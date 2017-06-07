@@ -1,7 +1,6 @@
 .idea/*
 vendor
 app/config/parameters.yml
-app/config/parameters.yml.dist
 app/logs/*
 app/cache/*
 web/bundles/*
