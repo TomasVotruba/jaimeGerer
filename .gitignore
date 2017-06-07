@@ -8,6 +8,3 @@ web/bundles/*
 composer.lock
 composer.phar
 README.md
-app/check.php
-app/bootstrap.php.cache
-.htaccess
