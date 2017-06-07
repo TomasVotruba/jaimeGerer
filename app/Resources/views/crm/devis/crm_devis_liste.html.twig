@@ -191,7 +191,7 @@
                         // this case `data: 0`.
                         "render": function ( data, type, row ) {
                             var btnUrl = Routing.generate('crm_devis_voir', {'id' : row['id'] });
-                            return '<a target='_blank' href="'+btnUrl+'">'+data+'</a>';
+                            return '<a target="_blank" href="'+btnUrl+'">'+data+'</a>';
                         },
                         "targets": 0
                     },
@@ -263,7 +263,7 @@
                     },
                     {
                         "render": function ( data, type, row ) {
-                            return '<a target='_blank' href="/crm/compte/voir/'+row['compte_id']+'">'+data+'</a>';
+                            return '<a target="_blank" href="/crm/compte/voir/'+row['compte_id']+'">'+data+'</a>';
                         },
                         "targets": 2
                     },
