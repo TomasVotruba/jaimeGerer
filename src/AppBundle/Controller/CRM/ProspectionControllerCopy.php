@@ -540,18 +540,29 @@ class ProspectionControllerCopy extends Controller
             )
         );
 
+        dump("1");
+        dump($data["date_tentative"]);
+
         if(gettype($data["date_tentative"])  !== 'string' ){
             $date = $data["date_tentative"]["date"];
+            dump("2");
+            dump($date);
         }
         else{
-            $date = strtotime($data["date_tentative"]);
+            $date = date("Y-d-m", strtotime( $data["date_tentative"]));
+            dump("3");
+            dump($date);
         }
 
         if($data["date_tentative"] !== "" && $data["date_tentative"] !== null){
+            dump("4");
             $date = new \DateTime($date);
+            dump($date);
         }
         else{
+            dump("5");
             $date = null;
+            dump($date);
         }
 
 
@@ -584,6 +595,7 @@ class ProspectionControllerCopy extends Controller
 
         $em->flush();
 
+        return new Response(1);
 
     }
 
