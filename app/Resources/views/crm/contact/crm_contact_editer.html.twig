@@ -21,7 +21,8 @@
 			$(".input-compte").change(function() {
 				$.ajax({
 					type: "POST",
-					url: "/web/app_dev.php/crm/compte/get_coordonnees/"+$(this).val(),
+//					url: "/web/app_dev.php/crm/compte/get_coordonnees/"+$(this).val(),
+					url: Routing.generate("crm_compte_get_coordonnees",{"nom":$(this).val()}),
 					success: function(data) {
 						$(".input-adresse").val(data.adresse);
 						$(".input-codepostal").val(data.codePostal);

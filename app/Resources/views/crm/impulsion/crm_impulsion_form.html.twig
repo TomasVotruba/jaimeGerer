@@ -36,7 +36,7 @@
 		$('.typeahead-contact').typeahead({
 		    order: "desc",
 		    source: {
-		        url: "/web/app_dev.php/crm/contact/get-contacts-impulsion"
+		        url: Routing.generate("crm_contact_impulsion_get_liste")
 		    },
 		    callback: {
 		        onInit: function (node) {

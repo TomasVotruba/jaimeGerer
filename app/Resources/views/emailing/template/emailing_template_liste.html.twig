@@ -84,7 +84,7 @@ $("* [rel='tooltip']").tooltip({
 					"processing": true,
 				    "serverSide": true,
 				    "ajax":{
-		                url :"/web/app_dev.php/crm/contact/liste/ajax", // json datasource
+		                url :Routing.generate("crm_contact_liste_ajax"), // json datasource
 		                type: "post",  // method  , by default get
 		            },
 		            "columns": [

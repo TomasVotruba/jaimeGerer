@@ -110,7 +110,7 @@
 			$('.typeahead-compte').typeahead({
 				order: "desc",
 				source: {
-					url: "/web/app_dev.php/crm/compte/get-comptes"
+					url: {{ path("crm_compte_get_liste") }}
 				},
 				callback: {
 					onInit: function (node) {
@@ -131,13 +131,13 @@
 
 		function changeAddress(compteId) {
 
-			console.log("Coucou papa je passe sur les internets !!!! ");
-
 			if(compteId == null ){
-				var url = "/web/app_dev.php/crm/compte/get_coordonnees_by_id/"+$('.entity-compte').val();
+//				var url = "/web/app_dev.php/crm/compte/get_coordonnees_by_id/"+$('.entity-compte').val();
+				var url = Routing.generate("crm_compte_get_coordonnees_by_id",{'id':$('.entity-compte').val()});
 			}
 			else{
-				var url = "/web/app_dev.php/crm/compte/get_coordonnees_by_id/"+compteId;
+//				var url = "/web/app_dev.php/crm/compte/get_coordonnees_by_id/"+compteId;
+				var url = Routing.generate("crm_compte_get_coordonnees_by_id",{'id':compteId});
 			}
 			$.ajax({
 				type: "POST",

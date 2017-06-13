@@ -43,7 +43,7 @@ class CompteController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/compte/liste/ajax", name="crm_compte_liste_ajax")
+	 * @Route("/crm/compte/liste/ajax", name="crm_compte_liste_ajax", options={"expose"=true})
 	 */
 	public function compteListeAjaxAction()
 	{
@@ -115,7 +115,7 @@ class CompteController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/compte/ajouter", name="crm_compte_ajouter")
+	 * @Route("/crm/compte/ajouter", name="crm_compte_ajouter", options={"expose"=true})
 	 */
 	public function compteAjouterAction()
 	{
@@ -171,7 +171,7 @@ class CompteController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/compte/fusionner/{id}", name="crm_compte_fusionner")
+	 * @Route("/crm/compte/fusionner/{id}", name="crm_compte_fusionner", options={"expose"=true})
 	 */
 	public function compteFusionnerAction(Compte $compte)
 	{
@@ -213,7 +213,7 @@ class CompteController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/compte/fusionner/etape2/{id}", name="crm_compte_fusionner_etape2")
+	 * @Route("/crm/compte/fusionner/etape2/{id}", name="crm_compte_fusionner_etape2", options={"expose"=true})
 	 */
 	public function compteFusionnerEtape2Action(Compte $compte)
 	{
@@ -265,7 +265,7 @@ class CompteController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/compte/fusionner/execution/{id}", name="crm_compte_fusionner_execution")
+	 * @Route("/crm/compte/fusionner/execution/{id}", name="crm_compte_fusionner_execution", options={"expose"=true})
 	 * @Method("POST")
 	 */
 	public function compteFusionnerExecutionAction(Compte $compte)
@@ -401,7 +401,7 @@ class CompteController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/compte/ajouter_modal", name="crm_compte_ajouter_modal")
+	 * @Route("/crm/compte/ajouter_modal", name="crm_compte_ajouter_modal", options={"expose"=true})
 	 */
 	public function compteAjouterModalAction()
 	{
@@ -476,7 +476,7 @@ class CompteController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/compte/editer/{id}", name="crm_compte_editer")
+	 * @Route("/crm/compte/editer/{id}", name="crm_compte_editer", options={"expose"=true})
 	 */
 	public function compteEditerAction(Compte $compte)
 	{
@@ -515,7 +515,7 @@ class CompteController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/compte/supprimer/{id}", name="crm_compte_supprimer")
+	 * @Route("/crm/compte/supprimer/{id}", name="crm_compte_supprimer", options={"expose"=true})
 	 */
 	public function compteSupprimerAction(Compte $compte)
 	{
@@ -542,7 +542,7 @@ class CompteController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/compte/get_coordonnees/{nom}", name="crm_compte_get_coordonnees")
+	 * @Route("/crm/compte/get_coordonnees/{nom}", name="crm_compte_get_coordonnees", options={"expose"=true})
 	 */
 	public function compteGetCoordonnees($nom)
 	{
@@ -578,7 +578,7 @@ class CompteController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/compte/get_coordonnees_by_id/{id}", name="crm_compte_get_coordonnees_by_id")
+	 * @Route("/crm/compte/get_coordonnees_by_id/{id}", name="crm_compte_get_coordonnees_by_id", options={"expose"=true})
 	 */
 	public function compteGetCoordonneesById(Compte $compte)
 	{
@@ -659,7 +659,7 @@ class CompteController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/compte/importer", name="crm_compte_importer")
+	 * @Route("/crm/compte/importer", name="crm_compte_importer", options={"expose"=true})
 	 */
 	public function compteImporterAction()
 	{

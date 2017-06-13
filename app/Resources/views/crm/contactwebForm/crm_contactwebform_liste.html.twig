@@ -70,7 +70,7 @@
 					"processing": true,
 				    "serverSide": true,
 				    "ajax":{
-		                url :"/web/app_dev.php/crm/contactwebForm/liste/ajax", // json datasource
+		                url :{{ path("crm_contactwebform_liste_ajax") }}, // json datasource
 		                type: "post",  // method  , by default get
 		            },
 		            "columns": [

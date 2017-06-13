@@ -36,7 +36,7 @@ use PHPExcel_IOFactory;
 class ContactController extends Controller
 {
 	/**
-	 * @Route("/crm/contact/liste", name="crm_contact_liste")
+	 * @Route("/crm/contact/liste", name="crm_contact_liste", options={"expose"=true})
 	 */
 	public function contactListeAction()
 	{
@@ -126,7 +126,7 @@ class ContactController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/contact/ajouter", name="crm_contact_ajouter")
+	 * @Route("/crm/contact/ajouter", name="crm_contact_ajouter", options={"expose"=true})
 	 * @Route("/crm/contact/ajouter_depuis_compte/{compte}", name="crm_contact_ajouter_depuis_compte")
 	 */
 	public function contactAjouterAction(Compte $compte = null)
@@ -308,7 +308,7 @@ class ContactController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/contact/fusionner/etape2/{id}", name="crm_contact_fusionner_etape2")
+	 * @Route("/crm/contact/fusionner/etape2/{id}", name="crm_contact_fusionner_etape2", options={"expose"=true})
 	 */
 	public function contactFusionnerEtape2Action(Contact $contact)
 	{
@@ -371,7 +371,7 @@ class ContactController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/contact/fusionner/execution/{id}", name="crm_contact_fusionner_execution")
+	 * @Route("/crm/contact/fusionner/execution/{id}", name="crm_contact_fusionner_execution", options={"expose"=true})
 	 * @Method("POST")
 	 */
 	public function contactFusionnerExecutionAction(Contact $contact)
@@ -665,7 +665,7 @@ class ContactController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/contact/ecrire/{id}", name="crm_contact_ecrire")
+	 * @Route("/crm/contact/ecrire/{id}", name="crm_contact_ecrire", options={"expose"=true})
 	 */
 	public function contactEcrireAction(Contact $contact)
 	{
@@ -740,7 +740,7 @@ class ContactController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/contact/get-compte/{id}", name="crm_contact_get_compte")
+	 * @Route("/crm/contact/get-compte/{id}", name="crm_contact_get_compte", options={"expose"=true})
 	 */
 	public function contactGetCompte(Contact $contact)
 	{
@@ -778,7 +778,7 @@ class ContactController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/contact/get-contacts-impulsion", name="crm_contact_impulsion_get_liste")
+	 * @Route("/crm/contact/get-contacts-impulsion", name="crm_contact_impulsion_get_liste", options={"expose"=true})
 	 */
 	public function contact_impulsion_listAction()
 	{
@@ -797,7 +797,7 @@ class ContactController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/contact/importer/mapping", name="crm_contact_importer_mapping")
+	 * @Route("/crm/contact/importer/mapping", name="crm_contact_importer_mapping", options={"expose"=true})
 	 */
 	public function contactImporterMappingAction()
 	{
@@ -1060,7 +1060,7 @@ class ContactController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/contact/importer/validation", name="crm_importer_validation")
+	 * @Route("/crm/contact/importer/validation", name="crm_importer_validation", options={"expose"=true})
 	 */
 	public function contactImporterValidationAction()
 	{
@@ -1673,7 +1673,7 @@ class ContactController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/contact/importer/upload", name="crm_contact_importer_upload")
+	 * @Route("/crm/contact/importer/upload", name="crm_contact_importer_upload", options={"expose"=true})
 	 */
 	public function contactImporterUploadAction()
 	{
