@@ -1288,39 +1288,5 @@ class FactureController extends Controller
 		));
 	}
 
-	/**
-	 * @Route("/compta/facture/pb", name="compta_facture_pb")
-	 */
-	public function findFacturesProblem(){
-		$em = $this->getDoctrine()->getManager();
-		$factureRepo = $em->getRepository('AppBundle:CRM\DocumentPrix');
-
-		$arr_all_factures = $factureRepo->findForCompany($this->getUser()->getCompany(), 'FACTURE', true);
-		$arr_num = array();
-		foreach($arr_all_factures as $facture){
-			if( $facture->getTotalRapproche() < $facture->getTotalTTC() && $facture->getTotalRapproche() !=0 && $facture->getEtat() != "PAID"  ){
-				$arr_num [] = $facture->getNum();
-				//$facture->setEtat('PAID');
-				
-				if( $facture->getTotalRapproche() != $facture->getTotalTTC() ){
-					var_dump($facture->getId());
-					// var_dump($facture->getTotalRapprocheAsInt());
-					var_dump($facture->getTotalRapproche());
-					// var_dump($facture->getTotalTTCAsInt());
-					var_dump($facture->getTotalTTC());
-
-					$facture->setEtat('PAID');
-					$em->persist($facture);
-
-				}
-			}
-		}
-
-		
-		dump($arr_num);
-		$em->flush();
-		return new Response();
-	}
-
 
 }
