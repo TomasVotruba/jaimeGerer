@@ -826,6 +826,18 @@ class DocumentPrix
     	return $totalTTC;
     }
 
+      public function getTotalTTCAsInt(){
+        $sousTotal = 0;
+        foreach($this->produits as $produit){
+            $sousTotal+= $produit->getTotal();
+        }
+
+        $totalHT = $sousTotal - $this->remise;
+
+        $totalTTC = $totalHT+$this->taxe;
+        return intval($totalTTC*100);
+    }
+
     public function getTotalHTMoinsAvoirs(){
       return $this->getTotalHT()-$this->getTotalAvoirsHT();
     }
@@ -842,6 +854,16 @@ class DocumentPrix
     	}
     	return $total;
     }
+
+    public function getTotalRapprocheAsInt(){
+
+        $total = 0;
+        foreach($this->rapprochements as $rapprochement){
+            $total+= $rapprochement->getMouvementBancaire()->getMontant()*100;
+        }
+        return intval($total);
+    }
+
 
     public function getTotalAvoirs(){
 
