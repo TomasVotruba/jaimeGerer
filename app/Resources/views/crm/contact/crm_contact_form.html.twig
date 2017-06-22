@@ -76,10 +76,15 @@
     <input type="submit" value="Enregistrer" class="btn btn-success" />
 	{{ form_end(form) }}
 {% block additionalJS %}
+	<script type="text/javascript">
+		var JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
+	</script>
+	<script src="{{ asset('js/error.js') }}"></script>
 	<script src="//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 	<script type="text/javascript" src="{{ asset('js/jquery.ui.addresspicker.js') }}"></script>
 	<script type="text/javascript">
 		$(document).ready( function () {
+
 			var addresspickerMap = $( "#{{ form.addressPicker.vars.id }}" ).addresspicker({
 			updateCallback: function(geocodeResult, parsedGeocodeResult){
 								//console.log(parsedGeocodeResult);
@@ -107,7 +112,6 @@
 				{% endif %}
 			{% endif %}
 
-			JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
 			$('.typeahead-compte').typeahead({
 				order: "desc",
 				source: {
@@ -173,5 +177,4 @@
 		}
 	</script>
 
-	<script src="{{ asset('js/error.js') }}"></script>
 {% endblock %}
