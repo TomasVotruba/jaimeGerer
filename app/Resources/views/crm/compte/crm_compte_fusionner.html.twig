@@ -67,8 +67,8 @@
 					});
 				},*/
 			    source: {
-			        //url: "/web/app_dev.php/crm/contact/crm_contact_get_liste_fusionner"+ ($('.entity-compte').val() > 0 ? '/'+$('.entity-compte').val() : '')
-			        url: "{{ path('crm_compte_get_liste_fusionner', {'id': app.request.get("id")}) }}"
+			        url: "/web/app_dev.php/crm/contact/crm_contact_get_liste_fusionner"+ ($('.entity-compte').val() > 0 ? '/'+$('.entity-compte').val() : '')
+			        {#url: "{{ path('crm_compte_get_liste_fusionner', {'id': app.request.get("id")}) }}"#}
 			    },
 			    callback: {
 			        onInit: function (node) {
