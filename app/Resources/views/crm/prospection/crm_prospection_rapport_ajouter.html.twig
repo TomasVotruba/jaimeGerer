@@ -2,6 +2,8 @@
 
 {% block content %}
 
+	{{ dump() }}
+
 	<div class="row">
 		<div class="col-md-12">
 			<h1>Campagne de prospection : {{ prospection.nom }}</h1>
@@ -13,12 +15,25 @@
 		<div class="col-md-12">
 			{{ form_start(form, { 'attr': {'class': 'form-inline form-filter'}}) }}
 		    <h3>Filtres</h3>
-			<ul class="filters" data-prototype="{{ form_widget(form.filters.vars.prototype)|e }}"></ul>
-			    {{ form_rest(form) }}
+			<ul id="collectionContainer" class="filters" data-prototype="
+				{% filter escape %}
+				    {{ include('crm/rapport/crm_rapport_filtre_form.html.twig', { 'form':  form.filtres.vars.prototype }) }}
+			    {% endfilter %}">
+				{% for filterField in form.filtres %}
+					<li>
+						{{ include('crm/rapport/crm_rapport_filtre_form.html.twig', { 'form': filterField }) }}
+					</li>
+				{% endfor %}
+			</ul>
+			{{ form_rest(form) }}
+
 			<br/>
 			<br/>
 			<br/>
+
 			<input type="submit" value="Créer la liste" class="btn btn-success" />
+
+
 			{{ form_end(form) }}
 		 </div>
 	</div>
@@ -34,6 +49,14 @@
 		var $newLinkLi = $('<li></li>').append($addFilterLink);
 	
 		$(document).ready( function () {
+			$("body").on("click", ".btn-rapport-add-separateur", function(e){
+				// empêche le lien de créer un « # » dans l'URL
+				e.preventDefault();
+				// supprimele filtre
+				$(this).parents('li').append('<hr />');
+				$(this).parents('li').find('.end-group-hidden').val(1);
+
+			});
 			// Récupère le div qui contient la collection de tags
 			var collectionHolder = $('ul.filters');
 			// ajoute l'ancre « ajouter un tag » et li à la balise ul
@@ -49,6 +72,7 @@
 			    addFilterForm(collectionHolder, $newLinkLi);
 
 			});
+
 
 		    function addFilterForm(collectionHolder, $newLinkLi) {
 		        // Récupère l'élément ayant l'attribut data-prototype comme expliqué plus tôt
@@ -89,6 +113,9 @@
 
 
 		});
+
+
+
 	</script>
 
 

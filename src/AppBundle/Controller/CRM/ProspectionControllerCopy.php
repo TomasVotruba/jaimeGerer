@@ -339,7 +339,7 @@ class ProspectionControllerCopy extends Controller
         $arr_filters = $filterRepo->findByProspection($prospection);
         $rapport = new Rapport();
 
-        $form = $this->createForm(new RapportType(), $rapport)
+        $form = $this->createForm(new RapportType('contact'), $rapport)
             ->remove('nom')
             ->remove('description')
             ->add('filters', 'collection', array(
@@ -356,11 +356,31 @@ class ProspectionControllerCopy extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $arr_filters = $form->get('filters')->getData();
+
+            $arr_new_filters =  $form->getData()->getFiltres();
+
+            foreach ($arr_new_filters as $index => $new_filter) {
+                array_push($arr_filters, $new_filter);
+            }
+
+
+
             foreach($arr_filters as $filter){
-                $filter->setProspection($prospection);
-                $em->persist($filter);
-                $em->flush();
+                if($filter->getId() == null){
+                    if($filter->getValeur() !== "" && $filter->getValeur() !== null){
+
+                        $filter->setProspection($prospection);
+                        $rapport->setNom("prospection");
+                        $rapport->setType("prospection");
+                        $rapport->setModule("CRM");
+                        $rapport->setDateCreation(new \DateTime(date('Y-m-d')));
+                        $rapport->setUserCreation($this->getUser());
+                        $em->persist($rapport);
+                        $em->persist($filter);
+                        $em->flush();
+                    }
+                }
+
             }
 
             $newContacts = $contactRepo->createQueryAndGetResult($arr_filters, $this->getUser()->getCompany());
