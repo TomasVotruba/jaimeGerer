@@ -28,7 +28,7 @@
 			{{ form_row(form.years) }}
 		</div>
 		<div class="col-md-6">
-			<input type="checkbox" id="checkbox-hide-prev" /> <label for="checkbox-hide-prev">Masquer les montants prévisionnels</label><br />
+			<input type="checkbox" id="checkbox-hide-prev" checked="checked" /> <label for="checkbox-hide-prev">Masquer les montants prévisionnels</label><br />
 			<input type="checkbox" id="checkbox-hide-accurate" /> <label for="checkbox-hide-accurate">Masquer les montants réalisés</label>
 		</div>
 		{{ form_end(form) }}
@@ -104,11 +104,13 @@
 						$("#wrapper-ajax").html(data);
 
 						if($('#checkbox-hide-accurate').is(':checked')){
-							$('td.accurate').toggle();
+							$('.accurate').hide();
+							$('.mois').attr('colspan',1);
 						}
 
 						if($('#checkbox-hide-prev').is(':checked')){
-							$('td.prev').toggle();
+							$('.prev').hide();
+							$('.mois').attr('colspan',1);
 						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {

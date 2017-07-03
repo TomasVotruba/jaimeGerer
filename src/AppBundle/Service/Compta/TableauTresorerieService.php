@@ -206,6 +206,10 @@ class TableauTresorerieService extends ContainerAware {
 
           } else if($this->utilsService->startsWith($rapprochement->getAffectationDiverse()->getCompteComptable(), '58')){
             //VIREMENTS DE COMPTE A COMPTE (ENTREE)
+            if($mois == 4){
+              dump($rapprochement->getMouvementBancaire());
+            }
+            
             $total_virements_entree+=$rapprochement->getMouvementBancaire()->getMontant();
 
           } else if($this->utilsService->startsWith($rapprochement->getAffectationDiverse()->getCompteComptable(), '455')){
@@ -224,7 +228,7 @@ class TableauTresorerieService extends ContainerAware {
             //TAXES
             $total_taxes+=$rapprochement->getMouvementBancaire()->getMontant();
 
-          } else if($this->utilsService->startsWith($rapprochement->getAffectationDiverse()->getCompteComptable(), '641') || $this->utilsService->startsWith($rapprochement->getAffectationDiverse()->getCompteComptable(), '644')){
+          } else if($this->utilsService->startsWith($rapprochement->getAffectationDiverse()->getCompteComptable(), '641') || $this->utilsService->startsWith($rapprochement->getAffectationDiverse()->getCompteComptable(), '644') || $this->utilsService->startsWith($rapprochement->getAffectationDiverse()->getCompteComptable(), '644' )){
             //SALAIRES
             $total_salaires+=$rapprochement->getMouvementBancaire()->getMontant();
 

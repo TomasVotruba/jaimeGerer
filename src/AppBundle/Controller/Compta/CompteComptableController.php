@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormError;
 
 use AppBundle\Entity\Compta\CompteComptable;
+use AppBundle\Entity\Compta\AffectationDiverse;
 use AppBundle\Entity\CRM\Compte;
 
 use AppBundle\Form\Compta\CompteComptableType;
@@ -56,8 +57,7 @@ class CompteComptableController extends Controller
 					$dataCount[substr($compte->getNum(),0,2)]++;
 				else
 					$dataCount[substr($compte->getNum(),0,2)] = 1 ;
-			}
-			//var_dump($data); exit;
+			}	
 		}
 		else
 			$arr_comptes = $repo->findBy(array(
@@ -908,6 +908,7 @@ class CompteComptableController extends Controller
 		}
 
 		$ligneJournal = $repo->find($id);
+		$oldCompteComptable = $ligneJournal->getCompteComptable();
 
 		//creation du formulaire
 		$form = $this->createForm(new LigneJournalCorrectionType($this->getUser()->getCompany()));
@@ -952,11 +953,40 @@ class CompteComptableController extends Controller
 				 //correction directe
 				 $ligneJournal->setCompteComptable($newCompteComptable);
 				 $em->persist($ligneJournal);
-			   $em->flush();
+			   	 $em->flush();
 			 } else {
 				 //OD
 				 $operationDiverseService = $this->get('appbundle.compta_operation_diverse_service');
 				 $operationDiverseService->corrigerAffectationAvecOD($ligneJournal, $newCompteComptable);
+			 }
+
+			 //on corrige également le rapprochement concerné pour garder le tableau de trésorerie à jour
+			 $rapprochements = $ligneJournal->getMouvementBancaire()->getRapprochements();
+			 foreach( $rapprochements as $rapprochement ){
+			 	if( $rapprochement->getAffectationDiverse() ){
+			 		$affectationDiverse = $rapprochement->getAffectationDiverse();
+			 		if( $affectationDiverse->getCompteComptable() ==  $oldCompteComptable){
+
+			 			if( $affectationDiverse->getRecurrent() ){
+
+			 				$newAffectationDiverse = new AffectationDiverse();
+			 				$newAffectationDiverse->setNom("Correction");
+			 				$newAffectationDiverse->setType($affectationDiverse->getType());
+			 				$newAffectationDiverse->setCompteComptable($newCompteComptable);
+			 				$newAffectationDiverse->setCompany($this->getUser()->getCompany());
+			 				$newAffectationDiverse->setRecurrent(false);
+							$em->persist($newAffectationDiverse);
+			 				$rapprochement->setAffectationDiverse($newAffectationDiverse);
+			 				$em->persist($rapprochement);
+			 			} else {
+			 				$affectationDiverse->setCompteComptable($newCompteComptable);
+			 				$em->persist($affectationDiverse);
+			 			}
+
+			 			$em->flush();
+						
+			 		}
+			 	}
 			 }
 
 			return new Response();
@@ -977,6 +1007,64 @@ class CompteComptableController extends Controller
 
 	}
 
+	/**
+	 * @Route("/compta/rapprochementpb", name="compta_rapprochement_pb")
+	 */
+	public function rapprochementPb(){
 
+		$em = $this->getDoctrine()->getManager();
+		$journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
+		$lignesJournal = $journalBanqueRepo->findForCompany($this->getUser()->getCompany());
+
+		$year = new \DateTime('2017-01-01 00:00:00');
+		$i = 0;
+		foreach($lignesJournal as $ligneJournal){
+
+			$compteComptable = $ligneJournal->getCompteComptable();
+
+			foreach($ligneJournal->getMouvementBancaire()->getRapprochements() as $rapprochement){
+
+				if($rapprochement->getAffectationDiverse() && $ligneJournal->getMouvementBancaire()->getDate() >= $year){
+
+					$affectationDiverse = $rapprochement->getAffectationDiverse();
+					if($affectationDiverse->getCompteComptable() != $compteComptable){
+
+
+						dump('nouveau : '.$compteComptable->__toString());
+						dump('ancien : '.$rapprochement->getAffectationDiverse()->getCompteComptable()->__toString());
+						$i++;
+
+						// if( $affectationDiverse->getRecurrent() ){
+
+			 		// 		$newAffectationDiverse = new AffectationDiverse();
+			 		// 		$newAffectationDiverse->setNom("Correction");
+			 		// 		$newAffectationDiverse->setType($affectationDiverse->getType());
+			 		// 		$newAffectationDiverse->setCompteComptable($compteComptable);
+			 		// 		$newAffectationDiverse->setCompany($this->getUser()->getCompany());
+			 		// 		$newAffectationDiverse->setRecurrent(false);
+						// 	$em->persist($newAffectationDiverse);
+			 		// 		$rapprochement->setAffectationDiverse($newAffectationDiverse);
+			 		// 		$em->persist($rapprochement);
+			 		// 	} else {
+			 		// 		$affectationDiverse->setCompteComptable($compteComptable);
+			 		// 		$em->persist($affectationDiverse);
+			 		// 	}
+
+			 			// $em->flush();
+
+					}
+
+				}
+
+
+			}
+
+		}
+
+		dump($i);
+
+		return new Response();
+
+	}
 
 }
