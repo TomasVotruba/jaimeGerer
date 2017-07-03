@@ -55,4 +55,19 @@ class JournalBanqueRepository extends EntityRepository
 
 		return $result;
 	}
+
+	public function findForCompany($company){
+
+		$qb = $this->createQueryBuilder('j')
+		->leftJoin('AppBundle\Entity\Compta\CompteComptable', 'c', 'WITH', 'j.compteComptable = c.id')
+		->where('c.company = :company')
+		->setParameter('company', $company)
+		->orderBy('j.date', 'ASC')
+		->addOrderBy('j.debit', 'DESC');
+
+		$result = $qb->getQuery()
+		->getResult();
+
+		return $result;
+	}
 }

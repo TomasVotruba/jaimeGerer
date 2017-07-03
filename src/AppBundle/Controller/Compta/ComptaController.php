@@ -6,11 +6,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 use AppBundle\Entity\SettingsActivationOutil;
+use AppBundle\Entity\Compta\AffectationDiverse;
 
-
+use PHPExcel;
 use PHPExcel_IOFactory;
+use PHPExcel_Shared_Date;
 
 class ComptaController extends Controller
 {
@@ -457,5 +460,125 @@ class ComptaController extends Controller
 		return $this->render('compta/activation/compta_activation_produits.html.twig', array(
 			'form' => $form->createView()
 		));
+	}
+
+
+	/**
+	 * @Route("/compta/check-rapprochements", name="compta_check_rapprochements")
+	 */
+	public function checkRapprochements(){
+
+
+		$em = $this->getDoctrine()->getManager();
+		$mouvementBancaireRepo = $em->getRepository('AppBundle:Compta\MouvementBancaire');
+		$journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
+
+		$arr_mouvementsBancaires = $mouvementBancaireRepo->findByYearAndCompany(2017, $this->getUser()->getCompany());
+
+		$objPHPExcel = new PHPExcel();
+		// header row
+		$arr_header = array(
+			'Date',
+			'Libellé',
+			'Montant',
+			'Compte initial',
+			'Compte destination'
+		);
+		$row = 1;
+		$col = 'A';
+		foreach($arr_header as $header){
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $header);
+				$col++;
+		}
+
+		foreach($arr_mouvementsBancaires as $mouvement){
+			if( count($mouvement->getRapprochements()) == 0  ){
+				continue;
+			}
+
+			$arr_lignesJournal = $journalBanqueRepo->findByMouvementBancaire($mouvement);
+			$compteComptable = null;
+			if(strpos($mouvement->getLibelle(), "Cheque" ) === false &&  strpos($mouvement->getLibelle(), "Ndf" ) === false ){
+
+				foreach($arr_lignesJournal as $ligneJournal){
+					if($ligneJournal->getCompteComptable()->getId() == $mouvement->getCompteBancaire()->getCompteComptable()->getId()){
+						continue;
+					}
+
+					$compteComptable = $ligneJournal->getCompteComptable();
+
+					foreach($mouvement->getRapprochements() as $rapprochement){
+						if( $rapprochement->getAffectationDiverse() ){
+							if($rapprochement->getAffectationDiverse()->getCompteComptable() != $compteComptable){
+
+								$col = 'A';
+								$row++;
+
+								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, PHPExcel_Shared_Date::PHPToExcel($ligneJournal->getDate()));
+								$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('dd/mm/yyyy');
+								$col++;
+
+								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligneJournal->getLibelle());
+								$col++;
+
+								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $mouvement->getMontant());
+								$col++;
+
+								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $rapprochement->getAffectationDiverse()->getCompteComptable()->getNum());
+								$col++;
+
+								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $compteComptable->getNum());
+								$col++;
+
+
+								$affectationDiverse = $rapprochement->getAffectationDiverse();
+					 			if( $affectationDiverse->getRecurrent() ){
+
+					 				$newAffectationDiverse = new AffectationDiverse();
+					 				$newAffectationDiverse->setNom("Correction");
+					 				$newAffectationDiverse->setType($affectationDiverse->getType());
+					 				$newAffectationDiverse->setCompteComptable($compteComptable);
+					 				$newAffectationDiverse->setCompany($this->getUser()->getCompany());
+					 				$newAffectationDiverse->setRecurrent(false);
+									$em->persist($newAffectationDiverse);
+					 				$rapprochement->setAffectationDiverse($newAffectationDiverse);
+					 				$em->persist($rapprochement);
+					 			} else {
+					 				$affectationDiverse->setCompteComptable($compteComptable);
+					 				$em->persist($affectationDiverse);
+					 			}
+
+					 			$em->flush();
+								
+					 		}
+							
+						}
+					}
+
+
+
+				}
+
+			}
+			
+			
+		}
+
+		//set column width
+		foreach(range('A','H') as $col) {
+			$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
+		}
+
+		 $response = new Response();
+		 $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+		 $response->headers->set('Content-Disposition', 'attachment;filename="journal_banque.xlsx"');
+		 $response->headers->set('Cache-Control', 'max-age=0');
+		 $response->sendHeaders();
+		 $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+		 $objWriter->save('php://output');
+		 exit();
+
+
+
 	}
 }
