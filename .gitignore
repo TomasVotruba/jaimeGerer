@@ -7,3 +7,4 @@ web/bundles/*
 composer.lock
 composer.phar
 README.md
+web/uploads/*
