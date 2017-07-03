@@ -48,7 +48,6 @@ class CompteComptableController extends Controller
 			$arr_comptes = $repo->SearchByName($data['recherche'],$this->getUser()->getCompany());
 			foreach( $arr_comptes as $compte )
 			{
-				//var_dump(isset($dataBigCount[substr($compte->getNum(),0,1)])); exit;
 				if( isset($dataBigCount[substr($compte->getNum(),0,1)]) )
 					$dataBigCount[substr($compte->getNum(),0,1)]++;
 				else
@@ -1004,66 +1003,6 @@ class CompteComptableController extends Controller
 				'redirectRoute' => $redirectRoute,
 				'compteId' => $compteId
 		));
-
-	}
-
-	/**
-	 * @Route("/compta/rapprochementpb", name="compta_rapprochement_pb")
-	 */
-	public function rapprochementPb(){
-
-		$em = $this->getDoctrine()->getManager();
-		$journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
-		$lignesJournal = $journalBanqueRepo->findForCompany($this->getUser()->getCompany());
-
-		$year = new \DateTime('2017-01-01 00:00:00');
-		$i = 0;
-		foreach($lignesJournal as $ligneJournal){
-
-			$compteComptable = $ligneJournal->getCompteComptable();
-
-			foreach($ligneJournal->getMouvementBancaire()->getRapprochements() as $rapprochement){
-
-				if($rapprochement->getAffectationDiverse() && $ligneJournal->getMouvementBancaire()->getDate() >= $year){
-
-					$affectationDiverse = $rapprochement->getAffectationDiverse();
-					if($affectationDiverse->getCompteComptable() != $compteComptable){
-
-
-						dump('nouveau : '.$compteComptable->__toString());
-						dump('ancien : '.$rapprochement->getAffectationDiverse()->getCompteComptable()->__toString());
-						$i++;
-
-						// if( $affectationDiverse->getRecurrent() ){
-
-			 		// 		$newAffectationDiverse = new AffectationDiverse();
-			 		// 		$newAffectationDiverse->setNom("Correction");
-			 		// 		$newAffectationDiverse->setType($affectationDiverse->getType());
-			 		// 		$newAffectationDiverse->setCompteComptable($compteComptable);
-			 		// 		$newAffectationDiverse->setCompany($this->getUser()->getCompany());
-			 		// 		$newAffectationDiverse->setRecurrent(false);
-						// 	$em->persist($newAffectationDiverse);
-			 		// 		$rapprochement->setAffectationDiverse($newAffectationDiverse);
-			 		// 		$em->persist($rapprochement);
-			 		// 	} else {
-			 		// 		$affectationDiverse->setCompteComptable($compteComptable);
-			 		// 		$em->persist($affectationDiverse);
-			 		// 	}
-
-			 			// $em->flush();
-
-					}
-
-				}
-
-
-			}
-
-		}
-
-		dump($i);
-
-		return new Response();
 
 	}
 

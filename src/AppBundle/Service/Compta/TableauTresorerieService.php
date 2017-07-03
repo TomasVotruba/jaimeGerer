@@ -202,14 +202,11 @@ class TableauTresorerieService extends ContainerAware {
 
           } else if($this->utilsService->startsWith($rapprochement->getAffectationDiverse()->getCompteComptable(), '74')){
             //DECAISSEMENTS SUBVENTIONS
+
             $total_decaissements_subventions+=$rapprochement->getMouvementBancaire()->getMontant();
 
           } else if($this->utilsService->startsWith($rapprochement->getAffectationDiverse()->getCompteComptable(), '58')){
             //VIREMENTS DE COMPTE A COMPTE (ENTREE)
-            if($mois == 4){
-              dump($rapprochement->getMouvementBancaire());
-            }
-            
             $total_virements_entree+=$rapprochement->getMouvementBancaire()->getMontant();
 
           } else if($this->utilsService->startsWith($rapprochement->getAffectationDiverse()->getCompteComptable(), '455')){
