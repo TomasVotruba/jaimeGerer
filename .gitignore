@@ -8,3 +8,7 @@ composer.lock
 composer.phar
 README.md
 web/uploads/*
+Supprimerait .idea/
+Supprimerait app/cache/
+Supprimerait app/logs/
+Supprimerait web/bundles/
