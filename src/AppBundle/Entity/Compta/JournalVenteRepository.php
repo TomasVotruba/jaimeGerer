@@ -35,7 +35,7 @@ class JournalVenteRepository extends EntityRepository
 		return $result;
 	}
 
-	public function findByCompteForCompany($compteComptable, $company, $startDate = null, $endDate = null){
+	public function findByCompteForCompany($compteComptable, $company=null, $startDate = null, $endDate = null){
 
 		$qb = $this->createQueryBuilder('j')
 			->leftJoin('AppBundle\Entity\CRM\DocumentPrix', 'f', 'WITH', 'j.facture = f.id')
@@ -43,10 +43,15 @@ class JournalVenteRepository extends EntityRepository
 			->leftJoin('AppBundle\Entity\Compta\Avoir', 'a', 'WITH', 'j.avoir = a.id')
 			->leftJoin('AppBundle\Entity\CRM\DocumentPrix', 'f2', 'WITH', 'a.facture = f2.id')
 			->leftJoin('AppBundle\Entity\CRM\Compte', 'c2', 'WITH', 'f2.compte = c2.id')
-			->where('c1.company = :company or c2.company = :company')
-			->andWhere('j.compteComptable = :compteComptable')
-			->setParameter('company', $company)
+			->where('j.compteComptable = :compteComptable')
 			->setParameter('compteComptable', $compteComptable);
+
+		if($company){
+			$qb
+			->andWhere('c1.company = :company or c2.company = :company')
+			->setParameter('company', $company);
+		}
+
 
 		if($startDate && $endDate){
 			$qb->andWhere('(f.dateCreation >= :startDate and f.dateCreation <= :endDate) or (a.dateCreation >= :startDate and a.dateCreation <= :endDate)')

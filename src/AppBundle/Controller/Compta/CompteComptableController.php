@@ -56,7 +56,7 @@ class CompteComptableController extends Controller
 					$dataCount[substr($compte->getNum(),0,2)]++;
 				else
 					$dataCount[substr($compte->getNum(),0,2)] = 1 ;
-			}	
+			}
 		}
 		else
 			$arr_comptes = $repo->findBy(array(
@@ -707,19 +707,19 @@ class CompteComptableController extends Controller
 
 		//lignes du journal de ventes pour le compte $compte
 		$repoJournalVente = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalVente');
-		$arr_journal_vente = $repoJournalVente->findByCompteForCompany($compteComptable, $this->getUser()->getCompany(), $start, $end);
+		$arr_journal_vente = $repoJournalVente->findByCompteForCompany($compteComptable, null, $start, $end);
 
 		//lignes du journal d'achats pour le compte $compte
 		$repoJournalAchat = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalAchat');
-		$arr_journal_achat = $repoJournalAchat->findByCompteForCompany($compteComptable, $this->getUser()->getCompany(), $start, $end);
+		$arr_journal_achat = $repoJournalAchat->findByCompteForCompany($compteComptable, null, $start, $end);
 
 		//lignes du journal de banque pour le compte $compte
 		$repoJournalBanque = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalBanque');
-		$arr_journal_banque = $repoJournalBanque->findByCompteForCompany($compteComptable, $this->getUser()->getCompany(), $start, $end);
+		$arr_journal_banque = $repoJournalBanque->findByCompteForCompany($compteComptable, null, $start, $end);
 
 		//lignes des opérations diverses
 		$repoOperationDiverse = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\OperationDiverse');
-		$arr_operation_diverse = $repoOperationDiverse->findByCompteForCompany($compteComptable, $this->getUser()->getCompany(), $start, $end);
+		$arr_operation_diverse = $repoOperationDiverse->findByCompteForCompany($compteComptable, null, $start, $end);
 
 		//regroupement dans 1 seul array
 		$arr_lignes = array_merge($arr_journal_vente, $arr_journal_achat, $arr_journal_banque, $arr_operation_diverse);
@@ -983,7 +983,7 @@ class CompteComptableController extends Controller
 			 			}
 
 			 			$em->flush();
-						
+
 			 		}
 			 	}
 			 }

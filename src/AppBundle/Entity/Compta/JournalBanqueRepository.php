@@ -32,14 +32,17 @@ class JournalBanqueRepository extends EntityRepository
 		return $result;
 	}
 
-	public function findByCompteForCompany($compteComptable, $company, $startDate = null, $endDate = null){
+	public function findByCompteForCompany($compteComptable, $company=null, $startDate = null, $endDate = null){
 
 		$qb = $this->createQueryBuilder('j')
 		->leftJoin('AppBundle\Entity\Compta\CompteComptable', 'c', 'WITH', 'j.compteComptable = c.id')
-		->where('c.company = :company')
-		->andWhere('j.compteComptable = :compteComptable')
-		->setParameter('company', $company)
+		->where('j.compteComptable = :compteComptable')
 		->setParameter('compteComptable', $compteComptable);
+
+		if($company){
+			$qb->andWhere('c.company = :company')
+			->setParameter('company', $company);
+		}
 
 		if($startDate && $endDate){
 			$qb->andWhere('j.date >= :startDate and j.date <= :endDate')
