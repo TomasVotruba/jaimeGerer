@@ -37,17 +37,22 @@ class JournalAchatRepository extends EntityRepository
 		return $result;
 	}
 
-	public function findByCompteForCompany($compteComptable, $company, $startDate = null, $endDate = null){
+	public function findByCompteForCompany($compteComptable, $company = null, $startDate = null, $endDate = null){
 
 		$qb = $this->createQueryBuilder('j')
 			->leftJoin('AppBundle\Entity\Compta\Depense', 'd', 'WITH', 'j.depense = d.id')
 			->leftJoin('AppBundle\Entity\CRM\Compte', 'c1', 'WITH', 'd.compte = c1.id')
 			->leftJoin('AppBundle\Entity\Compta\Avoir', 'a', 'WITH', 'j.avoir = a.id')
 			->leftJoin('AppBundle\Entity\Compta\Depense', 'd2', 'WITH', 'a.depense = d2.id')
-			->leftJoin('AppBundle\Entity\CRM\Compte', 'c2', 'WITH', 'd2.compte = c2.id')
-			->where('c1.company = :company or c2.company = :company')
-			->andWhere('j.compteComptable = :compteComptable')
-			->setParameter('company', $company)
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c2', 'WITH', 'd2.compte = c2.id');
+
+			if($company){
+				$qb
+					->where('c1.company = :company or c2.company = :company')
+					->setParameter('company', $company);
+			}
+
+			$qb->andWhere('j.compteComptable = :compteComptable')
 			->setParameter('compteComptable', $compteComptable);
 
 			if($startDate && $endDate){

@@ -12,14 +12,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class OperationDiverseRepository extends EntityRepository
 {
-	public function findByCompteForCompany($compteComptable, $company, $startDate = null, $endDate = null){
+	public function findByCompteForCompany($compteComptable, $company=null, $startDate = null, $endDate = null){
 
 		$qb = $this->createQueryBuilder('o')
 		->leftJoin('AppBundle\Entity\Compta\CompteComptable', 'c', 'WITH', 'o.compteComptable = c.id')
-		->where('c.company = :company')
-		->andWhere('o.compteComptable = :compteComptable')
-		->setParameter('company', $company)
+		->where('o.compteComptable = :compteComptable')
 		->setParameter('compteComptable', $compteComptable);
+
+		if($company){
+			$qb->andWhere('c.company = :company')
+				->setParameter('company', $company);
+		}
 
 		if($startDate && $endDate){
 			$qb->andWhere('o.date >= :startDate and o.date <= :endDate')
