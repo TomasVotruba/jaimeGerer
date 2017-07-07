@@ -125,6 +125,11 @@ class ProspectionService extends ContainerAware
                     }
                 }
                 else{
+
+                    if(array_key_exists("url", $contact)  == false ){
+                        $contact["url"] = "";
+                    }
+
                     $newContact = $this->contactRepo->findOneById(intval($contact['id']));
                     if($newContact != null) {
                         $newContact->setNom($contact["nom"]);
