@@ -21,7 +21,7 @@
 			</tr>
 		</tbody>
 	</table>
-	
+
 	{{ form_start(form, {'action' : path('compta_mouvement_bancaire_scinder', {'id' : mouvement.id } )} ) }}
 	{{ form_errors(form) }}
 
@@ -35,7 +35,7 @@
         </li>
     {% endfor %}
     </ul>
-    
+
     <div class="center">
     	<p class="error-montant"><i>Le montant de vos nouveaux mouvements n'est pas égal au montant initial.</i></p>
    		<input type="submit" value="Valider" class="btn btn-success" disabled />
@@ -52,7 +52,7 @@
 	var $addProduitLink = $('<a href="#" class="add_produit_link btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"</a>');
 	var $newProduitLi = $('<li></li>').append($addProduitLink);
 
-	$(document).ready( function () {   
+	$(document).ready( function () {
 
 		// Récupère le div qui contient la collection de tags
 		var collectionHolder = $('ul.produits');
@@ -82,7 +82,7 @@
 
 	        // Remplace '__name__' dans le HTML du prototype par un nombre basé sur
 	        // Toujours incrémenter pour éviter la duplication des noms/ids
-	        indexNewCollection++;		        
+	        indexNewCollection++;
 	        // la longueur de la collection courante
 	        var newForm = prototype.replace(/__name__/g, indexNewCollection);
 
@@ -116,7 +116,7 @@
 	    function montantChanged(element){
 
 	    	var montant = $(element).val();
-	    	montant = montant.replace(",", "."); 
+	    	montant = montant.replace(",", ".");
 	    	$(element).val(montant);
 
 		    var mouvement_montant =  $('.mouvement-montant').text();
@@ -124,7 +124,7 @@
 			if(+mouvement_montant < 0){
 				mouvement_montant = mouvement_montant.slice(1);
 			}
-			
+
 			var total = 0;
 			$.each($('.montant'), function( index, value ) {
 				var montant=$(this).val();
@@ -142,9 +142,8 @@
 			}
 		}
 
-	   
+
 
 
 	});
 </script>
-

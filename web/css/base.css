@@ -144,6 +144,12 @@ body.modal-open .dateInput {
      animation: spin 2s linear infinite;
  }
 
+ select[multiple], select[size] {
+     height: auto;
+     overflow-y: auto !important;
+     overflow-x: auto !important;
+ }
+
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
     100% { -webkit-transform: rotate(360deg); }
