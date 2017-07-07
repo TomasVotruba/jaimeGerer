@@ -393,6 +393,14 @@ class FactureController extends Controller
 		if ($form->isSubmitted() && $form->isValid()) {
 
 			$em = $this->getDoctrine()->getManager();
+
+				//supprimer les lignes du journal de vente
+				$journalVentesRepo = $em->getRepository('AppBundle:Compta\JournalVente');
+				$arr_lignes = $journalVentesRepo->findByFacture($facture);
+				foreach($arr_lignes as $ligne){
+					$em->remove($ligne);
+				}
+
 			$em->remove($facture);
 
 			$settingsRepository = $em->getRepository('AppBundle:Settings');
@@ -659,7 +667,7 @@ class FactureController extends Controller
 		if($activationCompta){
 			//ecrire dans le journal de vente
 			$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
-			$result = $journalVenteService->journalVentesAjouterFactureAction($facture);
+			$result = $journalVenteService->journalVentesAjouterFactureAction($newFacture);
 		}
 
 		$em->flush();
