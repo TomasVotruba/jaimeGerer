@@ -357,6 +357,7 @@ class DevisController extends Controller
 
 		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../web/files/crm/'.$this->getUser()->getCompany()->getId().'/devis/';
 		$nomClient = strtolower(str_ireplace(' ','', $devis->getCompte()->getNom()));
+        $nomClient = str_replace('é','e',$nomClient);
 		$fileName =$pdfFolder.$devis->getNum().'.'.$nomClient.'.pdf';
 
 		$this->get('knp_snappy.pdf')->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);
