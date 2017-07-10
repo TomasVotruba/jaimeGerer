@@ -2,6 +2,7 @@
 
 {% block content %}
 
+	{{ dump() }}
 	<div class="row">
 		<div class="col-md-12">
 			<h1>Rapport : {{ rapport.nom }}</h1>
@@ -43,7 +44,7 @@
 				<span id="iconUpload" class="glyphicon glyphicon-upload"></span>
 				Créer un segment sur mautic
 			</button>
-			<button onclick="saveProspection()" class="btn btn-primary"  title="prospection">
+			<button id="saveProspection" onclick="saveProspection()" class="btn btn-primary {% if rapport.data == null %}disabled{% endif %}"  title="prospection">
 				<span id="iconPhone" class="glyphicon glyphicon-earphone"></span>
 				Exporter vers prospection
 			</button>
@@ -277,6 +278,7 @@
 				   dataType : 'json',
 				   success : function(d, statut){ 
 						$("#alert-save-success").removeClass("hidden");
+					   	$("#saveProspection").removeClass("disabled");
 				  	}
       	 		 });
 		});
