@@ -56,9 +56,12 @@ class OpportuniteService extends ContainerAware {
     $lost = 0;
 
     foreach($list as $listItem){
-      if($listItem->isWon()){
+
+        $listItemDate = intval($listItem->getDate()->format("Y"));
+
+      if($listItem->isWon() && $listItemDate == intval($year)){
           $won++;
-      } elseif($listItem->isLost()){
+      } elseif($listItem->isLost() && $listItemDate == intval($year)){
         $lost++;
       }
     }
