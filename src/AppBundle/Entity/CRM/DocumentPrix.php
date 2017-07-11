@@ -829,7 +829,12 @@ class DocumentPrix
 
     	$totalHT = $sousTotal - $this->remise;
 
-    	$totalTTC = $totalHT+$this->taxe;
+      if($this->hasTypeProduit("Panorama")){
+        $totalTTC = $totalHT+$this->getFacturationBelge();
+      } else {
+        $totalTTC = $totalHT+$this->taxe;
+      }
+
     	return $totalTTC;
     }
 
@@ -1304,7 +1309,7 @@ class DocumentPrix
     public function hasTypeProduit($type){
 
       foreach($this->produits as $produit){
-        if($produit->getType()->getValeur() == $type){
+        if( strtoupper($produit->getType()->getValeur()) == strtoupper($type) ){
           return true;
         }
       }
@@ -1329,10 +1334,18 @@ class DocumentPrix
     /**
      * Get facturationBelgePercent
      *
-     * @return string 
+     * @return string
      */
     public function getFacturationBelgePercent()
     {
         return $this->facturationBelgePercent;
+    }
+
+    /**
+     * Get facturationBelge
+     */
+    public function getFacturationBelge()
+    {
+        return $this->getTotalHT()*$this->facturationBelgePercent;
     }
 }

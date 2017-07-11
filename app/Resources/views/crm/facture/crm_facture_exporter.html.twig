@@ -1,197 +1,259 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
+    <head>
+        <meta charset="utf-8">
         <title>Facture</title>
 
-		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="{{ app.request.schemeAndHttpHost ~ asset('css/crm_pdf.css') }}" />
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="{{ app.request.schemeAndHttpHost ~ asset('css/crm_pdf.css') }}"/>
 
-		<style>
-			thead { display: table-header-group }
-			tfoot { display: table-row-group }
-			tr { page-break-inside: avoid }
-			#echeance{ color: {{ app.user.company.color }} }
-			#produits_table tr th{
-				background-color: {{ app.user.company.color }};
-				color: #FFFFFF;
-				padding: 5px;
-				text-align: right;
-			}
-			#devis-remise, #facture-remise{ {{ app.user.company.color }} }
-			#rib{ font-size: 0.8em; font-weight: bold; color: {{ app.user.company.color }}; }
-			#pub{ border: 2px dashed  {{ app.user.company.color }}; padding: 10px; margin-top: 30px; margin-bottom: 30px; }
-		</style>
-      </head>
-      <body>
+        <style>
+            thead {
+                display: table-header-group;
+            }
+            tfoot {
+                display: table-row-group;
+            }
+            tr {
+                page-break-inside: avoid;
+            }
+            #echeance {
+                color: {{app.user.company.color}}
+            }
+            #produits_table tr th {
+                background-color: {{app.user.company.color}};
+                color: #FFFFFF;
+                padding: 5px;
+                text-align: right;
+            }
+            #devis-remise,
+            #facture-remise {
+                {{app.user.company.color}}
+            }
+            #rib {
+                font-size: 0.8em;
+                font-weight: bold;
+                color: {{app.user.company.color}};
+            }
+            #pub {
+                border:2px dashed{{app.user.company.color}};
+                padding: 10px;
+                margin-top: 30px;
+                margin-bottom: 30px;
+            }
+        </style>
+    </head>
+    <body>
 
-		<table id="coordonnees_table">
-			<tr>
-				<td>
-					<p>
-						<img src="{{ app.request.schemeAndHttpHost }}/web/upload/logo/{{ app.user.company.logo }}" alt="{{ app.user.company.nom }}" id="logo"/><br />
-						{{ app.user.company.adresse }}<br />
-						{{ app.user.company.codePostal }} {{ app.user.company.ville|upper }}<br />
-						{{ app.user.company.pays }}
-					</p>
-					<p>
-						<span class="glyphicon glyphicon-earphone"></span> {{ app.user.company.telephone }}<br />
-						Contact administratif : {{ contact_admin }} <br />
-						Gestionnaire de projet : {{ facture.userGestion }}
+        <table id="coordonnees_table">
+            <tr>
+                <td>
+                    <p>
+                        <img src="{{ app.request.schemeAndHttpHost }}/web/upload/logo/{{ app.user.company.logo }}" alt="{{ app.user.company.nom }}" id="logo"/><br/>
+                        {{ app.user.company.adresse }}<br/>
+                        {{ app.user.company.codePostal }}
+                        {{ app.user.company.ville|upper }}<br/>
+                        {{ app.user.company.pays }}
+                    </p>
+                    <p>
+                        <span class="glyphicon glyphicon-earphone"></span>
+                        {{ app.user.company.telephone }}<br/>
+                        Contact administratif :
+                        {{ contact_admin }}
+                        <br/>
+                        Gestionnaire de projet :
+                        {{ facture.userGestion }}
 
-					</p>
-				</td>
-				<td>
-					<p>
-						<strong>N° de facture : {{ facture.num }}</strong><br />
-						N° bon de commande {{ app.user.company }} : {{ facture.numBCInterne }}<br />
-						{% if facture.numBCClient is not null %}
-							N° bon de commande {{ facture.compte }} : {{ facture.numBCClient }}
-						{% endif %}
-					</p>
-					<p>
-						Date : {{ facture.dateCreation|date('d/m/Y') }}
-					</p>
-				</td>
+                    </p>
+                </td>
+                <td>
+                    <p>
+                        <strong>N° de facture :
+                            {{ facture.num }}</strong><br/>
+                        N° bon de commande
+                        {{ app.user.company }}
+                        :
+                        {{ facture.numBCInterne }}<br/>
+                        {% if facture.numBCClient is not null %}
+                            N° bon de commande
+                            {{ facture.compte }}
+                            :
+                            {{ facture.numBCClient }}
+                        {% endif %}
+                    </p>
+                    <p>
+                        Date :
+                        {{ facture.dateCreation|date('d/m/Y') }}
+                    </p>
+                </td>
 
-			</tr>
+            </tr>
 
-		</table>
+        </table>
 
-		<div id="destinataire">
-			<p>
-				{{ facture.compte }}<br />
-				{{ facture.adresse }}<br />
-				{{ facture.codePostal }} {{ facture.ville|upper }}<br />
-				{{ facture.pays }}<br />
-			</p>
-		</div>
+        <div id="destinataire">
+            <p>
+                {{ facture.compte }}<br/>
+                {{ facture.adresse }}<br/>
+                {{ facture.codePostal }}
+                {{ facture.ville|upper }}<br/>
+                {{ facture.pays }}<br/>
+            </p>
+        </div>
 
-		<p>
-			<strong> Objet : {{ facture.objet }} </strong>
-		</p>
-		<p id="echeance">
-			<strong>Echéance : {{ facture.dateValidite|date('d/m/Y') }}</strong>
-		</p>
+        <p>
+            <strong>
+                Objet :
+                {{ facture.objet }}
+            </strong>
+        </p>
+        <p id="echeance">
+            <strong>Echéance :
+                {{ facture.dateValidite|date('d/m/Y') }}</strong>
+        </p>
 
-		{% if facture.contact != null %}
-			<p>
-				Contact : {{ facture.contact }}
-			</p>
-		{% endif %}
+        {% if facture.contact != null %}
+            <p>
+                Contact :
+                {{ facture.contact }}
+            </p>
+        {% endif %}
 
-		<div id="titre">
-			<h3>Facture</h3>
-			{{ facture.description|raw }}
-		</div>
+        <div id="titre">
+            <h3>Facture</h3>
+            {{ facture.description|raw }}
+        </div>
 
-		<table id="produits_table">
-			<thead>
-				<th class="produit-input-text">Nom</td>
-				<th class="produit-input-number">Tarif unitaire</td>
-				<th class="produit-input-number">Quantité</td>
-				<th class="produit-input-number">Montant</td>
-				<th class="produit-input-number">Remise</td>
-				<th class="produit-input-number">Total</td>
-			</thead>
-			<tbody>
-		    	{% for produit in facture.produits %}
-					<tr>
-						<td class="produit-input-text"><strong>{{ produit.nom }}</strong></td>
-						<td class="produit-input-number">{{ produit.tarifUnitaire|number_format(2, ',', ' ') }} €</td>
-						<td class="produit-input-number">{{ produit.quantite }}</td>
-						<td class="produit-input-number">
-							{{ produit.montant|number_format(2, ',', ' ') }} €
-						</td>
-						<td class="produit-input-number">
-							{% if produit.remise is null %}
-								-
-							{% else %}
-								{{ produit.remise|number_format(2, ',', ' ') }} €
-							{% endif %}
-						</td>
-						<td class="produit-input-number">
-							{{ produit.total|number_format(2, ',', ' ') }} €
-						</td>
-					</tr>
-					<tr>
-						<td colspan="1" class="produit-input-text">
-							{{ produit.description|raw }}
-						</td>
-						<td colspan="5">
-							&nbsp;
-						</td>
-					</tr>
-		    	{% endfor %}
-		    </tbody>
-		</table>
+        <table id="produits_table">
+            <thead>
+                <th class="produit-input-text">Nom</td>
+                <th class="produit-input-number">Tarif unitaire</td>
+                <th class="produit-input-number">Quantité</td>
+                <th class="produit-input-number">Montant</td>
+                <th class="produit-input-number">Remise</td>
+                <th class="produit-input-number">Total</td>
+            </thead>
+            <tbody>
+                {% for produit in facture.produits %}
+                    <tr>
+                        <td class="produit-input-text">
+                            <strong>{{ produit.nom }}</strong>
+                        </td>
+                        <td class="produit-input-number">{{ produit.tarifUnitaire|number_format(2, ',', ' ') }}
+                            €</td>
+                        <td class="produit-input-number">{{ produit.quantite }}</td>
+                        <td class="produit-input-number">
+                            {{ produit.montant|number_format(2, ',', ' ') }}
+                            €
+                        </td>
+                        <td class="produit-input-number">
+                            {% if produit.remise is null %}
+                                -
+                            {% else %}
+                                {{ produit.remise|number_format(2, ',', ' ') }}
+                                €
+                            {% endif %}
+                        </td>
+                        <td class="produit-input-number">
+                            {{ produit.total|number_format(2, ',', ' ') }}
+                            €
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="1" class="produit-input-text">
+                            {{ produit.description|raw }}
+                        </td>
+                        <td colspan="5">
+                            &nbsp;
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-		<div id="totaux-wrapper">
-			<table id="totaux_table">
+        <div id="totaux-wrapper">
+            <table id="totaux_table">
 
-				{% if facture.hasTypeProduit('Panorama') %}
-					<tr id="facture-ttc">
-						<td>Total</td>
-						<td>{{ facture.totalTTC|number_format(2, ',', ' ') }} €</td>
-					</tr>
+                {% if facture.hasTypeProduit('Panorama') %}
+                    <tr id="facturation-belge">
+                        <td>Facturation Belgique
+                            {{ facture.facturationBelgePercent*100 }}%
+                        </td>
+                        <td>{{ facture.facturationBelge|number_format(2, ',', ' ') }}
+                            €</td>
+                    </tr>
 
-				{% else %}
+                {% else %}
 
-					<tr id="facture-sous-total">
-						<td>Sous total</td>
-						<td>{{ facture.sousTotal|number_format(2, ',', ' ') }} €</td>
-					</tr>
-					{% if facture.remise is not null %}
-						<tr id="facture-remise">
-							<td>Remise</td>
-							<td>{{ facture.remise|number_format(2, ',', ' ') }} €</td>
-						</tr>
-					{% endif %}
-					{% if facture.taxe is not null %}
-						<tr id="facture-ht">
-							<td>Total HT</td>
-							<td>{{ facture.totalHT|number_format(2, ',', ' ') }} €</td>
-						</tr>
-						<tr id="facture-taxe">
-							<td>TVA</td>
-							<td>{{ facture.taxe|number_format(2, ',', ' ') }} €</td>
-						</tr>
-					{% endif %}
-					<tr id="facture-ttc">
-						<td>{% if facture.taxe is not null %} Total TTC {% else %} Total prix net {% endif %}</td>
-						<td>{{ facture.totalTTC|number_format(2, ',', ' ') }} €</td>
-					</tr>
+                    <tr id="facture-sous-total">
+                        <td>Sous total</td>
+                        <td>{{ facture.sousTotal|number_format(2, ',', ' ') }}
+                            €</td>
+                    </tr>
+                    {% if facture.remise is not null %}
+                        <tr id="facture-remise">
+                            <td>Remise</td>
+                            <td>{{ facture.remise|number_format(2, ',', ' ') }}
+                                €</td>
+                        </tr>
+                    {% endif %}
+                    {% if facture.taxe is not null %}
+                        <tr id="facture-ht">
+                            <td>Total HT</td>
+                            <td>{{ facture.totalHT|number_format(2, ',', ' ') }}
+                                €</td>
+                        </tr>
+                        <tr id="facture-taxe">
+                            <td>TVA</td>
+                            <td>{{ facture.taxe|number_format(2, ',', ' ') }}
+                                €</td>
+                        </tr>
+                    {% endif %}
+                {% endif %}
 
-				{% endif %}
+                <tr id="facture-ttc">
+                    <td>
+                        {% if facture.taxe is not null %}
+                            Total TTC
+                        {% elseif facture.hasTypeProduit('Panorama') %}
+                            Total
+                        {% else %}
+                            Total prix net
+                        {% endif %}
+                    </td>
+                    <td>{{ facture.totalTTC|number_format(2, ',', ' ') }}
+                        €</td>
+                </tr>
 
-			</table>
-		</div>
+            </table>
+        </div>
 
+        <hr/>
+        <div id="cgv">
+            <p>
+                <strong>Conditions</strong><br/>
+                {{ facture.cgv|raw }}</p>
+        </div>
 
-		<hr />
-		<div id="cgv">
-			<p><strong>Conditions</strong><br />
-			{{ facture.cgv|raw }}</p>
-		</div>
+        <hr/>
 
-		<hr />
+        <p id="rib">
+            RIB :
+            {{ RIB }}
+        </p>
 
-		<p id="rib">
-			RIB : {{ RIB }}
-		</p>
+        <p id="remerciement">
+            En vous remerciant pour votre achat,<br/>
+            {{ app.user.company.nom }}
+        </p>
 
-		<p id="remerciement">
-			En vous remerciant pour votre achat,<br />
-			{{ app.user.company.nom }}
-		</p>
+        <div id="pub">
 
-		<div id="pub">
+            <img src="{{ app.request.schemeAndHttpHost }}/web/upload/{{ pub.image }}"/>
+            <p>{{ pub['texte'] }}
 
-			<img src="{{ app.request.schemeAndHttpHost }}/web/upload/{{ pub.image }}" />
-			<p>{{ pub['texte'] }}
+            </div>
 
-		</div>
-
-		<p id="footer">{{ footer.valeur|raw }}</p>
-	</body>
-</html>
+            <p id="footer">{{ footer.valeur|raw }}</p>
+        </body>
+    </html>

@@ -2,410 +2,443 @@
 
 {% block content %}
 
-	<div class="row">
-		<div class="col-md-12">
-			<h1>Facture</h1>	
-		</div>
-	</div>
-	
-	<div class="row">
-		<div class="col-md-12">
-		    <p class="group-btn">
-		    	<a href="{{ path('crm_facture_editer', {'id' : facture.id }) }}"  class="btn btn-warning">
-		    		<span class="glyphicon glyphicon-pencil"></span> Modifier
-		    	</a>
-
-		    	<a href="{{ path('crm_facture_exporter', {'id' : facture.id }) }}" class="btn {% if facture.numBCInterne is null %} btn-default not-active {% else %} btn-primary {% endif %}">
-		    		<span class="glyphicon glyphicon-floppy-disk"></span> Exporter
-		    	</a>
-		    	
-		    	<a href="{{ path('crm_facture_envoyer', {'id' : facture.id }) }}"  class="btn {% if (facture.contact is null) %} btn-default not-active {% else %} {% if (facture.contact.email is null) or (facture.numBCInterne is null) %} btn-default not-active {% else %} btn-primary {% endif %}{% endif %}"  data-toggle="modal" data-target="#modal">
-			    	<span class="glyphicon glyphicon-send"></span> Envoyer par email
-			    </a>
-
-			    <a href="{{ path('crm_facture_dupliquer', {'id' : facture.id }) }}"  class="btn btn-primary">
-		    		<span class="glyphicon glyphicon-duplicate"></span> Dupliquer
-		    	</a>
-			    
-		    	<a href="{{ path('crm_facture_supprimer', {'id' : facture.id }) }}"  class="btn {% if facture.num != lastNum %} btn-default not-active {% else %} btn-danger {% endif %}">
-		    		<span class="glyphicon glyphicon-trash"></span> Supprimer
-		    	</a>
-		    </p>
-		    
-		    <p>
-		     {% if facture.numBCInterne is null %} 
-		     	<span class="s">Vous ne pouvez pas exporter ou envoyer une facture sans numéro de bon de commande interne.</span><br />
-		     {% endif %}
-		      {% if facture.contact is null  %}
-		      		<span class="s">Vous ne pouvez pas envoyer la facture car le contact n'est pas renseigné.</span>
-		      {% else %}
-			      {% if facture.contact.email is null %} 
-			     	<span class="s">Vous ne pouvez pas envoyer la facture car l'adresse email du contact n'est pas renseignée.</span>
-			     {% endif %}
-			  {% endif %}
-		     </p>
-		     
-	    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Facture</h1>
+        </div>
     </div>
-    
-      <div class="row">
-		<div class="col-md-12">
-			{% for flashMessage in app.session.flashbag.get('success') %}
-			    <div class="alert alert-success">
-			        {{ flashMessage }}
-			    </div>
-			{% endfor %}
-			{% for flashMessage in app.session.flashbag.get('danger') %}
-			    <div class="alert alert-danger">
-			        {{ flashMessage }}
-			    </div>
-			{% endfor %}
-		</div>
-	</div>
 
-	    <div class="row" id="facture_details"> 	
-	    	<div class="col-md-12">
-	    		<h2>{{ facture.objet }}</h2>
-	    	</div>
-	    </div>
-	    <div class="row">
-	    	<div class="col-md-6">
-	    		<table class="contact-view-table">
-	    			<tbody>
-	    				<tr>
-	    					<td>Gestionnaire de la facture</td> 
-				    		<td>
-								{{ facture.userGestion }}
-								{% if facture.userGestion.enabled == false %}
-					    			<a tabindex="0" role="button" data-toggle="popover" data-trigger="hover" title="Utilisateur inactif" data-content="Cet utilisateur est inactif. Vous devriez changer le gestionnaire de la facture."><span class="glyphicon glyphicon-warning-sign red"></span></a>
-					    		{% endif %}		
-				    		</td>
-	    				</tr>
-	    				<tr>
-	    					<td>Numéro de facture</td> 
-				    		<td>
-								{{ facture.num }}			
-				    		</td>
-	    				</tr>
-	    				<tr>
-	    					<td>Date de validité</td> 
-				    		<td>
-								{{ facture.dateValidite|date("d/m/Y") }}			
-				    		</td>
-	    				</tr>
-	    				<tr>
-	    					<td>Etat</td> 
-				    		<td>
-								{{ facture.formattedEtat }}			
-				    		</td>
-	    				</tr>
-	    				<tr>
-	    					<td>Analytique</td> 
-				    		<td>
-								{{ facture.analytique }}			
-				    		</td>
-	    				</tr>
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    	<div class="col-md-6">
-	    		<table class="contact-view-table">
-	    			<tbody>
-	    				<tr>
-	    					<td>Organisation</td> 
-				    		<td>
-								<a href="{{ path('crm_compte_voir', {'id' : facture.compte.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
-									{{ facture.compte  }}
-								</a>
-				    		</td>
-	    				</tr>
-	    				<tr>
-	    					<td>Contact</td> 
-				    		<td>
-				    			{% if facture.contact == null %}
-				    				-
-				    			{% else %}
-									<a href="{{ path('crm_contact_voir', {'id' : facture.contact.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
-										{{ facture.contact  }}
-									</a>	
+    <div class="row">
+        <div class="col-md-12">
+            <p class="group-btn">
+                <a href="{{ path('crm_facture_editer', {'id' : facture.id }) }}" class="btn btn-warning">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    Modifier
+                </a>
+
+                <a href="{{ path('crm_facture_exporter', {'id' : facture.id }) }}" class="btn {% if facture.numBCInterne is null %} btn-default not-active {% else %} btn-primary {% endif %}">
+                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                    Exporter
+                </a>
+
+                <a
+                    href="{{ path('crm_facture_envoyer', {'id' : facture.id }) }}"
+                    class="btn {% if (facture.contact is null) %} btn-default not-active {% else %} {% if (facture.contact.email is null) or (facture.numBCInterne is null) %} btn-default not-active {% else %} btn-primary {% endif %}{% endif %}"
+                    data-toggle="modal"
+                    data-target="#modal">
+                    <span class="glyphicon glyphicon-send"></span>
+                    Envoyer par email
+                </a>
+
+                <a href="{{ path('crm_facture_dupliquer', {'id' : facture.id }) }}" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-duplicate"></span>
+                    Dupliquer
+                </a>
+
+                <a href="{{ path('crm_facture_supprimer', {'id' : facture.id }) }}" class="btn {% if facture.num != lastNum %} btn-default not-active {% else %} btn-danger {% endif %}">
+                    <span class="glyphicon glyphicon-trash"></span>
+                    Supprimer
+                </a>
+            </p>
+
+            <p>
+                {% if facture.numBCInterne is null %}
+                    <span class="s">Vous ne pouvez pas exporter ou envoyer une facture sans numéro de bon de commande interne.</span><br/>
+                {% endif %}
+                {% if facture.contact is null %}
+                    <span class="s">Vous ne pouvez pas envoyer la facture car le contact n'est pas renseigné.</span>
+                {% else %}
+                    {% if facture.contact.email is null %}
+                        <span class="s">Vous ne pouvez pas envoyer la facture car l'adresse email du contact n'est pas renseignée.</span>
+                    {% endif %}
+                {% endif %}
+            </p>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('danger') %}
+                <div class="alert alert-danger">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row" id="facture_details">
+        <div class="col-md-12">
+            <h2>{{ facture.objet }}</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <table class="contact-view-table">
+                <tbody>
+                    <tr>
+                        <td>Gestionnaire de la facture</td>
+                        <td>
+                            {{ facture.userGestion }}
+                            {% if facture.userGestion.enabled == false %}
+                                <a tabindex="0" role="button" data-toggle="popover" data-trigger="hover" title="Utilisateur inactif" data-content="Cet utilisateur est inactif. Vous devriez changer le gestionnaire de la facture.">
+                                    <span class="glyphicon glyphicon-warning-sign red"></span>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Numéro de facture</td>
+                        <td>
+                            {{ facture.num }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Date de validité</td>
+                        <td>
+                            {{ facture.dateValidite|date("d/m/Y") }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Etat</td>
+                        <td>
+                            {{ facture.formattedEtat }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Analytique</td>
+                        <td>
+                            {{ facture.analytique }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <table class="contact-view-table">
+                <tbody>
+                    <tr>
+                        <td>Organisation</td>
+                        <td>
+                            <a href="{{ path('crm_compte_voir', {'id' : facture.compte.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
+                                {{ facture.compte  }}
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Contact</td>
+                        <td>
+                            {% if facture.contact == null %}
+                                -
+                            {% else %}
+                                <a href="{{ path('crm_contact_voir', {'id' : facture.contact.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
+                                    {{ facture.contact  }}
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Numéro de bon de commande interne</td>
+                        <td>
+                            {{ facture.numBCInterne  }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Numéro de bon de commande client</td>
+                        <td>
+                            {% if facture.numBCClient is not null %}
+                                {{ facture.numBCClient  }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Numéro de devis</td>
+                        <td>
+                            {% if facture.devis is not null %}
+                                <a href="{{ path('crm_devis_voir', {'id' : facture.devis.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
+                                    {{ facture.devis.num  }}
+                                </a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <hr/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <table class="contact-view-table">
+                <tbody>
+                    <tr>
+                        <td>Adresse</td>
+                        <td>
+                            {% if facture.adresse is empty %}
+                                -
+                            {% else %}
+                                {{ facture.adresse }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Code postal</td>
+                        <td>
+                            {% if facture.codePostal is empty %}
+                                -
+                            {% else %}
+                                {{ facture.codePostal }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ville</td>
+                        <td>
+                            {% if facture.ville is empty %}
+                                -
+                            {% else %}
+                                {{ facture.ville }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Région</td>
+                        <td>
+                            {% if facture.region is empty %}
+                                -
+                            {% else %}
+                                {{ facture.region }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Pays</td>
+                        <td>
+                            {% if facture.pays is empty %}
+                                -
+                            {% else %}
+                                {{ facture.pays }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6"></div>
+    </div>
+    <div class="row">
+        <hr/>
+        <div class="col-md-12 produit-collection produit-collection-voir">
+            <table>
+                <thead>
+                    <th class="produit-input-type">Type</td>
+                    <th class="produit-input-nom">Nom</td>
+                    <th class="produit-input-number">Tarif unitaire (€)</td>
+                    <th class="produit-input-number">Quantité</td>
+                    <th class="produit-input-number">Montant (€)</td>
+                    <th class="produit-input-number">Remise (€)</td>
+                    <th class="produit-input-number">Total (€)</td>
+                </thead>
+                <tbody>
+                    {% for produit in facture.produits %}
+                        {{ include('crm/produit/crm_produit_voir.html.twig', { 'produit': produit }) }}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12" id="facture-calcul-wrapper">
+            <hr/>
+
+            {% if facture.hasTypeProduit("Panorama") %}
+
+						<div id="facture-taxe-wrapper" class="form-group">
+								<span class="facture-label">Facturation Belgique</span>
+								{% if facture.facturationBelgePercent is not null %}
+										<span class="facture-montant">{{ facture.facturationBelgePercent*100 }}%</span>
+										<span class="facture-montant">{{ facture.facturationBelge }}
+												€</span>
+								{% else %}
+										<span class="facture-montant">&nbsp;</span>
+										<span class="facture-montant">-</span>
 								{% endif %}
-				    		</td>
-	    				</tr>
-	    				<tr>
-	    					<td>Numéro de bon de commande interne</td> 
-				    		<td>
-								{{ facture.numBCInterne  }}	
-				    		</td>
-	    				</tr>
-	    				<tr>
-	    					<td>Numéro de bon de commande client</td> 
-				    		<td>
-				    		{% if facture.numBCClient is not null %}
-								{{ facture.numBCClient  }}	
-							{% else %}
-								-
-							{% endif %}
-				    		</td>
-	    				</tr>
-	    					<tr>
-	    					<td>Numéro de devis</td> 
-				    		<td>
-				    		{% if facture.devis is not null %}
-								<a href="{{ path('crm_devis_voir', {'id' : facture.devis.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
-									{{ facture.devis.num  }}	
-								</a>
-							{% else %}
-								-
-							{% endif %}
-				    		</td>
-	    				</tr>
-	    					
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    </div>
-	    <div class="row">
-	    	<div class="col-md-12">
-	    		<hr />
-	    	</div>
-	    </div>
-	    <div class="row">
-	    	<div class="col-md-6">
-	    		<table class="contact-view-table">
-	    			<tbody>
-	    				<tr>
-	    					<td>Adresse</td> 
-				    		<td>
-								{% if facture.adresse is empty %}
-						    		-
-						    	{% else %}
-						    		{{ facture.adresse }}
-						    	{% endif %}
-				    		</td>
-	    				</tr>
-	    				<tr>
-	    					<td>Code postal</td>
-				    		<td>
-				    			{% if facture.codePostal is empty %}
-						    		-
-						    	{% else %}
-						    		{{ facture.codePostal }}
-						    	{% endif %}
-				    		</td>
-	    				</tr>
-	    				<tr>
-	    					<td>Ville</td> 
-				    		<td>
-				    			{% if facture.ville is empty %}
-						    		-
-						    	{% else %}
-						    		{{ facture.ville }}
-						    	{% endif %}
-				    		</td>
-	    				</tr>
-	    				<tr>
-	    					<td>Région</td> 
-				    		<td>
-				    			{% if facture.region is empty %}
-						    		-
-						    	{% else %}
-						    		{{ facture.region }}
-						    	{% endif %}
-						    </td>
-	    				</tr>
-	    				<tr>
-	    					<td>Pays</td> 
-				    		<td>
-				    			{% if facture.pays is empty %}
-						    		-
-						    	{% else %}
-						    		{{ facture.pays }}
-						    	{% endif %}
-						    </td>
-	    				</tr>
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    	<div class="col-md-6">
-	    	</div>
-	    </div>
-	     <div class="row">	
-	    	<hr />
-	    	<div class="col-md-12 produit-collection produit-collection-voir">
-		    	<table>
-					<thead>
-							<th class="produit-input-type">Type</td>
-							<th class="produit-input-nom">Nom</td>
-							<th class="produit-input-number">Tarif unitaire (€)</td>
-							<th class="produit-input-number">Quantité</td>
-							<th class="produit-input-number">Montant (€)</td>
-							<th class="produit-input-number">Remise (€)</td>
-							<th class="produit-input-number">Total (€)</td>
-					</thead>
-					<tbody>
-			    	{% for produit in facture.produits %}
-						{{ include('crm/produit/crm_produit_voir.html.twig', { 'produit': produit }) }}
-			    	{% endfor %}
-			    	</tbody>
-			    </table>
-	    	</div>
-	    </div>
-	    <div class="row">   
-	   	 	<div class="col-md-12" id="facture-calcul-wrapper">
-	    	<hr />
-	   		<div class="form-group">
-	   			<span class="facture-label">Sous total</span> 
-	   			<span class="facture-montant">{{ facture.sousTotal }} €</span>
-	   		</div>
-	    	<div class="form-group">
-	    		<span class="facture-label">Remise</span> 
-	    		<span class="facture-montant">
-	    			{% if facture.remise is not null %}
-	    				{{ facture.remise }} €
-	    			{% else %}
-	    				-
-	    			{% endif %}
-	    		</span>
-	    	</div>
-	    	<div class="form-group">
-	    		<span class="facture-label">Total HT</span> 
-	    		<span class="facture-montant">{{ facture.totalHT }} €</span>
-	    	</div>	
-		    	<div id="facture-taxe-wrapper" class="form-group">
-		    		<span class="facture-label">TVA</span>
-		    		{% if facture.taxe is not null %}
-		    			<span class="facture-montant">{{ facture.taxePercent*100 }}%</span>
-		   	 			<span class="facture-montant">{{ facture.taxe }} €</span>
-		   	 		{% else %}
-		   	 			<span class="facture-montant">&nbsp;</span>
-		   	 			<span class="facture-montant">-</span>
-		   	 		{% endif %}
-		    	</div>
-	   	 	<div class="form-group">
-	   	 		<span class="facture-label">
-	   	 			{% if facture.taxe is not null %} Total TTC {% else %} Total prix net {% endif %}
-	   	 		</span> 
-	   	 		<span class="facture-montant">{{ facture.totalTTC }} €</span>
-	   	 	</div>
-	   	 	<hr />
-	    </div>
-	</div>
-	<div class="row">	
-	    	<div class="col-md-12">
-	    		<table class="contact-view-table">
-		    		<tbody>
-		    			<tr>
-		    				<td>Conditions d'utilisation</td> 
-				    		<td>
-				    			{% if facture.cgv is empty %}
-						    		-
-						    	{% else %}
-									{{ facture.cgv|raw }}	
-						    	{% endif %}
-				    		</td> 
-		    			</tr>
-		    		</tbody>
-		    	</table> 
-	    	</div>
-	    </div>
-	    <div class="row">	
-	    	<div class="col-md-12">
-	    		<table class="contact-view-table">
-		    		<tbody>
-		    			<tr>
-		    				<td>Commentaire</td>
-				    		<td>
-				    			{% if facture.description is empty %}
-						    		-
-						    	{% else %}
-									{{ facture.description|raw }}	
-						    	{% endif %}
-				    		</td> 
-		    			</tr>
-		    		</tbody>
-		    	</table> 
-		    	<hr />
-	    	</div>
-	    </div>
-	    <div class="row">
-	    	<div class="col-md-6">
-	     		<table class="contact-view-table">
-	     			<tbody>
-	     				<tr>
-	     					<td>Créé le</td>  
-				    		<td>
-				    			{{ facture.dateCreation|date("d/m/Y") }}
-				    		</td> 
-	     				</tr>
-	     				<tr>
-	     					<td>Par</td>  
-		    				<td>
-								{{ facture.userCreation }}
-							</td>
-	     				
-	     				</tr>
-	     			</tbody>
-	     		</table>
-	     	</div>
-	     	<div class="col-md-6">
-	     		<table class="contact-view-table">
-	     			<tbody>
-	     				<tr>
-				    		<td>Modifié le</td>  
-				    		<td>
-				    			{% if facture.dateEdition is empty %}
-						    		Jamais
-						    	{% else %}
-									{{ facture.dateEdition|date("d/m/Y") }}	
-						    	{% endif %}
-				    		</td> 
-			    		</tr>
-			    		<tr>
-		    			{% if facture.userEdition is not empty %}
-				    		<td>Par</td>  
-		    				<td>
-								{{ facture.userEdition }}
-							</td>
-				    	{% endif %}
-			    		</tr>
-	     			</tbody>
-	    		</table>
-	    	</div>
-	    </div>
-	    
-{{ include('crm/priseContact/crm_prise_contact_docprix_liste_part.html.twig', {'listPriseContact': listPriseContacts, 'div_id': 'table_prises_contact'}) }}
-{{ include('compta/relance/compta_relance_liste_part.html.twig', {'listRelances': listRelances, 'div_id': 'table_relances'}) }}
+						</div>
+
+            {% else %}
+
+                <div class="form-group">
+                    <span class="facture-label">Sous total</span>
+                    <span class="facture-montant">{{ facture.sousTotal }}
+                        €</span>
+                </div>
+                <div class="form-group">
+                    <span class="facture-label">Remise</span>
+                    <span class="facture-montant">
+                        {% if facture.remise is not null %}
+                            {{ facture.remise }}
+                            €
+                        {% else %}
+                            -
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="form-group">
+                    <span class="facture-label">Total HT</span>
+                    <span class="facture-montant">{{ facture.totalHT }}
+                        €</span>
+                </div>
+                <div id="facture-taxe-wrapper" class="form-group">
+                    <span class="facture-label">TVA</span>
+                    {% if facture.taxe is not null %}
+                        <span class="facture-montant">{{ facture.taxePercent*100 }}%</span>
+                        <span class="facture-montant">{{ facture.taxe }}
+                            €</span>
+                    {% else %}
+                        <span class="facture-montant">&nbsp;</span>
+                        <span class="facture-montant">-</span>
+                    {% endif %}
+                </div>
+
+            {% endif %}
+
+            <div class="form-group">
+                <span class="facture-label">
+                    {% if facture.taxe is not null %}
+                        Total TTC
+                    {% elseif facture.hasTypeProduit("Panorama") %}
+											Total
+										{% else %}
+                        Total prix net
+                    {% endif %}
+                </span>
+                <span class="facture-montant">{{ facture.totalTTC }}
+                    €</span>
+            </div>
+            <hr/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="contact-view-table">
+                <tbody>
+                    <tr>
+                        <td>Conditions d'utilisation</td>
+                        <td>
+                            {% if facture.cgv is empty %}
+                                -
+                            {% else %}
+                                {{ facture.cgv|raw }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="contact-view-table">
+                <tbody>
+                    <tr>
+                        <td>Commentaire</td>
+                        <td>
+                            {% if facture.description is empty %}
+                                -
+                            {% else %}
+                                {{ facture.description|raw }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <table class="contact-view-table">
+                <tbody>
+                    <tr>
+                        <td>Créé le</td>
+                        <td>
+                            {{ facture.dateCreation|date("d/m/Y") }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Par</td>
+                        <td>
+                            {{ facture.userCreation }}
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <table class="contact-view-table">
+                <tbody>
+                    <tr>
+                        <td>Modifié le</td>
+                        <td>
+                            {% if facture.dateEdition is empty %}
+                                Jamais
+                            {% else %}
+                                {{ facture.dateEdition|date("d/m/Y") }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        {% if facture.userEdition is not empty %}
+                            <td>Par</td>
+                            <td>
+                                {{ facture.userEdition }}
+                            </td>
+                        {% endif %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{ include('crm/priseContact/crm_prise_contact_docprix_liste_part.html.twig', {'listPriseContact': listPriseContacts, 'div_id': 'table_prises_contact'}) }}
+    {{ include('compta/relance/compta_relance_liste_part.html.twig', {'listRelances': listRelances, 'div_id': 'table_relances'}) }}
 
 {% endblock %}
 
 {% block javascripts %}
-	{{ parent() }}
-	<script type="text/javascript">
-		$(document).ready( function () {    
-			$('#table_contacts').DataTable({
-					language : {                
-						"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"            
-					},
-					paging : false,
-				    info: false,
-				    searching: false,
-					fnDrawCallback: function () {
-					  $( 'a', this.fnGetNodes() ).tooltip( {
-						"delay": 0,
-						"track": true,
-						"fade": 250,
-						"tooltipClass": 'btn btn-default',
-					  } );
-					},
-					fnInitComplete: function () {
-					  $( 'a', this.fnGetNodes() ).tooltip( {
-						"delay": 0,
-						"track": true,
-						"fade": 250,
-						"tooltipClass": 'btn btn-default',
-					  } );
-					},
-			});
-		});
-	</script>
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#table_contacts').DataTable({
+                language: {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"
+                },
+                paging: false,
+                info: false,
+                searching: false,
+                fnDrawCallback: function() {
+                    $('a', this.fnGetNodes()).tooltip({"delay": 0, "track": true, "fade": 250, "tooltipClass": 'btn btn-default'});
+                },
+                fnInitComplete: function() {
+                    $('a', this.fnGetNodes()).tooltip({"delay": 0, "track": true, "fade": 250, "tooltipClass": 'btn btn-default'});
+                }
+            });
+        });
+    </script>
 {% endblock %}

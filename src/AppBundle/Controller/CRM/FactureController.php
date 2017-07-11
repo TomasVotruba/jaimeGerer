@@ -445,7 +445,7 @@ class FactureController extends Controller
 		$contactAdmin = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'CONTACT_ADMINISTRATIF', 'company'=>$this->getUser()->getCompany()));
 		$rib = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'RIB', 'company'=>$this->getUser()->getCompany()));
 
-		return $this->render('crm/facture/crm_facture_exporter.html.twig',array(
+		$html = $this->renderView('crm/facture/crm_facture_exporter.html.twig',array(
 				'facture' => $facture,
 				'footer' => $footerfacture,
 				'pub' => $arr_pub,
