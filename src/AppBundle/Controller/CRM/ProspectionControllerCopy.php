@@ -739,16 +739,34 @@ class ProspectionControllerCopy extends Controller
     }
 
     /**
-     * @Route("/crm/prospection/change_rapports/{prospectionId}", name="crm_change_rapport")
+     * @Route("/crm/prospection/change_rapports", name="crm_change_rapport")
      */
-    public function changeRapports($prospectionId)
+    public function changeRapports(Request $request)
     {
+        $jsonContacts = $request->getContent();
+
+        $ajaxData = json_decode($jsonContacts);
+
+        $id = $ajaxData->id;
+
+
+
         $em = $this->getDoctrine()->getManager();
 
-        $prospectionRepo = $em->getRepository('AppBundle:CRM\Prospection');
-        $prospection = $prospectionRepo->find(intval($prospectionId));
+        $rapportRepo = $em->getRepository('AppBundle:CRM\Rapport');
+        $rapport = $rapportRepo->find(intval($id));
 
-        $data = json_decode($prospection->getRapport()->getData());
+
+        $prospection = new Prospection();
+        $prospection->setNom($rapport->getNom());
+        $prospection->setCompany($this->getUser()->getCompany());
+        $prospection->setUserCreation($this->getUser());
+        $prospection->setDateCreation(new \DateTime('now'));
+
+        $em->persist($prospection);
+
+
+        $data = json_decode($rapport->getData());
 
         $newData = [];
 
@@ -764,7 +782,7 @@ class ProspectionControllerCopy extends Controller
         $prospectionService->checkIfProspectList($newData, $this->getUser(), $prospection);
 
 
-        return new Response("ok");
+        return new JsonResponse("ok");
     }
 
 

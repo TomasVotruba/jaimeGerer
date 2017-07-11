@@ -1,7 +1,6 @@
 {% extends 'crm/crm_layout.html.twig' %}
 
 {% block content %}
-
 	<div class="row">
 		<div class="col-md-12">
 			<h1>Rapport : {{ rapport.nom }}</h1>
@@ -43,6 +42,10 @@
 				<span id="iconUpload" class="glyphicon glyphicon-upload"></span>
 				Créer un segment sur mautic
 			</button>
+			<button id="saveProspection" onclick="saveProspection()" class="btn btn-primary {% if rapport.data == null %}disabled{% endif %}"  title="prospection">
+				<span id="iconPhone" class="glyphicon glyphicon-earphone"></span>
+				Exporter vers prospection
+			</button>
 			{% endif %}
 			<div id="alert-save-success" class="alert alert-success hidden">  Les modifications ont bien été enregistrées.  </div>
 			<hr />
@@ -71,6 +74,35 @@
 
 		</div>
 	</div>
+
+
+
+	<div id="modaleProspection" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Exporter vers la prospection</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-offset-4 col-md-4">
+							<h4 id="textContent"></h4>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-offset-5 col-md-4">
+							<span id="spanGlyphicon" class="glyphicon"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
 
 
 	<div class="row">
@@ -244,6 +276,7 @@
 				   dataType : 'json',
 				   success : function(d, statut){ 
 						$("#alert-save-success").removeClass("hidden");
+					   	$("#saveProspection").removeClass("disabled");
 				  	}
       	 		 });
 		});
@@ -344,6 +377,50 @@
 			});
 		{% endif %}
 	}
+
+	function saveProspection(){
+
+
+        var data = {{ arr_obj|json_encode|raw }};
+        var strData = JSON.stringify(data);
+        var sentData = { id: "{{ rapport.id }}" };
+        sentData =  JSON.stringify(sentData);
+
+
+
+
+        var spanIcn = document.getElementById('spanGlyphicon');
+        var divContent = document.getElementById('textContent');
+
+
+        $.ajax({
+            url: "{{ path('crm_change_rapport') }}",
+            method: 'POST',
+            data: sentData,
+            dataType : 'json',
+            success : function(data, statut){
+
+                spanIcn.classList.remove('glyphicon-remove');
+                spanIcn.classList.add('glyphicon-ok');
+                divContent.textContent("Export effectué avec succès");
+
+                $('#modaleProspection').modal('show');
+            },
+            error : function(){
+
+                spanIcn.classList.remove('glyphicon-ok');
+                spanIcn.classList.add('glyphicon-remove');
+                divContent.textContent("Une erreur s'est produite durant l'export");
+
+                $('#modaleProspection').modal('show');
+
+            }
+        });
+
+	}
+
+
+
 
 
 	</script>
