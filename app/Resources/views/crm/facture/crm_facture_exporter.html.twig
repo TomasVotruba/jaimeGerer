@@ -128,30 +128,41 @@
 
 		<div id="totaux-wrapper">
 			<table id="totaux_table">
-				<tr id="facture-sous-total">
-					<td>Sous total</td>
-					<td>{{ facture.sousTotal|number_format(2, ',', ' ') }} €</td>
-				</tr>
-				{% if facture.remise is not null %}
-					<tr id="facture-remise">
-						<td>Remise</td>
-						<td>{{ facture.remise|number_format(2, ',', ' ') }} €</td>
+
+				{% if facture.hasTypeProduit('Panorama') %}
+					<tr id="facture-ttc">
+						<td>Total</td>
+						<td>{{ facture.totalTTC|number_format(2, ',', ' ') }} €</td>
 					</tr>
+
+				{% else %}
+
+					<tr id="facture-sous-total">
+						<td>Sous total</td>
+						<td>{{ facture.sousTotal|number_format(2, ',', ' ') }} €</td>
+					</tr>
+					{% if facture.remise is not null %}
+						<tr id="facture-remise">
+							<td>Remise</td>
+							<td>{{ facture.remise|number_format(2, ',', ' ') }} €</td>
+						</tr>
+					{% endif %}
+					{% if facture.taxe is not null %}
+						<tr id="facture-ht">
+							<td>Total HT</td>
+							<td>{{ facture.totalHT|number_format(2, ',', ' ') }} €</td>
+						</tr>
+						<tr id="facture-taxe">
+							<td>TVA</td>
+							<td>{{ facture.taxe|number_format(2, ',', ' ') }} €</td>
+						</tr>
+					{% endif %}
+					<tr id="facture-ttc">
+						<td>{% if facture.taxe is not null %} Total TTC {% else %} Total prix net {% endif %}</td>
+						<td>{{ facture.totalTTC|number_format(2, ',', ' ') }} €</td>
+					</tr>
+
 				{% endif %}
-				{% if facture.taxe is not null %}
-				<tr id="facture-ht">
-					<td>Total HT</td>
-					<td>{{ facture.totalHT|number_format(2, ',', ' ') }} €</td>
-				</tr>
-				<tr id="facture-taxe">
-					<td>TVA</td>
-					<td>{{ facture.taxe|number_format(2, ',', ' ') }} €</td>
-				</tr>
-				{% endif %}
-				<tr id="facture-ttc">
-					<td>{% if facture.taxe is not null %} Total TTC {% else %} Total prix net {% endif %}</td>
-					<td>{{ facture.totalTTC|number_format(2, ',', ' ') }} €</td>
-				</tr>
 
 			</table>
 		</div>

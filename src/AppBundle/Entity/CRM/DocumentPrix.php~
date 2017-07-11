@@ -158,6 +158,13 @@ class DocumentPrix
     private $taxePercent;
 
     /**
+     * @var decimal
+     *
+     * @ORM\Column(name="facturationBelgePercent", type="decimal", scale=4, nullable=true)
+     */
+    private $facturationBelgePercent;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="num", type="string", length=50, nullable=false)
@@ -238,6 +245,12 @@ class DocumentPrix
      * @ORM\Column(name="compta", type="boolean", nullable=true)
      */
     private $compta;
+
+    /**
+   * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Opportunite", mappedBy="devis")
+   * @ORM\JoinColumn(nullable=true)
+   */
+  private $opportunite;
 
     /**
      * Get id
@@ -820,6 +833,18 @@ class DocumentPrix
     	return $totalTTC;
     }
 
+      public function getTotalTTCAsInt(){
+        $sousTotal = 0;
+        foreach($this->produits as $produit){
+            $sousTotal+= $produit->getTotal();
+        }
+
+        $totalHT = $sousTotal - $this->remise;
+
+        $totalTTC = $totalHT+$this->taxe;
+        return intval($totalTTC*100);
+    }
+
     public function getTotalHTMoinsAvoirs(){
       return $this->getTotalHT()-$this->getTotalAvoirsHT();
     }
@@ -836,6 +861,16 @@ class DocumentPrix
     	}
     	return $total;
     }
+
+    public function getTotalRapprocheAsInt(){
+
+        $total = 0;
+        foreach($this->rapprochements as $rapprochement){
+            $total+= $rapprochement->getMouvementBancaire()->getMontant()*100;
+        }
+        return intval($total);
+    }
+
 
     public function getTotalAvoirs(){
 
@@ -1082,17 +1117,20 @@ class DocumentPrix
 
     	 }
     }
-	public function setId($id) {
-		$this->id = $id;
-		return $this;
-	}
-	public function getAnalytique() {
-		return $this->analytique;
-	}
-	public function setAnalytique($analytique) {
-		$this->analytique = $analytique;
-		return $this;
-	}
+
+  	public function setId($id) {
+  		$this->id = $id;
+  		return $this;
+  	}
+
+  	public function getAnalytique() {
+  		return $this->analytique;
+  	}
+
+  	public function setAnalytique($analytique) {
+  		$this->analytique = $analytique;
+  		return $this;
+  	}
 
 
 	/**
@@ -1237,5 +1275,41 @@ class DocumentPrix
         }
       }
       return $arr_relances;
+    }
+
+    /**
+     * Set opportunite
+     *
+     * @param \AppBundle\Entity\CRM\Opportunite $opportunite
+     * @return DocumentPrix
+     */
+    public function setOpportunite(\AppBundle\Entity\CRM\Opportunite $opportunite = null)
+    {
+        $this->opportunite = $opportunite;
+
+        return $this;
+    }
+
+    /**
+     * Get opportunite
+     *
+     * @return \AppBundle\Entity\CRM\Opportunite
+     */
+    public function getOpportunite()
+    {
+        return $this->opportunite;
+    }
+
+
+    public function hasTypeProduit($type){
+
+      foreach($this->produits as $produit){
+        if($produit->getType()->getValeur() == $type){
+          return true;
+        }
+      }
+
+      return false;
+
     }
 }

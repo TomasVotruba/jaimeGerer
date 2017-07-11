@@ -13,14 +13,14 @@ class FactureType extends AbstractType
 {
 	protected $userGestionId;
 	protected $companyId;
-	
+
 	public function __construct ($userGestionId = null, $companyId = null)
 	{
 		$this->userGestionId = $userGestionId;
 		$this->companyId = $companyId;
 	}
-	
-	
+
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -112,9 +112,9 @@ class FactureType extends AbstractType
              		'required' => true,
              		'mapped' => false,
              		'label' => 'Organisation',
-             		'attr' => array('class' => 'typeahead-compte')
+             		'attr' => array('class' => 'typeahead-compte', 'autocomplete' => 'off')
              ))
-              
+
              ->add('compte', 'hidden', array(
              		'required' => true,
              		'attr' => array('class' => 'entity-compte')
@@ -125,10 +125,10 @@ class FactureType extends AbstractType
 		        		'label' => 'Contact',
 		        		'attr' => array('class' => 'typeahead-contact')
 		        ))
-		        
+
 		        ->add('contact', 'hidden', array(
 		        		'required' => true,
-		        		'attr' => array('class' => 'entity-contact')
+		        		'attr' => array('class' => 'entity-contact', 'autocomplete' => 'off')
 		        ))
            	->add('devis', 'entity', array(
            			'class'=> 'AppBundle\Entity\CRM\DocumentPrix',
@@ -175,6 +175,21 @@ class FactureType extends AbstractType
            			'label' => 'TVA',
            			'attr' => array('class' => 'facture-taxe-percent'),
            	))
+						->add('facturationBelge', 'number', array(
+								'required' => false,
+								'precision' => 2,
+								'label_attr' => array('class' => 'hidden'),
+								'attr' => array('class' => 'facturation-belgique'),
+								'read_only' => true,
+								'mapped' => false
+						))
+						->add('facturationBelgePercent', 'percent', array(
+								'required' => false,
+								'type' => 'fractional',
+								'precision' => 2,
+								'label' => 'Facturation Belgique',
+								'attr' => array('class' => 'facturation-belgique-percent'),
+						))
            	->add('totalHT', 'number', array(
            			'required' => false,
            			'label' => 'Total HT',
@@ -207,7 +222,7 @@ class FactureType extends AbstractType
            			},
            	))
         ;
-             
+
       }
 
     /**
@@ -227,5 +242,5 @@ class FactureType extends AbstractType
     {
         return 'appbundle_crm_facture';
     }
-    
+
 }

@@ -158,6 +158,13 @@ class DocumentPrix
     private $taxePercent;
 
     /**
+     * @var decimal
+     *
+     * @ORM\Column(name="facturationBelgePercent", type="decimal", scale=4, nullable=true)
+     */
+    private $facturationBelgePercent;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="num", type="string", length=50, nullable=false)
@@ -1110,17 +1117,20 @@ class DocumentPrix
 
     	 }
     }
-	public function setId($id) {
-		$this->id = $id;
-		return $this;
-	}
-	public function getAnalytique() {
-		return $this->analytique;
-	}
-	public function setAnalytique($analytique) {
-		$this->analytique = $analytique;
-		return $this;
-	}
+
+  	public function setId($id) {
+  		$this->id = $id;
+  		return $this;
+  	}
+
+  	public function getAnalytique() {
+  		return $this->analytique;
+  	}
+
+  	public function setAnalytique($analytique) {
+  		$this->analytique = $analytique;
+  		return $this;
+  	}
 
 
 	/**
@@ -1283,10 +1293,46 @@ class DocumentPrix
     /**
      * Get opportunite
      *
-     * @return \AppBundle\Entity\CRM\Opportunite 
+     * @return \AppBundle\Entity\CRM\Opportunite
      */
     public function getOpportunite()
     {
         return $this->opportunite;
+    }
+
+
+    public function hasTypeProduit($type){
+
+      foreach($this->produits as $produit){
+        if($produit->getType()->getValeur() == $type){
+          return true;
+        }
+      }
+
+      return false;
+
+    }
+
+    /**
+     * Set facturationBelgePercent
+     *
+     * @param string $facturationBelgePercent
+     * @return DocumentPrix
+     */
+    public function setFacturationBelgePercent($facturationBelgePercent)
+    {
+        $this->facturationBelgePercent = $facturationBelgePercent;
+
+        return $this;
+    }
+
+    /**
+     * Get facturationBelgePercent
+     *
+     * @return string 
+     */
+    public function getFacturationBelgePercent()
+    {
+        return $this->facturationBelgePercent;
     }
 }

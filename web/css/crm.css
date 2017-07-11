@@ -195,7 +195,7 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 	width: 50px;
 }
 
-.devis-sous-total, .devis-remise, .devis-taxe, .devis-taxe-percent, .devis-total-ht, .devis-total-ttc, .facture-sous-total, .facture-remise, .facture-taxe, .facture-taxe-percent, .facture-total-ht, .facture-total-ttc{
+.devis-sous-total, .devis-remise, .devis-taxe, .devis-taxe-percent, .devis-total-ht, .devis-total-ttc, .facture-sous-total, .facture-remise, .facture-taxe, .facture-taxe-percent, .facture-total-ht, .facture-total-ttc, .facturation-belgique{
 	width: 100px !important;
 }
 
@@ -225,30 +225,27 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 	clear: both;
 }
 
-#devis-taxe-wrapper, #facture-taxe-wrapper{
+#devis-taxe-wrapper, #facture-taxe-wrapper, #totaux-wrapper-belgique{
 	clear: both;
 	float: right;
 }
 
-#devis-taxe-wrapper .form-group, #facture-taxe-wrapper .form-group{
+#devis-taxe-wrapper .form-group, #facture-taxe-wrapper .form-group, #totaux-wrapper-belgique .form-group{
 	display: inline-block;
 	vertical-align: bottom;
-}
-
-#devis-taxe-wrapper .form-group, #facture-taxe-wrapper .form-group{
 	float:left;
 }
 
-#devis-taxe-wrapper .form-group div.input-group, #facture-taxe-wrapper .form-group div.input-group{
+#devis-taxe-wrapper .form-group div.input-group, #facture-taxe-wrapper .form-group div.input-group, #totaux-wrapper-belgique .form-group div.input-group{
 	padding-right: 5px;
 	width: 140px;
 }
 
-#devis-taxe-wrapper .form-group:first-of-type, #facture-taxe-wrapper .form-group:first-of-type{
+#devis-taxe-wrapper .form-group:first-of-type, #facture-taxe-wrapper .form-group:first-of-type, #totaux-wrapper-belgique .form-group:first-of-type{
 	display: inline;
 }
 
-#devis-taxe-wrapper .form-group:last-of-type, #facture-taxe-wrapper .form-group:last-of-type{
+#devis-taxe-wrapper .form-group:last-of-type, #facture-taxe-wrapper .form-group:last-of-type, #totaux-wrapper-belgique .form-group:last-of-type{
 	padding-top: 25px;
 	clear: none;
 }

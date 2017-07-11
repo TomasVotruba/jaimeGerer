@@ -295,7 +295,8 @@ class FactureController extends Controller
 		}
 
 		return $this->render('crm/facture/crm_facture_ajouter.html.twig', array(
-				'form' => $form->createView()
+				'form' => $form->createView(),
+				'facture' => $facture
 		));
 	}
 
@@ -376,7 +377,8 @@ class FactureController extends Controller
 		}
 
 		return $this->render('crm/facture/crm_facture_editer.html.twig', array(
-				'form' => $form->createView()
+				'form' => $form->createView(),
+				'facture' => $facture
 		));
 	}
 
@@ -427,9 +429,6 @@ class FactureController extends Controller
 	 */
 	public function factureExporterAction(DocumentPrix $facture)
 	{
-		//~ if( is_null($facture->getNumBCInterne()) )
-		//~ { echo "hich"; }
-		//~ var_dump($facture); exit;
 		if( is_null($facture->getNumBCInterne()) )
 		{
 			return $this->redirect($this->generateUrl(
@@ -446,7 +445,7 @@ class FactureController extends Controller
 		$contactAdmin = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'CONTACT_ADMINISTRATIF', 'company'=>$this->getUser()->getCompany()));
 		$rib = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'RIB', 'company'=>$this->getUser()->getCompany()));
 
-		$html = $this->renderView('crm/facture/crm_facture_exporter.html.twig',array(
+		return $this->render('crm/facture/crm_facture_exporter.html.twig',array(
 				'facture' => $facture,
 				'footer' => $footerfacture,
 				'pub' => $arr_pub,
