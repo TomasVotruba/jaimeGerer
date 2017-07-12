@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Compta\CompteBancaire;
 
 use AppBundle\Form\Compta\MouvementBancaireType;
+use AppBundle\Form\Compta\UploadReleveBancaireType;
+use AppBundle\Form\Compta\UploadReleveBancaireMappingType;
 
 class ReleveBancaireController extends Controller
 {
