@@ -16,7 +16,7 @@
 	<div class="row">
 		<div class="col-md-12">
 		    <p>
-		    	<a href="{{ path('compta_releve_bancaire_importer') }}" class="btn btn-success">
+		    	<a href="{{ path('compta_releve_bancaire_importer_form') }}" class="btn btn-success">
 		    		<span class="glyphicon glyphicon-import"></span> Importer
 		    	</a>
 		    </p>
@@ -165,7 +165,7 @@
 	<div class="row">
 		<div class="col-md-3"></div>
 		<div class="col-md-9 align-bottom">
-			<p class="align-right xl">Solde : <span id="solde"></span> €</p>
+			<p class="align-right xl">Solde : <span id="solde"></span></p>
 		</div>
 	</div>
 
@@ -205,6 +205,7 @@
 	<script src="{{ asset('js/jquery.comiseo.daterangepicker.js') }}"></script>
 	<script src="{{ asset('js/datepicker-fr.js') }}"></script>
 	<script src="{{ asset('js/dateFilterConfig.js') }}"></script>
+	<script src="{{ asset('js/accounting.min.js') }}"></script>
 	<script type="text/javascript">
 		$(document).ready( function () {
 
@@ -247,7 +248,7 @@
 
 			function loadSolde(id){
 				var soldes = {{ arr_soldes|json_encode|raw }};
-				$('#solde').html(soldes[id]);
+				$('#solde').html(accounting.formatMoney(soldes[id], { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 }));
 				if(soldes[id] > 0){
 					$('#solde').removeClass("red");
 					$('#solde').addClass("green");

@@ -59,12 +59,9 @@ class ReleveBancaireController extends Controller
 
 		/*pour afficher le solde du compte bancaire*/
 		$arr_soldes_id = array();
-		//var_dump($arr_comptesBancaires); exit;
 		$soldeRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\SoldeCompteBancaire');
 		foreach($arr_comptesBancaires as $compteBancaire){
-			//var_dump($compteBancaire); exit;
 			$solde = $soldeRepo->findLatest($compteBancaire);
-			//var_dump($solde); exit;
 			$arr_soldes_id[$compteBancaire->getId()] = $solde->getMontant();
 		}
 
@@ -189,9 +186,7 @@ class ReleveBancaireController extends Controller
 		$FiltreReleveBancaire = $arr_filtres;
 		$FiltreReleveBancaire['id'] = $id;
 		$session->set('FiltreReleveBancaire', $FiltreReleveBancaire);
-		//var_dump($arr_filtres); exit;
-
-		//var_dump($arr_filtres); exit;
+	
 		//affichage de la liste des mouvements bancaires du compte
 		$mouvementRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\MouvementBancaire');
 
@@ -247,7 +242,6 @@ class ReleveBancaireController extends Controller
 				}
 			}
 			$arr_mouvementsBancaires = $arr_mouvementsBancaires_prefiltre;
-			//var_dump($arr_mouvementsBancaires); exit;
 		}
 
 		return $this->render('compta/releve_bancaire/compta_releve_bancaire_voir.html.twig', array(
@@ -256,166 +250,9 @@ class ReleveBancaireController extends Controller
 	}
 
 	/**
-	 * @Route("/compta/mouvement-bancaire/rapprocher/{id}/{type}/{piece}", name="compta_mouvement_bancaire_rapprocher", options={"expose"=true})
+	 * @Route("/compta/releve-bancaire/importer/form", name="compta_releve_bancaire_importer_form")
 	 */
-	public function mouvementBancaireRapprocherAction(MouvementBancaire $mouvementBancaire, $type, $piece)
-	{
-		//mise à jour du mouvement bancaire
-		$mouvementBancaire->setType($type);
-		$em = $this->getDoctrine()->getManager();
-		$em->persist($mouvementBancaire);
-
-		//creation et hydratation du rapprochement bancaire
-		$rapprochement = new Rapprochement();
-		$rapprochement->setDate(new \DateTime(date('Y-m-d')));
-		$rapprochement->setMouvementBancaire($mouvementBancaire);
-		$s_piece = ''; //string pour l'affichage dans le tableau du relevé bancaire
-		switch($type){
-			case 'DEPENSE' :
-				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
-				$depense = $repo->find($piece);
-				$rapprochement->setDepense($depense);
-				$piece = $depense;
-				$s_piece =  $piece->getCompte()->getNom().' : '.$piece->getTotalTTC().' € TTC';
-				$depense->setEtat('RAPPROCHE');
-				$em->persist($depense);
-				break;
-			case 'FACTURE' :
-				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
-				$facture = $repo->find($piece);
-				$rapprochement->setFacture($facture);
-				$piece = $facture;
-				$s_piece =  $piece->getNum().' : '.$piece->getTotalTTC().' € TTC';
-				$facture->setEtat('RAPPROCHE');
-				$em->persist($facture);
-				break;
-			case 'ACCOMPTE' :
-				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Accompte');
-				$accompte = $repo->find($piece);
-				$rapprochement->setAccompte($accompte);
-				$piece = $accompte;
-				$s_piece = $accompte->__toString();
-				break;
-			case 'AVOIR-FOURNISSEUR' :
-				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
-				$avoir = $repo->find($piece);
-				$rapprochement->setAvoir($avoir);
-				$piece = $avoir;
-				$s_piece = $avoir->__toString();
-				break;
-			case 'AVOIR-CLIENT' :
-				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
-				$avoir = $repo->find($piece);
-				$rapprochement->setAvoir($avoir);
-				$piece = $avoir;
-				$s_piece = $avoir->__toString();
-				break;
-			case 'REMISE-CHEQUES' :
-				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\RemiseCheque');
-				$remiseCheque = $repo->find($piece);
-				$rapprochement->setRemiseCheque($remiseCheque);
-				$piece = $remiseCheque;
-				$s_piece = $remiseCheque->__toString();
-				break;
-			case 'AFFECTATION-DIVERSE-VENTE' :
-				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\AffectationDiverse');
-				$affectationDiverse = $repo->find($piece);
-				$rapprochement->setAffectationDiverse($affectationDiverse);
-				$piece = $affectationDiverse;
-				$s_piece = $affectationDiverse->__toString();
-				break;
-			case 'AFFECTATION-DIVERSE-ACHAT' :
-				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\AffectationDiverse');
-				$affectationDiverse = $repo->find($piece);
-				$rapprochement->setAffectationDiverse($affectationDiverse);
-				$piece = $affectationDiverse;
-				$s_piece = $affectationDiverse->__toString();
-				break;
-			case 'NOTE-FRAIS' :
-				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:NDF\NoteFrais');
-				$noteFrais = $repo->find($piece);
-				$rapprochement->setNoteFrais($noteFrais);
-				$piece = $noteFrais;
-				$s_piece = $noteFrais->__toString();
-				$noteFrais->setEtat('RAPPROCHE');
-				$em->persist($noteFrais);
-				break;
-		}
-
-		$em->persist($rapprochement);
-
-
-		//faut-il supprimer l'objet des dropdowns ?
-		$b_remove = true;
-		if($type != 'AFFECTATION-DIVERSE-VENTE' && $type != 'AFFECTATION-DIVERSE-ACHAT'){
-			if($piece->getTotalRapproche() < $piece->getTotalTTC()){
-				$b_remove = false;
-			}
-		}
-
-		try{
-			$journalBanqueService = $this->container->get('appbundle.compta_journal_banque_controller');
-			$journalBanqueService->journalBanqueAjouterAction($type, $rapprochement);
-			$em->flush();
-
-		} catch(\Exception $e){
-			throw $e;
-		}
-
-		return new JsonResponse(array(
-			'piece_id' => $piece->getId(),
-			's_piece' => $s_piece,
-			'remove' => $b_remove
-		));
-	}
-
-	/**
-	 * @Route("/compta/rapprochement/supprimer/{id}", name="compta_rapprochement_supprimer", options={"expose"=true})
-	 */
-	public function rapprochementSupprimerAction(Rapprochement $rapprochement)
-	{
-		$em = $this->getDoctrine()->getManager();
-
-		//supprimer les lignes du journal de banque
-		$mouvement = $rapprochement->getMouvementBancaire();
-		$journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
-
-		$arr_journalBanque = $journalBanqueRepo->findByMouvementBancaire($mouvement);
-		foreach($arr_journalBanque as $ligneJournal){
-			$em->remove($ligneJournal);
-		}
-
-		$mouvement->setType(null);
-		$em->persist($mouvement);
-
-		if($rapprochement->getDepense()){
-			$depense = $rapprochement->getDepense();
-			$depense->setEtat("ENREGISTRE");
-			$em->persist($depense);
-		}
-		if($rapprochement->getFacture()){
-			$facture = $rapprochement->getFacture();
-			$facture->setEtat("ENREGISTRE");
-			$em->persist($facture);
-		}
-		if($rapprochement->getNoteFrais()){
-			$ndf = $rapprochement->getNoteFrais();
-			$ndf->setEtat("ENREGISTRE");
-			$em->persist($ndf);
-		}
-
-		//supprimer le rapprochement
-		$em->remove($rapprochement);
-
-		$em->flush();
-
-		return new JsonResponse();
-	}
-
-	/**
-	 * @Route("/compta/releve-bancaire/importer", name="compta_releve_bancaire_importer")
-	 */
-	public function releveBancaireImporterAction()
+	public function releveBancaireImporterFormAction()
 	{
 		$form = $this->createForm(new UploadReleveBancaireType($this->getUser()->getCompany()));
 
@@ -468,9 +305,8 @@ class ReleveBancaireController extends Controller
 			$arr_soldes_id[$compteBancaire->getId()] = $solde->getMontant();
 		}
 
-		return $this->render('compta/releve_bancaire/compta_releve_bancaire_importer.html.twig', array(
+		return $this->render('compta/releve_bancaire/compta_releve_bancaire_importer_form.html.twig', array(
 			'form' => $form->createView(),
-			'etape' => 1, //1 : upload du fichier - 2 : mapping
 			'arr_soldes' => $arr_soldes_id
 		));
 	}
@@ -482,7 +318,8 @@ class ReleveBancaireController extends Controller
 	{
 		$request = $this->getRequest();
 		$session = $request->getSession();
-
+		$em = $this->getDoctrine()->getManager();
+		
 		//recuperation et ouverture du fichier temporaire uploadé
 		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/releve_bancaire';
 		$filename = $session->get('import_releve_filename');
@@ -497,6 +334,7 @@ class ReleveBancaireController extends Controller
 			$arr_headers = explode(';',$row[$i]);
 			$i++;
 		}
+		fclose($fh);
 		$arr_headers = array_combine($arr_headers, $arr_headers); //pour que l'array ait les mêmes clés et valeurs
 		$form_mapping = $this->createForm(new UploadReleveBancaireMappingType($arr_headers));
 
@@ -506,194 +344,94 @@ class ReleveBancaireController extends Controller
 		if ($form_mapping->isSubmitted() && $form_mapping->isValid()) {
 			//recuperation des données du formulaire
 			$data = $form_mapping->getData();
-			$colDate =  $data['date'];
-			$colLibelle =  $data['libelle'];
-			$colCredit =  $data['credit'];
-			$colDebit =  $data['debit'];
 
-			$em = $this->getDoctrine()->getManager();
-
-			//récupération du compte bancaire
-			$repo = $em->getRepository('AppBundle:Compta\CompteBancaire');
-			$compte_bancaire_id = $session->get('import_releve_compte_bancaire_id');
-			$compteBancaire = $repo->find($compte_bancaire_id);
-
-			//parsing du CSV
-			$csv = new \parseCSV();
-			$csv->delimiter = ";";
-			$csv->encoding('ISO-8859-1', 'UTF-8');
-			$csv->parse($path.'/'.$filename);
-
-			$dateFormat = $session->get('import_releve_compte_date_format');
-			$total = 0;
-
-			//parsing ligne par ligne
-			foreach($csv->data as $data){
-
-				if($data[$colDate] == "" || $data[$colDate] == null){
-					continue;
-				}
-
-
-				if(array_key_exists($colLibelle, $data) && array_key_exists($colCredit, $data) && array_key_exists($colDebit, $data) && array_key_exists($colDate, $data) ){
-
-					//creation et hydratation du mouvement bancaire
-					$mouvement = new MouvementBancaire();
-					$mouvement->setCompteBancaire($compteBancaire);
-					$mouvement->setLibelle($data[$colLibelle]);
-
-					$date = \DateTime::createFromFormat($dateFormat, $data[$colDate]);
-					$mouvement->setDate($date);
-
-					if($data[$colCredit] > 0){
-						$montant = $data[$colCredit];
-						$montant = str_replace(',','.',$montant);
-						$montant = preg_replace('/\s+/u', '', $montant);
-
-					} else {
-						$montant = $data[$colDebit];
-						$montant = str_replace(',','.',$montant);
-						$montant = preg_replace('/\s+/u', '', $montant);
-						if($montant > 0){
-							$montant= -$montant;
-						}
-					}
-
-					$mouvement->setMontant($montant);
-					$total+=$montant;
-
-
-					$em->persist($mouvement);
-				}
-
-			}
-
-			//suppression du fichier temporaire
-			fclose($fh);
-			unlink($path.'/'.$filename);
-
-			//modification du solde du compte bancaire
-			$soldeRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\SoldeCompteBancaire');
-			$solde = $soldeRepo->findLatest($compteBancaire);
-			$newSolde = new SoldeCompteBancaire();
-			$newSolde->setCompteBancaire($compteBancaire);
-			$newSolde->setDate(new \DateTime(date('Y-m-d')));
-			$newSolde->setMontant($solde->getMontant()+$total);
-			$em->persist($newSolde);
-
-			$em->flush();
-
-			return $this->redirect($this->generateUrl('compta_releve_bancaire_index'));
+			$session->set('import_releve_compte_col_date', $data['date']);
+			$session->set('import_releve_compte_col_libelle', $data['libelle']);
+			$session->set('import_releve_compte_col_debit', $data['debit']);
+			$session->set('import_releve_compte_col_credit', $data['credit']);
+	
+			return $this->redirect(
+				$this->generateUrl('compta_releve_bancaire_importer_validation')
+			);
 		}
 
-		return $this->render('compta/releve_bancaire/compta_releve_bancaire_importer.html.twig', array(
-				'form' => $form_mapping->createView(),
-				'etape' => 2 //1 : upload du fichier - 2 : mapping
+		return $this->render('compta/releve_bancaire/compta_releve_bancaire_importer_mapping.html.twig', array(
+			'form' => $form_mapping->createView(),
 		));
 
 	}
 
 	/**
-	 * @Route("/compta/mouvement-bancaire/scinder/{id}", name="compta_mouvement_bancaire_scinder")
+	 * @Route("/compta/releve-bancaire/importer/validation", name="compta_releve_bancaire_importer_validation")
 	 */
-	public function mouvementBancaireScinderAction(MouvementBancaire $mouvementBancaire)
-	{
-		$formBuilder = $this->createFormBuilder();
-		$formBuilder->add('mouvements', 'collection', array(
-					'type' => new MouvementBancaireType($mouvementBancaire),
-             		'allow_add' => true,
-             		'allow_delete' => true,
-             		'by_reference' => false,
-             		'label_attr' => array('class' => 'hidden')
-             ));
-		$form = $formBuilder->getForm();
+	 public function releveBancaireImporterValidationAction(){
 
-		$request = $this->getRequest();
-		$form->handleRequest($request);
+	 	$session = $this->getRequest()->getSession();
+		$releveBancaireService = $this->get('appbundle.compta_releve_bancaire_service');
+		$compteBancaireRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\CompteBancaire');
+		$soldeRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\SoldeCompteBancaire');
 
-		if ($form->isSubmitted() && $form->isValid()) {
-			$em = $this->getDoctrine()->getManager();
-			$arr_mouvements = $form->get('mouvements')->getData();
+		$compte_bancaire_id = $session->get('import_releve_compte_bancaire_id');
+		$compteBancaire = $compteBancaireRepo->find($compte_bancaire_id);
 
-			foreach($arr_mouvements as $newMouvement){
-				$newMouvement->setCompteBancaire($mouvementBancaire->getCompteBancaire());
-				if($mouvementBancaire->getMontant() < 0){
-					$montant = $newMouvement->getMontant();
-					$montant = -$montant;
-					$newMouvement->setMontant($montant);
-				}
-				$em->persist($newMouvement);
-			}
+		$filename = $session->get('import_releve_filename');
+	 	$dateFormat = $session->get('import_releve_compte_date_format');
+	 	$colDate = $session->get('import_releve_compte_col_date');
+	 	$colLibelle = $session->get('import_releve_compte_col_libelle');
+	 	$colDebit = $session->get('import_releve_compte_col_debit');
+	 	$colCredit = $session->get('import_releve_compte_col_credit');
 
-			$em->remove($mouvementBancaire);
-			$em->flush();
+		$arr_parsed = $releveBancaireService->parseReleveCSV($colDate, $colLibelle, $colDebit, $colCredit, $dateFormat, $filename, $compteBancaire);
 
-			return $this->redirect($this->generateUrl('compta_releve_bancaire_index'));
-		}
+		$ancienSolde = $soldeRepo->findLatest($compteBancaire);
+		$nouveauSolde = $ancienSolde->getMontant()+$arr_parsed['total'];
 
-		return $this->render('compta/mouvement_bancaire/compta_mouvement_bancaire_scinder_modal.html.twig', array(
-			'mouvement' => $mouvementBancaire,
-			'form' => $form->createView(),
+		return $this->render('compta/releve_bancaire/compta_releve_bancaire_importer_validation.html.twig', array(
+			'arr_mouvements' => $arr_parsed['arr_mouvements'],
+			'total' => $arr_parsed['total'],
+			'ancienSolde' => $ancienSolde->getMontant(),
+			'nouveauSolde' => $nouveauSolde,
 		));
 	}
 
 	/**
-	 * @Route("/compta/mouvement-bancaire/fusionner/{id}", name="compta_mouvement_bancaire_fusionner")
+	 * @Route("/compta/releve-bancaire/importer", name="compta_releve_bancaire_importer")
 	 */
-	public function mouvementBancaireFusionnerAction(MouvementBancaire $mouvementBancaire)
-	{
-		$em = $this->getDoctrine()->getManager();
-		$mouvementsRepo = $em->getRepository('AppBundle:Compta\MouvementBancaire');
+	 public function releveBancaireImporterAction(){
 
-		$arr_mouvements = $mouvementsRepo->findBy(
-				array('compteBancaire' => $mouvementBancaire->getCompteBancaire(), 'type' => null),
-				array('date' => 'DESC')
-		);
+	 	$session = $this->getRequest()->getSession();
+	 	$em = $this->getDoctrine()->getManager();
+		$releveBancaireService = $this->get('appbundle.compta_releve_bancaire_service');
+		$compteBancaireRepo = $em->getRepository('AppBundle:Compta\CompteBancaire');
+		$soldeRepo = $em->getRepository('AppBundle:Compta\SoldeCompteBancaire');
 
-		$arr_choices = array();
-		foreach($arr_mouvements as $mouvement){
-			if($mouvement->getId() != $mouvementBancaire->getId()){
-				$arr_choices[$mouvement->getId()] = $mouvement;
-			}
+		$compte_bancaire_id = $session->get('import_releve_compte_bancaire_id');
+		$compteBancaire = $compteBancaireRepo->find($compte_bancaire_id);
+
+		$filename = $session->get('import_releve_filename');
+	 	$dateFormat = $session->get('import_releve_compte_date_format');
+	 	$colDate = $session->get('import_releve_compte_col_date');
+	 	$colLibelle = $session->get('import_releve_compte_col_libelle');
+	 	$colDebit = $session->get('import_releve_compte_col_debit');
+	 	$colCredit = $session->get('import_releve_compte_col_credit');
+
+		$arr_parsed = $releveBancaireService->parseReleveCSV($colDate, $colLibelle, $colDebit, $colCredit, $dateFormat, $filename, $compteBancaire);
+
+		foreach($arr_parsed['arr_mouvements'] as $mouvement){
+			$em->persist($mouvement);
 		}
 
-		$formBuilder = $this->createFormBuilder();
-		$formBuilder ->add('fusion', 'choice', array(
-             		'required' => true,
-             		'label' => 'Fusionner avec :',
-					'multiple' => true,
-             		'choices' => $arr_choices,
-					'attr' => array(
-						'size' => '12'
-					)
-             ));
-		$form = $formBuilder->getForm();
+		$ancienSolde = $soldeRepo->findLatest($compteBancaire);
 
-		$request = $this->getRequest();
-		$form->handleRequest($request);
+		$newSolde = new SoldeCompteBancaire();
+		$newSolde->setCompteBancaire($compteBancaire);
+		$newSolde->setDate(new \DateTime(date('Y-m-d')));
+		$newSolde->setMontant($ancienSolde->getMontant()+$arr_parsed['total']);
+		$em->persist($newSolde);
 
-		if ($form->isSubmitted() && $form->isValid()) {
+		$em->flush();
 
-			$arr_fusion = $form->get('fusion')->getData();
-
-			$newMontant = $mouvementBancaire->getMontant();
-			foreach($arr_fusion as $fusionId){
-				$fusionMouvement = $mouvementsRepo->find($fusionId);
-				$newMontant+=$fusionMouvement->getMontant();
-				$em->remove($fusionMouvement);
-			}
-			$mouvementBancaire->setMontant($newMontant);
-			$em->persist($mouvementBancaire);
-			$em->flush();
-
-			return $this->redirect($this->generateUrl('compta_releve_bancaire_index'));
-		}
-
-		return $this->render('compta/mouvement_bancaire/compta_mouvement_bancaire_fusionner_modal.html.twig', array(
-				'mouvement' => $mouvementBancaire,
-				'form' => $form->createView(),
-		));
+		return $this->redirect($this->generateUrl('compta_releve_bancaire_index'));
 	}
-
-
+	
 }

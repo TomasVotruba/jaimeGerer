@@ -1,0 +1,78 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Importer un relevé bancaire</h1>
+
+			
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 center">
+
+			<h2>Vérifiez attentivement les informations suivantes :</h2>
+
+			<p>
+				Nombre de mouvements bancaires à importer : {{ arr_mouvements|length }}
+				<button class="btn btn-info btn-xs" type="button" data-toggle="collapse" data-target="#collapse" aria-expanded="false" aria-controls="collapseExample">
+				  Détails
+				</button> 
+
+			</p>
+			<div class="collapse" id="collapse">
+
+				<table class="table table-transparent table-striped table-bordered">
+					<thead>
+						<tr>
+							<th class="center col-md-2">Date</th>
+							<th class="align-left col-md-8">Libelle</th>
+							<th class="align-right col-md-2">Montant</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for mouvement in arr_mouvements %}
+							<tr>
+								<td class="center">{{ mouvement.date|date('d/m/Y') }}</td>
+								<td class="align-left">{{ mouvement.libelle }}</td>
+								<td class="align-right">{{ mouvement.montant|number_format(2, ',', ' ') }} €</td>
+							</tr>
+						{% endfor %}
+						<tr>
+							<td colspan="2" class="align-right"><strong>Total</strong></td>
+							<td class="align-right"><strong>{{ total|number_format(2, ',', ' ') }} €</strong></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
+			<p>Solde du compte bancaire avant import : {{ ancienSolde|number_format(2,',',' ') }} €</p>
+			<p><strong>Solde du compte bancaire après import : {{ nouveauSolde|number_format(2,',',' ') }} €</strong></p>
+
+		</div>
+	</div>
+
+	<div class="row spacer-top">
+		<div class="col-md-3"></div>
+		<div class="col-md-3 center">
+			<p>
+				Une erreur ?<br />
+				<a class="btn btn-danger" href="{{ path('compta_releve_bancaire_index') }}">
+		       		<span class="glyphicon glyphicon-chevron-left"></span> Annuler l'import
+		    	</a>
+	    	</p>
+	    </div>
+
+	    <div class="col-md-3 center">
+	    	<p>
+	    		Tout est OK !<br />
+		    	<a class="btn btn-success" href="{{ path('compta_releve_bancaire_importer') }}">
+		       		<span class="glyphicon glyphicon-ok"></span> Confirmer l'import
+		    	</a>
+		    </p>
+		</div>
+		<div class="col-md-3"></div>
+	</div>
+{% endblock %}

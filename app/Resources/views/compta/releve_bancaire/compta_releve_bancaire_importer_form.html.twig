@@ -1,0 +1,133 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Importer un relevé bancaire</h1>
+
+			<div class="alert alert-info alert-dismissible" role="alert">
+			 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<strong>Comment faire ?</strong>
+				<ul>
+					<li>Téléchargez votre relevé bancaire au format .csv sur le site de votre banque</li>
+					<li>Ouvrez le fichier .csv avec Excel</li>
+					<li>Supprimez les éventuels en-tête et pied de page. Vous ne devez garder que les noms de colonnes et les lignes à importer -
+						<a class="alert-link" href="#" data-toggle="modal" data-target="#modal-help-lines-to-remove">voir un exemple</a>
+					</li>
+					<li>Enregistrez votre fichier .csv</li>
+					<li><span class="glyphicon glyphicon-warning-sign"></span> Si vous utilisez <strong>Excel pour Mac</strong>, vous devez enregistrer votre fichier au format <strong>"CSV (Windows)" - </strong>
+						<a class="alert-link" href="#" data-toggle="modal" data-target="#modal-help-excel-mac-encoding">voir un exemple</a>
+					</li>
+					<li>Importez le fichier .csv ci-dessous</li>
+				</ul>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+		 	{{ form_start(form, {'action': path('compta_releve_bancaire_importer_form')}) }}
+			{{ form_errors(form) }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.compteBancaire) }}<br />
+		    {{ form_errors(form.compteBancaire) }}
+		    {{ form_widget(form.compteBancaire) }}
+		</div>
+		<div class="col-md-9"></div>
+	</div>
+	<div class="row">
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.solde) }}<br />
+		    {{ form_errors(form.solde) }}
+		    {{ form_widget(form.solde) }}
+		</div>
+		<div class="col-md-9"></div>
+	</div>
+	<div class="row">
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.dateFormat) }}<br />
+		    {{ form_errors(form.dateFormat) }}
+		    {{ form_widget(form.dateFormat) }}
+		</div>
+		<div class="col-md-9"></div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group">
+			   	{{ form_label(form.file) }}<br />
+			    <div class="form-errors">{{ form_errors(form.file) }}</div>
+			    {{ form_widget(form.file) }}
+			    <div class="help-block">
+						<span class="glyphicon glyphicon-info-sign"></span> Format accepté : .csv
+					</div>
+			</div>
+
+
+			 <div class="form-group">
+			 	<a class="btn" href="{{ path('compta_releve_bancaire_index') }}">
+		       		<span class="glyphicon glyphicon-chevron-left"></span>Annuler
+		   		 </a>
+			    {{ form_widget(form.submit) }}
+			</div>
+
+			{{ form_rest(form) }}
+			{{ form_end(form) }}
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block additionalModals %}
+	<div id="modal-help-lines-to-remove" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalAlert" aria-hidden="true" data-focus-on="input:first">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>Préparer votre relevé bancaire pour l'importer</h3>
+				</div>
+				<div class="modal-body center">
+					<img src="{{ asset('images/help/exemple_releve_bancaire.png') }}" alt="Lignes à supprimer du fichier .csv" />
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="modal-help-excel-mac-encoding" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalAlert" aria-hidden="true" data-focus-on="input:first">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>Préparer votre relevé bancaire pour l'importer</h3>
+				</div>
+				<div class="modal-body center">
+					<img src="{{ asset('images/help/exemple_releve_bancaire_encodage_excel_mac.png') }}" alt="Enregistrer le fichier .csv avec Excel pour Mac" />
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+		$(document).ready( function () {
+			var id = $(".compte-select").val();
+			loadSolde(id);
+
+			$(".compte-select").change(function(){
+				var id = $(this).val();
+				loadSolde(id);
+			});
+
+			function loadSolde(id){
+				var soldes = {{ arr_soldes|json_encode|raw }};
+				$('.input-solde').val(soldes[id]);
+			}
+		});
+	</script>
+{% endblock %}

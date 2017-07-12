@@ -110,3 +110,9 @@ services:
     mautic:
         class: AppBundle\Service\mautic\MauticApiService
         arguments: ["@session", %mautic_api_url%]
+
+    appbundle.compta_releve_bancaire_service:
+        class: AppBundle\Service\Compta\ReleveBancaireService
+        calls:
+            - [setContainer, ["@service_container"]]
+        arguments: [ @doctrine.orm.entity_manager, %kernel.root_dir% ]

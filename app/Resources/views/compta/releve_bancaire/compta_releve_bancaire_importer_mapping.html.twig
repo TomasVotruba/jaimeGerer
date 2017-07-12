@@ -1,0 +1,56 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Importer un relevé bancaire</h1>
+		</div>
+	</div>	
+
+	<div class="row">
+		<div class="col-md-12">
+		<p>Faites correspondre les colonnes de votre fichier aux données à importer.</p>
+		{{ form_start(form) }}
+		{{ form_errors(form) }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.date) }}<br />
+		    {{ form_errors(form.date) }}
+		    {{ form_widget(form.date) }}
+		</div>
+
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.libelle) }}<br />
+		    {{ form_errors(form.libelle) }}
+		    {{ form_widget(form.libelle) }}
+		</div>
+
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.credit) }}<br />
+		    {{ form_errors(form.credit) }}
+		    {{ form_widget(form.credit) }}
+		</div>
+
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.debit) }}<br />
+		    {{ form_errors(form.debit) }}
+		    {{ form_widget(form.debit) }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+
+		    <div class="form-group">
+		    	<a class="btn" href="{{ path('compta_releve_bancaire_index') }}">
+		       		<span class="glyphicon glyphicon-chevron-left"></span>Annuler
+		    	</a>
+			    {{ form_widget(form.submit) }}
+			</div>
+
+			{{ form_rest(form) }}
+			{{ form_end(form) }}
+		</div>
+	</div>
+{% endblock %}
