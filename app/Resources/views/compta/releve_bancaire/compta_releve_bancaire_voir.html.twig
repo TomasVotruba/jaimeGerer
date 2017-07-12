@@ -1,9 +1,9 @@
 {% for mouvement in arr_mouvements %}
 	<tr>
-		<td>{{ mouvement.date|date('d/m/Y') }}</td>
-		<td>{{ mouvement.libelle }}</td>
-		<td>{% if mouvement.montant < 0 %}{{ mouvement.montant|number_format(2, ',', ' ') }} € {% endif %}</td>
-		<td>{% if mouvement.montant >= 0 %}{{ mouvement.montant|number_format(2, ',', ' ') }} € {% endif %}</td>
+		<td class="center">{{ mouvement.date|date('d/m/Y') }}</td>
+		<td class="align-left">{{ mouvement.libelle }}</td>
+		<td class="align-right">{% if mouvement.montant < 0 %}{{ mouvement.montant|number_format(2, ',', ' ') }} € {% endif %}</td>
+		<td class="align-right">{% if mouvement.montant >= 0 %}{{ mouvement.montant|number_format(2, ',', ' ') }} € {% endif %}</td>
 	</tr>
 {% endfor %}
     			
