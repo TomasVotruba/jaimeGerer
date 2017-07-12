@@ -28,4 +28,20 @@ class MouvementBancaireRepository extends EntityRepository
 		return $result;
 
 	}
+
+	public function findByDateAndCompteBancaire($year, $month, $compteBancaire){
+
+		$result = $this->createQueryBuilder('m')
+		->where('m.date >= :dateDebut and m.date <= :dateFin')
+		->andWhere('m.compteBancaire = :compteBancaire')
+		->setParameter('compteBancaire', $compteBancaire)
+		->setParameter('dateDebut', $year.'-'.$month.'-01')
+		->setParameter('dateFin',  $year.'-'.$month.'-31')
+		->orderBy('m.date', 'ASC')
+		->getQuery()
+		->getResult();
+
+		return $result;
+
+	}
 }

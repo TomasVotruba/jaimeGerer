@@ -1,8 +1,16 @@
 {% block submenu %}
-			<div class="sub-menu">
-				<a href="{{ path('compta_releve_bancaire_index') }}" {% if app.request.pathInfo == "/compta/releve-bancaire"  %}class=" current"{% endif %}>Relevés bancaires</a> - 
-				<a href="{{ path('compta_compte_bancaire_liste') }}" {% if app.request.pathInfo == "/compta/compte-bancaire"  %}class=" current"{% endif %}>Comptes bancaires</a> - 
-				<a href="{{ path('compta_journal_banque_index') }}" {% if app.request.pathInfo == "/compta/journal-banque"  %}class=" current"{% endif %}>Journal de banque</a>
-			</div>
+    <ul class="nav nav-tabs">
+      <li {% if app.request.pathInfo == "/compta/rapprochement"  %} class="active" {% endif %}>
+        <a href="{{ path('compta_rapprochement_index') }}" >Rapprochements</a>
+      </li>
+      <li {% if app.request.pathInfo == "/compta/releve-bancaire"  %} class="active" {% endif %}>
+          <a href="{{ path('compta_releve_bancaire_index') }}">Relevés bancaires</a>
+      </li>
+      <li {% if app.request.pathInfo == "/compta/compte-bancaire"  %} class="active" {% endif %}>
+          <a href="{{ path('compta_compte_bancaire_liste') }}">Comptes bancaires</a>
+      </li>
+      <li {% if app.request.pathInfo == "/compta/journal-banque"  %} class="active" {% endif %}>
+          <a href="{{ path('compta_journal_banque_index') }}">Journal de banque</a>
+      </li>
+    </ul>
 {% endblock %}
-		

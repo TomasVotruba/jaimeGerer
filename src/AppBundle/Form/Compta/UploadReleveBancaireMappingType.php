@@ -32,16 +32,16 @@ class UploadReleveBancaireMappingType extends AbstractType
     	$debit = "";
     	foreach($this->arr_headers as $header){
     		
-    		if(strstr($header, 'Libellé')){
+    		if(strstr($header, 'Libellé') || strstr($header, 'Libelle') ){
     			$libelle = $header;
     		} 
     		if(strstr($header, 'Date') && !strstr($header, 'valeur')){
     			$date = $header;
     		} 
-    		if(strstr($header, 'Crédit')){
+    		if(strstr($header, 'Crédit') || strstr($header, 'Credit')){
     			$credit = $header;
     		}
-    		if(strstr($header, 'Débit')){
+    		if(strstr($header, 'Débit') || strstr($header, 'Debit')){
     			$debit = $header;
     		}
     	}

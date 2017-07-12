@@ -14,6 +14,230 @@ class RapprochementController extends Controller
 {
 
   /**
+   * @Route("/compta/rapprochement", name="compta_rapprochement_index")
+   */
+  public function rapprochementIndexAction()
+  {
+    /*creation du dropdown pour choisir le compte bancaire*/
+    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\CompteBancaire');
+    $arr_comptesBancaires = $repo->findByCompany($this->getUser()->getCompany());
+
+    $session = $this->getRequest()->getSession();
+    $filtreReleveBancaire = $session->get('FiltreReleveBancaire');
+    if( is_null($filtreReleveBancaire) ){
+      $filtreReleveBancaire['montant'] = 'all';
+      $filtreReleveBancaire['rapprochement'] = 'all';
+      $filtreReleveBancaire['id'] = 0;
+      $filtreReleveBancaire['dateRange'] = '';
+
+      $session->set('FiltreReleveBancaire', $filtreReleveBancaire);
+    }
+
+    $formBuilder = $this->createFormBuilder();
+    $formBuilder->add('comptes', 'entity', array(
+        'required' => true,
+        'class' => 'AppBundle:Compta\CompteBancaire',
+        'label' => 'Compte bancaire',
+        'choices' => $arr_comptesBancaires,
+        'attr' => array('class' => 'compte-select'),
+        'data' => $this->getDoctrine()->getManager()->getReference("AppBundle:Compta\CompteBancaire", $filtreReleveBancaire['id'])
+    ));
+
+
+    /*pour afficher le solde du compte bancaire*/
+    $arr_soldes_id = array();
+    $soldeRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\SoldeCompteBancaire');
+    foreach($arr_comptesBancaires as $compteBancaire){
+      $solde = $soldeRepo->findLatest($compteBancaire);
+      $arr_soldes_id[$compteBancaire->getId()] = $solde->getMontant();
+    }
+
+    /*creation des listes pour les dropdowns des objets rapprochables*/
+    //remises de cheque
+    $repoRemiseCheque = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\RemiseCheque');
+    $arr_all_remises_cheques = $repoRemiseCheque->findForCompany($this->getUser()->getCompany());
+    $arr_remises_cheques = array();
+    $arr_factures_rapprochees_par_remises_cheques = array();
+    $arr_avoirs_rapprochees_par_remises_cheques = array();
+    foreach($arr_all_remises_cheques as $remiseCheque){
+      if($remiseCheque->getTotalRapproche() < $remiseCheque->getTotal()){
+        $arr_remises_cheques[] = $remiseCheque;
+      } else {
+        foreach($remiseCheque->getCheques() as $cheque){
+          foreach($cheque->getPieces() as $piece){
+            if($piece->getFacture()){
+              $arr_factures_rapprochees_par_remises_cheques[] = $piece->getFacture()->getId();
+            }else if($piece->getAvoir()){
+              $arr_avoirs_rapprochees_par_remises_cheques[] = $piece->getFacture()->getId();
+            }
+          }
+        }
+      }
+    }
+
+    //factures
+    $repoFactures = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
+    $arr_all_factures = $repoFactures->findForCompany($this->getUser()->getCompany(), 'FACTURE', true);
+    $arr_factures = array();
+    foreach($arr_all_factures as $facture){
+      if($facture->getTotalRapproche() < $facture->getTotalTTC() && $facture->getEtat() != "PAID" && !in_array($facture->getId(), $arr_factures_rapprochees_par_remises_cheques) && $facture->getTotalAvoirs() < $facture->getTotalTTC()){
+        $arr_factures[] = $facture;
+      }
+    }
+
+    //depenses
+    $repoDepenses = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
+    $arr_all_depenses = $repoDepenses->findForCompany($this->getUser()->getCompany());
+    $arr_depenses = array();
+    foreach($arr_all_depenses as $depense){
+      if($depense->getEtat() != 'RAPPROCHE'){
+        if($depense->getTotalRapproche() < $depense->getTotalTTC()){
+          $arr_depenses[] = $depense;
+        }
+      }
+    }
+
+    //notes de frais
+    $repoNotesFrais = $this->getDoctrine()->getManager()->getRepository('AppBundle:NDF\NoteFrais');
+    $arr_all_note_frais = $repoNotesFrais->findForCompany($this->getUser()->getCompany());
+    $arr_notes_frais = array();
+    foreach($arr_all_note_frais as $ndf){
+      if($ndf->getEtat() != 'RAPPROCHE'){
+        $arr_notes_frais[] = $ndf;
+      }
+    }
+
+    //accomptes
+    $repoAccomptes = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Accompte');
+    $arr_all_accomptes = $repoAccomptes->findForCompany($this->getUser()->getCompany());
+    $arr_accomptes = array();
+    foreach($arr_all_accomptes as $accompte){
+      if($accompte->getTotalRapproche() < $accompte->getMontant()){
+        $arr_accomptes[] = $accompte;
+      }
+    }
+
+    //avoirs fournisseurs
+    $repoAvoirs = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
+    $arr_all_avoirs_fournisseurs = $repoAvoirs->findForCompany('FOURNISSEUR', $this->getUser()->getCompany());
+    $arr_avoirs_fournisseurs = array();
+    foreach($arr_all_avoirs_fournisseurs as $avoir){
+      if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !in_array($avoir->getId(), $arr_avoirs_rapprochees_par_remises_cheques)){
+        $arr_avoirs_fournisseurs[] = $avoir;
+      }
+    }
+
+    //avoirs clients
+    $arr_all_avoirs_clients = $repoAvoirs->findForCompany('CLIENT', $this->getUser()->getCompany());
+    $arr_avoirs_clients = array();
+    foreach($arr_all_avoirs_clients as $avoir){
+      if($avoir->getTotalRapproche() < $avoir->getTotalTTC()){
+        $arr_avoirs_clients[] = $avoir;
+      }
+    }
+
+    //affectations diverses vente
+    $repoAffectations = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\AffectationDiverse');
+    $arr_aff_ventes = $repoAffectations->findForCompany('VENTE', $this->getUser()->getCompany(), true);
+    //affectations diverses  achats
+    $arr_aff_achats = $repoAffectations->findForCompany('ACHAT', $this->getUser()->getCompany(), true);
+
+    return $this->render('compta/rapprochement/compta_rapprochement_index.html.twig', array(
+      'form' => $formBuilder->getForm()->createView(),
+      'arr_soldes' => $arr_soldes_id,
+      'arr_factures' => $arr_factures,
+      'arr_depenses' => $arr_depenses,
+      'arr_accomptes' => $arr_accomptes,
+      'arr_avoirs_fournisseurs' => $arr_avoirs_fournisseurs,
+      'arr_avoirs_clients' => $arr_avoirs_clients,
+      'arr_remise_cheques' => $arr_remises_cheques,
+      'arr_affectations_diverses_vente' => $arr_aff_ventes,
+      'arr_affectations_diverses_achat' => $arr_aff_achats,
+      'arr_notes_frais' => $arr_notes_frais,
+      'filtreReleveBancaire' => $filtreReleveBancaire,
+    ));
+  }
+
+  /**
+   * @Route("/compta/rapprochement/voir", name="compta_rapprochement_voir", options={"expose"=true})
+   */
+  public function rapprochementVoirAction()
+  {
+    $compteBancaireRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\CompteBancaire');
+    $id = $this->getRequest()->request->get('id');
+
+    $compteBancaire = $compteBancaireRepo->find($id);
+
+    $arr_filtres = $this->getRequest()->request->get('filtres');
+    $session = $this->getRequest()->getSession();
+    $FiltreReleveBancaire = $arr_filtres;
+    $FiltreReleveBancaire['id'] = $id;
+    $session->set('FiltreReleveBancaire', $FiltreReleveBancaire);
+  
+    //affichage de la liste des mouvements bancaires du compte
+    $mouvementRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\MouvementBancaire');
+
+    $arr_allMouvementsBancaires = $mouvementRepo->findBy(
+        array('compteBancaire' => $compteBancaire),
+        array('date' => 'DESC')
+    );
+
+    $arr_mouvementsBancaires_prefiltre = array();
+    $arr_mouvementsBancaires = array();
+
+    if($arr_filtres['rapprochement'] == 'rapproche'){
+      foreach($arr_allMouvementsBancaires as $mouvement){
+        if(count($mouvement->getRapprochements()) != 0){
+          $arr_mouvementsBancaires_prefiltre[] = $mouvement;
+        }
+      }
+    } else if($arr_filtres['rapprochement'] == 'non-rapproche'){
+      foreach($arr_allMouvementsBancaires as $mouvement){
+        if(count($mouvement->getRapprochements()) == 0){
+          $arr_mouvementsBancaires_prefiltre[] = $mouvement;
+        }
+      }
+    } else if($arr_filtres['rapprochement'] == 'all'){
+      foreach($arr_allMouvementsBancaires as $mouvement){
+        $arr_mouvementsBancaires_prefiltre[] = $mouvement;
+      }
+    }
+
+    if($arr_filtres['montant'] == 'positif'){
+      foreach($arr_mouvementsBancaires_prefiltre as $mouvement){
+        if($mouvement->getMontant() > 0){
+          $arr_mouvementsBancaires[] = $mouvement;
+        }
+      }
+    } else if($arr_filtres['montant'] == 'negatif'){
+      foreach($arr_mouvementsBancaires_prefiltre as $mouvement){
+        if($mouvement->getMontant() < 0){
+          $arr_mouvementsBancaires[] = $mouvement;
+        }
+      }
+    } else if($arr_filtres['montant'] == 'all'){
+      foreach($arr_mouvementsBancaires_prefiltre as $mouvement){
+        $arr_mouvementsBancaires[] = $mouvement;
+      }
+    }
+
+    if(is_array($arr_filtres['dateRange'])){
+      $arr_mouvementsBancaires_prefiltre = array();
+      foreach($arr_mouvementsBancaires as $mouvement){
+        if($mouvement->getDate() >= \DateTime::createFromFormat('D M d Y H:i:s e+', $arr_filtres['dateRange']['start']) && $mouvement->getDate() <= \DateTime::createFromFormat('D M d Y H:i:s e+', $arr_filtres['dateRange']['end'])){
+          $arr_mouvementsBancaires_prefiltre[] = $mouvement;
+        }
+      }
+      $arr_mouvementsBancaires = $arr_mouvementsBancaires_prefiltre;
+    }
+
+    return $this->render('compta/rapprochement/compta_rapprochement_voir.html.twig', array(
+        'arr_mouvementsBancaires' => $arr_mouvementsBancaires,
+    ));
+  }
+
+
+  /**
    * @Route("/compta/rapprochement/supprimer/{id}", name="compta_rapprochement_supprimer", options={"expose"=true})
    */
   public function rapprochementSupprimerAction(Rapprochement $rapprochement)
@@ -205,7 +429,7 @@ class RapprochementController extends Controller
       $em->remove($mouvementBancaire);
       $em->flush();
 
-      return $this->redirect($this->generateUrl('compta_releve_bancaire_index'));
+      return $this->redirect($this->generateUrl('compta_rapprochement_index'));
     }
 
     return $this->render('compta/mouvement_bancaire/compta_mouvement_bancaire_scinder_modal.html.twig', array(
@@ -263,7 +487,7 @@ class RapprochementController extends Controller
       $em->persist($mouvementBancaire);
       $em->flush();
 
-      return $this->redirect($this->generateUrl('compta_releve_bancaire_index'));
+      return $this->redirect($this->generateUrl('compta_rapprochement_index'));
     }
 
     return $this->render('compta/mouvement_bancaire/compta_mouvement_bancaire_fusionner_modal.html.twig', array(

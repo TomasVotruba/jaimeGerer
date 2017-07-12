@@ -1,0 +1,402 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Banque : Relevés bancaires</h1>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+				{% include 'compta/journal_banque/compta_banque_submenu.html.twig' %}
+		</div>
+	</div>
+
+	<div class="row spacer-top">
+		<div class="col-md-12">
+		    <p>
+		    	<a href="{{ path('compta_releve_bancaire_importer_form') }}" class="btn btn-success">
+		    		<span class="glyphicon glyphicon-import"></span> Importer
+		    	</a>
+		    </p>
+	    </div>
+    </div>
+
+	<div class="hidden" id="form-select-factures">
+		<form >
+			<select class="select-factures form-control">
+				<option value=""></option>
+				{% for facture in arr_factures %}
+					<option value="{{ facture.id }}">{{ facture.num }} : {{ facture.compte }} : {{ facture.totalTTC }} €</option>
+				{% endfor %}
+			</select>
+		</form>
+	</div>
+	<div class="hidden" id="form-select-depenses">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="select-depense col-sm-10">
+					<select class="select-depenses form-control">
+						<option value=""></option>
+						{% for depense in arr_depenses %}
+							<option value="{{ depense.id }}">{{ depense.compte }} : {{ depense.totalTTC }} €</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="edit-depense col-sm-2">
+					<a data-toggle="modal" data-target="#modal" class="btn btn-xs btn-warning lien-edit-depense" title="Modifier la dépense">
+						<span class="glyphicon glyphicon-pencil"></span>
+					</a>
+				</div>
+			</div>
+		</form>
+		<a data-toggle="modal" data-target="#modal-lg" class="lien-nouvelle-depense">Nouvelle dépense</a>
+	</div>
+	<div class="hidden" id="form-select-accomptes">
+		<form>
+			<select class="select-accomptes form-control">
+				<option value=""></option>
+				{% for accompte in arr_accomptes %}
+					<option value="{{ accompte.id }}">{{ accompte }}</option>
+				{% endfor %}
+			</select>
+		</form>
+	</div>
+	<div class="hidden" id="form-select-avoir-fournisseurs">
+		<form>
+			<select class="select-avoir-fournisseurs form-control">
+				<option value=""></option>
+				{% for avoir in arr_avoirs_fournisseurs %}
+					<option value="{{ avoir.id }}">{{ avoir }}</option>
+				{% endfor %}
+			</select>
+		</form>
+	</div>
+	<div class="hidden" id="form-select-avoir-clients">
+		<form>
+			<select class="select-avoir-clients form-control">
+				<option value=""></option>
+				{% for avoir in arr_avoirs_clients %}
+					<option value="{{ avoir.id }}">{{ avoir }}</option>
+				{% endfor %}
+			</select>
+		</form>
+	</div>
+	<div class="hidden" id="form-select-remise-cheques">
+		<form>
+			<select class="select-remise-cheques form-control">
+				<option value=""></option>
+				{% for remiseCheque in arr_remise_cheques %}
+					<option value="{{ remiseCheque.id }}">{{ remiseCheque }}</option>
+				{% endfor %}
+			</select>
+		</form>
+	</div>
+	<div class="hidden" id="form-select-note-frais">
+		<form>
+			<select class="select-note-frais form-control">
+				<option value=""></option>
+				{% for noteFrais in arr_notes_frais %}
+					<option value="{{ noteFrais.id }}">{{ noteFrais }}</option>
+				{% endfor %}
+			</select>
+		</form>
+	</div>
+	<div class="hidden" id="form-select-affectation-diverse-vente">
+		<form>
+			<select class="select-affectation-diverse-vente form-control">
+				<option value=""></option>
+				{% for affectationDiverse in arr_affectations_diverses_vente %}
+					<option value="{{ affectationDiverse.id }}">{{ affectationDiverse }}</option>
+				{% endfor %}
+			</select>
+		</form>
+		<a href="{{ path('compta_affectation_diverse_ajouter_modal', {'type' : 'VENTE'}) }}" class="lien-nouvelle-affectation-diverse" data-toggle="modal" data-target="#modal">Nouvelle affectation diverse</a>
+	</div>
+	<div class="hidden" id="form-select-affectation-diverse-achat">
+		<form>
+			<select class="select-affectation-diverse-achat form-control">
+				<option value=""></option>
+				{% for affectationDiverse in arr_affectations_diverses_achat %}
+					<option value="{{ affectationDiverse.id }}">{{ affectationDiverse }}</option>
+				{% endfor %}
+			</select>
+		</form>
+		<a href="{{ path('compta_affectation_diverse_ajouter_modal', {'type' : 'ACHAT'}) }}" class="lien-nouvelle-affectation-diverse" data-toggle="modal" data-target="#modal">Nouvelle affectation diverse</a>
+	</div>
+
+	<div class="row">
+		<div class="col-md-3">
+			{{ form_start(form) }}
+			{{ form_widget(form) }}
+			{{ form_end(form) }}
+		</div>
+	</div>
+
+	<div class="row well">
+		<div class="col-md-12 center">
+			<h3>Filtres</h3>
+		</div>
+		<div class="col-md-3">
+			<p><strong>Rapprochement</strong></p>
+			<input type="radio" name="filtre_rapprochement" value="all" class="filte"{% if filtreReleveBancaire.rapprochement == 'all' %} checked{% endif %}/> Toutes les lignes<br />
+			<input type="radio" name="filtre_rapprochement" value="rapproche" class="filte"{% if filtreReleveBancaire.rapprochement == 'rapproche' %} checked{% endif %}/> Lignes rapprochées uniquement<br />
+			<input type="radio" name="filtre_rapprochement" value="non-rapproche" class="filte"{% if filtreReleveBancaire.rapprochement == 'non-rapproche' %} checked{% endif %}/> Lignes non rapprochées uniquement<br />
+		</div>
+		<div class="col-md-3">
+			<p><strong>Montant</strong></p>
+			<input type="radio" name="filtre_montant" value="all" class="filte"{% if filtreReleveBancaire.montant == 'all' %} checked{% endif %}/> Tous<br />
+			<input type="radio" name="filtre_montant" value="positif" class="filte"{% if filtreReleveBancaire.montant == 'positif' %} checked{% endif %}/> Montants positifs uniquement<br />
+			<input type="radio" name="filtre_montant" value="negatif" class="filte"{% if filtreReleveBancaire.montant == 'negatif' %} checked{% endif %}/> Montants négatifs uniquement<br />
+		</div>
+		<div class="col-md-3">
+			<p><strong>Date</strong></p>
+			<input id="dateRange" name="dateRange" class="filte" />
+		</div>
+		<div class="col-md-3">
+			<form onsubmit="return false;">
+				<label for="search">Rechercher</label>
+				<input id="search" type="text" class="form-control" placeholder="Libellé, date ou montant">
+			</form>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-9 align-bottom">
+			<p class="align-right xl">Solde : <span id="solde"></span></p>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-striped table-bordered" id="table-releve">
+				<thead>
+					<tr>
+						<th class="hidden">ID</th>
+						<th>Date</th>
+						<th class="libelle">Libellé</th>
+						<th>Montant</th>
+						<th>Type</th>
+						<th>Rapprochement</th>
+						<th class="pointer">Rapprocher</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody id="wrapper-ajax" class="searchable">
+				</tbody>
+			</table>
+			<p class="center" id="loader">
+				<img src="{{ asset('images/assets/dog_loader.gif') }}" alt="Chargement en cours" /><br />
+				<i>Chargement en cours...</i>
+			</p>
+		</div>
+	</div>
+
+{% endblock %}
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/jquery.comiseo.daterangepicker.css') }}" type="text/css" />
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('js/moment.js') }}"></script>
+	<script src="{{ asset('js/jquery.comiseo.daterangepicker.js') }}"></script>
+	<script src="{{ asset('js/datepicker-fr.js') }}"></script>
+	<script src="{{ asset('js/dateFilterConfig.js') }}"></script>
+	<script src="{{ asset('js/accounting.min.js') }}"></script>
+	<script type="text/javascript">
+		$(document).ready( function () {
+
+			var id = $(".compte-select").val();
+			loadTable(id);
+			loadSolde(id);
+
+			$(".compte-select").change(function(){
+				$("#loader").removeClass("hidden");
+				$("#wrapper-ajax").html("");
+				var id = $(this).val();
+				loadTable(id);
+				loadSolde(id);
+			});
+
+			function loadTable(id){
+
+				var arr_filtres = {
+						rapprochement: $('input[name=filtre_rapprochement]:radio:checked').val(),
+						montant: $('input[name=filtre_montant]:radio:checked').val(),
+						dateRange: $("#dateRange").daterangepicker("getRange")
+						};
+
+				$.ajax({
+					type: "POST",
+					url: Routing.generate('compta_rapprochement_voir'),
+					data: { 'id':  id, 'filtres': arr_filtres },
+					success: function(data) {
+						$("#loader").addClass("hidden");
+						$("#wrapper-ajax").html(data);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						$("#loader").addClass("hidden");
+						console.log(jqXHR.status);
+						console.log(textStatus);
+						console.log(errorThrown);
+					},
+				});
+			}
+
+			function loadSolde(id){
+				var soldes = {{ arr_soldes|json_encode|raw }};
+				$('#solde').html(accounting.formatMoney(soldes[id], { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 }));
+				if(soldes[id] > 0){
+					$('#solde').removeClass("red");
+					$('#solde').addClass("green");
+				} else{
+					$('#solde').removeClass("green");
+					$('#solde').addClass("red");
+				}
+			}
+
+			//filtre
+			$('.filte').click(function(){
+				$("#loader").removeClass("hidden");
+				$("#wrapper-ajax").html("");
+				var id = $(".compte-select").val();
+				loadTable(id);
+			});
+			$('#dateRange').change(function(){
+				$("#loader").removeClass("hidden");
+				$("#wrapper-ajax").html("");
+				var id = $(".compte-select").val();
+				loadTable(id);
+			});
+
+			var last_a_clicked = null;
+			$(document).on("click", '.lien-nouvelle-affectation-diverse', function(e) {
+				last_a_clicked = $(this);
+			});
+
+			$(document).on("click", '.lien-nouvelle-depense', function(e) {
+				last_a_clicked = $(this);
+			});
+
+			$(document).on("click", '.lien-edit-depense', function(e) {
+				last_a_clicked = $(this);
+				var depense_id = $(this).parents('td').find('.select-depenses').val();
+				$.ajax({
+			    	type: "POST",
+			        url: Routing.generate('compta_depense_editer_modal', {'id' : depense_id }),
+			        success: function(data)
+			        {
+						$('#modal .modal-content').html(data);
+			        }
+		        });
+
+			});
+
+			$(document).on("submit", '#form-add-depense', function(e) {
+				e.preventDefault();
+				$.ajax({
+			    	type: "POST",
+			        url: Routing.generate('compta_depense_ajouter_modal'),
+			        data: $(this).serialize(), // serializes the form's elements.
+			        success: function(data)
+			        {
+			        	$(".select-depenses").append('<option value='+data.id+'>'+data.s_depense+'</option>');
+			        	$(last_a_clicked).parent().find(".select-depenses").val(+data.id);
+
+			        	var price = data.price;
+			      		var montant =  $(last_a_clicked).parents('tr').find('.montant .hidden').text();
+
+			      		if ( Math.abs(parseFloat(montant)) === Math.abs(parseFloat(price)) ) {
+			      			$(last_a_clicked).parents('tr').find('.btn-rapprochement').removeClass('hidden');
+			      			$(last_a_clicked).parents('tr').find('.rapprochement-invalide').addClass('hidden');
+						} else {
+							$(last_a_clicked).parents('tr').find('.btn-rapprochement').addClass('hidden');
+			      			$(last_a_clicked).parents('tr').find('.rapprochement-invalide').removeClass('hidden');
+						}
+
+			        	$('#modal').modal('hide');
+			        }
+		        });
+			});
+
+			$(document).on("submit", '#form-edit-depense', function(e) {
+				e.preventDefault();
+				var depense_id = $(last_a_clicked).parents('td').find('.select-depenses').val();
+				$.ajax({
+			    	type: "POST",
+			        url: Routing.generate('compta_depense_editer_modal', {'id' : depense_id}),
+			        data: $(this).serialize(), // serializes the form's elements.
+			        success: function(data)
+			        {
+						//modifier le texte de l'option sélectionné
+						$(last_a_clicked).parents('td').find(".select-depenses  option:selected").text(data.s_depense);
+
+				        //modifier les autres select depenses
+  			        	$(".select-depenses option[value='"+depense_id+"'").text(data.s_depense);
+//  			        	$(last_a_clicked).parent().find(".select-depenses").val(data.id);
+//  			        	$(last_a_clicked).parent().find(".select-depenses").;
+
+			        	var price = data.price;
+			      		var montant =  $(last_a_clicked).parents('tr').find('.montant .hidden').text();
+
+			      		if ( Math.abs(parseFloat(montant)) === Math.abs(parseFloat(price)) ) {
+			      			$(last_a_clicked).parents('tr').find('.btn-rapprochement').removeClass('hidden');
+			      			$(last_a_clicked).parents('tr').find('.rapprochement-invalide').addClass('hidden');
+						} else {
+							$(last_a_clicked).parents('tr').find('.btn-rapprochement').addClass('hidden');
+			      			$(last_a_clicked).parents('tr').find('.rapprochement-invalide').removeClass('hidden');
+						}
+
+			        	$('#modal').modal('hide');
+			        }
+		        });
+			});
+
+			$(document).on("submit", '#form-add-affectation_diverse', function(e) {
+
+				var type = "VENTE";
+				var a_class = $(last_a_clicked).parent().find('select').attr('class');
+
+				if(a_class.indexOf('achat') > -1){
+					type = "ACHAT";
+				}
+
+				  e.preventDefault();
+				  $.ajax({
+			          type: "POST",
+			          url: Routing.generate('compta_affectation_diverse_ajouter_modal', {'type' : type} ),
+			          data: $(this).serialize(), // serializes the form's elements.
+			          success: function(data)
+			          {
+				          var selector = "";
+				          if(data.type == 'VENTE'){
+				        	  selector = ".select-affectation-diverse-vente";
+						  }else{
+							  selector = ".select-affectation-diverse-achat";
+						  }
+			        	  $(selector).append('<option value='+data.id+'>'+data.nom+'</option>');
+			        	  $(last_a_clicked).parent().find(selector).val(+data.id);
+			        	  $(last_a_clicked).parents('tr').find('.validation').find(".btn-rapprochement").removeClass("hidden");
+
+			        	  $('#modal').modal('hide');
+			          }
+			        });
+			 	});
+
+				$(function(){
+			$('#search').keyup(function () {
+					var rex = new RegExp($(this).val(), 'i');
+					$('.searchable tr').hide();
+					$('.searchable tr').filter(function () {
+							return rex.test($(this).find('.libelle, .montant, .date').text());
+					}).show();
+
+			});
+		});
+
+		});
+	</script>
+{% endblock %}
