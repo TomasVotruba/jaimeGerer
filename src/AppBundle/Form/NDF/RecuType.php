@@ -10,10 +10,12 @@ use Doctrine\ORM\EntityRepository;
 class RecuType extends AbstractType
 {
     protected $companyId;
+    protected $nextRecu;
 
-    public function __construct ($companyId = null)
+    public function __construct ($companyId = null, $nextRecu = null)
     {
       $this->companyId = $companyId;
+      $this->nextRecu = $nextRecu;
     }
 
     /**
@@ -79,9 +81,15 @@ class RecuType extends AbstractType
                   ->orderBy('c.nom', 'ASC');
                 },
             ))
-            ->add('submit', 'submit', array(
-              'label' => 'Enregistrer',
+            ->add('save', 'submit', array(
+              'label' => 'Enregistrer et revenir à la liste des reçus',
+            ))
+            ->add('next', 'submit', array(
+              'label' => 'Enregistrer et passer au reçu suivant',
+              'disabled' => $this->nextRecu == null ? true : false 
             ));
+           
+          
         ;
     }
 

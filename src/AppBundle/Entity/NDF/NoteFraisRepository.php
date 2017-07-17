@@ -43,6 +43,20 @@ class NoteFraisRepository extends EntityRepository
 				->setParameter('rapproche', $rapprochement);
 		}
 
+		if($search){
+			$qb->andWhere('u.firstname LIKE :search or u.lastname LIKE :search')
+				->setParameter('search', '%'.$search.'%');
+		}
+
+		if($orderBy == "nom"){
+			$qb->addOrderBy('u.firstname', $dir);
+		} else if($orderBy == "date"){
+			$qb->addOrderBy('n.year', $dir);
+			$qb->addOrderBy('n.month', $dir);
+		} else {
+			$qb->addOrderBy('n.'.$orderBy, $dir);
+		}
+
 
 		$qb->setMaxResults($length)
 		->setFirstResult($start);

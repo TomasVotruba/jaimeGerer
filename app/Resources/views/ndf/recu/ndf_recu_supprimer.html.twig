@@ -17,7 +17,7 @@
 				</object>
 			{% else %}
 				<p class="center">
-					<img src="/{{ recu.path }}/{{ recu.file }}" alt="" />
+					<img src="/{{ recu.path }}/{{ recu.file }}" alt="Reçu" class="ndf-recu-apercu"/>
 				</p>
 			{% endif %}
 		</div>
@@ -27,7 +27,7 @@
 	    	{{ form_start(form) }}
  				{{ form_widget(form) }}
 
-	   	 	 <a class="btn" href="{{ path('ndf_recus') }}">
+	   	 	 <a class="btn" href="{{ path('ndf_recus_liste') }}">
        			<span class="glyphicon glyphicon-chevron-left"></span>Annuler
     		</a>
 	   	 	<input type="submit" value="Supprimer" class="btn btn-danger" />

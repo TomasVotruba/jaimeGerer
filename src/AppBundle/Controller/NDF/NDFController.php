@@ -95,8 +95,23 @@ class NDFController extends Controller
 	 */
 	public function NDFRecuModifierAction(Recu $recu)
 	{
+		$em = $this->getDoctrine()->getManager();
+		$recuRepo = $em->getRepository('AppBundle:NDF\Recu');
 
-		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId()), $recu);
+		$arr_recus = $recuRepo->findBy(array(
+			'user' => $recu->getUser(),
+		), array(
+			'id' => 'ASC'
+		));
+		$nextRecu = null;
+		for($i=0; $i<count($arr_recus); $i++){
+			if($arr_recus[$i]->getId() == $recu->getId() && array_key_exists($i+1, $arr_recus)){
+				$nextRecu = $arr_recus[$i+1];
+				break;
+			}
+		}
+
+		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId(), $nextRecu), $recu);
 
 		$request = $this->getRequest();
 		$form->handleRequest($request);
@@ -106,9 +121,15 @@ class NDFController extends Controller
 			$recu->setDateEdition(new \DateTime(date('Y-m-d')));
 			$recu->setUserEdition($this->getUser());
 			$recu->setEtat('READ');
-			$em = $this->getDoctrine()->getManager();
+			
 			$em->persist($recu);
 			$em->flush();
+
+			if($form->get('next')->isClicked() && $nextRecu){
+				return $this->redirect($this->generateUrl(
+					'ndf_recu_modifier', array('id' => $nextRecu->getId())
+				));
+			}
 
 			return $this->redirect($this->generateUrl(
 					'ndf_recus_liste'
@@ -143,7 +164,7 @@ class NDFController extends Controller
 			 */
 
 			return $this->redirect($this->generateUrl(
-					'ndf_recus'
+					'ndf_recus_liste'
 			));
 		}
 
@@ -224,9 +245,9 @@ class NDFController extends Controller
 				$compteComptableRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\CompteComptable');
 				$compteDefault = $compteComptableRepo->findOneBy(array(
 					'company' => $this->getUser()->getCompany(),
-					'num' => '421'
+					'num' => '42100000'
 				));
-				$ndf->setCompteComptable($ndf->getUser()->getCompteComptableNoteFrais());
+				$ndf->setCompteComptable($compteDefault);
 			}
 
 			$em = $this->getDoctrine()->getManager();
@@ -328,7 +349,7 @@ class NDFController extends Controller
 
 		$arr_recus_by_id = array();
 
-	  $request = $this->get('request');
+	  	$request = $this->get('request');
 		$formatter = new \IntlDateFormatter($request->getLocale(), \IntlDateFormatter::LONG, \IntlDateFormatter::LONG);
 		$formatter->setPattern('MMMM');
 

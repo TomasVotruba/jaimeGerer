@@ -50,3 +50,7 @@ tfoot td{
 	text-align: right;
 	padding-right: 30px;
 }
+
+.ndf-recu-apercu{
+	max-width: 100%;
+}

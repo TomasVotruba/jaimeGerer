@@ -2,15 +2,17 @@
 	<a class="close" data-dismiss="modal">×</a>
 </div>
 <div class="modal-body">
-
-	{% if recu.fileType == "pdf" %}
-		<object data="/{{ recu.path }}/{{ recu.file }}" type="application/pdf" width="100%" height="600px;">
-		 <p>Votre navigateur ne supporte pas la lecture des fichiers PDFs. <a href="/pdf/sample-3pp.pdf">Téléchargez PDF</a>.</p>
-		</object>
-	{% else %}
-		<p class="center">
-			<img src="/{{ recu.path }}/{{ recu.file }}" alt="" />
-		</p>
-	{% endif %}
-
+	<div class="row">
+		<div class="col-md-12">
+			{% if recu.fileType == "pdf" %}
+				<object data="/{{ recu.path }}/{{ recu.file }}" type="application/pdf" width="100%" height="600px;">
+				 <p>Votre navigateur ne supporte pas la lecture des fichiers PDFs. <a href="/pdf/sample-3pp.pdf">Téléchargez PDF</a>.</p>
+				</object>
+			{% else %}
+				<p class="center">
+					<img src="/{{ recu.path }}/{{ recu.file }}" alt="Reçu" class="ndf-recu-apercu" />
+				</p>
+			{% endif %}
+		</div>
+	</div>
 </div>

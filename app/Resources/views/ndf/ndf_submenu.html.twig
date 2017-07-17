@@ -1,7 +1,13 @@
 {% block submenu %}
-			<div class="sub-menu">
-				<a href="{{ path('ndf_recu_upload') }}" {% if app.request.pathInfo == ""  %}class=" current"{% endif %}>Uploader un reçu </a> -
-			  <a href="{{ path('ndf_recus_liste') }}" {% if app.request.pathInfo == ""  %} class="current"{% endif %}>Mes reçus</a> -
-			  <a href="{{ path('ndf_liste') }}" {% if app.request.pathInfo == ""  %}class=" current"{% endif %}>Mes notes de frais</a>
-			</div>
+	<ul class="nav nav-tabs">
+		<li {% if app.request.pathInfo == "/ndf/recu/upload"  %} class="active" {% endif %}>
+        	<a href="{{ path('ndf_recu_upload') }}" >Uploader mes reçus</a>
+      	</li>
+		<li {% if app.request.pathInfo == "/ndf/recu/liste"  %} class="active" {% endif %}>
+        	<a href="{{ path('ndf_recus_liste') }}" >Mes reçus</a>
+      	</li>
+      	<li {% if app.request.pathInfo == "/ndf/liste"  %} class="active" {% endif %}>
+        	<a href="{{ path('ndf_liste') }}" >Mes notes de frais</a>
+      	</li>
+	</ul>
 {% endblock %}

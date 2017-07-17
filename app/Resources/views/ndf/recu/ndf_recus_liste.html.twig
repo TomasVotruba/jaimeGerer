@@ -13,7 +13,7 @@
 		</div>
 	</div>
 
-  <div class="row">
+  <div class="row spacer-top">
 		<div class="col-md-12">
 
 			<table class="table table-bordered table-striped">
@@ -78,7 +78,7 @@
 									{% endif %}
 								</td>
 							{% else %}
-								<td colspan="7" class="center"><i><span class="glyphicon glyphicon-refresh"></span> Ce reçu est en cours de lecture.</i></td>
+								<td colspan="7" class="center"><i><span class="glyphicon glyphicon-warning-sign"></span> Ce reçu n'a pas encore été traité.</i></td>
 							{% endif %}
 							<td>Le {{ recu.dateCreation|date('d/m/Y') }}<br />par {{ recu.userCreation }}</td>
 							<td>
