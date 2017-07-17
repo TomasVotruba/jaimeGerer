@@ -7,7 +7,7 @@ web/bundles/*
 composer.lock
 composer.phar
 README.md
-web/uploads/*
+web/upload/*
 Supprimerait .idea/
 Supprimerait app/cache/
 Supprimerait app/logs/
