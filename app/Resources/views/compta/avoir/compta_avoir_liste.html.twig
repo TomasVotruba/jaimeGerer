@@ -153,23 +153,23 @@
                         "targets": 4
                     }, {
                         "render": function(data, type, row) {
-														var voirUrl = Routing.generate('compta_avoir_voir', {'id' : row['id']});
-														var editerUrl = Routing.generate('compta_avoir_editer', {'id' : row['id']});
-														var supprimerUrl = Routing.generate('compta_avoir_supprimer', {'id' : row['id']});
+							var voirUrl = Routing.generate('compta_avoir_voir', {'id' : row['id']});
+							var editerUrl = Routing.generate('compta_avoir_editer', {'id' : row['id']});
+							var supprimerUrl = Routing.generate('compta_avoir_supprimer', {'id' : row['id']});
 
-														var s =
-															"<p>" +
-																"<a href=" + voirUrl + " class=\"btn btn-xs btn-info\" data-toggle=\"tooltip\" title=\"Voir\"><span class=\"glyphicon glyphicon-eye-open\"></span></a> " +
-																"<a href=" + editerUrl + "  class=\"btn btn-xs btn-warning\" data-toggle=\"tooltip\" title=\"Modifier\"><span class=\"glyphicon glyphicon-pencil\"></span></a> ";
+							var s =
+								"<p>" +
+									"<a href=" + voirUrl + " class=\"btn btn-xs btn-info\" data-toggle=\"tooltip\" title=\"Voir\"><span class=\"glyphicon glyphicon-eye-open\"></span></a> " +
+									"<a href=" + editerUrl + "  class=\"btn btn-xs btn-warning\" data-toggle=\"tooltip\" title=\"Modifier\"><span class=\"glyphicon glyphicon-pencil\"></span></a> ";
 
-															  if (row['num'] == "{{ lastNum }}") {
-																	s += "<a href=" + supprimerUrl + " class=\"btn btn-xs btn-danger\" data-toggle=\"tooltip\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a>";
-																} else {
-																	s += "<a href=\"#\" class=\"btn btn-xs btn-default not-active\"><span class=\"glyphicon glyphicon-trash\"></span>";
-																}
+								  if (row['num'] == "{{ lastNum }}") {
+										s += "<a href=" + supprimerUrl + " class=\"btn btn-xs btn-danger\" data-toggle=\"tooltip\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a>";
+									} else {
+										s += "<a href=\"#\" class=\"btn btn-xs btn-default not-active\"><span class=\"glyphicon glyphicon-trash\"></span>";
+									}
 
-															s += "</p>";
-														return s;
+								s += "</p>";
+							return s;
                         },
                         "targets": 5
                     }

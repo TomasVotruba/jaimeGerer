@@ -60,7 +60,7 @@ class AvoirRepository extends EntityRepository
 		}
 
 		if($search != ""){
-			$qb->andWhere('a.objet LIKE :search or a.num LIKE :search')
+			$qb->andWhere('a.objet LIKE :search or a.num LIKE :search or c1.nom LIKE :search or c2.nom LIKE :search')
 			->setParameter('search', '%'.$search.'%');
 		}
 
