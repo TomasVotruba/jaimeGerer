@@ -134,12 +134,12 @@ class CompteFusionnerEtape2Type extends AbstractType
 				 'label' => 'Gestionnaire de l\'organisation'
             ));
 
-        if( $this->first_compte->getSecteurActivite()->getId() != $this->second_compte->getSecteurActivite()->getId() )
+        if( $this->first_compte->getSecteurActivite() !== $this->second_compte->getSecteurActivite() )
             $builder
                 ->add('secteurActivite', 'choice', array(
                     'required' => true,
                     //~ 'choices' => array( 'userGestion1' => $this->first_compte->getUserGestion() , 'userGestion2' => $this->second_compte->getUserGestion() ),
-                    'choices' => array( $this->first_compte->getSecteurActivite()->getId() => $this->first_compte->getSecteurActivite() , $this->second_compte->getUserGestion()->getId() => $this->second_compte->getUserGestion() ),
+                    'choices' => array( $this->first_compte->getSecteurActivite() => $this->first_compte->getSecteurActivite() , $this->second_compte->getSecteurActivite() => $this->second_compte->getSecteurActivite() ),
                     'expanded' => true,
                     'multiple' => false,
                     'mapped' => false,
