@@ -64,6 +64,52 @@ class NDFController extends Controller
 	}
 
 	/**
+	 * @Route("/ndf/recu/ajouter", name="ndf_recu_ajouter")
+	 */
+	public function NDFRecuAjouterAction()
+	{
+		$em = $this->getDoctrine()->getManager();
+
+		$recu = new Recu();
+
+		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId()), $recu);
+
+		$form->add('next', 'submit', array(
+			'label' => 'Enregistrer et ajouter un autre reçu'
+		));
+
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$recu->setDateCreation(new \DateTime(date('Y-m-d')));
+			$recu->setUserCreation($this->getUser());
+			$recu->setUser($this->getUser());
+			$recu->setEtat('READ');
+			
+			$em->persist($recu);
+			$em->flush();
+
+			if($form->get('next')->isClicked()){
+				return $this->redirect($this->generateUrl(
+					'ndf_recu_ajouter'
+				));
+			}
+
+			return $this->redirect($this->generateUrl(
+					'ndf_recus_liste'
+			));
+		}
+
+		return $this->render('ndf/recu/ndf_recu_ajouter.html.twig', array(
+			'form' => $form->createView(),
+			'recu' => $recu
+		));
+	}
+
+
+	/**
 	 * @Route("/ndf/recu/liste", name="ndf_recus_liste")
 	 */
 	public function NDFRecusListeAction()
@@ -96,22 +142,8 @@ class NDFController extends Controller
 	public function NDFRecuModifierAction(Recu $recu)
 	{
 		$em = $this->getDoctrine()->getManager();
-		$recuRepo = $em->getRepository('AppBundle:NDF\Recu');
 
-		$arr_recus = $recuRepo->findBy(array(
-			'user' => $recu->getUser(),
-		), array(
-			'id' => 'ASC'
-		));
-		$nextRecu = null;
-		for($i=0; $i<count($arr_recus); $i++){
-			if($arr_recus[$i]->getId() == $recu->getId() && array_key_exists($i+1, $arr_recus)){
-				$nextRecu = $arr_recus[$i+1];
-				break;
-			}
-		}
-
-		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId(), $nextRecu), $recu);
+		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId()), $recu);
 
 		$request = $this->getRequest();
 		$form->handleRequest($request);
@@ -124,12 +156,6 @@ class NDFController extends Controller
 			
 			$em->persist($recu);
 			$em->flush();
-
-			if($form->get('next')->isClicked() && $nextRecu){
-				return $this->redirect($this->generateUrl(
-					'ndf_recu_modifier', array('id' => $nextRecu->getId())
-				));
-			}
 
 			return $this->redirect($this->generateUrl(
 					'ndf_recus_liste'

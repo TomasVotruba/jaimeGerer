@@ -7,70 +7,8 @@
 		</div>
 	</div>
 
-  	<div class="row">
-		<div class="col-md-12">
-			{% include 'ndf/ndf_submenu.html.twig' %}
-		</div>
-	</div>
+	{% include 'ndf/recu/ndf_recu_form.html.twig' %}
 
-
-  	<div class="row spacer-top">
-		<div class="col-md-6">
-			{% if recu.fileType == "pdf" %}
-				<object data="/{{ recu.path }}/{{ recu.file }}" type="application/pdf" width="100%" height="600px;">
-				 <p>Votre navigateur ne supporte pas la lecture des fichiers PDFs. <a href="/pdf/sample-3pp.pdf">Téléchargez PDF</a>.</p>
-				</object>
-			{% else %}
-				<p class="center">
-					<img src="/{{ recu.path }}/{{ recu.file }}" alt="Reçu" class="ndf-recu-apercu" />
-				</p>
-			{% endif %}
-		</div>
-
-		<div class="col-md-6">
-			{{ form_start(form) }}
-
-			<div class="form-group">
-				{{ form_row(form.date) }}
-			</div>
-
-			<div class="form-group">
-				{{ form_row(form.fournisseur) }}
-			</div>
-
-			<div class="form-group">
-				{{ form_row(form.analytique) }}
-			</div>
-
-			<div class="form-group">
-				{{ form_row(form.compteComptable) }}
-			</div>
-
-			<div class="form-group">
-				{{ form_row(form.montantHT) }}
-			</div>
-
-			<div class="form-group">
-				{{ form_row(form.tva) }}
-			</div>
-
-			<div class="form-group">
-				{{ form_row(form.montantTTC) }}
-			</div>
-
-			<div class="form-group center">
-				<div class="col-md-6">
-					{{ form_row(form.save, {'attr' : {'class' : 'btn btn-info'}}) }}
-				</div>
-				<div class="col-md-6">
-					{{ form_row(form.next, {'attr' : {'class' : 'btn btn-success'}}) }}
-				</div>
-			</div>
-
-			{{ form_rest(form) }}
-			{{ form_end(form) }}
-		</div>
-	</div>
 {% endblock %}
 
 {% block javascripts %}

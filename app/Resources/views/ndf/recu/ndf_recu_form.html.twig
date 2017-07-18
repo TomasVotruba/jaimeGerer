@@ -1,0 +1,107 @@
+{{ form_start(form) }}
+<div class="row">
+
+	<div class="col-md-6">
+	
+		<div class="form-group">
+			{{ form_row(form.date) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(form.analytique) }}
+		</div>
+
+	</div>	
+
+	<div class="col-md-6">
+
+		<div class="form-group">
+			{{ form_row(form.fournisseur) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(form.compteComptable) }}
+		</div>
+
+	</div>
+
+</div>
+<div class="row">
+
+	<div class="col-md-9"></div>
+
+	<div class="col-md-3">
+		<div class="form-group">
+			{{ form_row(form.montantHT) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(form.tva) }}
+		</div>
+
+		<div class="form-group">
+			{{ form_row(form.montantTTC) }}
+		</div>
+	</div>
+
+</div>	
+
+<div class="row">
+
+	<div class="form-group center">
+		<div class="col-md-6">
+			{{ form_row(form.save, {'attr' : {'class' : 'btn btn-info'}}) }}
+		</div>
+
+		{% if recu.id == null %}
+			<div class="col-md-6">
+				{{ form_row(form.next, {'attr' : {'class' : 'btn btn-success'}}) }}
+			</div>
+		{% endif %}
+	</div>
+		
+</div>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}
+
+{% block javascripts %}
+	<script type="text/javascript">
+
+		$(document).ready( function () {
+
+			$('.montant-ht').change(function(){
+				updateMontants();
+			});
+			$('.montant-tva').change(function(){
+				updateMontants();
+			});
+			$('.montant-ttc').change(function(){
+				updateMontants();
+			});
+
+			function updateMontants(){
+				var ht = $('.montant-ht').val();
+				ht = ht.replace(",", ".");
+				$('.montant-ht').val(ht);
+
+				var tva = $('.montant-tva').val();
+				tva = tva.replace(",", ".");
+				$('.montant-tva').val(tva);
+
+				var ttc = $('.montant-ttc').val();
+				ttc = ttc.replace(",", ".");
+				$('.montant-ttc').val(ttc);
+
+				if(tva != 0){
+					var ttc = +ht + +tva;
+					$('.montant-ttc').val(ttc.toFixed(2));
+				} else {
+					$('.montant-ttc').val(ht);
+				}
+			}
+
+		});
+
+	</script>
+{% endblock %}
