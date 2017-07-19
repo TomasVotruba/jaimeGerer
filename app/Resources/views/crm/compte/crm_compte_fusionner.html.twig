@@ -9,11 +9,6 @@
 		
 	</div>
 
-
-
-
-
-
 	 {{ form_start(form, { 'attr': {'class': 'compte_fusionner_modal', 'data-async': '', 'data-target' : '#modal' } }) }}
 	<div class="row">
 		
@@ -59,16 +54,8 @@
 
 			$('.typeahead-compte').typeahead({
 			    order: "desc",
-			    //minLength: 3,
-			    //dynamic: true,
-				/*source: function (typeahead, query) {
-					return $.get('{{ path('crm_contact_get_liste_fusionner', {'id': app.request.get("id")}) }}', { query: query }, function (data) {
-						return typeahead.process(data);
-					});
-				},*/
 			    source: {
-			        url: "/web/app_dev.php/crm/contact/crm_contact_get_liste_fusionner"+ ($('.entity-compte').val() > 0 ? '/'+$('.entity-compte').val() : '')
-			        {#url: "{{ path('crm_compte_get_liste_fusionner', {'id': app.request.get("id")}) }}"#}
+			        url: "/web/app_dev.php/crm/compte/get-comptes-fusionner/{{ compte.id }}"
 			    },
 			    callback: {
 			        onInit: function (node) {

@@ -200,8 +200,8 @@ class CompteController extends Controller
 			$em->flush();
 
 			return $this->redirect($this->generateUrl(
-					'crm_contact_voir',
-					array('id' => $contact->getId())
+					'crm_compte_voir',
+					array('id' => $compte->getId())
 			));
 		}
 
@@ -219,6 +219,10 @@ class CompteController extends Controller
 	{
 		//~ echo "hich"; exit;
 		$em = $this->getDoctrine()->getManager();
+
+
+
+
 		$request = $this->getRequest();
 		//~ var_dump($_POST);
 		//~ $contact = new Contact();
@@ -227,23 +231,24 @@ class CompteController extends Controller
 				new compteFusionnerType(
 						$this->getUser()->getId(),
 						$this->get('router'),
-						$request->get('id')
+						$compte->getId()
 				),
 				$compte
 		);
+
 
 		//~ $request = $this->getRequest();
 		$form->handleRequest($request);
 		//~ if ($form->isSubmitted() && $form->isValid()) {
 			$posts = $request->request->get($form->getName());
 			$repository = $em->getRepository('AppBundle:CRM\Compte');
-			$first_compte = $repository->findOneById($request->get('id'));
+			$first_compte = $repository->findOneById($compte->getId());
 			$second_compte = $repository->findOneById($posts['compte']);
 			$form = $this->createForm(
 					new CompteFusionnerEtape2Type(
 							$first_compte,
 							$second_compte,
-							$this->get('router')
+                            $this->get('router')
 					),
 					$compte
 			);
@@ -446,7 +451,6 @@ class CompteController extends Controller
 
 	/**
 	 * @Route("/crm/compte/get-comptes-fusionner/{compte_id}", name="crm_compte_get_liste_fusionner", defaults={"compte_id" = null})
-	 * @Route("/crm/compte/get-comptes-fusionner", name="crm_compte_get_liste_fusionner_default")
 	 */
 	public function compte_list_fusionnerAction($compte_id)
 	{
@@ -454,18 +458,26 @@ class CompteController extends Controller
 		$request = $this->getRequest();
 		//~ var_dump($request->get('id')); exit;
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Compte');
+
 		//~ if( is_null($compte_id) )
 			//~ $list = $repository->findByCompany($this->getUser()->getCompany());
 		//~ else
 			//~ $list = $repository->findAll($this->getUser()->getCompany(), $compte_id);
-		$compte = $repository->find($request->get('id'));
+		$compte = $repository->find($compte_id);
+
+
 		$list = $repository->findAllExcept($compte->getId());
 
+
 		$res = array();
+
+
 		if( count($list) > 0 )
 		{
 			foreach ($list as $compte) {
+
 				$_res = array('id' => $compte->getId(), 'display' => $compte->getNom());
+
 				$res[] = $_res;
 			}
 		}
