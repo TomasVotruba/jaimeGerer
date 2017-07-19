@@ -90,6 +90,20 @@ class NoteFrais
      */
     private $user;
 
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="signature_employe", type="boolean")
+     */
+    private $signatureEmploye = false;
+
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="signature_responsable", type="boolean")
+     */
+    private $signatureResponsable = false;
+
     /**
      * Get id
      *

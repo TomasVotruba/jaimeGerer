@@ -3,12 +3,12 @@ body{
 }
 
 .wrap-content-ndf h1{
-	color: #F2835C;
+	color: #fb7155;
 	font-weight: bold;
 }
 
 .titre-ndf{
-	background: #F2835C;
+	background: #fb7155;
 }
 
 .titre-ndf:before{
@@ -53,4 +53,8 @@ tfoot td{
 
 .ndf-recu-apercu{
 	max-width: 100%;
+}
+
+.signature-ndf{
+	max-width: 150px;
 }

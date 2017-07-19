@@ -67,10 +67,16 @@
 		<table id="signatures_table">
 			<tr>
 				<td class="col-md-6">
-					Signature :
+					Signature :<br />
+					{% if ndf.signatureEmploye %}
+						<img src="{{ app.request.schemeAndHttpHost }}/web/upload/signature/{{ ndf.user.id }}/{{ ndf.user.signature }}" alt="{{ ndf.user.firstname }} {{ ndf.user.lastname }}" class="signature-ndf" />
+					{% endif %}
 				</td>
 				<td class="col-md-6">
-					Signature du responsable :
+					Signature du responsable :<br />
+					{% if ndf.signatureResponsable %}
+							<img src="{{ app.request.schemeAndHttpHost }}/web/upload/tampon/{{ app.user.company.tampon }}" alt="{{ app.user.company.nom }}" id="tampon de l'entreprise"/>
+					{% endif %}
 				</td>
 			</tr>
 		</table>

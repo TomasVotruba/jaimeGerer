@@ -37,20 +37,25 @@ class NoteFraisType extends AbstractType
           11 => 'Novembre',
           12 => 'Décembre'
         );
-        $arr_annees = array(2016 => 2016, 2017 => 2017);
+        
+        $annee = date('Y');
+        $arr_annees = array(
+          $annee-1 => $annee-1,
+          $annee => $annee
+        );
 
         $builder
           ->add('month', 'choice', array(
             'label' => '',
             'required' => true,
             'choices' => $arr_mois,
-            'data' => $ndf->getMonth() ? $ndf->getMonth() : date('m', mktime(0, 0, 0, date('m')-1, 1, date('Y')))
+            'data' => $ndf->getMonth() ? $ndf->getMonth() : date('n')
           ))
          ->add('year', 'choice', array(
             'label' => '',
             'required' => true,
             'choices' => $arr_annees,
-            'data' => date('Y')
+            'data' => $annee
           ))
           ->add('recus', 'choice', array(
             'mapped' => false,
@@ -59,6 +64,10 @@ class NoteFraisType extends AbstractType
             'multiple' => true,
             'attr' => array('class' => 'select-recus'),
             'data' => $ndf->getRecusId()
+          ))
+          ->add('signatureEmploye', 'checkbox', array(
+              'label'    => 'Je certifie que ces informations sont exactes et signe la note de frais.',
+              'required' => false,
           ))
           ->add('draft', 'submit', array(
             'label' => 'Enregistrer comme brouillon'

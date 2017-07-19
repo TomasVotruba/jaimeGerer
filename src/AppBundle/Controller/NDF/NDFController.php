@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormError;
 
 use AppBundle\Entity\NDF\NoteFrais;
 use AppBundle\Entity\NDF\Recu;
@@ -237,7 +238,7 @@ class NDFController extends Controller
 
 		$arr_recus_by_id = array();
 
-	  $request = $this->get('request');
+	  	$request = $this->get('request');
 		$formatter = new \IntlDateFormatter($request->getLocale(), \IntlDateFormatter::LONG, \IntlDateFormatter::LONG);
 		$formatter->setPattern('MMMM');
 
@@ -260,7 +261,26 @@ class NDFController extends Controller
 			if ($form->get('draft')->isClicked()) {
 				$ndf->setEtat('DRAFT');
 			} else {
-				$ndf->setEtat('ENREGISTRE');
+
+				if($ndf->getSignatureEmploye()){
+
+					if(!$this->getUser()->getSignature()){
+						$form->get('signatureEmploye')->addError(new FormError('Vous devez uploader votre signature'));
+						return $this->render('ndf/ndf_ajouter.html.twig', array(
+							'form' => $form->createView(),
+							'ndf' => $ndf
+						));
+					}
+
+					$ndf->setEtat('ENREGISTRE');
+				} else {
+					$form->get('signatureEmploye')->addError(new FormError('Vous devez cocher cette case'));
+					return $this->render('ndf/ndf_ajouter.html.twig', array(
+						'form' => $form->createView(),
+						'ndf' => $ndf
+					));
+				}
+
 			}
 
 
@@ -349,7 +369,8 @@ class NDFController extends Controller
 		}
 
 		return $this->render('ndf/ndf_ajouter.html.twig', array(
-			'form' => $form->createView()
+			'form' => $form->createView(),
+			'ndf' => $ndf
 		));
 	}
 
@@ -521,38 +542,93 @@ class NDFController extends Controller
 		));
 	}
 
+	/**
+	 * @Route("/ndf/valider/{id}",
+	 *    name="ndf_valider",
+	 *    options={"expose"=true}
+	 *  )
+	 */
+	public function NDFValiderAction(NoteFrais $ndf)
+	{
+		$ndf->setEtatValide();
+		$ndf->setSignatureResponsable(true);
+		$em = $this->getDoctrine()->getManager();
+		$em->persist($ndf);
+		$em->flush();
 
-		/**
-		 * @Route("/ndf/valider/{id}", name="ndf_valider")
-		 */
-		public function NDFValiderAction(NoteFrais $ndf)
-		{
-			$form = $this->createFormBuilder()->getForm();
+		return $this->redirect($this->generateUrl('ndf_liste_admin'));
+	}
 
-			$request = $this->getRequest();
-			$form->handleRequest($request);
+	/**
+	 * @Route("/ndf/refuser/{id}",
+	 *    name="ndf_refuser",
+	 *    options={"expose"=true}
+	 *  )
+	 */
+	public function NDFRefuserAction(NoteFrais $ndf)
+	{
 
-			if ($form->isSubmitted() && $form->isValid()) {
+		$form = $this->createFormBuilder()->getForm();
 
+		$form->add('message', 'textarea', array(
+				'label' => 'Raison du refus',
+				'attr' => array('class' => 'tinymce'),
+				'required' => true,
+				'data' => ''
+		));
+
+		$form->add('submit', 'submit', array(
+  		  'label' => 'Envoyer',
+		  'attr' => array('class' => 'btn btn-success')
+		));
+
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$objet = "Note de frais refusée";
+			$message = '<p>'.$ndf->getUser()->getFirstname().',</p>';
+			$message.= '<p>Votre note de frais de '.$ndf->getMonth().'/'.$ndf->getYear().' d\'un montant de '.$ndf->getTotal().' € a été refusée pour la raison suivante :</p>';
+
+			$message.= $form->get('message')->getData();
+
+			try{
+				$mail = \Swift_Message::newInstance()
+					->setSubject($objet)
+					->setFrom($this->getUser()->getEmail())
+					->setTo($ndf->getUser()->getEmail())
+					->setBody($message, 'text/html')
+				;
+				$this->get('mailer')->send($mail);
+				$this->get('session')->getFlashBag()->add(
+						'success',
+						'Le message a bien été envoyé.'
+				);
+
+				$ndf->setEtatRefus();
 				$em = $this->getDoctrine()->getManager();
-				$ndf->setEtat('ENREGISTRE');
 				$em->persist($ndf);
 				$em->flush();
 
-				return $this->redirect($this->generateUrl(
-						'ndf_liste'
-				));
-			}
+			} catch(\Exception $e){
+    			$error =  $e->getMessage();
+    			$this->get('session')->getFlashBag()->add('danger', "L'email n'a pas été envoyé pour la raison suivante : $error");
+    		}
 
-			return $this->render('ndf/ndf_valider.html.twig', array(
-					'form' => $form->createView(),
-					'ndf' => $ndf
-			));
+			return $this->redirect($this->generateUrl('ndf_liste_admin'));
 		}
+
+		return $this->render('ndf/ndf_refuser_modal.html.twig', array(
+				'form' => $form->createView(),
+				'ndf' => $ndf
+		));
+		
+	}
 
 
 		/**
-		 * @Route("/ndf/exporter/{id}", name="ndf_exporter")
+		 * @Route("/ndf/exporter/{id}", name="ndf_exporter", options={"expose"=true})
 		 */
 		public function NDFExporterAction(NoteFrais $ndf)
 		{
@@ -583,42 +659,42 @@ class NDFController extends Controller
 
 		}
 
-		/**
-		 * @Route("/ndf/recus/exporter/{id}", name="ndf_recus_exporter")
-		 */
-		public function NDFRecusExporterAction(NoteFrais $ndf)
-		{
-			$im = new \Imagick('C:\wamp\www\jaimegerer-ndf\web\images\logo-couleur-500px.png');
-			$im->setImageFormat('jpg');
-			header('Content-Type: image/jpeg');
-			echo $im;
+		// /**
+		//  * @Route("/ndf/recus/exporter/{id}", name="ndf_recus_exporter")
+		//  */
+		// public function NDFRecusExporterAction(NoteFrais $ndf)
+		// {
+		// 	$im = new \Imagick('C:\wamp\www\jaimegerer-ndf\web\images\logo-couleur-500px.png');
+		// 	$im->setImageFormat('jpg');
+		// 	header('Content-Type: image/jpeg');
+		// 	echo $im;
 
-			return new Response();
-			return $this->render('ndf/ndf_exporter_recus.html.twig', array(
-					'ndf' => $ndf
-			));
-
-
-			$filename = 'recus_'.$ndf->getLibelle().'.pdf';
-
-			return new Response(
-					$this->get('knp_snappy.pdf')->getOutputFromHtml($html,
-							array(
-									'margin-bottom' => '10mm',
-									'margin-top' => '10mm',
-									'zoom' => 0.8, //prod only, zoom level is not the same on Windows
-									'default-header'=>false,
-							)
-					),
-					200,
-					array(
-							'Content-Type'          => 'application/pdf',
-							'Content-Disposition'   => 'attachment; filename='.$filename,
-					)
-			);
+		// 	return new Response();
+		// 	return $this->render('ndf/ndf_exporter_recus.html.twig', array(
+		// 			'ndf' => $ndf
+		// 	));
 
 
-		}
+		// 	$filename = 'recus_'.$ndf->getLibelle().'.pdf';
+
+		// 	return new Response(
+		// 			$this->get('knp_snappy.pdf')->getOutputFromHtml($html,
+		// 					array(
+		// 							'margin-bottom' => '10mm',
+		// 							'margin-top' => '10mm',
+		// 							'zoom' => 0.8, //prod only, zoom level is not the same on Windows
+		// 							'default-header'=>false,
+		// 					)
+		// 			),
+		// 			200,
+		// 			array(
+		// 					'Content-Type'          => 'application/pdf',
+		// 					'Content-Disposition'   => 'attachment; filename='.$filename,
+		// 			)
+		// 	);
+
+
+		// }
 
 	/**
 	 * @Route("/ndf/recu/get-data/{id}", name="ndf_recu_get_data", options={"expose"=true})
@@ -672,11 +748,13 @@ class NDFController extends Controller
 
 
 		for($i=0; $i<count($list); $i++){
+
 			$arr_f = $list[$i];
 
 			$noteFrais = $repository->find($arr_f['id']);
 			$total = $noteFrais->getTotal();
 			$list[$i]['total'] = $total;
+			$list[$i]['etat'] = $noteFrais->getEtatPourCompta();
 		}
 
 		$response = new JsonResponse();
@@ -703,181 +781,181 @@ class NDFController extends Controller
 		));
 	}
 
-	/**
-	 * @Route("/ndf/uploader", name="ndf_uploader")
-	 */
-	public function NDFUploaderAction()
-	{
-		$em = $this->getDoctrine()->getManager();
-		$compteRepo = $em->getRepository('AppBundle:CRM\Compte');
-		$settingsRepository = $em->getRepository('AppBundle:Settings');
-		$compteComptableRepo = $em->getRepository('AppBundle:Compta\CompteComptable');
+	// /**
+	//  * @Route("/ndf/uploader", name="ndf_uploader")
+	//  */
+	// public function NDFUploaderAction()
+	// {
+	// 	$em = $this->getDoctrine()->getManager();
+	// 	$compteRepo = $em->getRepository('AppBundle:CRM\Compte');
+	// 	$settingsRepository = $em->getRepository('AppBundle:Settings');
+	// 	$compteComptableRepo = $em->getRepository('AppBundle:Compta\CompteComptable');
 
-		$noteFrais = new NoteFrais();
+	// 	$noteFrais = new NoteFrais();
 
-		$form = $this->createForm(
-				new NoteFraisUploadType($this->getUser()->getCompany()->getId()),
-				$noteFrais
-		);
+	// 	$form = $this->createForm(
+	// 			new NoteFraisUploadType($this->getUser()->getCompany()->getId()),
+	// 			$noteFrais
+	// 	);
 
-		$request = $this->getRequest();
-		$form->handleRequest($request);
+	// 	$request = $this->getRequest();
+	// 	$form->handleRequest($request);
 
-		if ($form->isSubmitted() && $form->isValid()) {
+	// 	if ($form->isSubmitted() && $form->isValid()) {
 
-			//recuperation des données du formulaire
-			$file = $form['file']->getData();
+	// 		//recuperation des données du formulaire
+	// 		$file = $form['file']->getData();
 
-			//enregistrement temporaire du fichier uploadé
-			$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-			$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/notes-de-frais';
-			$file->move($path, $filename);
+	// 		//enregistrement temporaire du fichier uploadé
+	// 		$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
+	// 		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/notes-de-frais';
+	// 		$file->move($path, $filename);
 
-			//lecture du fichier Excel
-			$fileType = PHPExcel_IOFactory::identify($path.'/'.$filename);
-			$readerObject = PHPExcel_IOFactory::createReader($fileType);
-			$objPHPExcel = $readerObject->load($path.'/'.$filename);
-			//fichier dans un array associatif
-			$arr_data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
+	// 		//lecture du fichier Excel
+	// 		$fileType = PHPExcel_IOFactory::identify($path.'/'.$filename);
+	// 		$readerObject = PHPExcel_IOFactory::createReader($fileType);
+	// 		$objPHPExcel = $readerObject->load($path.'/'.$filename);
+	// 		//fichier dans un array associatif
+	// 		$arr_data = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
 
-			$arr_analytiques = array();
-			foreach($arr_data as $data){
-				if(!in_array($data['S'], $arr_analytiques)){
-					$arr_analytiques[] = $data['S'];
-				}
-			}
+	// 		$arr_analytiques = array();
+	// 		foreach($arr_data as $data){
+	// 			if(!in_array($data['S'], $arr_analytiques)){
+	// 				$arr_analytiques[] = $data['S'];
+	// 			}
+	// 		}
 
-			$noteFrais->setEtat('ENREGISTRE');
-			$noteFrais->setDateCreation(new \DateTime(date('Y-m-d')));
-			$noteFrais->setUserCreation($this->getUser());
+	// 		$noteFrais->setEtat('ENREGISTRE');
+	// 		$noteFrais->setDateCreation(new \DateTime(date('Y-m-d')));
+	// 		$noteFrais->setUserCreation($this->getUser());
 
-			$em->persist($noteFrais);
+	// 		$em->persist($noteFrais);
 
-			foreach($arr_analytiques as $analytique){
+	// 		foreach($arr_analytiques as $analytique){
 
-				$settingsAnalytique = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'ANALYTIQUE', 'company'=>$this->getUser()->getCompany(), 'valeur' => $analytique));
-				if(!$settingsAnalytique){
-					continue;
-				}
+	// 			$settingsAnalytique = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'ANALYTIQUE', 'company'=>$this->getUser()->getCompany(), 'valeur' => $analytique));
+	// 			if(!$settingsAnalytique){
+	// 				continue;
+	// 			}
 
-				$arr_comptes = array();
+	// 			$arr_comptes = array();
 
-				$depense = new Depense();
-				$depense->setLibelle('NDF '.$noteFrais->getLibelle().' '.$noteFrais->getMonth().'/'.$noteFrais->getYear().' ('.$analytique.')');
+	// 			$depense = new Depense();
+	// 			$depense->setLibelle('NDF '.$noteFrais->getLibelle().' '.$noteFrais->getMonth().'/'.$noteFrais->getYear().' ('.$analytique.')');
 
-				$depense->setCompte(null);
+	// 			$depense->setCompte(null);
 
-				$dateNDF = \DateTime::createFromFormat('Y-m-d', $noteFrais->getYear().'-'.$noteFrais->getMonth().'-01');
-				$depense->setDate($dateNDF);
+	// 			$dateNDF = \DateTime::createFromFormat('Y-m-d', $noteFrais->getYear().'-'.$noteFrais->getMonth().'-01');
+	// 			$depense->setDate($dateNDF);
 
-				$depenseYear = $depense->getDate()->format('Y');
-
-
-				$settingsNum = $settingsRepository->findOneBy(array('module' => 'COMPTA', 'parametre' => 'NUMERO_DEPENSE', 'company'=>$this->getUser()->getCompany()));
-				if( count($settingsNum) == 0)
-				{
-					$settingsNum = new Settings();
-					$settingsNum->setModule('COMPTA');
-					$settingsNum->setParametre('NUMERO_DEPENSE');
-					$settingsNum->setHelpText('Le numéro de dépense courant - ne pas modifier si vous n\'êtes pas sûr de ce que vous faites !');
-					$settingsNum->setTitre('Numéro de dépense');
-					$settingsNum->setType('NUM');
-					$settingsNum->setNoTVA(false);
-					$settingsNum->setCategorie('DEPENSE');
-					$settingsNum->setCompany($this->getUser()->getCompany());
-					$currentNum = 1;
-				}
-				else
-				{
-					$currentNum = $settingsNum->getValeur();
-				}
-				if($depenseYear != date("Y")){
-					//si la dépense est antidatée, récupérer le dernier numéro de dépense de l'année concernée
-					$prefixe = 'D-'.$depenseYear.'-';
-					$depenseRepo = $em->getRepository('AppBundle:Compta\Depense');
-					$lastNum = $depenseRepo->findMaxNumForYear('DEPENSE', $depenseYear, $this->getUser()->getCompany());
-					$lastNum = substr($lastNum, 7);
-					$lastNum++;
-					$depense->setNum($prefixe.$lastNum);
-				} else {
-					$prefixe = 'D-'.date('Y').'-';
-					if($currentNum < 10){
-						$prefixe.='00';
-					} else if ($currentNum < 100){
-						$prefixe.='0';
-					}
-					$depense->setNum($prefixe.$currentNum);
-
-					//mise à jour du numéro de facture
-					$currentNum++;
-					$settingsNum->setValeur($currentNum);
-					$em->persist($settingsNum);
-				}
+	// 			$depenseYear = $depense->getDate()->format('Y');
 
 
-				$depense->setAnalytique($settingsAnalytique);
+	// 			$settingsNum = $settingsRepository->findOneBy(array('module' => 'COMPTA', 'parametre' => 'NUMERO_DEPENSE', 'company'=>$this->getUser()->getCompany()));
+	// 			if( count($settingsNum) == 0)
+	// 			{
+	// 				$settingsNum = new Settings();
+	// 				$settingsNum->setModule('COMPTA');
+	// 				$settingsNum->setParametre('NUMERO_DEPENSE');
+	// 				$settingsNum->setHelpText('Le numéro de dépense courant - ne pas modifier si vous n\'êtes pas sûr de ce que vous faites !');
+	// 				$settingsNum->setTitre('Numéro de dépense');
+	// 				$settingsNum->setType('NUM');
+	// 				$settingsNum->setNoTVA(false);
+	// 				$settingsNum->setCategorie('DEPENSE');
+	// 				$settingsNum->setCompany($this->getUser()->getCompany());
+	// 				$currentNum = 1;
+	// 			}
+	// 			else
+	// 			{
+	// 				$currentNum = $settingsNum->getValeur();
+	// 			}
+	// 			if($depenseYear != date("Y")){
+	// 				//si la dépense est antidatée, récupérer le dernier numéro de dépense de l'année concernée
+	// 				$prefixe = 'D-'.$depenseYear.'-';
+	// 				$depenseRepo = $em->getRepository('AppBundle:Compta\Depense');
+	// 				$lastNum = $depenseRepo->findMaxNumForYear('DEPENSE', $depenseYear, $this->getUser()->getCompany());
+	// 				$lastNum = substr($lastNum, 7);
+	// 				$lastNum++;
+	// 				$depense->setNum($prefixe.$lastNum);
+	// 			} else {
+	// 				$prefixe = 'D-'.date('Y').'-';
+	// 				if($currentNum < 10){
+	// 					$prefixe.='00';
+	// 				} else if ($currentNum < 100){
+	// 					$prefixe.='0';
+	// 				}
+	// 				$depense->setNum($prefixe.$currentNum);
 
-				$depense->setNoteFrais($noteFrais);
-				$depense->setDateCreation(new \DateTime(date('Y-m-d')));
-				$depense->setUserCreation($this->getUser());
-				$depense->setEtat("ENREGISTRE");
+	// 				//mise à jour du numéro de facture
+	// 				$currentNum++;
+	// 				$settingsNum->setValeur($currentNum);
+	// 				$em->persist($settingsNum);
+	// 			}
 
-				$em->persist($depense);
 
-				foreach($arr_data as $data){
-					if($data['S'] == $analytique){
+	// 			$depense->setAnalytique($settingsAnalytique);
 
-						if(!array_key_exists($data['G'], $arr_comptes)){
-							$arr_comptes[$data['G']] = array('HT' => 0, 'TVA' => 0);
-						}
+	// 			$depense->setNoteFrais($noteFrais);
+	// 			$depense->setDateCreation(new \DateTime(date('Y-m-d')));
+	// 			$depense->setUserCreation($this->getUser());
+	// 			$depense->setEtat("ENREGISTRE");
 
-						$ligne = new LigneDepense();
-						$ligne->setNom($data['C'].' : '.$data['F']);
-						$ligne->setMontant($data['M']-$data['L']);
-						$ligne->setTaxe($data['L']);
+	// 			$em->persist($depense);
 
-						$ligne->setDepense($depense);
+	// 			foreach($arr_data as $data){
+	// 				if($data['S'] == $analytique){
 
-						$cc = $compteComptableRepo->findOneBy(array('company' => $this->getUser()->getCompany(), 'nom' => $data['G']));
-						$ligne->setCompteComptable($cc);
+	// 					if(!array_key_exists($data['G'], $arr_comptes)){
+	// 						$arr_comptes[$data['G']] = array('HT' => 0, 'TVA' => 0);
+	// 					}
 
-						$em->persist($ligne);
-						$depense->addLigne($ligne);
+	// 					$ligne = new LigneDepense();
+	// 					$ligne->setNom($data['C'].' : '.$data['F']);
+	// 					$ligne->setMontant($data['M']-$data['L']);
+	// 					$ligne->setTaxe($data['L']);
 
-					}
-				}
+	// 					$ligne->setDepense($depense);
 
-				$em->persist($depense);
+	// 					$cc = $compteComptableRepo->findOneBy(array('company' => $this->getUser()->getCompany(), 'nom' => $data['G']));
+	// 					$ligne->setCompteComptable($cc);
 
-				$em->flush();
+	// 					$em->persist($ligne);
+	// 					$depense->addLigne($ligne);
 
-				//ecrire dans le journal des achats
-				$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
-				$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
-			}
+	// 				}
+	// 			}
 
-			return $this->redirect($this->generateUrl(
-					'ndf_voir', array('id' => $noteFrais->getId())));
+	// 			$em->persist($depense);
 
-		}
-		$ccRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\CompteComptable');
-		$compteComptable = $ccRepo->findOneBy(array(
-			'company' => $this->getUser()->getCompany(),
-			'num' => 421
-		));
+	// 			$em->flush();
 
-		if($compteComptable == null){
-			$compteComptable = $ccRepo->findOneBy(array(
-					'company' => $this->getUser()->getCompany(),
-					'num' => 42100000
-			));
-		}
+	// 			//ecrire dans le journal des achats
+	// 			$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
+	// 			$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+	// 		}
 
-		return $this->render('ndf/compta_note_frais_ajouter.html.twig', array(
-				'form' => $form->createView(),
-				'compteComptable' => $compteComptable
-		));
-	}
+	// 		return $this->redirect($this->generateUrl(
+	// 				'ndf_voir', array('id' => $noteFrais->getId())));
+
+	// 	}
+	// 	$ccRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\CompteComptable');
+	// 	$compteComptable = $ccRepo->findOneBy(array(
+	// 		'company' => $this->getUser()->getCompany(),
+	// 		'num' => 421
+	// 	));
+
+	// 	if($compteComptable == null){
+	// 		$compteComptable = $ccRepo->findOneBy(array(
+	// 				'company' => $this->getUser()->getCompany(),
+	// 				'num' => 42100000
+	// 		));
+	// 	}
+
+	// 	return $this->render('ndf/compta_note_frais_ajouter.html.twig', array(
+	// 			'form' => $form->createView(),
+	// 			'compteComptable' => $compteComptable
+	// 	));
+	// }
 
 
 	// /**

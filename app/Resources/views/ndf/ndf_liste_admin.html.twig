@@ -13,27 +13,23 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <p>
-                <a href="{{ path('ndf_uploader') }}" class="btn btn-success">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Ajouter
-                </a>
-
-            </p>
-        </div>
-    </div>
-
     <div id="filter" class="row well">
         <h3 class=" col-md-offset-5">Filtres :</h3>
         <span id="filterState" class="col-md-offset-1 col-md-4">
             <h5>Etat</h5>
-            <input type="radio" name="filter_state" id="toutes" class="filter_state" value="" checked/>
-            <label for="enregistre">Toutes</label><br/>
-            <input type="radio" name="filter_state" id="enregistre" class="filter_state" value="ENREGISTRE"/>
-            <label for="enregistre">Enregistrées</label><br/>
-            <input type="radio" name="filter_state" id="rapproche" class="filter_state" value="RAPPROCHE"/>
+            <input type="radio" name="filter_state" id="all" class="filter_state" value="ALL" checked />
+            <label for="all">Toutes</label><br/>
+            
+            <input type="radio" name="filter_state" id="enregistre" class="filter_state" value="ENREGISTRE" />
+            <label for="enregistre">A valider</label><br/>
+            
+            <input type="radio" name="filter_state" id="validees" class="filter_state" value="VALIDE" />
+            <label for="validees">Validées</label><br/>
+            
+            <input type="radio" name="filter_state" id="refuses" class="filter_state" value="REFUS" />
+            <label for="refuses">Refusées</label><br/>
+            
+            <input type="radio" name="filter_state" id="rapproche" class="filter_state" value="RAPPROCHE" />
             <label for="rapproche">Rapprochées</label>
         </span>
         <span class="col-md-3">
@@ -107,13 +103,8 @@
                     type: "post",
                     "data": function(d) {
                         d.dateRange = $("#dateRange").daterangepicker("getRange");
-                        if (document.getElementById('enregistre').checked === true) {
-                            d.etat = document.getElementById('enregistre').value;
-                        } else if (document.getElementById('rapproche').checked === true) {
-                            d.etat = document.getElementById('rapproche').value;
-                        } else {
-                            d.etat = document.getElementById('toutes').value;
-                        }
+                        // 
+                        d.etat = $(".filter_state:checked").val();
                     }
                 },
                 "initComplete": function(settings, json) {
@@ -122,7 +113,7 @@
                         $('#table_note_frais_list tbody').find('tr').remove();
                         tableau.draw();
                     })
-                    $('#filterState').change(function() {
+                    $('input[type=radio][name=filter_state]').change(function() {
                         $('#table_note_frais_list tbody').find('tr').remove();
                         tableau.draw();
                     })
@@ -161,12 +152,30 @@
                     }, {
                         // The `data` parameter refers to the data for the cell (defined by the `data` option, which defaults to the column being worked with, in this case `data: 0`.
                         "render": function(data, type, row) {
-													var voirUrl = Routing.generate("ndf_voir", {'id' : row['id']})
-													var editerUrl = Routing.generate("ndf_editer", {'id' : row['id']})
-													var supprimerUrl = Routing.generate("ndf_supprimer", {'id' : row['id']})
-                          var s = "<p><a href=" + voirUrl + " class=\"btn btn-xs btn-info\" ​data-toggle=\"tooltip\" title=\"Voir\"><span class=\"glyphicon glyphicon-eye-open\"></span></a> "+
-																	"<a href=" + editerUrl+ " class=\"btn btn-xs btn-warning\" ​data-toggle=\"tooltip\" title=\"Editer\"><span class=\"glyphicon glyphicon-pencil\"></span></a> "+
-																	" <a href=" + supprimerUrl + " class=\"btn btn-xs btn-danger\" ​data-toggle=\"tooltip\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a></p>";;
+						  var voirUrl = Routing.generate("ndf_voir", {'id' : row['id']});
+						  var editerUrl = Routing.generate("ndf_editer", {'id' : row['id']});
+						  var supprimerUrl = Routing.generate("ndf_supprimer", {'id' : row['id']});
+                          var exporterUrl = Routing.generate("ndf_exporter", {'id' : row['id']});
+                          var validerUrl = Routing.generate("ndf_valider", {'id' : row['id']});
+                          var refuserUrl = Routing.generate("ndf_refuser", {'id' : row['id']});
+
+
+                          var s = 
+                                "<p><a href=" + voirUrl + " class=\"btn btn-xs btn-info\" ​data-toggle=\"tooltip\" title=\"Voir\"><span class=\"glyphicon glyphicon-eye-open\"></span></a> "+
+                                " <a href=" + exporterUrl + " class=\"btn btn-xs btn-primary\" ​data-toggle=\"tooltip\" title=\"Exporter\"><span class=\"glyphicon glyphicon-floppy-disk\"></span></a> "
+                                ;
+
+                            if(row.etat == "A valider"){
+                                s+= 
+                                    "<a href=" + editerUrl+ " class=\"btn btn-xs btn-warning\" ​data-toggle=\"tooltip\" title=\"Editer\"><span class=\"glyphicon glyphicon-pencil\"></span></a> "+
+                                    " <a href=" + supprimerUrl + " class=\"btn btn-xs btn-danger\" ​data-toggle=\"tooltip\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a> " +
+                                    " <a href=" + validerUrl + " class=\"btn btn-xs btn-success\" ​data-toggle=\"tooltip\" title=\"Valider\"><span class=\"glyphicon glyphicon-ok\"></span></a> " +
+                                    " <a href=" + refuserUrl + " class=\"btn btn-xs btn-danger\" ​data-toggle=\"tooltip\" title=\"Refuser\" data-toggle=\"modal\" data-target=\"#modal\"><span class=\"glyphicon glyphicon-remove\"></span></a>"
+                                ;
+                            }
+
+                            s+="</p>";
+                               
                           return s;
                         },
                         "targets": 4
@@ -181,17 +190,22 @@
                   } );
                 },
                 fnInitComplete: function () {
-                  $( 'a', this.fnGetNodes() ).tooltip( {
-                  "delay": 0,
-                  "track": true,
-                  "fade": 250,
-                  "tooltipClass": 'btn',
-                  } );
-                  $("#NodesToMove").detach().removeClass("hidden").appendTo('div.dataTables_dateRange');
-                  $('#dateRange').change(function() {
-                      $('#table_note_frais_list tbody').find('tr').remove();
-                      tableau.draw();
-                  });
+                    $( 'a', this.fnGetNodes() ).tooltip( {
+                        "delay": 0,
+                        "track": true,
+                        "fade": 250,
+                        "tooltipClass": 'btn',
+                    });
+                    $("#NodesToMove").detach().removeClass("hidden").appendTo('div.dataTables_dateRange');
+    
+                    $('#dateRange').change(function() {
+                        $('#table_note_frais_list tbody').find('tr').remove();
+                        tableau.draw();
+                    })
+                    $('input[type=radio][name=filter_state]').change(function() {
+                        $('#table_note_frais_list tbody').find('tr').remove();
+                        tableau.draw();
+                    })
                 },
             });
 

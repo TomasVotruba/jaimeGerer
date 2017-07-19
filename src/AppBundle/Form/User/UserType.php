@@ -59,7 +59,8 @@ class UserType extends AbstractType
                 'ROLE_COMMERCIAL' => 'J\'aime le commercial',
                 'ROLE_COMPTA' => 'J\'aime la compta',
                 'ROLE_COMMUNICATION' => 'J\'aime communiquer',
-                'ROLE_RH' => 'J\'aime le recrutement'
+                'ROLE_RH' => 'J\'aime le recrutement',
+                'ROLE_NDF' => 'J\'aime les notes de frais',
               )
             ))
             ->add('receiptBankId', 'text', array(

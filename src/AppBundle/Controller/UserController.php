@@ -220,4 +220,43 @@ class UserController extends Controller
     return $response;
   }
 
+    /**
+    * @Route("/user/upload/signature", name="user_upload_signature")
+    */
+    public function userUploadSignatureAction()
+    {
+        $user = $this->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $requestData = $this->getRequest();
+
+        $arr_files = $requestData->files->all();
+        $file = $arr_files["files"][0];
+
+        //enregistrement temporaire du fichier uploadé
+        $filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
+        $path =  $this->get('kernel')->getRootDir().'/../web/upload/signature/'.$user->getId().'/';
+        $file->move($path, $filename);
+
+        $oldSignature = null;
+        if($user->getSignature() != null){
+          $oldSignature = $user->getSignature();
+        }
+
+        $user->setSignature($filename);
+        $em->persist($user);
+        $em->flush();
+
+        if($oldSignature) {
+          unlink($path.$oldSignature);
+        }
+
+        $response = new JsonResponse();
+        $response->setData(array(
+            'filename' => $filename
+        ));
+
+        return $response;
+    }
+
 }

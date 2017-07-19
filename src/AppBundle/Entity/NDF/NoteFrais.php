@@ -63,6 +63,7 @@ class NoteFrais
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\Depense", mappedBy="noteFrais", cascade={"remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"id" = "ASC"})
      */
     private $depenses;
 
@@ -89,6 +90,20 @@ class NoteFrais
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="signature_employe", type="boolean")
+     */
+    private $signatureEmploye = false;
+
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="signature_responsable", type="boolean")
+     */
+    private $signatureResponsable = false;
 
     /**
      * Get id
@@ -480,7 +495,15 @@ class NoteFrais
           break;
 
         case 'ENREGISTRE':
-          $etat = 'Transmise à la compta';
+          $etat = 'Transmise à la compta, en attente de validation';
+          break;
+
+        case 'VALIDE':
+          $etat = 'Validée par la compta, en attente de paiement';
+          break;
+
+        case 'REFUS':
+          $etat = 'Refusée par la compta';
           break;
 
         case 'RAPPROCHE':
@@ -490,5 +513,100 @@ class NoteFrais
       }
 
       return $etat;
+    }
+
+    public function getEtatPourCompta(){
+
+      $etat = '';
+      switch(strtoupper($this->etat)){
+        case 'DRAFT':
+          $etat = 'Brouillon';
+          break;
+
+        case 'ENREGISTRE':
+          $etat = 'A valider';
+          break;
+
+        case 'VALIDE':
+          $etat = 'Validée';
+          break;
+
+        case 'REFUS':
+          $etat = 'Refusée';
+          break;
+
+        case 'RAPPROCHE':
+          $etat = 'Rapprochée';
+          break;
+
+      }
+
+      return $etat;
+    }
+
+    public function setEtatBrouillon(){
+        $this->etat = "DRAFT";
+    }
+
+    public function setEtatAValider(){
+        $this->etat = "ENREGISTRE";
+    }
+
+    public function setEtatValide(){
+        $this->etat = "VALIDE";
+    }
+
+    public function setEtatRefus(){
+        $this->etat = "REFUS";
+    }
+
+    public function setEtatRapproche(){
+        $this->etat = "RAPPROCHE";
+    }
+
+    /**
+     * Set signatureEmploye
+     *
+     * @param boolean $signatureEmploye
+     * @return NoteFrais
+     */
+    public function setSignatureEmploye($signatureEmploye)
+    {
+        $this->signatureEmploye = $signatureEmploye;
+
+        return $this;
+    }
+
+    /**
+     * Get signatureEmploye
+     *
+     * @return boolean 
+     */
+    public function getSignatureEmploye()
+    {
+        return $this->signatureEmploye;
+    }
+
+    /**
+     * Set signatureResponsable
+     *
+     * @param boolean $signatureResponsable
+     * @return NoteFrais
+     */
+    public function setSignatureResponsable($signatureResponsable)
+    {
+        $this->signatureResponsable = $signatureResponsable;
+
+        return $this;
+    }
+
+    /**
+     * Get signatureResponsable
+     *
+     * @return boolean 
+     */
+    public function getSignatureResponsable()
+    {
+        return $this->signatureResponsable;
     }
 }

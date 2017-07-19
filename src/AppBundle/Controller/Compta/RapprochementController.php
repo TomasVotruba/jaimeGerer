@@ -102,7 +102,7 @@ class RapprochementController extends Controller
     $arr_all_note_frais = $repoNotesFrais->findForCompany($this->getUser()->getCompany());
     $arr_notes_frais = array();
     foreach($arr_all_note_frais as $ndf){
-      if($ndf->getEtat() != 'RAPPROCHE'){
+      if($ndf->getEtat() == 'VALIDE'){
         $arr_notes_frais[] = $ndf;
       }
     }

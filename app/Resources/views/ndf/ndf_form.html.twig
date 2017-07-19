@@ -1,11 +1,15 @@
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('lib/jquery-file-upload/css/jquery.fileupload.css') }}">
+{% endblock %}
+
 {{ form_start(form) }}
 
 <strong>Date de la note de frais</strong>
 <div class="row">
-	<div class="col-md-1">
+	<div class="col-md-2">
 		{{ form_widget(form.month) }}
 	</div>
-	<div class="col-md-1">
+	<div class="col-md-2">
 		{{ form_widget(form.year) }}
 	</div>
 </div>
@@ -93,6 +97,44 @@
 	</div>
 
 	<div class="row">
+		<div class="col-md-12">
+			{{ form_row(form.signatureEmploye) }}
+
+			{% if app.user.signature is not null %}
+				<p class="green"><span class="glyphicon glyphicon-ok"></span> Vous avez uploadé votre signature</p>
+			{% else %}
+				<div class="alert alert-warning">
+					<span class="glyphicon glyphicon-warning-sign"></span> Vous n'avez pas encore uploadé votre signature sur J'aime Gérer.
+				</div>
+			{% endif %}
+			<p>
+				<img id="signature-img" src="{{ app.request.schemeAndHttpHost }}/web/upload/signature/{{ app.user.id }}/{{ app.user.signature }}" alt="Signature" class="signature-ndf {% if app.user.signature is null %} hidden {% endif %}"/>
+			</p>
+				
+			<p class="red hidden" id="error-signature"></p>
+			<!-- The fileinput-button span is used to style the file input field as button -->
+	        <a class="btn btn-info btn-xs"><span class="fileinput-button">
+	        	Choisir un fichier
+	        	<!-- The file input field used as target for the file upload widget -->
+	        	<input class="fileupload-signature" type="file" name="files[]">
+		    </span></a>
+		    <i class="s">Formats acceptés : .jpg, .jpeg, .png, .bmp - Taille (en pixels) : entre 50x50 et 300x300 - Poids max 1 Mo</i>
+		    <!-- The progress bar -->
+		    <div id="progress-signature" class="progress hidden" style="width:250px; margin: auto; margin-bottom: 20px;">
+		        <div class="progress-bar progress-bar-info progress-bar-striped"></div>
+		    </div>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<hr />
+		</div>
+	</div>
+
+
+	<div class="row">
 		<div class="col-md-6">
 			<div class="form-group center">
 				<p><strong><i>Vous souhaitez pouvoir modifier cette note de frais ultérieurement</i></strong></p>
@@ -112,9 +154,13 @@
 
 {% block javascripts %}
 	<!-- Dropdown with multiple selections : https://github.com/ehynds/jquery-ui-multiselect-widget -->
-  <script src="{{ asset('lib/jquery-ui-multiselect-widget/src/jquery.multiselect.js') }}"></script>
-  <script src="{{ asset('lib/jquery-ui-multiselect-widget/src/jquery.multiselect.filter.js') }}"></script>
+  	<script src="{{ asset('lib/jquery-ui-multiselect-widget/src/jquery.multiselect.js') }}"></script>
+  	<script src="{{ asset('lib/jquery-ui-multiselect-widget/src/jquery.multiselect.filter.js') }}"></script>
 	<script src="{{ asset('lib/jquery-ui-multiselect-widget/i18n/jquery.multiselect.fr.js') }}"></script>
+	<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+	<script src="{{ asset('lib/jquery-file-upload/js/jquery.iframe-transport.js') }}"></script>
+	<!-- The basic File Upload plugin -->
+	<script src="{{ asset('lib/jquery-file-upload/js/jquery.fileupload.js') }}"></script>
 
 	<script type="text/javascript">
 		 $(function() {
@@ -140,6 +186,11 @@
 				},
 			 });
 
+			{% if ndf.id is null %}
+				 $(".select-recus").multiselect("widget").find(":checkbox").each(function(){
+					 onClick(this);
+				 });
+			{% endif %}
 
 			 function onClick(ui){
 
@@ -152,41 +203,40 @@
 
 					 //send ajax request to get receipt details
 					 $.ajax({
-								 type: "GET",
-								 url: Routing.generate('ndf_recu_get_data', {
-										 'id': id,
-								 }),
-								 success: function(data) {
+							 type: "GET",
+							 url: Routing.generate('ndf_recu_get_data', {
+									 'id': id,
+							 }),
+							 success: function(data) {
 
-									 //remove placeholder for empty table
-									if($('.selected-recus').find('.empty-table').length){
-										$('.selected-recus').html('');
-									}
+								 //remove placeholder for empty table
+								if($('.selected-recus').find('.empty-table').length){
+									$('.selected-recus').html('');
+								}
 
-									//add receipt to the table
-								 $(".selected-recus").append(data);
+								//add receipt to the table
+							 $(".selected-recus").append(data);
 
-								 //update prices
-								 ajoutTotaux(id);
+							 //update prices
+							 ajoutTotaux(id);
 
-								 //hide progress bar
-								 var num_rows = $('.selected-recus tr').length;
-								 var checked_values = $(".select-recus").multiselect("getChecked").map(function(){
-									 return this.value;
-								 }).get();
-								 if(num_rows == checked_values.length){
-									 $(".progress").addClass("hidden");
-									 $(".submit").prop('disabled', false);
-								 }
-
-
-							 },
-							 error: function(jqXHR, textStatus, errorThrown) {
-								 console.log(jqXHR.status);
-								 console.log(textStatus);
-								 console.log(errorThrown);
+							 //hide progress bar
+							 var num_rows = $('.selected-recus tr').length;
+							 var checked_values = $(".select-recus").multiselect("getChecked").map(function(){
+								 return this.value;
+							 }).get();
+							 if(num_rows == checked_values.length){
+								 $(".progress").addClass("hidden");
+								 $(".submit").prop('disabled', false);
 							 }
-						 });
+
+						 },
+						 error: function(jqXHR, textStatus, errorThrown) {
+							 console.log(jqXHR.status);
+							 console.log(textStatus);
+							 console.log(errorThrown);
+						 }
+					 });
 
 				 } else {
 					 //update prices
@@ -250,6 +300,38 @@
 				newTotal = newTotal.toFixed(2);
 				return newTotal.toString().replace(".", ",");
 			}
+
+		    var url_upload_signature = "{{ path('user_upload_signature') }}";
+		    var user_id = "{{ app.user.id }}";
+		    $('.fileupload-signature').fileupload({
+		        url: url_upload_signature,
+		        dataType: 'json',
+		        add: function(e, data) {
+
+			            var acceptFileTypes = /^image\/(gif|jpe?g|png|bmp)$/i;
+			            if(data.originalFiles[0]['type'].length && !acceptFileTypes.test(data.originalFiles[0]['type'])) {
+			            	$('#error-signature').text('Format de fichier non accepté.');
+		    	            $('#error-signature').removeClass("hidden");
+			            } else {
+			            	  $('#error-signature').addClass("hidden");
+			 	                data.submit();
+			 	        }
+
+		    	},
+		        done: function (e, data) {
+				  $('#progress-signature').addClass("hidden");
+				  $('#signature-img').attr('src', '/web/upload/signature/'+user_id+'/'+data.result.filename);
+				  $('#signature-img').removeClass("hidden");
+		        },
+		        progressall: function (e, data) {
+		        	$('#progress-signature').removeClass("hidden");
+		            var progress = parseInt(data.loaded / data.total * 100, 10);
+		            $('#progress-signature .progress-bar').css(
+		                'width',
+		                progress + '%'
+		            );
+		        }
+		    });
 
 		 });
 	</script>

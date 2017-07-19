@@ -48,6 +48,25 @@ class User extends BaseUser
      */
     private $compteComptableNoteFrais;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="signature", type="string", length=255, nullable=true)
+     */
+    private $signature;
+
+    //for signature upload
+    /**
+     * @Assert\Image(
+     *  maxSize="1M",
+     *  minHeight="50",
+     *  maxHeight="300",
+     *  minWidth="50",
+     *  maxWidth="300" )
+     */
+    private $file;
+    private $tempFilename;
+
     public function __construct()
     {
         parent::__construct();
@@ -145,5 +164,28 @@ class User extends BaseUser
     public function getCompteComptableNoteFrais()
     {
         return $this->compteComptableNoteFrais;
+    }
+
+    /**
+     * Set signature
+     *
+     * @param string $signature
+     * @return User
+     */
+    public function setSignature($signature)
+    {
+        $this->signature = $signature;
+
+        return $this;
+    }
+
+    /**
+     * Get signature
+     *
+     * @return string 
+     */
+    public function getSignature()
+    {
+        return $this->signature;
     }
 }

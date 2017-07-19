@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class NoteFraisRepository extends EntityRepository
 {
-	public function findForList($company, $length, $start, $orderBy, $dir, $search, $rapprochement = '', $dateRange = '' ){
+	public function findForList($company, $length, $start, $orderBy, $dir, $search, $etat = '', $dateRange = '' ){
 
 		$qb = $this->createQueryBuilder('n')
 		->select('n.id',  "CONCAT( CONCAT(u.firstname, ' '),  u.lastname) as nom" , 'n.month', 'n.year', 'n.etat')
@@ -20,6 +20,12 @@ class NoteFraisRepository extends EntityRepository
 		->leftJoin('AppBundle\Entity\User', 'u', 'WITH', 'u.id = n.user')
 		->where('c.company = :company')
 		->setParameter('company', $company);
+
+
+		if($etat != "ALL"){
+			$qb->andWhere('n.etat = :etat')
+				->setParameter('etat', $etat);
+		}
 
 		if( is_array($dateRange) ){
 			$qb
@@ -32,16 +38,7 @@ class NoteFraisRepository extends EntityRepository
 				->setParameter('anneeFin', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end'])->format('Y'))
 				->setParameter('moisFin', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end'])->format('n'));
 		}
-		if( $rapprochement == 'RAPPROCHE') {
-			$qb
-				->andWhere('n.etat = :rapproche')
-				->setParameter('rapproche', $rapprochement);
-		}
-		else if ($rapprochement == 'ENREGISTRE') {
-			$qb
-				->andWhere('n.etat = :rapproche')
-				->setParameter('rapproche', $rapprochement);
-		}
+		
 
 		if($search){
 			$qb->andWhere('u.firstname LIKE :search or u.lastname LIKE :search')

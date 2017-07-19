@@ -17,7 +17,7 @@
 		<div class="col-md-12">
 		    <p>
 		    	<a class="btn btn-success" href="{{ path('ndf_ajouter') }}">
-		    		<span class="glyphicon glyphicon-plus"></span> Ajouter
+		    		<span class="glyphicon glyphicon-plus"></span> Créer une note de frais
 		    	</a>
 
 		    </p>
@@ -43,15 +43,18 @@
 								<td>{{ "%02d"|format(ndf.month) }}/{{ ndf.year }}</td>
 								<td>{{ ndf.nbRecus }}</td>
 								<td>{{ ndf.totalTTC|number_format(2,',',' ') }} €</td>
-								<td>{{ ndf.etatPourUser }}</td>
 								<td>
-									{% if ndf.etat == "DRAFT" %}
-										<a href="{{ path('ndf_valider', {'id' : ndf.id }) }}" class="btn btn-xs btn-success" ​data-toggle="tooltiphich" title="Valider et transmettre à la compta"><span class="glyphicon glyphicon-check"></span></a>
+									{{ ndf.etatPourUser }}
+
+								</td>
+								<td>
+									{% if ndf.etat == "DRAFT" or ndf.etat == "REFUS" %}
+										{# <a href="{{ path('ndf_valider', {'id' : ndf.id }) }}" class="btn btn-xs btn-success" ​data-toggle="tooltiphich" title="Valider et transmettre à la compta"><span class="glyphicon glyphicon-check"></span></a> #}
 										<a href="{{ path('ndf_editer', {'id' : ndf.id }) }}" class="btn btn-xs btn-warning" ​data-toggle="tooltiphich" title="Modifier"><span class="glyphicon glyphicon-pencil"></span></a>
 										<a href="{{ path('ndf_supprimer', {'id' : ndf.id }) }}" class="btn btn-xs btn-danger" ​data-toggle="tooltiphich" title="Supprimer"><span class="glyphicon glyphicon-trash"></span></a>
 									{% else %}
 										<a href="{{ path('ndf_exporter', {'id' : ndf.id }) }}" class="btn btn-xs btn-primary" ​data-toggle="tooltiphich" title="Exporter la note de frais"><span class="glyphicon glyphicon-floppy-disk"></span></a>
-										<a href="{{ path('ndf_recus_exporter', {'id' : ndf.id }) }}" class="btn btn-xs btn-primary" ​data-toggle="tooltiphich" title="Exporter les reçus"><span class="glyphicon glyphicon-file"></span></a>
+										{# <a href="{{ path('ndf_recus_exporter', {'id' : ndf.id }) }}" class="btn btn-xs btn-primary" ​data-toggle="tooltiphich" title="Exporter les reçus"><span class="glyphicon glyphicon-file"></span></a> #}
 									{% endif %}
 								</td>
 							</tr>
