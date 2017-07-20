@@ -12,6 +12,7 @@ use AppBundle\Entity\Compta\CompteBancaire;
 use AppBundle\Form\Compta\MouvementBancaireType;
 use AppBundle\Form\Compta\UploadReleveBancaireType;
 use AppBundle\Form\Compta\UploadReleveBancaireMappingType;
+use AppBundle\Entity\Compta\SoldeCompteBancaire;
 
 class ReleveBancaireController extends Controller
 {
