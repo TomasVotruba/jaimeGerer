@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use AppBundle\Entity\Compta\Rapprochement;
+use AppBundle\Entity\Compta\MouvementBancaire;
 
 
 class RapprochementController extends Controller
