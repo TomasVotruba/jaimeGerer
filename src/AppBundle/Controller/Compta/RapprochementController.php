@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use AppBundle\Entity\Compta\Rapprochement;
 use AppBundle\Entity\Compta\MouvementBancaire;
 
+use AppBundle\Form\Compta\MouvementBancaireType;
+
 
 class RapprochementController extends Controller
 {
