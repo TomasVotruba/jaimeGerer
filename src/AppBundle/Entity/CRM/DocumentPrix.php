@@ -1096,6 +1096,29 @@ class DocumentPrix
     	return $s_etat;
     }
 
+    public function win(){
+      $this->etat = "WON";
+    }
+
+    public function isWon(){
+      if($this->etat == "WON"){
+        return true;
+      }
+      return false;
+    }
+
+    public function lose(){
+      $this->etat = "LOST";
+    }
+
+    public function isLost(){
+      if($this->etat == "LOST"){
+        return true;
+      }
+      return false;
+    }
+
+
     public function __clone() {
 
     	if ($this->id) {

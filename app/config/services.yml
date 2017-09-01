@@ -40,6 +40,11 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         arguments: [ @doctrine.orm.entity_manager ]
+    appbundle.crm_devis_service:
+        class: AppBundle\Service\CRM\DevisService
+        calls:
+            - [setContainer, ["@service_container"]]
+        arguments: [ @doctrine.orm.entity_manager ]
     appbundle.crm_prospection_service:
         class: AppBundle\Service\CRM\ProspectionService
         calls:

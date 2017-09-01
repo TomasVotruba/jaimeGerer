@@ -654,4 +654,41 @@ class DevisController extends Controller
 		));
 	}
 
+	/**
+	 * @Route("/crm/devis/gagner/{id}",
+	 *   name="crm_devis_gagner",
+	 *   options={"expose"=true}
+	 * )
+	 */
+	public function devisGagner(DocumentPrix $devis)
+	{
+
+		$devisService = $this->get('appbundle.crm_opportunite_service');
+		$devisService->win($devis);
+
+		return $this->redirect($this->generateUrl(
+				'crm_devis_voir',
+				array('id' => $devis->getId())
+		));
+	}
+
+	/**
+	 * @Route("/crm/devis/perdre/{id}",
+	 *   name="crm_devis_perdre",
+	 *   options={"expose"=true}
+	 * )
+	 */
+	public function devisPerdre(DocumentPrix $devis)
+	{
+
+		$devisService = $this->get('appbundle.crm_opportunite_service');
+		$devisService->lose($devis);
+
+		return $this->redirect($this->generateUrl(
+				'crm_devis_voir',
+				array('id' => $devis->getId())
+		));
+	}
+
+
 }
