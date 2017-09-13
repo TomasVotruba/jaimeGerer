@@ -490,15 +490,19 @@ class DepenseController extends Controller
 	public function depenseEditerAction(Depense $depense)
 	{
 		$em = $this->getDoctrine()->getManager();
-
+		$opportuniteSousTraitancesRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\OpportuniteSousTraitance');
 		$opportuniteService = $this->get('appbundle.crm_opportunite_service');
+
 		$arr_opporunitesSousTraitances = $opportuniteService->findOpportunitesSousTraitancesAFacturer($this->getUser()->getCompany());
+
+		$depenseOpportuniteSousTraitances = $opportuniteSousTraitancesRepo->findHavingDepense($depense);
 
 		$form = $this->createForm(
 				new DepenseType(
 						$this->getUser()->getCompany()->getId(),
 						$em,
-						$arr_opporunitesSousTraitances
+						$arr_opporunitesSousTraitances,
+						$depenseOpportuniteSousTraitances
 				),
 				$depense
 		);
@@ -552,6 +556,12 @@ class DepenseController extends Controller
 			$depense->setUserEdition($this->getUser());
 			$depense->setTaxe(0); //pour empêcher que la TVA soit enregistrée à la fois dans la ligneDepense et dans la depense
 			$em->persist($depense);
+
+			$opportuniteSousTraitances = $form['opportuniteSousTraitances']->getData();
+			foreach($opportuniteSousTraitances as $sousTraitance){
+				$sousTraitance->addDepense($depense);
+				$em->persist($sousTraitance);
+			}
 
 			//supprimer les lignes du journal des achats
 			$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');

@@ -21,11 +21,12 @@ class DepenseType extends AbstractType
 	private $manager;
 	private $arr_opportuniteSousTraitances;
 
-	public function __construct($companyId = null, ObjectManager $manager, $arr_opportuniteSousTraitances = null)
+	public function __construct($companyId = null, ObjectManager $manager, $arr_opportuniteSousTraitances = null, $depenseOpportuniteSousTraitances = null)
 	{
 		$this->companyId = $companyId;
 		$this->manager = $manager;
 		$this->arr_opportuniteSousTraitances = $arr_opportuniteSousTraitances;
+		$this->depenseOpportuniteSousTraitances = $depenseOpportuniteSousTraitances;
 	}
 
     /**
@@ -149,7 +150,8 @@ class DepenseType extends AbstractType
 						 'multiple' => true,
 						 'expanded' => false,
 						 'attr' => array('class' => 'select-sous-traitances'),
-						 'mapped' => false
+						 'mapped' => false,
+						 'data' => $this->depenseOpportuniteSousTraitances
 
 					))
         ;

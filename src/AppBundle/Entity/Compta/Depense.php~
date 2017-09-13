@@ -164,24 +164,22 @@ class Depense
 	 */
 	private $noteFrais;
 
-  /**
-   * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalAchat", mappedBy="depense", cascade={"remove"}, orphanRemoval=true)
-   */
-  private $journalAchats;
+      /**
+       * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalAchat", mappedBy="depense", cascade={"remove"}, orphanRemoval=true)
+       */
+      private $journalAchats;
 
-  /**
-  * @var string
-  *
-  * @ORM\Column(name="num_fournisseur", type="string", length=255, nullable=true)
-  */
- private $numFournisseur;
+    /**
+      * @var string
+      *
+      * @ORM\Column(name="num_fournisseur", type="string", length=255, nullable=true)
+    */
+    private $numFournisseur;
 
- /**
-  * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\OpportuniteSousTraitance", inversedBy="depenses")
-  * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-  */
- private $opportuniteSousTraitance;
-
+    /**
+    * @ORM\ManyToMany(targetEntity="AppBundle\Entity\CRM\OpportuniteSousTraitance")
+    */
+    private $opportuniteSousTraitances;
 
   /**
    * Constructor
@@ -893,26 +891,37 @@ class Depense
   	}
 
 
+
     /**
-     * Set opportuniteSousTraitance
+     * Add opportuniteSousTraitances
      *
-     * @param \AppBundle\Entity\CRM\OpportuniteSousTraitance $opportuniteSousTraitance
+     * @param \AppBundle\CRM\OpportuniteSousTraitance $opportuniteSousTraitances
      * @return Depense
      */
-    public function setOpportuniteSousTraitance(\AppBundle\Entity\CRM\OpportuniteSousTraitance $opportuniteSousTraitance = null)
+    public function addOpportuniteSousTraitance(\AppBundle\CRM\OpportuniteSousTraitance $opportuniteSousTraitances)
     {
-        $this->opportuniteSousTraitance = $opportuniteSousTraitance;
+        $this->opportuniteSousTraitances[] = $opportuniteSousTraitances;
 
         return $this;
     }
 
     /**
-     * Get opportuniteSousTraitance
+     * Remove opportuniteSousTraitances
      *
-     * @return \AppBundle\Entity\CRM\OpportuniteSousTraitance 
+     * @param \AppBundle\CRM\OpportuniteSousTraitance $opportuniteSousTraitances
      */
-    public function getOpportuniteSousTraitance()
+    public function removeOpportuniteSousTraitance(\AppBundle\CRM\OpportuniteSousTraitance $opportuniteSousTraitances)
     {
-        return $this->opportuniteSousTraitance;
+        $this->opportuniteSousTraitances->removeElement($opportuniteSousTraitances);
+    }
+
+    /**
+     * Get opportuniteSousTraitances
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOpportuniteSousTraitances()
+    {
+        return $this->opportuniteSousTraitances;
     }
 }

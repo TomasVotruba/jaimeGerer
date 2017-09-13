@@ -164,17 +164,17 @@ class Depense
 	 */
 	private $noteFrais;
 
-  /**
-   * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalAchat", mappedBy="depense", cascade={"remove"}, orphanRemoval=true)
-   */
-  private $journalAchats;
+      /**
+       * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalAchat", mappedBy="depense", cascade={"remove"}, orphanRemoval=true)
+       */
+      private $journalAchats;
 
-  /**
-  * @var string
-  *
-  * @ORM\Column(name="num_fournisseur", type="string", length=255, nullable=true)
-  */
- private $numFournisseur;
+    /**
+      * @var string
+      *
+      * @ORM\Column(name="num_fournisseur", type="string", length=255, nullable=true)
+    */
+    private $numFournisseur;
 
   /**
    * Constructor
@@ -884,5 +884,6 @@ class Depense
   		}
   		return (-$total);
   	}
+
 
 }
