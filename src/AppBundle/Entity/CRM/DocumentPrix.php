@@ -1142,7 +1142,7 @@ class DocumentPrix
     			$cloneProduit->setDocumentPrix($this);
     			$this->produits->add($cloneProduit);
     		}
-
+            
     	 }
     }
 

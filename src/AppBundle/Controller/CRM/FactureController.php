@@ -635,6 +635,11 @@ class FactureController extends Controller
 		$settingsNum->setValeur($currentNum);
 		$em->persist($settingsNum);
 
+        $cgv = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'CGV_FACTURE', 'company' => $this->getUser()->getCompany()));
+        if($cgv){
+            $newFacture->setCgv($cgv->getValeur());
+        }
+
 		$settingsActivationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
 		$activationCompta = $settingsActivationRepo->findOneBy(array(
 				'company' => $this->getUser()->getCompany(),
