@@ -316,7 +316,7 @@ class DevisController extends Controller
 
 		$contactAdmin = $settingsRepository->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'CONTACT_ADMINISTRATIF'));
 
-		return $this->render('crm/devis/crm_devis_exporter.html.twig',array(
+		$html = $this->renderView('crm/devis/crm_devis_exporter.html.twig',array(
 				'devis' => $devis,
 				'footer' => $footerDevis,
 				'contact_admin' => $contactAdmin,
