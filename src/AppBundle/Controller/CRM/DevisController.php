@@ -316,7 +316,7 @@ class DevisController extends Controller
 
 		$contactAdmin = $settingsRepository->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'CONTACT_ADMINISTRATIF'));
 
-		$html = $this->renderView('crm/devis/crm_devis_exporter.html.twig',array(
+		return $this->render('crm/devis/crm_devis_exporter.html.twig',array(
 				'devis' => $devis,
 				'footer' => $footerDevis,
 				'contact_admin' => $contactAdmin,
@@ -484,31 +484,30 @@ class DevisController extends Controller
 			$currentNum++;
 			$settingsNum->setValeur($currentNum);
 
-      $settingsActivationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
+      		$settingsActivationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
 			$activationCompta = $settingsActivationRepo->findOneBy(array(
 					'company' => $this->getUser()->getCompany(),
 					'outil' => 'COMPTA',
 			));
 			if($activationCompta){
 				$facture->setCompta(true);
-        //si le compte comptable du client n'existe pas, on le créé
-        $compte = $facture->getCompte();
-        if($compte->getClient() == false || $compte->getCompteComptableClient() == null){
+		        //si le compte comptable du client n'existe pas, on le créé
+		        $compte = $facture->getCompte();
+		        if($compte->getClient() == false || $compte->getCompteComptableClient() == null){
 
-          $compteComptableService = $this->get('appbundle.compta_compte_comptable_controller');
-          $compteComptable = $compteComptableService->createCompteComptableForCompte('411', $compte->getNom());
+		          $compteComptableService = $this->get('appbundle.compta_compte_comptable_controller');
+		          $compteComptable = $compteComptableService->createCompteComptableForCompte('411', $compte->getNom());
 
-          $em->persist($compteComptable);
+		          $em->persist($compteComptable);
 
-          $compte->setClient(true);
-          $compte->setCompteComptableClient($compteComptable);
-          $em->persist($compte);
-         }
-			}
-			else{
+		          $compte->setClient(true);
+		          $compte->setCompteComptableClient($compteComptable);
+		          $em->persist($compte);
+		         }
+			} else{
 				$facture->setCompta(false);
 			}
-      $em->persist($devis);
+      		$em->persist($devis);
 			$em->persist($settingsNum);
 
 			$em->flush();
