@@ -332,6 +332,8 @@ class DevisController extends Controller
 								'margin-top' => '10mm',
 								'zoom' => 0.8, //prod only, zoom level is not the same on Windows
 								'default-header'=>false,
+								'javascript-delay'=>300,
+								'no-stop-slow-scripts' => true
 						)
 				),
 				200,
