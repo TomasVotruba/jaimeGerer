@@ -309,6 +309,8 @@ class DevisController extends Controller
 	 */
 	public function devisExporterAction(DocumentPrix $devis)
 	{
+
+		$utilsService = $this->get('appbundle.utils_service');
 		$settingsRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
 		$footerDevis = $settingsRepository->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'PIED_DE_PAGE_DEVIS'));
 
@@ -320,7 +322,7 @@ class DevisController extends Controller
 				'contact_admin' => $contactAdmin,
 		));
 
-		$nomClient = strtolower(str_ireplace(' ','', $devis->getCompte()->getNom()));
+		$nomClient = $utilsService->removeSpecialChars($devis->getCompte()->getNom());
 		$filename = $devis->getNum().'.'.$nomClient.'.pdf';
 
 		return new Response(
@@ -342,6 +344,9 @@ class DevisController extends Controller
 
 	private function _devisCreatePDF(DocumentPrix $devis)
 	{
+
+		$utilsService = $this->get('appbundle.utils_service');
+
 		$settingsRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
 		$footerDevis = $settingsRepository->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'PIED_DE_PAGE_DEVIS'));
 
@@ -356,8 +361,7 @@ class DevisController extends Controller
 		$filename = 'devis_'.$devis->getNum().'.pdf';
 
 		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../web/files/crm/'.$this->getUser()->getCompany()->getId().'/devis/';
-		$nomClient = strtolower(str_ireplace(' ','', $devis->getCompte()->getNom()));
-        $nomClient = str_replace('é','e',$nomClient);
+		$nomClient = $utilsService->removeSpecialChars($devis->getCompte()->getNom());
 		$fileName =$pdfFolder.$devis->getNum().'.'.$nomClient.'.pdf';
 
 		$this->get('knp_snappy.pdf')->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);

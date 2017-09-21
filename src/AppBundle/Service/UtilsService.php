@@ -33,5 +33,27 @@ class UtilsService extends ContainerAware {
     return $val*100;
   }
 
+  public function removeSpecialChars($string){
+    $specialChars = array(
+       'à', 'ä',
+       'é', 'è', 'ê', 'ë',
+       'ö', 'ô',
+       'ù', 'û', 'ü',
+       ' '
+    );
+
+    $normalChars = array(
+       'a', 'a',
+       'e', 'e', 'e', 'e',
+       'o', 'o',
+       'u', 'u', 'u',
+       ''
+    );
+
+    $string = str_replace($specialChars, $normalChars, $string);
+    return strtolower($string);
+
+  }
+
 
 }

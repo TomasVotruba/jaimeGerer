@@ -123,12 +123,12 @@ class FactureType extends AbstractType
 		        		'required' => true,
 		        		'mapped' => false,
 		        		'label' => 'Contact',
-		        		'attr' => array('class' => 'typeahead-contact')
+		        		'attr' => array('class' => 'typeahead-contact', 'autocomplete' => 'off')
 		        ))
 
 		        ->add('contact', 'hidden', array(
 		        		'required' => true,
-		        		'attr' => array('class' => 'entity-contact', 'autocomplete' => 'off')
+		        		'attr' => array('class' => 'entity-contact')
 		        ))
            	->add('devis', 'entity', array(
            			'class'=> 'AppBundle\Entity\CRM\DocumentPrix',
