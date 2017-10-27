@@ -835,7 +835,7 @@ class DocumentPrix
         $totalTTC = $totalHT+$this->taxe;
       }
 
-    	return $totalTTC;
+    	return round($totalTTC, 2);
     }
 
       public function getTotalTTCAsInt(){
