@@ -165,7 +165,7 @@ class DepenseController extends Controller
 	public function depenseAjouterAction()
 	{
 		$em = $this->getDoctrine()->getManager();
-
+		
 		$opportuniteService = $this->get('appbundle.crm_opportunite_service');
 		$arr_opporunitesSousTraitances = $opportuniteService->findOpportunitesSousTraitancesAFacturer($this->getUser()->getCompany());
 
@@ -298,7 +298,7 @@ class DepenseController extends Controller
 					$em->persist($compte);
 
 				}
-
+	
 				$opportuniteSousTraitances = $form['opportuniteSousTraitances']->getData();
 				foreach($opportuniteSousTraitances as $sousTraitance){
 					$sousTraitance->addDepense($depense);
@@ -466,8 +466,12 @@ class DepenseController extends Controller
 	public function depenseVoirAction(Depense $depense)
 	{
 		
+		$opportuniteSousTraitanceRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\OpportuniteSousTraitance');
+		$arr_sousTraitances = $opportuniteSousTraitanceRepo->findHavingDepense($depense);
+
 		return $this->render('compta/depense/compta_depense_voir.html.twig', array(
-			'depense' => $depense
+			'depense' => $depense,
+			'arr_sousTraitances' => $arr_sousTraitances
 		));
 	}
 
@@ -556,6 +560,12 @@ class DepenseController extends Controller
 			$depense->setUserEdition($this->getUser());
 			$depense->setTaxe(0); //pour empêcher que la TVA soit enregistrée à la fois dans la ligneDepense et dans la depense
 			$em->persist($depense);
+
+			$arr_sousTraitances = $opportuniteSousTraitancesRepo->findHavingDepense($depense);
+			foreach($arr_sousTraitances as $st){
+				$em->remove($st);
+				$em->flush();
+			}
 
 			$opportuniteSousTraitances = $form['opportuniteSousTraitances']->getData();
 			foreach($opportuniteSousTraitances as $sousTraitance){
