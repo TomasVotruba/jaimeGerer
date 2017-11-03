@@ -139,6 +139,9 @@
                             if (row['avoir'] != null) {
                                 s += "<br /><span class='s glyphicon glyphicon-scissors'></span> <span class='s'>Avoir " + row['avoir'] + "</span>";
                             };
+                            if (row['cheque'] != null) {
+                                s += '<br /><span class="glyphicon glyphicon-paperclip s"></span> <span class="s">' + row['cheque'] + "</span>";
+                            };
                             return s;
                         },
                         "targets": 0

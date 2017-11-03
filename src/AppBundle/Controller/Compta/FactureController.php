@@ -125,6 +125,7 @@ class FactureController extends Controller
 		$col = $arr_sort[0]['column'];
 
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
+		$chequesRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\RemiseCheque');
 
 		$arr_search = $requestData->get('search');
 		$arr_date = $requestData->get('dateRange');
@@ -143,6 +144,8 @@ class FactureController extends Controller
 				$arr_date
 		);
 
+		$arr_remise_cheques = $chequesRepository->findForCompany($this->getUser()->getCompany());
+
 		for($i=0; $i<count($list); $i++){
 
 			$arr_f = $list[$i];
@@ -154,6 +157,17 @@ class FactureController extends Controller
 			$list[$i]['avoir'] = null;
 			foreach($facture->getAvoirs() as $avoir){
 				$list[$i]['avoir'].=$avoir->getNum().' ';
+			}
+
+			$list[$i]['cheque'] = null;
+			foreach($arr_remise_cheques as $remiseCheque){
+				foreach($remiseCheque->getCheques() as $cheque){
+					foreach($cheque->getPieces() as $piece){
+						if($piece->getFacture()->getId() == $arr_f['id']){
+							$list[$i]['cheque'] = $remiseCheque->getNum();
+						}
+					}
+				}
 			}
 
 		}
