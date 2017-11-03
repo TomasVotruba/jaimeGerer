@@ -14,7 +14,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
             <p>
                 <a href="{{ path('compta_depense_ajouter') }}" class="btn btn-success">
                     <span class="glyphicon glyphicon-plus"></span> Ajouter une dépense
@@ -22,6 +22,11 @@
                 <a class="btn btn-info" href="{{ path('compta_depense_importer_historique' )}}">
                     Importer historique de dépenses
                 </a>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <p class="align-right" id="wrapper-totaux">
+                <!-- filled by AJAX when dateRange is changed -->
             </p>
         </div>
     </div>
@@ -61,6 +66,8 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+
+            updateTotaux();
 
             var url = Routing.generate('compta_depense_liste_ajax');
             var tableau = $('#table_depense_list').DataTable({
@@ -207,9 +214,23 @@
                   $('#dateRange').change(function() {
                       $('#table_depense_list tbody').find('tr').remove();
                       tableau.draw();
+                      updateTotaux();
                   });
                 },
             })
+
+            function updateTotaux() {
+                $.ajax({
+                    url: Routing.generate('compta_depense_total_ajax'),
+                    type: 'POST',
+                    data: {
+                        dateRange: $("#dateRange").daterangepicker("getRange")
+                    }
+                }).done(function(data) {
+                    $('#wrapper-totaux').html(data);
+                });
+
+            }
         });
     </script>
 {% endblock %}

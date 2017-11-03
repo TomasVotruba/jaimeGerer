@@ -87,7 +87,7 @@ class DepenseRepository extends EntityRepository
 		return $qb->getQuery()->getSingleScalarResult();
 	}
 
-	public function findForCompany($company){
+	public function findForCompany($company, $dateRange = null){
 		$qb = $this->createQueryBuilder('d')
 		->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
 		->leftJoin('AppBundle\Entity\Compta\LigneDepense', 'l', 'WITH', 'd.id = l.depense')
@@ -96,6 +96,17 @@ class DepenseRepository extends EntityRepository
 		->orderBy('c.nom', 'ASC')
 		->addOrderBy('l.montant', 'ASC')
 		;
+
+		if( is_array($dateRange) ){
+			$dateStart = $dateRange['start'] instanceof \DateTime ? $dateRange['start'] :
+								\DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['start']) ;
+			$dateEnd = $dateRange['end'] instanceof \DateTime ? $dateRange['end'] :
+							\DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end']) ;
+			$qb->andWhere('d.date >= :dateDebut')
+				->setParameter('dateDebut', $dateStart)
+				->andWhere('d.date <= :dateFin')
+				->setParameter('dateFin', $dateEnd);
+		}
 
 		return $qb->getQuery()->getResult();
 	}

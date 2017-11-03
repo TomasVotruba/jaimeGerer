@@ -160,6 +160,38 @@ class DepenseController extends Controller
 	}
 
 	/**
+	 * Calculate the total (HT and TTC) all invoices in a date range
+	 * passed as POST parameter
+	 * @return Response 	Rendered view
+	 *
+	 * @Route("/compta/depense/total/ajax",
+	 * 	name="compta_depense_total_ajax",
+	 * 	options={"expose"=true}
+	 * )
+	 */
+	public function depenseTotalAjaxAction(){
+
+		$arr_date = $this->getRequest()->get('dateRange');
+
+		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
+		$arr_depenses = $repository->findForCompany($this->getUser()->getCompany(), $arr_date);
+
+		$arr_totaux = array(
+			'ht' => 0,
+			'ttc' => 0
+		);
+
+		foreach($arr_depenses as $depense){
+			$arr_totaux['ht']+= $depense->getTotalHT();
+			$arr_totaux['ttc']+= $depense->getTotalTTC();
+		}
+
+		return $this->render('compta/depense/compta_depense_liste_totaux.html.twig', array(
+			'arr_totaux' => $arr_totaux
+		));
+	}
+
+	/**
 	 * @Route("/compta/depense/ajouter", name="compta_depense_ajouter")
 	 */
 	public function depenseAjouterAction()
