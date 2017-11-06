@@ -119,6 +119,7 @@ class TableauTVAService extends ContainerAware {
 								}
 							}
 						}
+
 					} elseif($rapprochement->getRemiseCheque()){
 						$arr_cheques = $rapprochement->getRemiseCheque()->getCheques();
 						foreach($arr_cheques as $cheque){

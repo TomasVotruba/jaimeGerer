@@ -712,12 +712,17 @@ class DocumentPrix
 	    		$ht = $sous_total;
 	    	}
 
+            if($this->hasTypeProduit("Panorama")){
+                $facturationBelge = $ht*$this->facturationBelgePercent;
+                $ht+= $facturationBelge;
+            }  
+
 	    	$ttc = $ht+$this->taxe;
     	}
     	$arr_totaux = array();
     	$arr_totaux['sous_total'] = $sous_total;
-    	$arr_totaux['HT'] = $ht;
-    	$arr_totaux['TTC'] = $ttc;
+    	$arr_totaux['HT'] = round($ht, 2);
+    	$arr_totaux['TTC'] = round($ttc, 2);
 
     	return $arr_totaux;
     }
@@ -818,7 +823,14 @@ class DocumentPrix
     	}
 
     	$totalHT = $sousTotal - $this->remise;
-    	return $totalHT;
+
+        if($this->hasTypeProduit("Panorama")){
+            $facturationBelge = $totalHT*$this->facturationBelgePercent;
+            $totalHT+= $facturationBelge;
+
+        }   
+        
+    	return round($totalHT, 2);
     }
 
     public function getTotalTTC(){
@@ -829,11 +841,12 @@ class DocumentPrix
 
     	$totalHT = $sousTotal - $this->remise;
 
-      if($this->hasTypeProduit("Panorama")){
-        $totalTTC = $totalHT+$this->getFacturationBelge();
-      } else {
-        $totalTTC = $totalHT+$this->taxe;
-      }
+        if($this->hasTypeProduit("Panorama")){
+            $facturationBelge = $totalHT*$this->facturationBelgePercent;
+            $totalTTC = $totalHT + $facturationBelge;
+        } else {
+            $totalTTC = $totalHT+$this->taxe;
+        }
 
     	return round($totalTTC, 2);
     }
@@ -846,7 +859,12 @@ class DocumentPrix
 
         $totalHT = $sousTotal - $this->remise;
 
-        $totalTTC = $totalHT+$this->taxe;
+        if($this->hasTypeProduit("Panorama")){
+            $totalTTC = $totalHT+$this->getFacturationBelge();
+        } else {
+            $totalTTC = $totalHT+$this->taxe;
+        }
+
         return intval($totalTTC*100);
     }
 
