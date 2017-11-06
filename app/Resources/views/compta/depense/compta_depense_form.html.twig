@@ -47,21 +47,23 @@
 
 <div class="row">
 	<div class="col-md-6">
-		{{ form_row(form.modePaiement) }}
+		{{ form_row(form.analytique) }}
 	</div>
+	
 	<div class="col-md-6">
 		{{ form_row(form.conditionReglement) }}
 	</div>
 </div>
 	<div class="row">
 		<div class="col-md-6">
+			{{ form_row(form.modePaiement) }}
+		</div>
+		<div class="col-md-6">
 			<div class="wrapper-num-cheque hidden">
 					{{ form_row(form.numCheque) }}
 			</div>
 		</div>
-		<div class="col-md-6">
-			{{ form_row(form.analytique) }}
-		</div>
+		
 	</div>
 
 <div class="row">

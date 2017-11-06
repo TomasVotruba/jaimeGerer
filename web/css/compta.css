@@ -316,8 +316,20 @@ body{
 	background:#F2835C;
 }
 
+#tva-table td, #tva-table th{
+	border: 1px solid #eee;
+}
+
 .thick-border-top{
 	border-top: 2px solid #555 !important;
+}
+
+tr.black-border-top td, td.black-border-top, th.black-border-top {
+	border-top: 1px solid #555 !important;
+}
+
+tr.black-border-bottom td, td.black-border-bottom, th.black-border-bottom {
+	border-bottom: 1px solid #555 !important;
 }
 
 .thick-border-bottom th{
@@ -326,6 +338,14 @@ body{
 
 .thick-border-left{
 	border-left: 2px solid #555 !important;
+}
+
+.black-border-left{
+	border-left: 1px solid #555 !important;
+}
+
+.black-border-right{
+	border-right: 1px solid #555 !important;
 }
 
 td.accurate, th.poste{

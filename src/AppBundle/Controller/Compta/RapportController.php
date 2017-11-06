@@ -78,7 +78,7 @@ class RapportController extends Controller
 	public function rapportTVAVoirAction($year)
 	{
 		$tableauTVAService = $this->get('appbundle.compta_tableau_tva_service');
-		  $arr_tva = $tableauTVAService->creerTableauTVA( $this->getUser()->getCompany(), $year );
+		$arr_tva = $tableauTVAService->creerTableauTVA( $this->getUser()->getCompany(), $year );
 
 		return $this->render('compta/rapport/compta_rapport_tva_voir.html.twig', array(
 			'arr_tva' => $arr_tva,
@@ -685,6 +685,49 @@ class RapportController extends Controller
 			 $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 			 $objWriter->save('php://output');
 			 exit();
+
+	}
+
+
+	/**
+	 * @Route("/compta/erreurs-factures",
+	 *   name="compta_erreurs_factures",
+	 *   
+	 * )
+	 */
+	public function rapportErreursFacturesAction()
+	{
+		$facturesRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
+
+		$arr_factures = $facturesRepo->findForCompany(
+			$this->getUser()->getCompany(),
+			'FACTURE',
+			true
+		);
+
+		foreach($arr_factures as $facture){
+			$analytique = $facture->getAnalytique();
+			if($analytique == null){
+				$ok = false;
+			} else {
+				$ok = true;
+				foreach($facture->getProduits() as $produit){
+
+					if($produit->getType()->getValeur() != $facture->getAnalytique()->getValeur() && $produit->getType()->getValeur() == 'FC'){
+						$ok = false;
+						echo $facture->getNum().' : '.$produit->getType()->getValeur().' - '.$facture->getAnalytique()->getValeur();
+						echo '<br />';
+					}
+
+				}
+			}
+			
+
+		
+
+		}
+
+		return new Response();
 
 	}
 

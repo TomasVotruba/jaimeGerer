@@ -39,7 +39,7 @@ class UtilsService extends ContainerAware {
        'é', 'è', 'ê', 'ë',
        'ö', 'ô',
        'ù', 'û', 'ü',
-       ' '
+       ' ', '-'
     );
 
     $normalChars = array(
@@ -47,7 +47,7 @@ class UtilsService extends ContainerAware {
        'e', 'e', 'e', 'e',
        'o', 'o',
        'u', 'u', 'u',
-       ''
+       '', ''
     );
 
     $string = str_replace($specialChars, $normalChars, $string);
