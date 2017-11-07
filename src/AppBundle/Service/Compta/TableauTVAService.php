@@ -120,9 +120,6 @@ class TableauTVAService extends ContainerAware {
 									$arr_soumis[$type]['taxe_percent']['other']+=$rapprochement->getFacture()->getTaxe();
 								}
 							}
-							if($type == "france" && $arr_periode['mois'] == "02" && $arr_periode['annee'] == "17"){
-								$this->logger->info($rapprochement->getFacture()->getNum().' : '.$rapprochement->getFacture()->getTotalHT().' '.$rapprochement->getFacture()->getTaxe().' '.$rapprochement->getFacture()->getTotalTTC());
-							}
 						}
 
 					} elseif($rapprochement->getRemiseCheque()){
