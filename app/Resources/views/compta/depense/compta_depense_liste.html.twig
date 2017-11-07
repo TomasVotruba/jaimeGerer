@@ -67,6 +67,13 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
+             //set date range picker to current year
+            var year = (new Date).getFullYear();
+            $("#dateRange").daterangepicker("setRange", {
+                start: new Date(year, 0, 1),
+                end: new Date()
+            })
+
             updateTotaux();
 
             var url = Routing.generate('compta_depense_liste_ajax');
