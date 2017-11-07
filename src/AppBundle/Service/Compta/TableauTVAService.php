@@ -260,7 +260,6 @@ class TableauTVAService extends ContainerAware {
 								$arr_soumis[$type]['taxe_percent'][$taxePercent]+=$depense->getTotalTVA();
 							} else {
 								$arr_soumis[$type]['taxe_percent']['other']+=$depense->getTotalTVA();
-								dump($depense->getNum());
 							}
 						}
 						
@@ -270,8 +269,6 @@ class TableauTVAService extends ContainerAware {
 
 			$arr_periode['sortie_soumis'] = $arr_soumis;
 			$arr_periode['sortie_non_soumis'] = $arr_non_soumis;
-
-			//dump($arr_periode['sortie_soumis']);
 
 			$arr_types = array('france', 'intra', 'extra');
 			foreach($arr_types as $type){
