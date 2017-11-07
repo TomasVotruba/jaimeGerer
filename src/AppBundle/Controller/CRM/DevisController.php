@@ -694,5 +694,40 @@ class DevisController extends Controller
 		));
 	}
 
+	/**
+	 * @Route("/crm/devis/analytique",
+	 *   name="crm_devis_analytique"
+	 * )
+	 */
+	public function devisAnalytique()
+	{
+		$em = $this->getDoctrine()->getManager();
+		$devisRepo = $em->getRepository('AppBundle:CRM\DocumentPrix');
+		$settingsRepo = $em->getRepository('AppBundle:Settings');
+
+		$arr_settings_analytiques = $settingsRepo->findBy(array(
+			'company' => $this->getUser()->getCompany(),
+			'parametre' => 'ANALYTIQUE'
+		));
+
+		$arr_analytique = array();
+		foreach($arr_settings_analytiques as $a){
+			$arr_analytique[$a->getValeur()] = $a;
+		}
+
+		$arr_devis = $devisRepo->findForCompany($this->getUser()->getCompany(), 'DEVIS');
+		foreach($arr_devis as $devis){
+			$produit = $devis->getProduits()[0];
+			if($produit->getType()){
+				$analytique = $arr_analytique[$produit->getType()->getValeur()];
+				$devis->setAnalytique($analytique);
+				$em->persist($devis);
+				$em->flush();
+			}
+			
+		}
+
+		return new Response();
+	}
 
 }
