@@ -139,9 +139,9 @@
         // ajoute un lien « add a produit »
         var $addProduitLink = $('<a href="#" class="add_produit_link btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"</a>');
         var $newProduitLi = $('<li></li>').append($addProduitLink);
-			  var hasFC = false;
-			  var hasPanorama = false;
-				var facture_id = "{{ facture.id }}";
+	    var hasFC = false;
+	    var hasPanorama = false;
+		var facture_id = "{{ facture.id }}";
 
         $(document).ready(function() {
 
@@ -152,11 +152,11 @@
             // Récupèrer le nombre de produits pour l'incrémenter et éviter le bug du jeu de suppression
             indexNewCollection = collectionHolder.children().length;
 
-						if(facture_id == ""){
-							addProduitForm(collectionHolder, $newProduitLi, false);
-						}
+			if(facture_id == ""){
+				addProduitForm(collectionHolder, $newProduitLi, false);
+			}
 
-						updateProduitType();
+			updateProduitType();
 
             $addProduitLink.on('click', function(e) {
                 // empêche le lien de créer un « # » dans l'URL
@@ -255,13 +255,18 @@
 
             function updateProduitType() {
 
-								hasFC = false;
+				hasFC = false;
                 $.each($('.produit-type'), function(index, value) {
                     var id = $(this).attr('id');
                     var selector = $('#' + id + ' option:selected');
                     if (selector.text() == 'FC') {
                         hasFC = true;
                     }
+
+                    $(".facture-analytique option").filter(function() {
+                        //may want to use $.trim in here
+                        return $(this).text() == selector.text(); 
+                    }).prop('selected', true);
                 });
 
                 if (hasFC) {
@@ -274,7 +279,7 @@
                     $('.fc-taxe-hidden').addClass('hidden');
                 }
 
-								hasPanorama = false;
+				hasPanorama = false;
                 $.each($('.produit-type'), function(index, value) {
                     var id = $(this).attr('id');
                     var selector = $('#' + id + ' option:selected');
@@ -293,11 +298,13 @@
                     $('#totaux-wrapper').removeClass("hidden");
                     $('#totaux-wrapper-belgique').addClass("hidden");
                     $('#total-wrapper').find('label').text('Total TTC');
-										$('.facturation-belgique-percent').val(null);
-										$('.facturation-belgique').val(null);
+					$('.facturation-belgique-percent').val(null);
+					$('.facturation-belgique').val(null);
                 }
 
-								updatefactureTotaux();
+				updatefactureTotaux();
+
+
             }
 
             function updateMontant(element) {
@@ -356,9 +363,9 @@
                 $('.facture-total-ht').val(totalHT.toFixed(2));
 
                 updateTaxe();
-								if(hasPanorama){
-									  updateFacturationBelgique();
-								}
+				if(hasPanorama){
+					  updateFacturationBelgique();
+				}
             }
 
             function updateTaxe() {

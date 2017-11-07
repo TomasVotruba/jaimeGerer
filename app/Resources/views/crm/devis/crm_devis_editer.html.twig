@@ -146,6 +146,11 @@
 			    	if(selector.text() == 'FC'){
 			    		hasFC = true;
 				    }
+
+				    $(".devis-analytique option").filter(function() {
+				        //may want to use $.trim in here
+				        return $(this).text() == selector.text(); 
+				    }).prop('selected', true);
 		    	});
 
 		    	if(hasFC){

@@ -149,6 +149,16 @@
 								{% endif %}
 				    		</td>
 	    				</tr>
+	    				<tr>
+	    					<td>Analytique</td>
+				    		<td>
+				    			{% if devis.analytique == null %}
+				    				-
+				    			{% else %}
+									{{ devis.analytique  }}
+								{% endif %}
+				    		</td>
+	    				</tr>
 	    			</tbody>
 	    		</table>
 	    	</div>

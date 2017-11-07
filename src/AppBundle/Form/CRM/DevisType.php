@@ -165,6 +165,22 @@ class DevisType extends AbstractType
            			'read_only' => true,
            			'attr' => array('class' => 'devis-total-ttc')
            	))
+            ->add('analytique', 'entity', array(
+                'class'=> 'AppBundle\Entity\Settings',
+                'required' => true,
+                'label' => 'Analytique',
+                'property' => 'valeur',
+                'query_builder' => function(EntityRepository $er) {
+                  return $er->createQueryBuilder('s')
+                  ->where('s.company = :company')
+                  ->andWhere('s.module = :module')
+                  ->andWhere('s.parametre = :parametre')
+                  ->setParameter('company', $this->companyId)
+                  ->setParameter('module', 'CRM')
+                  ->setParameter('parametre', 'ANALYTIQUE');
+                },
+                'attr' => array('class' => 'devis-analytique')
+            ))
         ;
 
       }

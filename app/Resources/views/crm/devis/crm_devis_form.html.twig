@@ -7,11 +7,12 @@
 	<div class="col-md-6">
 		{{ form_errors(form) }}
 		{{ form_row(form.objet) }}
-		{{ form_row(form.etat) }}
+		{{ form_row(form.dateValidite) }}
+		{{ form_row(form.analytique) }}
 	</div>
 	<div class="col-md-6">
-		{{ form_row(form.dateValidite) }}
 		{{ form_row(form.userGestion) }}
+		{{ form_row(form.etat) }}
 	</div>
 </div>
 <div class="row">
@@ -184,5 +185,5 @@
 
 	</script>
 
-	<script src="{{ asset('js/error.js') }}"></script>
+
 {% endblock %}

@@ -456,7 +456,6 @@ class DevisController extends Controller
 
 			$em = $this->getDoctrine()->getManager();
 			$data = $form->getData();
-			//~ var_dump($data); exit;
 			$facture = clone $devis;
 
             $devis->setEtat("WON");

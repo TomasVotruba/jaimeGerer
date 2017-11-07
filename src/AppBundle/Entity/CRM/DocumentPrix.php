@@ -1350,9 +1350,12 @@ class DocumentPrix
     public function hasTypeProduit($type){
 
       foreach($this->produits as $produit){
-        if( strtoupper($produit->getType()->getValeur()) == strtoupper($type) ){
-          return true;
+        if($produit->getType()){
+            if( strtoupper($produit->getType()->getValeur()) == strtoupper($type) ){
+                return true;
+            }
         }
+        
       }
 
       return false;
