@@ -3,9 +3,9 @@
       <li {% if app.request.pathInfo == "/compta/rapport/tva"  %} class="active" {% endif %}>
         <a href="{{ path('compta_rapport_tva_index') }}" >TVA</a>
       </li>
-      <li {% if app.request.pathInfo == "/compta/rapport/tableau-tresorerie"  %} class="active" {% endif %}>
+   {#    <li {% if app.request.pathInfo == "/compta/rapport/tableau-tresorerie"  %} class="active" {% endif %}>
           <a href="{{ path('compta_rapport_tableau_tresorerie_index') }}">Tableau de trésorerie</a>
-      </li>
+      </li> #}
       <li {% if app.request.pathInfo == "/compta/rapport/tableau-bord"  %} class="active" {% endif %}>
           <a href="{{ path('compta_rapport_tableau_bord_index') }}">Tableau de bord</a>
       </li>
