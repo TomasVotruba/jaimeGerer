@@ -9,11 +9,13 @@ class TableauTVAService extends ContainerAware {
 
   protected $em;
   protected $utilsService;
+  protected $logger;
 
-  public function __construct(\Doctrine\ORM\EntityManager $em, $utilsService)
+  public function __construct(\Doctrine\ORM\EntityManager $em, $utilsService, $logger)
   {
     $this->em = $em;
     $this->utilsService = $utilsService;
+    $this->logger = $logger;
   }
 
   public function creerTableauTVA($company, $year){
@@ -118,6 +120,9 @@ class TableauTVAService extends ContainerAware {
 									$arr_soumis[$type]['taxe_percent']['other']+=$rapprochement->getFacture()->getTaxe();
 								}
 							}
+							if($type == "france" && $arr_periode['mois'] == "02" && $arr_periode['annee'] == "17"){
+								$this->logger->info($rapprochement->getFacture()->getNum().' : '.$rapprochement->getFacture()->getTotalHT().' '.$rapprochement->getFacture()->getTaxe().' '.$rapprochement->getFacture()->getTotalTTC());
+							}
 						}
 
 					} elseif($rapprochement->getRemiseCheque()){
@@ -163,6 +168,12 @@ class TableauTVAService extends ContainerAware {
 				$arr_soumis[$type]['sortieHT'] = 0;
 				$arr_soumis[$type]['sortieTVA'] = 0;
 				$arr_soumis[$type]['sortieTTC'] = 0;
+				$arr_soumis[$type]['taxe_percent'] = array(
+						'55' => 0,
+						'100' => 0,
+						'200' => 0,
+						'other' => 0
+				);
 			}
 
 			foreach($arr_non_soumis as $type => $arr){
@@ -197,6 +208,22 @@ class TableauTVAService extends ContainerAware {
 							$arr_soumis[$type]['sortieHT']+= $rapprochement->getDepense()->getTotalHT();
 							$arr_soumis[$type]['sortieTVA']+= $rapprochement->getDepense()->getTotalTVA();
 
+							$taxePercent = 0;
+							if(round($depense->getTotalHT() * 0.2, 2) == $depense->getTotalTVA()){
+								$taxePercent = 200;
+							} else if(round($depense->getTotalHT() * 0.055, 2) == $depense->getTotalTVA()){
+								$taxePercent = 55;
+							} else if(round($depense->getTotalHT() * 0.1, 2) == $depense->getTotalTVA()){
+								$taxePercent = 100;
+							}
+
+							if(array_key_exists($taxePercent, $arr_soumis[$type]['taxe_percent'])){
+								$arr_soumis[$type]['taxe_percent'][$taxePercent]+=$depense->getTotalTVA();
+							} else {
+								$arr_soumis[$type]['taxe_percent']['other']+=$depense->getTotalTVA();
+							}
+							
+
 						}
 					}
 				}
@@ -221,12 +248,33 @@ class TableauTVAService extends ContainerAware {
 						$arr_soumis[$type]['sortieTTC']+= $depense->getTotalTTC();
 						$arr_soumis[$type]['sortieHT']+= $depense->getTotalHT();
 						$arr_soumis[$type]['sortieTVA']+= $depense->getTotalTVA();
+
+						if($depense->getTotalTVA() != 0){
+							$taxePercent = 0;
+							if(round($depense->getTotalHT() * 0.2, 2) == $depense->getTotalTVA()){
+								$taxePercent = 200;
+							} else if(round($depense->getTotalHT() * 0.055, 2) == $depense->getTotalTVA()){
+								$taxePercent = 55;
+							} else if(round($depense->getTotalHT() * 0.1, 2) == $depense->getTotalTVA()){
+								$taxePercent = 100;
+							}
+
+							if(array_key_exists($taxePercent, $arr_soumis[$type]['taxe_percent'])){
+								$arr_soumis[$type]['taxe_percent'][$taxePercent]+=$depense->getTotalTVA();
+							} else {
+								$arr_soumis[$type]['taxe_percent']['other']+=$depense->getTotalTVA();
+								dump($depense->getNum());
+							}
+						}
+						
 					}
 				}
 			}
 
 			$arr_periode['sortie_soumis'] = $arr_soumis;
 			$arr_periode['sortie_non_soumis'] = $arr_non_soumis;
+
+			//dump($arr_periode['sortie_soumis']);
 
 			$arr_types = array('france', 'intra', 'extra');
 			foreach($arr_types as $type){

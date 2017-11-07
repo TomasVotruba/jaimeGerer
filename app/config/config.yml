@@ -235,3 +235,12 @@ services:
         class: Twig_Extensions_Extension_Intl
         tags:
             - { name: twig.extension }
+
+monolog:
+    channels: ['tva_logger']
+    handlers:
+        tva_logger:
+            level:    debug
+            path:     '%kernel.logs_dir%/tva.log'
+            channels: [tva_logger]
+            type:     stream

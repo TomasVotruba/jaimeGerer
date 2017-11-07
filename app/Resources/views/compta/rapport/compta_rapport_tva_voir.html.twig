@@ -28,7 +28,15 @@
 			{# <td class="thick-border-left">Soumis à TVA</td> #}
 			<td class="align-right thick-border-left">{{ arr_periode.sortie_soumis[type].sortieTTC|number_format(2,',',' ') }} €</td>
 			<td class="align-right">{{ arr_periode.sortie_soumis[type].sortieHT|number_format(2,',',' ') }} €</td>
-			<td class="align-right">{{ arr_periode.sortie_soumis[type].sortieTVA|number_format(2,',',' ') }} €</td>
+			<td class="align-right">
+				{{ arr_periode.sortie_soumis[type].sortieTVA|number_format(2,',',' ') }} €<br />
+				{% if arr_periode.sortie_soumis[type].taxe_percent.55 != 0 %}<i>5,5% : {{ arr_periode.sortie_soumis[type].taxe_percent.55|number_format(2,',',' ') }} €</i><br />{% endif %}
+				{% if arr_periode.sortie_soumis[type].taxe_percent.100 != 0 %}<i>10% : {{ arr_periode.sortie_soumis[type].taxe_percent.100|number_format(2,',',' ') }} €</i><br />{% endif %}
+				{% if arr_periode.sortie_soumis[type].taxe_percent.200 != 0 %}<i>20% : {{ arr_periode.sortie_soumis[type].taxe_percent.200|number_format(2,',',' ') }} €</i>{% endif %}<br />
+				{% if arr_periode.sortie_soumis[type].taxe_percent.other != 0 %}<i>Autre : {{ arr_periode.sortie_soumis[type].taxe_percent.other|number_format(2,',',' ') }} €</i>{% endif %}
+
+
+			</td>
 
 			
 			<td class="align-right thick-border-left{% if arr_periode.balance[type] < 0 %} red {% else %} green{% endif %}">{{ arr_periode.balance[type]|number_format(2,',',' ') }} €</td>
@@ -56,7 +64,7 @@
 			<td class="align-right thick-border-left">{{ arr_periode.sortie_non_soumis[type].sortieTTC|number_format(2,',',' ') }} €</td>
 			<td class="align-right">{{ arr_periode.sortie_non_soumis[type].sortieHT|number_format(2,',',' ') }} €</td>
 			<td class="align-right">-</td>
-			<td class="align-right">-</td>
+			<td class="align-right thick-border-left">-</td>
 
 		</tr>
 	{% endfor %}

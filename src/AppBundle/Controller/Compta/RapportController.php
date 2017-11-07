@@ -707,24 +707,15 @@ class RapportController extends Controller
 
 		foreach($arr_factures as $facture){
 			$analytique = $facture->getAnalytique();
-			if($analytique == null){
-				$ok = false;
-			} else {
-				$ok = true;
-				foreach($facture->getProduits() as $produit){
-
-					if($produit->getType()->getValeur() != $facture->getAnalytique()->getValeur() && $produit->getType()->getValeur() == 'FC'){
-						$ok = false;
-						echo $facture->getNum().' : '.$produit->getType()->getValeur().' - '.$facture->getAnalytique()->getValeur();
-						echo '<br />';
-					}
-
-				}
+			$ok = true;
+			if($facture->getAnalytique() == null){
+				echo $facture->getNum().' : NO ANALYTIQUE - '.$facture->getTaxe();
+				echo '<br />';
+			} else if($facture->getAnalytique()->getValeur() != 'FC' && $facture->getTaxe() == 0 && $facture->getPays() == "France"){
+				echo $facture->getNum().' : '.$facture->getAnalytique().' - '.$facture->getTaxe();
+				echo '<br />';
 			}
-			
-
-		
-
+	
 		}
 
 		return new Response();

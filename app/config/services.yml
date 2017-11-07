@@ -101,7 +101,7 @@ services:
         class: AppBundle\Service\Compta\TableauTVAService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager, @appbundle.utils_service ]
+        arguments: [ @doctrine.orm.entity_manager, @appbundle.utils_service, @monolog.logger.tva_logger ]
     appbundle.compta_grand_livre_service:
         class: AppBundle\Service\Compta\GrandLivreService
         calls:
