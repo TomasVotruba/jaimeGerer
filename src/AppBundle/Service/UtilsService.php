@@ -37,17 +37,19 @@ class UtilsService extends ContainerAware {
     $specialChars = array(
        'à', 'ä',
        'é', 'è', 'ê', 'ë',
+       'ï', 'î',
        'ö', 'ô',
        'ù', 'û', 'ü',
-       ' ', '-'
+       ' ', '-', '\''
     );
 
     $normalChars = array(
        'a', 'a',
        'e', 'e', 'e', 'e',
+       'i', 'i',
        'o', 'o',
        'u', 'u', 'u',
-       '', ''
+       '', '', ''
     );
 
     $string = str_replace($specialChars, $normalChars, $string);

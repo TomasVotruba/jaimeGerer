@@ -566,7 +566,7 @@ class DevisController extends Controller
 			$message = $form->get('message')->getData();
 
 			$filename = $this->_devisCreatePDF($devis);
-
+			
 			try{
 				$mail = \Swift_Message::newInstance()
 					->setSubject($objet)

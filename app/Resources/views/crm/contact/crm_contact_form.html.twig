@@ -90,7 +90,6 @@
 								//console.log(parsedGeocodeResult);
 								//$('#callback_result').html(JSON.stringify(parsedGeocodeResult, null, 4));
 								var addressToField = ( parsedGeocodeResult.street_number ? parsedGeocodeResult.street_number + ', ' : '' ) + parsedGeocodeResult.route;
-								console.log(addressToField);
 								$('#{{ form.adresse.vars.id }}').val(addressToField);
 								//$('#callback_result').html(parsedGeocodeResult.street_number + ', ' +parsedGeocodeResult.route);
 							},

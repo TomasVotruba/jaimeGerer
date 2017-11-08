@@ -73,10 +73,14 @@ swiftmailer:
     default_mailer: gmail
     mailers:
         gmail:
-            transport:  gmail
-            username:   gilquin.nicomak@gmail.com
-            password:   S!ss!&B@tw0m@n
+            host: box421.bluehost.com
+            transport:  smtp
+            username:   gilquin@nicomak.ue
+            password:   N!c0m@k007!
             delivery_address: test@nicomak.eu
+            port: 465
+            encryption: ssl
+            auth_mode: login
         mailgun:
             transport: "mailgun"
             spool:     { type: memory }
