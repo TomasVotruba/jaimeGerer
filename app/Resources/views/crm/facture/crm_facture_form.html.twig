@@ -153,8 +153,16 @@
             indexNewCollection = collectionHolder.children().length;
 
 			if(facture_id == ""){
+                //nouvelle facture : créer un élément produit vide
 				addProduitForm(collectionHolder, $newProduitLi, false);
-			}
+               
+			} else {
+                //edition de facture : calculer les totaux
+                 $.each($('.produit-tarif'), function( index, value ) {
+                    updateMontant(this);
+                });
+            }
+
 
 			updateProduitType();
 
@@ -372,7 +380,7 @@
                 var totalHT = $('.facture-total-ht').val();
                 var taxePercent = $('.facture-taxe-percent').val();
                 taxePercent = taxePercent.replace(",", ".");
-                $('.facture-taxe-percent').val(taxePercent);
+               // $('.facture-taxe-percent').val(taxePercent);
 
                 if (taxePercent != 0) {
                     //Montant Taxe var taxePercent = taxePercent.replace("%", "");

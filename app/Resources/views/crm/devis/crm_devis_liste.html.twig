@@ -120,8 +120,8 @@
 
             var url = Routing.generate('crm_devis_liste_ajax');
             {% if etat is not null %}
-            var etat = "{{ etat }}";
-            url = Routing.generate('crm_devis_liste_ajax', {'etat' : etat });
+                var etat = "{{ etat }}";
+                url = Routing.generate('crm_devis_liste_ajax', {'etat' : etat });
             {% endif %}
 
             var table = $('#table_devis_list').DataTable({
@@ -147,7 +147,7 @@
                 "language" : {
                     "url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"
                 },
-                "order": [[ 1, "desc" ]],
+                "order": [[ 4, "desc" ]],
                 "responsive": true,
                 "processing": true,
                 "serverSide": true,
