@@ -1,0 +1,328 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Action commerciale</h1>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+		    <p class="group-btn">
+		    	{# <a href="{{ path('crm_opportunite_editer', {'id' : opportunite.id }) }}"  class="btn btn-warning">
+		    		<span class="glyphicon glyphicon-pencil"></span> Modifier
+		    	</a>
+		    	<a href="{{ path('crm_opportunite_supprimer', {'id' : opportunite.id }) }}"  class="btn btn-danger">
+		    		<span class="glyphicon glyphicon-trash"></span> Supprimer
+		    	</a>
+
+		    	{% if opportunite.isLost() == false and opportunite.isWon() == false %}
+			    	<a href="{{ path('crm_opportunite_gagner', {'id' : opportunite.id }) }}" class="btn btn-success">
+			    		<span class="glyphicon glyphicon-thumbs-up"></span> Opportunité gagnée
+			    	</a> 
+			    	<a href="{{ path('crm_opportunite_perdre', {'id' : opportunite.id }) }}" class="btn btn-danger">
+			    		<span class="glyphicon glyphicon-thumbs-down"></span> Opportunité perdue
+			    	</a> 
+		   		{% endif %} #}
+		    </p>
+		    
+	    </div>
+    </div>
+
+     <div class="row" id="opportunite_details">
+	    	<div class="col-md-12">
+	    		<h2>{{ opportunite.nom }} - {{ opportunite.montant }} &euro;</h2>
+	    	</div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-md-6">
+	    		<table class="contact-view-table">
+	    			<tbody>
+						<tr>
+								<td>Nom de l’Opportunité</td>
+								<td>
+								{{ opportunite.nom }}
+
+								</td>
+							</tr>
+	    				
+							<tr>
+								<td>Date de l'opportunité</td>
+								<td>
+									{{ opportunite.date|date("m/Y") }}
+								</td>
+							</tr>
+	    				<tr>
+	    					<td>Type</td>
+				    		<td>
+								{{ opportunite.type }}
+
+				    		</td>
+	    				</tr>
+							<tr>
+								<td>Secteur</td>
+								<td>
+									{{ opportunite.priveOrPublicToString }}
+								</td>
+							</tr>
+	    			</tbody>
+	    		</table>
+	    		<hr />
+	    	</div>
+
+	    	<div class="col-md-6">
+	    		<table class="contact-view-table">
+	    			<tbody>
+
+							<tr>
+								<td>Gestionnaire de l'opportunité</td>
+								<td>
+								{{ opportunite.userGestion }}
+								{% if opportunite.userGestion.enabled == false %}
+										<a tabindex="0" role="button" data-toggle="popover" data-trigger="hover" title="Utilisateur inactif" data-content="Cet utilisateur est inactif. Vous devriez changer le gestionnaire de l'opportunité."><span class="glyphicon glyphicon-warning-sign red"></span></a>
+									{% endif %}
+								</td>
+							</tr>
+		    				<tr>
+		    					<td>Nom de l'organisation</td>
+					    		<td>
+					    			<a href="{{ path('crm_compte_voir', {'id' : opportunite.compte.id }) }}">
+										{{ opportunite.compte.nom }}
+									</a>
+					    		</td>
+		    				</tr>
+							<tr>
+								<td>Nom du contact</td>
+								<td>
+									{% if opportunite.contact %}
+										<a href="{{ path('crm_contact_voir', {'id' : opportunite.contact.id }) }}">
+										{{ opportunite.contact.prenom }} {{ opportunite.contact.nom }}
+									<a href="{{ path('crm_compte_voir', {'id' : opportunite.compte.id }) }}">
+								{% else %}
+									-
+								{% endif %}
+								</td>
+							</tr>
+							<tr>
+								<td>Origine</td>
+								<td>
+								{{ opportunite.origine }}
+								</td>
+							</tr>
+							<tr>
+								<td>Analytique</td>
+								<td>
+								{{ opportunite.analytique }}
+								</td>
+							</tr>
+							<tr>
+								<td>Etat</td>
+								<td>
+								{{ opportunite.etatToString }}
+								</td>
+							</tr>
+							<tr>
+								<td>Appel d'offre</td>
+								<td>
+									{% if opportunite.appelOffre %}
+										<span class="glyphicon glyphicon-ok"></span>
+									{% endif %}
+								</td>
+							</tr>
+	    			</tbody>
+	    		</table>
+	    		<hr />
+	    	</div>
+	    </div>
+			<div class="row">
+				<div class="col-md-4">
+					<table  class="contact-view-table">
+						<tbody>
+							<tr>
+								<td>Montant HT</td>
+								<td>{{ opportunite.montant }} &euro;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-4">
+					<table  class="contact-view-table">
+						<tbody>
+							<tr>
+								<td>Probabilité</td>
+								<td>{{ opportunite.probabilite.valeur }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-4">
+					<table  class="contact-view-table">
+						<tbody>
+							<tr>
+								<td>CA Attendu</td>
+								<td>{{ opportunite.ca_attendu }} &euro;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			{% if opportunite.isWon() %}
+				<div class="row">
+					<div class="col-md-12">
+						<hr />
+						<h3>Répartition du montant en fonction de l'activité prévue 
+							<a class="btn btn-primary btn-xs" href=" {{ path('crm_opportunite_gagner_repartition', {'id' : opportunite.id, 'edition' : true }) }} ">Modifer</a>
+						</h3> 
+
+						<table class="contact-view-table">
+							<tbody>
+							{% for repartition in opportunite.opportuniteRepartitions %}
+								<tr>
+									<td> {{ repartition.date|localizeddate('medium', 'none', app.request.locale, null, 'MMM YYYY' ) }} </td>
+									<td>
+										{{ repartition.montantMonetaire|number_format(2, ',', ' ') }} €
+									</td>
+									{% if opportunite.opportuniteSousTraitances|length > 0 %}
+										<td>
+											dont sous-traitance :
+											<ul>
+												{% set hasSousTraitance = false %}
+												{% for sousTraitance in opportunite.opportuniteSousTraitances %}
+													{% for sousTraitanceRepartition in sousTraitance.repartitions %}
+														{% if sousTraitanceRepartition.date == repartition.date %}
+															{% set hasSousTraitance = true %}
+															<li>
+																{{ sousTraitance.sousTraitant }} : {{ sousTraitanceRepartition.montantMonetaire|number_format(2, ',', ' ') }} €  
+																{% for depense in sousTraitance.depenses %}
+																	{% if loop.first %}
+																		(factures : 
+																	{% endif %}
+																	<a href=" {{ path('compta_depense_voir', {'id' : depense.id }) }} " >{{ depense.num }}</a>
+																	{% if loop.last %}
+																		)
+																	{% else %}
+																		, 
+																	{% endif %}
+																{% endfor %}
+															</li>
+														{% endif %}
+													{% endfor %}
+												{% endfor %}
+
+												{% if hasSousTraitance == false %}
+													<li>0 €</li>
+												{% endif %}
+											</ul>
+										</td>
+									{% endif %}
+								</tr>
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<hr />
+						<h3>Sous-traitants <a class="btn btn-xs btn-primary" href="{{ path('crm_opportunite_gagner_sous_traitance', {'id' : opportunite.id }) }}">Ajouter un sous-traitant</a></h3>
+						{% if opportunite.opportuniteSousTraitances|length == 0 %}
+							<p>Pas de sous-traitance</p>
+						{% else %}
+							<table class="contact-view-table">
+								<tbody>
+								{% for sousTraitance in opportunite.opportuniteSousTraitances %}
+									<tr>
+										<td> {{ sousTraitance.sousTraitant }} </td>
+										<td>
+											{{ sousTraitance.montantMonetaire|number_format(2, ',', ' ') }} € <a href="{{ path('crm_opportunite-sous-traitance_editer', {'id' : sousTraitance.id }) }}" class="btn btn-xs btn-primary">Modifier</a>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					{% endif %}
+					</div>
+					<div class="col-md-6">
+						<div id="gauge-sous-traitance">
+							<!-- Gauge Chart loaded by javascript -->
+						</div>
+					</div>
+				</div>
+			{% endif %}
+
+	    <div class="row">
+	    	<div class="col-md-6">
+					<hr />
+	     		<table class="contact-view-table">
+	     			<tbody>
+	     				<tr>
+	     					<td>Créé le</td>
+				    		<td>
+				    			{{ opportunite.dateCreation|date("d/m/Y") }}
+				    		</td>
+	     				</tr>
+	     				<tr>
+	     					<td>Par</td>
+		    				<td>
+								{{ opportunite.userCreation }}
+							</td>
+
+	     				</tr>
+	     			</tbody>
+	     		</table>
+	     	</div>
+	     	<div class="col-md-6">
+					<hr />
+	     		<table class="contact-view-table">
+	     			<tbody>
+	     				<tr>
+				    		<td>Modifié le</td>
+				    		<td>
+				    			{% if opportunite.dateEdition is empty %}
+						    		Jamais
+						    	{% else %}
+									{{ opportunite.dateEdition|date("d/m/Y") }}
+						    	{% endif %}
+				    		</td>
+			    		</tr>
+			    		<tr>
+		    			{% if opportunite.userEdition is not empty %}
+				    		<td>Par</td>
+		    				<td>
+								{{ opportunite.userEdition }}
+							</td>
+				    	{% endif %}
+			    		</tr>
+	     			</tbody>
+	    		</table>
+	    	</div>
+	    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('lib/justgage/justgage.1.0.1.min.js') }}"></script>
+	<script src="{{ asset('lib/justgage/raphael.2.1.0.min.js') }}"></script>
+
+	<script type="text/javascript">
+		$(document).ready( function () {
+			{% if opportunite.isWon() %}
+				var g = new JustGage({
+						    id: "gauge-sous-traitance",
+						    value: {{ opportunite.montantMonetaireSousTraitance|number_format(2,'.','') }},
+						    min: 0,
+						    max: {{ opportunite.montant }},
+						    title: "Sous-traitance",
+						    levelColors: ["a9d60c", "f8c700", "ff0000"],
+						    levelColorsGradient: false,
+						    label: "€"
+					});
+			{% endif %}
+		});
+	</script>
+{% endblock %}

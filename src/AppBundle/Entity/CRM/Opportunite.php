@@ -35,7 +35,6 @@ class Opportunite
    * @var string
    *
    * @ORM\Column(name="montant", type="float")
-   * @Assert\NotBlank()
    */
   private $montant;
 

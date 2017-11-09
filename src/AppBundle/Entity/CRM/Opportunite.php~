@@ -55,9 +55,16 @@ class Opportunite
     /**
      * @var boolean
      *
-     * @ORM\Column(name="appel_offre", type="boolean")
+     * @ORM\Column(name="appel_offre", type="boolean", nullable=false)
      */
     private $appelOffre = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="prive_or_public", type="string", length=6)
+     */
+    private $priveOrPublic;
 
   /**
    * @var \DateTime
@@ -90,13 +97,6 @@ class Opportunite
 	 * @ORM\JoinColumn(nullable=false)
 	 */
 	private $userGestion;
-
-  /**
-   * @var \DateTime
-   *
-   * @ORM\Column(name="echeance", type="date")
-   */
-  private $echeance;
 
   /**
    * @var string
@@ -152,6 +152,19 @@ class Opportunite
    * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
    */
   private $analytique;
+
+  /**
+   * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="opportunite")
+   * @ORM\JoinColumn(nullable=true)
+   */
+  private $devis;
+
+  /**
+   * @var \DateTime
+   *
+   * @ORM\Column(name="date", type="date")
+   */
+  private $date;
 
   /**
    * Constructor
@@ -363,24 +376,6 @@ class Opportunite
 	 */
 	public function getUserGestion() {
 		return $this->userGestion;
-	}
-
-	/**
-	 *
-	 * @return the DateTime
-	 */
-	public function getEcheance() {
-		return $this->echeance;
-	}
-
-	/**
-	 *
-	 * @param
-	 *        	$echeance
-	 */
-	public function setEcheance($echeance) {
-		$this->echeance = $echeance;
-		return $this;
 	}
 
 	/**
@@ -724,4 +719,107 @@ class Opportunite
     }
 
 
+    /**
+     * Set devis
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
+     * @return Opportunite
+     */
+    public function setDevis(\AppBundle\Entity\CRM\DocumentPrix $devis = null)
+    {
+        $this->devis = $devis;
+
+        return $this;
+    }
+
+    /**
+     * Get devis
+     *
+     * @return \AppBundle\Entity\CRM\DocumentPrix 
+     */
+    public function getDevis()
+    {
+        return $this->devis;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     * @return Opportunite
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime 
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+
+    /**
+     * Set priveOrPublic
+     *
+     * @param string $priveOrPublic
+     * @return Opportunite
+     */
+    public function setPriveOrPublic($priveOrPublic)
+    {
+        $this->priveOrPublic = $priveOrPublic;
+
+        return $this;
+    }
+
+    /**
+     * Get priveOrPublic
+     *
+     * @return string 
+     */
+    public function getPriveOrPublic()
+    {
+        return $this->priveOrPublic;
+    }
+
+    /**
+     * Get priveOrPublic as human readable string
+     *
+     * @return string 
+     */
+    public function getPriveOrPublicToString()
+    {
+        if($this->priveOrPublic == "PRIVE") {
+          return 'Privé';
+        } else {
+          return 'Public';
+        }
+
+        return 'N/A';
+    }
+
+    public function isSecteurPrive()
+    {
+        if($this->priveOrPublic == "PRIVE") {
+          return true;
+        } 
+
+        return false;
+    }
+
+    public function isSecteurPublic()
+    {
+        if($this->priveOrPublic == "PUBLIC") {
+          return true;
+        } 
+
+        return false;
+    }
 }

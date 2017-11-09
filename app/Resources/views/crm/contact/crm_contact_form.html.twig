@@ -136,12 +136,10 @@
 		function changeAddress(compteId) {
 
 			if(compteId == null ){
-				var url = "/web/app_dev.php/crm/compte/get_coordonnees_by_id/"+$('.entity-compte').val();
-//				var url = Routing.generate("crm_compte_get_coordonnees_by_id",{'id':$('.entity-compte').val()});
+				var url = Routing.generate("crm_compte_get_coordonnees_by_id",{'id':$('.entity-compte').val()});
 			}
 			else{
-				var url = "/web/app_dev.php/crm/compte/get_coordonnees_by_id/"+compteId;
-//				var url = Routing.generate("crm_compte_get_coordonnees_by_id",{'id':compteId});
+				var url = Routing.generate("crm_compte_get_coordonnees_by_id",{'id':compteId});
 			}
 			$.ajax({
 				type: "POST",

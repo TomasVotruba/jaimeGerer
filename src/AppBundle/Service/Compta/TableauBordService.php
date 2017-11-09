@@ -948,7 +948,7 @@ class TableauBordService extends ContainerAware {
            $arr_details['salaires_nets'][$month]['details']['affectation_diverses'][$rapprochement->getId()] = $rapprochement;
          }*/
 
-     } else if ( $this->utilsService->startsWith($compteComptable->getNum(), '6041') ||
+     } else if ( 
                  $this->utilsService->startsWith($compteComptable->getNum(), '6251') ||
                  ( $this->ccAutoroute && $compteComptable->getId() == $this->ccAutoroute->getId() )  ||
                  ( $this->ccCarburant && $compteComptable->getId() == $this->ccCarburant->getId() ) ||

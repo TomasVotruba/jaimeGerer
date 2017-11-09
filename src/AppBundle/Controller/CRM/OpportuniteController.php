@@ -14,10 +14,12 @@ use AppBundle\Entity\CRM\Opportunite;
 use AppBundle\Entity\CRM\OpportuniteSousTraitance;
 use AppBundle\Entity\CRM\OpportuniteRepartition;
 use AppBundle\Entity\CRM\Contact;
+use AppBundle\Entity\CRM\DocumentPrix;
 use AppBundle\Entity\Settings;
 use AppBundle\Entity\Rapport;
 
 use AppBundle\Form\CRM\OpportuniteType;
+use AppBundle\Form\CRM\OpportuniteDevisType;
 use AppBundle\Form\CRM\OpportuniteRepartitionType;
 use AppBundle\Form\CRM\OpportuniteWonRepartitionType;
 use AppBundle\Form\CRM\OpportuniteSousTraitanceType;
@@ -699,5 +701,8 @@ class OpportuniteController extends Controller
 				array('id' => $newOpportunite->getId())
 		));
 	}
+
+
+	
 
 }
