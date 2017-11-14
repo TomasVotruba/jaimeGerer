@@ -288,6 +288,10 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 	 width: 15%;
 }
 
+#table_opportunite_list.dataTable tr td{
+	width: 0 !important;
+}
+
 /**
 *CONTACTS
 **/
@@ -372,4 +376,8 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 **/
 .crm-homepage-block{
 	min-height: 200px;
+}
+
+#action-commerciale-filter-date label{
+	font-weight: normal;
 }

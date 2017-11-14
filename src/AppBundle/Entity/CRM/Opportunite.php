@@ -561,7 +561,10 @@ class Opportunite
     public function getCa_attendu(){
       $s_proba = $this->getProbabilite()->getValeur();
       $arr_proba = explode('-', $s_proba);
-      $proba = str_replace('%', '', $arr_proba[1]);
+
+      if(count($arr_proba)){
+         $proba = str_replace('%', '', $arr_proba[1]);
+      }
 
       return $this->getMontant()*($proba/100);
     }

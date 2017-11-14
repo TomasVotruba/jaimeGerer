@@ -1,0 +1,246 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+    <div class="row">
+        <h1>Action commerciale gagnée :
+            {{ actionCommerciale }}
+            <br/>
+            <small>Félicitations !
+                <img src="{{ asset('images/assets/icon_champagne.svg')}}" alt="Celebrate !" class="icon"/></small>
+        </h1>
+
+        <div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <p>
+              <span class="glyphicon glyphicon-info-sign"></span>
+              Ces informations vont permettre de remplir automatiquement votre
+              <a class="alert-link" href="{{ path('compta_rapport_tableau_bord_index') }}">tableau de bord</a> dans <span class="jaimelacompta">J'aime la Compta</span>.
+            </p>
+        </div>
+
+    </div>
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <h2>Montant HT de l'action commerciale :
+                {{ actionCommerciale.montant|number_format(2,',',' ') }}
+                €
+            </h2>
+            <p>
+              <strong>Répartissez le montant par mois en fonction de l'activité prévue.</strong>
+            </p>
+        </div>
+    </div>
+
+    {{ form_start(form, {'action': path('crm_action_commerciale_gagner_repartition', {'id' : actionCommerciale.id }), 'method': 'POST'}) }}
+
+    <div class="row">
+        <div class="col-md-2 center">
+            <strong>Mois et année</strong>
+        </div>
+        <div class="col-md-2 center">
+            <strong>Montant</strong>
+        </div>
+        <div class="col-md-8"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+
+            <ul
+                class="repartitions"
+                id="collectionContainer"
+                data-prototype="
+				{% filter escape %}
+				    {{ include('crm/action-commerciale/crm_action_commerciale_repartition_form.html.twig', { 'form':  form.opportuniteRepartitions.vars.prototype }) }}
+			    {% endfilter %}">
+                {% for repartitionField in form.opportuniteRepartitions %}
+                    <li>
+                        {{ include('crm/action-commerciale/crm_action_commerciale_repartition_form.html.twig', { 'form': repartitionField }) }}
+                    </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 align-right">
+            <strong>Total réparti :</strong>
+        </div>
+        <div class="col-md-2 align-right">
+            <strong>
+                <span class="total">0 €</span>
+            </strong>
+            <span class="glyphicon glyphicon-ok green ok-sign hidden"></span>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-2 feedback-total red align-right"></div>
+    </div>
+
+    {% if form.sousTraitance is defined %}
+        <div class="row">
+            <div class="col-md-12">
+                <hr/>
+                <strong>Cette action commerciale comporte-t-elle de la sous-traitance ?</strong>
+                {{ form_row(form.sousTraitance) }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr/>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1">
+            <a class="btn" href="{{ path('crm_action_commerciale_liste') }}">
+                <span class="glyphicon glyphicon-chevron-left"></span>Annuler
+            </a>
+        </div>
+        <div class="col-md-1">
+            {{ form_row(form.submit)  }}
+        </div>
+    </div>
+
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+{{ parent() }}
+
+<script src="{{ asset('js/accounting.min.js') }}"></script>
+<script type="text/javascript">
+
+    var $addRepartitionLink = $('<a href="#" class="add_repartition_link btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"></span> Ajouter un mois</a>');
+    var $newRepartitionLi = $('<li></li>').append($addRepartitionLink);
+
+    $(document).ready(function() {
+
+        var repartitionCollectionHolder = $('ul.repartitions');
+        repartitionCollectionHolder.append($newRepartitionLi);
+        indexNewCollectionRepartition = repartitionCollectionHolder.children().length;
+
+        {% if actionCommerciale.opportuniteRepartitions|length == 0 %}
+            addRepartitionForm(repartitionCollectionHolder, $newRepartitionLi, false);
+        {% endif %}
+
+        $addRepartitionLink.on('click', function(e) {
+            // empêche le lien de créer un « # » dans l'URL
+            e.preventDefault();
+            // ajoute un nouveau formulaire tag
+            addRepartitionForm(repartitionCollectionHolder, $newRepartitionLi, false);
+
+        });
+
+        $('.montant').change(function() {
+            var val = $(this).find('input').val();
+            val = val.replace(",", ".");
+            $(this).find('input').val(val);
+
+            calculTotal();
+        });
+
+          $('.remove-button').on('click', function(e) {
+            // empêche le lien de créer un « # » dans l'URL
+            e.preventDefault();
+            $(this).parents('li').remove();
+            calculTotal();
+        });
+
+        calculTotal();
+
+        function addRepartitionForm(repartitionCollectionHolder, $newRepartitionLi, ExecTinymceCommand) {
+            var prototype = repartitionCollectionHolder.attr('data-prototype');
+
+            indexNewCollectionRepartition++;
+            var newForm = prototype.replace(/__name__/g, indexNewCollectionRepartition);
+
+            var $newFormLi = $('<li></li>').append(newForm);
+            $newRepartitionLi.before($newFormLi);
+
+            $('.remove-button').unbind('click');
+            $('.remove-button').on('click', function(e) {
+                // empêche le lien de créer un « # » dans l'URL
+                e.preventDefault();
+                $(this).parents('li').remove();
+                 calculTotal();
+            });
+
+            $('.montant').change(function() {
+                var val = $(this).find('input').val();
+                val = val.replace(",", ".");
+                $(this).find('input').val(val);
+
+                calculTotal();
+            });
+        }
+
+        function calculTotal(){
+
+
+            var total = 0;
+            $.each($('.montant input'), function(index, value) {
+                var val = $(value).val();
+                total = +total + + val;
+            });
+            $('.total').text(accounting.formatMoney(total, {
+                symbol: "€",
+                format: "%v %s",
+                decimal: ",",
+                thousand: " ",
+                precision: 2
+            }));
+
+            if (total == {{ actionCommerciale.montant }}) {
+
+                $('.feedback-total').addClass("hidden");
+                $('.ok-sign').removeClass("hidden");
+                $('button[type=submit]').addClass("btn-success").prop("disabled", false);
+
+            } else {
+
+                $('button[type=submit]').removeClass("btn-success").prop('disabled', true);
+
+                if (total < {{ actionCommerciale.montant }}) {
+
+                    var reste = {{ actionCommerciale.montant }} - total;
+                    $('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Encore " + accounting.formatMoney(reste, {
+                        symbol: "€",
+                        format: "%v %s",
+                        decimal: ",",
+                        thousand: " ",
+                        precision: 2
+                    }) + " à répartir").removeClass("hidden");
+                    $('.ok-sign').addClass("hidden");
+                } else if (total > {{ actionCommerciale.montant}}) {
+
+                    var trop = total - {{ actionCommerciale.montant }};
+                    $('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Vous avez réparti " + accounting.formatMoney(trop, {
+                        symbol: "€",
+                        format: "%v %s",
+                        decimal: ",",
+                        thousand: " ",
+                        precision: 2
+                    }) + " en trop").removeClass("hidden");
+                    $('.ok-sign').addClass("hidden");
+                }
+            }
+        }
+
+    });
+</script>
+{% endblock %}

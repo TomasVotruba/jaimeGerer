@@ -1,0 +1,65 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+		<div class="row">
+				<h1>Opportunité gagnée :
+						{{ opportunite }}
+						<br/>
+						<small>Félicitations !</small>
+				</h1>
+		</div>
+		<div class="row">
+				<div class="col-md-12">
+						<h2>Sous-traitance</h2>
+				</div>
+		</div>
+
+	    {{ form_start(form, {'action': path('crm_opportunite_gagner_sous_traitance_repartition', {'id' : opportunite.id }), 'method': 'POST'}) }}
+
+
+        {% for sousTraitance in opportunite.opportuniteSousTraitances %}
+					<div class="well" id="{{ sousTraitance.id }}">
+						<div class="row">
+			        <div class="col-md-12">
+								<h3>{{ sousTraitance.sousTraitant }}</h3>
+							</div>
+						</div>
+						<div class="row">
+							<ul
+									class="repartitions-sous-traitants"
+									id="collectionContainer"
+									data-prototype="
+									 {% filter escape %}
+												{{ include('crm/opportunite/crm_opportunite_repartition_sous_traitance_form.html.twig', { 'form':  form[sousTraitance.id].vars.prototype }) }}
+										 {% endfilter %}"
+							>
+									{% for repartitionField in form[sousTraitance.id] %}
+											<li class="repartition">
+													{{ include('crm/opportunite/crm_opportunite_repartition_sous_traitance_form.html.twig', { 'form': repartitionField }) }}
+											</li>
+									{% endfor %}
+							</ul>
+							<p>
+								<a href="#" class="btn btn-xs btn-success add_repartition_sous_traitance_link">
+									<span class="glyphicon glyphicon-plus"></span> Ajouter un mois
+								</a>
+							</p>
+		        </div>
+			    </div>
+
+				{% endfor %}
+
+		    {{ form_rest(form) }}
+		    {{ form_end(form) }}
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+	{{ parent() }}
+
+    <script src="{{ asset('js/accounting.min.js') }}"></script>
+
+{% endblock %}

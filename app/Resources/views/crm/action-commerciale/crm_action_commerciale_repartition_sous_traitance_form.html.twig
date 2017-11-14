@@ -1,0 +1,16 @@
+<div class="produit-collection row">
+	<div class="col-md-1">
+		{{ form_widget(form.date.day, {'attr' : {'class' : 'hidden'}}) }}
+ 		{{ form_widget(form.date.month) }}
+	</div>
+	<div class="col-md-1">
+		{{ form_widget(form.date.year) }}
+	</div>
+	<div class="col-md-3 montant">
+			{{ form_widget(form.montantMonetaire) }}
+	</div>
+	<div class="col-md-1">
+		<a href="#" class="btn btn-xs btn-danger remove-repartition-button"><span class="glyphicon glyphicon-minus"></span></a>
+	</div>
+	<div class="col-md-6"></div>
+</div>

@@ -1,0 +1,325 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+    <div class="row">
+        <h1>Action commerciale gagnée :
+            {{ actionCommerciale }}
+            <br/>
+            <small>Félicitations !</small>
+        </h1>
+
+        <div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <p>
+              <span class="glyphicon glyphicon-info-sign"></span>
+              Ces informations vont permettre de remplir automatiquement votre
+              <a class="alert-link" href="{{ path('compta_rapport_tableau_bord_index') }}">tableau de bord</a> dans <span class="jaimelacompta">J'aime la Compta</span>.
+            </p>
+        </div>
+    </div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<hr />
+				<h2>Montant total de la sous-traitance pour cette action commerciale : <span class="total-sous-traitance"></span></h2>
+			</div>
+		</div>
+
+    <div class="row">
+        <div class="col-md-12">
+						<hr />
+            <h2>Ajouter un sous-traitant</h2>
+        </div>
+    </div>
+
+
+    {{ form_start(form, {'action': path('crm_action_commerciale_gagner_sous_traitance', {'id' : actionCommerciale.id }), 'method': 'POST'}) }}
+
+    <div class="row">
+
+        <div class="col-md-6">
+            {{ form_row(form.sousTraitant) }}
+        </div>
+
+        <div class="col-md-6"></div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-2">
+            {{ form_row(form.typeForfait) }}
+        </div>
+
+        <div class="montant-global col-md-3 hidden">
+            {{ form_row(form.montantGlobalMonetaire) }}
+        </div>
+
+        <div class="col-md-3 tarif-jour hidden">
+            {{ form_row(form.tarifJourMonetaire) }}
+        </div>
+
+        <div class="col-md-3 nb-jours hidden">
+            {{ form_row(form.nbJours) }}
+        </div>
+
+				<div class="col-md-1"></div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+			<hr />
+			<p><strong>Répartir le montant de ce sous-traitant : <span class="total-sous-traitant"></span></strong></p>
+            <ul
+                class="repartitions-sous-traitants"
+                id="collectionContainer"
+                data-prototype="
+				{% filter escape %}
+					{{ include('crm/action-commerciale/crm_action_commerciale_repartition_sous_traitance_form.html.twig', { 'form':  form.repartitions.vars.prototype }) }}
+				{% endfilter %}">
+                {% for repartitionField in form.repartitions %}
+                    <li class="repartition">
+                        {{ include('crm/action-commerciale/crm_action_commerciale_repartition_sous_traitance_form.html.twig', { 'form': repartitionField }) }}
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <p>
+                <a href="#" class="btn btn-xs btn-success add_repartition_sous_traitance_link">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Ajouter un mois
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+		<div class="row">
+        <div class="col-md-2 align-right">
+            <strong>Total réparti :</strong>
+        </div>
+        <div class="col-md-2 align-right">
+					<p>
+            <strong>
+                <span class="total">0 €</span>
+            </strong>
+            <span class="glyphicon glyphicon-ok green ok-sign hidden"></span>
+					</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-2">
+					<p class="feedback-total red align-right"></p>
+				</div>
+    </div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<hr />
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-3">
+				{{ form_row(form.add)}}
+			</div>
+
+			<div class="col-md-3">
+				{{ form_row(form.submit)}}
+			</div>
+		</div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script src="{{ asset('js/accounting.min.js') }}"></script>
+    <script type="text/javascript">
+
+        var $newRepartitionSousTraitantLi = $('<li></li>');
+		var totalSousTraitant = 0;
+		var totalSousTraitance = parseFloat("{{ actionCommerciale.montantMonetaireSousTraitance }}");
+
+        $(document).ready(function() {
+
+			calculTotalSousTraitant();
+
+			/**
+			 * Affiche/masque les inputs en fonction du type de forfait
+			 */
+			$('.type-forfait').change(function(){
+
+				if($(this).find('input[type=radio]:checked').val() == 'GLOBAL'){
+						$('.montant-global').removeClass("hidden");
+						$('.tarif-jour').addClass("hidden");
+						$('.nb-jours').addClass("hidden");
+
+						//recalcule le total de la sous-traitance
+						calculTotalSousTraitant();
+
+				} else {
+
+					$('.montant-global').addClass("hidden");
+					$('.tarif-jour').removeClass("hidden");
+					$('.nb-jours').removeClass("hidden");
+
+					//recalcule le total de la sous-traitance
+					calculTotalSousTraitant();
+				}
+
+			});
+
+			/**
+			 * Recalcule le total de la sous-traitance lorsque les valeurs des inputs changent
+			 */
+			$('.montant-global').change(function(){
+				calculTotalSousTraitant();
+			});
+			$('.tarif-jour').change(function(){
+				calculTotalSousTraitant();
+			});
+			$('.nb-jours').change(function(){
+				calculTotalSousTraitant();
+			});
+
+			/**
+			 * Calcule le montant total pour ce sous-traitant en fonction du type de forfait
+			 * et l'affiche dans le span .total-sous-traitant
+			 */
+			function calculTotalSousTraitant(){
+
+					if($('.type-forfait').find('input[type=radio]:checked').val() == 'GLOBAL'){
+						totalSousTraitant = $('.montant-global').find('input').val();
+					} else {
+						totalSousTraitant = $('.tarif-jour').find('input').val() * $('.nb-jours').find('input').val();
+					}
+
+					$('.total-sous-traitant').text(accounting.formatMoney(totalSousTraitant, {
+							symbol: "€",
+							format: "%v %s",
+							decimal: ",",
+							thousand: " ",
+							precision: 2
+					}));
+
+					totalSousTraitance = parseFloat("{{ actionCommerciale.montantMonetaireSousTraitance }}") + parseFloat(totalSousTraitant);
+					$('.total-sous-traitance').text(accounting.formatMoney(totalSousTraitance, {
+							symbol: "€",
+							format: "%v %s",
+							decimal: ",",
+							thousand: " ",
+							precision: 2
+					}));
+
+					//recalcule la différence entre le total à répartir et le total réparti
+					calculTotalRepartition();
+			}
+
+			/**
+			 * Calcul le total réparti, et le compare au total à répartir
+			 * Affiche un feedback adaptéé (ok, en trop, en moins)
+			 */
+			function calculTotalRepartition(){
+
+
+				var total = 0;
+				$.each($('.montant input'), function(index, value) {
+					var val = $(value).val();
+					total = +total + + val;
+				});
+				$('.total').text(accounting.formatMoney(total, {
+					symbol: "€",
+					format: "%v %s",
+					decimal: ",",
+					thousand: " ",
+					precision: 2
+				}));
+
+				if (total == totalSousTraitant) {
+
+					$('.feedback-total').addClass("hidden");
+					$('.ok-sign').removeClass("hidden");
+					$('button[type=submit]').addClass("btn-success").prop("disabled", false);
+
+				} else {
+
+					$('button[type=submit]').removeClass("btn-success").prop('disabled', true);
+
+					if (total < totalSousTraitant) {
+
+							var reste = totalSousTraitant - total;
+							$('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Encore " + accounting.formatMoney(reste, {
+									symbol: "€",
+									format: "%v %s",
+									decimal: ",",
+									thousand: " ",
+									precision: 2
+							}) + " à répartir").removeClass("hidden");
+							$('.ok-sign').addClass("hidden");
+					} else if (total > totalSousTraitant) {
+
+							var trop = total - totalSousTraitant;
+							$('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Vous avez réparti " + accounting.formatMoney(trop, {
+									symbol: "€",
+									format: "%v %s",
+									decimal: ",",
+									thousand: " ",
+									precision: 2
+							}) + " en trop").removeClass("hidden");
+							$('.ok-sign').addClass("hidden");
+					}
+				}
+			}
+
+            var repartitionSousTraitantsCollectionHolder = $('ul.repartitions-sous-traitants');
+            repartitionSousTraitantsCollectionHolder.append($newRepartitionSousTraitantLi);
+            indexNewCollectionRepartitionSousTraitants = repartitionSousTraitantsCollectionHolder.children().length;
+
+            addRepartitionForm(repartitionSousTraitantsCollectionHolder, $newRepartitionSousTraitantLi, false);
+
+            $('.add_repartition_sous_traitance_link').on('click', function(e) {
+                // empêche le lien de créer un « # » dans l'URL
+                e.preventDefault();
+                // ajoute un nouveau formulaire tag
+                addRepartitionForm(repartitionSousTraitantsCollectionHolder, $newRepartitionSousTraitantLi, true);
+
+            });
+
+	        function addRepartitionForm(repartitionSousTraitantsCollectionHolder, $newRepartitionSousTraitantLi, ExecTinymceCommand) {
+	            var prototype = repartitionSousTraitantsCollectionHolder.attr('data-prototype');
+
+	            indexNewCollectionRepartitionSousTraitants++;
+	            var newForm = prototype.replace(/__name__/g, indexNewCollectionRepartitionSousTraitants);
+
+	            var $newFormLi = $('<li class="repartition"></li>').append(newForm);
+	            $newRepartitionSousTraitantLi.before($newFormLi);
+
+	            $('.remove-repartition-button').unbind('click');
+	            $('.remove-repartition-button').on('click', function(e) {
+	                // empêche le lien de créer un « # » dans l'URL
+	                e.preventDefault();
+	                $(this).parents('li.repartition').remove();
+	            });
+
+				$('.montant').change(function() {
+					var val = $(this).find('input').val();
+					val = val.replace(",", ".");
+					$(this).find('input').val(val);
+
+					calculTotalRepartition();
+				});
+
+	        }
+
+    	});
+    </script>
+{% endblock %}

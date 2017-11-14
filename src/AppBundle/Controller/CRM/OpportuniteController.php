@@ -86,6 +86,7 @@ class OpportuniteController extends Controller
 
 			$opportunite = $repository->find($arr_o['id']);
 			$list[$i]['ca_attendu'] = $opportunite->getCa_attendu();
+
 		}
 
 

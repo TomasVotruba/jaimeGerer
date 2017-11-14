@@ -33,18 +33,32 @@ class OpportuniteRepository extends EntityRepository
 		return $result;
 	}
 
-	public function findForList($company, $length, $start, $orderBy, $dir, $search, $etat="ONGOING"){
+	public function findForList($company, $length, $start, $orderBy, $dir, $search, $dateRange = '', $etat=null){
 		$qb = $this->createQueryBuilder('o')
-		->select('o.id', 'o.nom', 'o.montant', 'o.date', 'o.appelOffre', 'c.nom as compte')
+		->select('o.id', 'o.nom', 'o.montant', 'o.date', 'o.appelOffre', 'c.nom as compte', 'o.etat')
 		->innerJoin('o.compte', 'c')
 		->where('c.company = :company')
-		->andWhere('o.etat = :etat')
-		->setParameter('etat', $etat)
 		->setParameter('company', $company);
 
 		if($search != ""){
 			$qb->andWhere('o.nom LIKE :search OR c.nom LIKE :search')
 			->setParameter('search', '%'.$search.'%');
+		}
+
+		if($etat && $etat!="all"){
+			$qb->andWhere('o.etat LIKE :etat')
+			->setParameter('etat', $etat);
+		}
+
+		if( is_array($dateRange) ){
+            $dateStart = $dateRange['start'] instanceof \DateTime ? $dateRange['start'] :
+                \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['start']) ;
+            $dateEnd = $dateRange['end'] instanceof \DateTime ? $dateRange['end'] :
+                \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end']) ;
+			$qb->andWhere('o.date >= :dateDebut')
+				->setParameter('dateDebut', $dateStart)
+				->andWhere('o.date <= :dateFin')
+				->setParameter('dateFin', $dateEnd);
 		}
 
 		$qb->setMaxResults($length)
@@ -73,18 +87,33 @@ class OpportuniteRepository extends EntityRepository
 
 
 
-	public function countForList($company, $search, $etat="ONGOING"){
+	public function countForList($company, $search, $dateRange = '', $etat=null){
 		$qb = $this->createQueryBuilder('o')
 		->select('COUNT(o)')
 		->innerJoin('o.compte', 'c')
 		->where('c.company = :company')
-		->andWhere('o.etat = :etat')
-		->setParameter('etat', $etat)
 		->setParameter('company', $company);
 
 		if($search != ""){
 			$qb->andWhere('o.nom LIKE :search OR c.nom LIKE :search')
 			->setParameter('search', '%'.$search.'%');
+		}
+
+		if( is_array($dateRange) ){
+            $dateStart = $dateRange['start'] instanceof \DateTime ? $dateRange['start'] :
+                \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['start']) ;
+            $dateEnd = $dateRange['end'] instanceof \DateTime ? $dateRange['end'] :
+                \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end']) ;
+			$qb->andWhere('o.date >= :dateDebut')
+				->setParameter('dateDebut', $dateStart)
+				->andWhere('o.date <= :dateFin')
+				->setParameter('dateFin', $dateEnd);
+		}
+
+
+		if($etat && $etat!="all"){
+			$qb->andWhere('o.etat LIKE :etat')
+			->setParameter('etat', $etat);
 		}
 
 		return $qb->getQuery()->getSingleScalarResult();
@@ -335,6 +364,16 @@ class OpportuniteRepository extends EntityRepository
 		->setParameter('start', $year.'-01-01')
 		->setParameter('end',  $year.'-12-31')
 		->setParameter('won', 'WON');
+
+		return $qb->getQuery()->getResult();
+	}
+
+	public function findForCompany($company){
+
+		$qb = $this->createQueryBuilder('o')
+		->innerJoin('o.compte', 'c')
+		->where('c.company = :company')
+		->setParameter('company', $company);
 
 		return $qb->getQuery()->getResult();
 	}

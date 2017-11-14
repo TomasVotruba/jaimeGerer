@@ -27,18 +27,18 @@
 	    			</a>
 					<div class="tooltoop">Suivi</div>
 	    		</li>
-	    		<li id="link-opportunite">
-	    			<a href="{{ path('crm_opportunite_liste') }}">
+	    		<li id="link-action-commerciale">
+	    			<a href="{{ path('crm_action_commerciale_liste') }}">
 	    				<span class="glyphicon glyphicon-screenshot" style="font-size: 2em;"></span>
 	    			</a>
-					<div class="tooltoop">Opportunités</div>
+					<div class="tooltoop">Actions commerciales</div>
 	    		</li>
-	    		<li id="link-devis">
+	    	{# 	<li id="link-devis">
 	    			<a href="{{ path('crm_devis_liste') }}">
 	    				<span class="glyphicon glyphicon-euro" style="font-size: 2em;" ></span>
 	    			</a>
 					<div class="tooltoop">Devis</div>
-	    		</li>
+	    		</li> #}
 	    		<li id="link-facture">
 	    			<a href="{{ path('crm_facture_liste') }}">
 	    				<span class="glyphicon glyphicon-piggy-bank" style="font-size: 2em;"></span>
@@ -94,7 +94,7 @@
 
 	   /* Add class "current" on the right menu item by checking the page URL */
 	   $(document).ready(function() {
-			var arr_links = ['compte', 'contact', 'impulsion', 'opportunite', 'devis', 'facture', 'rapport', 'settings', 'contactwebForm', 'prospection'];
+			var arr_links = ['compte', 'contact', 'impulsion', 'opportunite', 'devis', 'action-commerciale', 'facture', 'rapport', 'settings', 'contactwebForm', 'prospection'];
 		    var arr_param = window.location.href.split("/");
 
 		    var index;
