@@ -35,6 +35,7 @@
 	$(document).ready( function () {
 		$('.typeahead-contact').typeahead({
 		    order: "desc",
+		    accent: true,
 		    source: {
 		        url: Routing.generate("crm_contact_impulsion_get_liste")
 		    },

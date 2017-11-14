@@ -84,6 +84,7 @@
 				var selector = "#form_{{ compteFournisseur }}-name";
 				$(selector).typeahead({
 				    order: "desc",
+				    accent: true,
 				    source: {
 				        url: "/web/app_dev.php/crm/compte/get-comptes-and-contacts"
 				    },
@@ -104,6 +105,7 @@
 				var selector = "#form_{{ compteClient }}-name";
 				$(selector).typeahead({
 				    order: "desc",
+				    accent: true,
 				    source: {
 				        url: "/web/app_dev.php/crm/compte/get-comptes-and-contacts"
 				    },

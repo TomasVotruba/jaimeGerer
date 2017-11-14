@@ -356,6 +356,7 @@ table.table.table-striped td{ width: 32%}
 						var selector = "#{{ form['comptes-' ~ k ~ '-' ~ key~'-name'].vars.id }}";
 						$(selector).typeahead({
 							order: "desc",
+							accent: true,
 							source: {
 								url: "{{ path('crm_compte_get_liste') }}"
 							},

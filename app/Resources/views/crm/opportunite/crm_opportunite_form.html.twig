@@ -121,6 +121,7 @@
 
         $('.typeahead-compte').typeahead({
             order: "desc",
+            accent: true,
             source: {
                 url: Routing.generate("crm_compte_get_liste")
             },
@@ -139,6 +140,7 @@
 
         $('.typeahead-contact').typeahead({
             order: "desc",
+            accent: true,
             source: {
                 url: Routing.generate('crm_contact_get_liste', {'compte_id' : null })
             },

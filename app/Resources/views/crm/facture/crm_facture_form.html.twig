@@ -422,6 +422,7 @@
 
 						$('.typeahead-compte').typeahead({
 								order: "desc",
+                                accent: true,
 								source: {
 										url: "/web/crm/compte/get-comptes"
 										//			        url: Routing.generate("crm_compte_get_liste")
@@ -442,6 +443,7 @@
 
 						$('.typeahead-contact').typeahead({
 								order: "desc",
+                                accent: true,
 								source: {
 										url: "/web/crm/contact/get-contacts"
 										//			        url: Routing.generate("crm_contact_get_liste_default")
@@ -464,6 +466,7 @@
 								$(".typeahead-contact").typeahead("destroy");
 								$('.typeahead-contact').typeahead({
 										order: "desc",
+                                        accent: true,
 										source: {
 												url: "/web/crm/contact/get-contacts" + ($('.entity-compte').val() > 0
 														? '/' + $('.entity-compte').val()

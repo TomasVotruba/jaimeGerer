@@ -106,6 +106,7 @@
 			var selector = "#form_{{ key }}-name";
 			$(selector).typeahead({
 			    order: "desc",
+			    accent: true,
 			    source: {
 			        url: "/web/app_dev.php/crm/compte/get-comptes-and-contacts"
 			    },

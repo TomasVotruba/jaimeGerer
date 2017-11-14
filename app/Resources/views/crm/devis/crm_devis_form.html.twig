@@ -99,6 +99,7 @@
 
 			$('.typeahead-compte').typeahead({
 			    order: "desc",
+			    accent: true,
 			    source: {
 					url: Routing.generate("crm_compte_get_liste"),
 			    },
@@ -121,6 +122,7 @@
 				$(".typeahead-contact").data('typeahead', (data = null))
 				$('.typeahead-contact').typeahead({
 					order: "desc",
+					accent: true,
 					source: {
 						url: "/web/app_dev.php/crm/contact/get-contacts"+ ($('.entity-compte').val() > 0 ? '/'+$('.entity-compte').val() : '')
 					},
@@ -141,6 +143,7 @@
 
 			$('.typeahead-contact').typeahead({
 			    order: "desc",
+			    accent: true,
 				/*source: function (typeahead, query) {
 					return $.get('/web/app_dev.php/crm/contact/get-contacts', { query: query }, function (data) {
 						return typeahead.process(data);
