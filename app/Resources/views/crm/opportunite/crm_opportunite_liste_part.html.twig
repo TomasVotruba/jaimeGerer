@@ -1,10 +1,19 @@
 {% block content %}
 	<div class="row" id="opportunites">
 		<div class="col-md-12">
-			<h3>Opportunités</h3>
+			<h3>Actions commerciales</h3>
 			<p>
-				<a target='_blank' href="{% if id_to_use is defined %} {{ path('crm_opportunite_ajouter_from_voir_contact_compte', {'id_to_use' : id_to_use, 'type' : id_origine_type }) }}{% else %}{{ path('crm_opportunite_ajouter') }}{% endif %}" class="btn btn-xs btn-success">
-					<span class="glyphicon glyphicon-plus"></span> Ajouter
+
+				{% if compte is defined %}
+					{% set compteId = compte.id %}
+				{% elseif contact is defined %}
+					{% set compteId = contact.compte.id %}
+				{% else %}
+					{% set compteId = null %}
+				{% endif %}
+
+				<a target='_blank' href="{{ path('crm_action_commerciale_ajouter', {'compteId' : compteId, 'contactId' : (contact is defined) ? contact.id : null }) }}" class="btn btn-xs btn-success">
+					<span class="glyphicon glyphicon-plus"></span> Ajouter une action commerciale
 				</a>
 			</p>
 			<table id="table_opportunites" class="table table-bordered table-striped">

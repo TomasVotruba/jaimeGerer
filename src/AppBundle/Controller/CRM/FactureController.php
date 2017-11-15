@@ -190,20 +190,43 @@ class FactureController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/facture/ajouter", name="crm_facture_ajouter")
+	 * @Route("/crm/facture/ajouter/{compteId}/{contactId}", name="crm_facture_ajouter")
 	 */
-	public function factureAjouterAction()
+	public function factureAjouterAction($compteId = null, $contactId = null)
 	{
 		$em = $this->getDoctrine()->getManager();
+		$compteRepo = $em->getRepository('AppBundle:CRM\Compte');
+		$contactRepo = $em->getRepository('AppBundle:CRM\Contact');
+
 		$facture = new DocumentPrix($this->getUser()->getCompany(),'FACTURE', $em);
 		$facture->setUserGestion($this->getUser());
+
+		$compte = null;
+		if($compteId){
+			$compte = $compteRepo->find($compteId);
+			$facture->setCompte($compteId);
+		}
+		$contact = null;
+		if($contactId){
+			$contact = $contactRepo->find($contactId);
+			$facture->setContact($contactId);
+		}
+
 		$form = $this->createForm(
-				new FactureType(
-						$facture->getUserGestion()->getId(),
-						$this->getUser()->getCompany()->getId()
-				),
-				$facture
+			new FactureType(
+				$facture->getUserGestion()->getId(),
+				$this->getUser()->getCompany()->getId(),
+				$compte
+			),
+			$facture
 		);
+
+		if($compte){
+			$form->get('compte_name')->setData($compte->__toString());
+		}
+		if($contact){
+			$form->get('contact_name')->setData($contact->__toString());
+		}
 
 		$request = $this->getRequest();
 		$form->handleRequest($request);

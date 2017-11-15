@@ -3,7 +3,16 @@
 		<div class="col-md-12">
 			<h3>Factures</h3>
 			<p>
-				<a target='_blank' href="{{ path('crm_facture_ajouter') }}" class="btn btn-xs btn-success">
+
+				{% if compte is defined %}
+					{% set compteId = compte.id %}
+				{% elseif contact is defined %}
+					{% set compteId = contact.compte.id %}
+				{% else %}
+					{% set compteId = null %}
+				{% endif %}
+
+				<a target='_blank' href="{{ path('crm_facture_ajouter', {'compteId' : compteId, 'contactId' : (contact is defined) ? contact.id : null }) }}" class="btn btn-xs btn-success">
 					<span class="glyphicon glyphicon-plus"></span> Ajouter
 				</a>
 			</p>

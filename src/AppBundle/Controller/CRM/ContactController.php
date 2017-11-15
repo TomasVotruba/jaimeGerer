@@ -756,7 +756,7 @@ class ContactController extends Controller
 
 	/**
 	 * @Route("/crm/contact/get-contacts/{compte_id}", name="crm_contact_get_liste", defaults={"compte_id" = null}, options={"expose"=true})
-	 * @Route("/crm/contact/get-contacts", name="crm_contact_get_liste_default")
+	 * @Route("/crm/contact/get-contacts", name="crm_contact_get_liste_default", options={"expose"=true})
 	 */
 	public function contact_listAction($compte_id)
 	{

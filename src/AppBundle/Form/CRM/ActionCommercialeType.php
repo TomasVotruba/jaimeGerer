@@ -120,6 +120,7 @@ class ActionCommercialeType extends AbstractType
             ->add('pays', 'text', array(
                 'required' => true,
                 'label' => 'Pays',
+                'attr' => array('class' => 'input-pays'),
                 'mapped' => false,
                 'data' => $this->compte ? $this->compte->getPays() : null
             ))

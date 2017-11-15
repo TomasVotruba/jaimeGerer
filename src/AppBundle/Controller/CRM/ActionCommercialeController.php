@@ -153,26 +153,50 @@ class ActionCommercialeController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/action-commerciale/ajouter",
+	 * @Route("/crm/action-commerciale/ajouter/{compteId}/{contactId}",
 	 *   name="crm_action_commerciale_ajouter",
 	 *  )
 	 */
-	public function actionCommercialeAjouterAction()
+	public function actionCommercialeAjouterAction($compteId = null, $contactId = null)
 	{
 		$em = $this->getDoctrine()->getManager();
 		$devisService = $this->get('appbundle.crm_devis_service');
+		$compteRepo = $em->getRepository('AppBundle:CRM\Compte');
+		$contactRepo = $em->getRepository('AppBundle:CRM\Contact');
 
 		$opportunite = new Opportunite();
 		$devis = new DocumentPrix($this->getUser()->getCompany(),'DEVIS', $em);
+
+		$compte = null;
+		if($compteId){
+			$compte = $compteRepo->find($compteId);
+			$opportunite->setCompte($compteId);
+			$devis->setCompte($compteId);
+		}
+		$contact = null;
+		if($contactId){
+			$contact = $contactRepo->find($contactId);
+			$opportunite->setContact($contactId);
+			$devis->setContact($contactId);
+		}
 
 		$opportunite->setUserGestion($this->getUser());
 		$form = $this->createForm(
 			new ActionCommercialeType(
 					$opportunite->getUserGestion()->getId(),
-					$this->getUser()->getCompany()->getId()
+					$this->getUser()->getCompany()->getId(),
+					$devis,
+					$compte
 			),
 			$opportunite
 		);
+
+		if($compte){
+			$form->get('compte_name')->setData($compte->__toString());
+		}
+		if($contact){
+			$form->get('contact_name')->setData($contact->__toString());
+		}
 
 		$form->get('dateValidite')->setData($devis->getDateValidite());
 		$form->get('date')->setData(new \DateTime(date('Y-m-d')));

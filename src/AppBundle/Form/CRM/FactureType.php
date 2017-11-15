@@ -13,11 +13,13 @@ class FactureType extends AbstractType
 {
 	protected $userGestionId;
 	protected $companyId;
+    protected $compte;
 
-	public function __construct ($userGestionId = null, $companyId = null)
+	public function __construct ($userGestionId = null, $companyId = null, $compte = null)
 	{
 		$this->userGestionId = $userGestionId;
 		$this->companyId = $companyId;
+        $this->compte = $compte;
 	}
 
 
@@ -58,26 +60,31 @@ class FactureType extends AbstractType
         		'required' => true,
             	'label' => 'Adresse',
              	'attr' => array('class' => 'input-adresse'),
+                'data' => $this->compte ? $this->compte->getAdresse() : null
         	))
             ->add('codePostal', 'text', array(
         		'required' => true,
             	'label' => 'Code postal',
             	'attr' => array('class' => 'input-codepostal'),
+                'data' => $this->compte ? $this->compte->getCodePostal() : null
         	))
             ->add('ville', 'text', array(
         		'required' => true,
             	'label' => 'Ville',
             	'attr' => array('class' => 'input-ville'),
+                'data' => $this->compte ? $this->compte->getVille() : null
         	))
             ->add('region', 'text', array(
         		'required' => true,
             	'label' => 'Région',
             	'attr' => array('class' => 'input-region'),
+                'data' => $this->compte ? $this->compte->getRegion() : null
         	))
             ->add('pays', 'text', array(
         		'required' => true,
             	'label' => 'Pays',
             	'attr' => array('class' => 'input-pays'),
+                'data' => $this->compte ? $this->compte->getPays() : null
         	))
             ->add('description', 'textarea', array(
         		'required' => false,

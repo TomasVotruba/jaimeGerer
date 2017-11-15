@@ -418,96 +418,96 @@
                 $('.facture-total-ttc').val(totalTTC.toFixed(2));
             }
 
-						$(".dateCreationInput").prop("disabled", true);
+			$(".dateCreationInput").prop("disabled", true);
 
-						$('.typeahead-compte').typeahead({
-								order: "desc",
-                                accent: true,
-								source: {
-										url: "/web/crm/compte/get-comptes"
-										//			        url: Routing.generate("crm_compte_get_liste")
-								},
-								callback: {
-										onInit: function(node) {
-												console.log('Typeahead Initiated on ' + node.selector);
-										},
-										onClickAfter: function(node, a, item, event) {
-												$('.entity-compte').val(item.id);
-
-												changeAddress();
-										}
-								},
-								debug: true
-
-						});
-
-						$('.typeahead-contact').typeahead({
-								order: "desc",
-                                accent: true,
-								source: {
-										url: "/web/crm/contact/get-contacts"
-										//			        url: Routing.generate("crm_contact_get_liste_default")
-								},
-								callback: {
-										onInit: function(node) {
-												console.log('Typeahead Devis Initiated on ' + node.selector);
-										},
-										onClickAfter: function(node, a, item, event) {
-												console.log('Typeahead Devis Click on ' + node.selector);
-												$('.entity-contact').val(item.id);
-										}
-								},
-								debug: true
-
-						});
-
-						$('.typeahead-compte').blur(function() {
-								$('div.typeahead-result', '#typeahead-container-contact').remove();
-								$(".typeahead-contact").typeahead("destroy");
-								$('.typeahead-contact').typeahead({
-										order: "desc",
-                                        accent: true,
-										source: {
-												url: "/web/crm/contact/get-contacts" + ($('.entity-compte').val() > 0
-														? '/' + $('.entity-compte').val()
-														: '')
-										},
-										callback: {
-												onInit: function(node) {
-														console.log('Typeahead Devis Initiated on ' + node.selector);
-														console.log($('.entity-compte').val());
-												},
-												onClickAfter: function(node, a, item, event) {
-														console.log('Typeahead Devis Click on ' + node.selector);
-														$('.entity-contact').val(item.id);
-
-												}
-										},
-										debug: true
-
-								});
-						});
-
-						function changeAddress() {
-								$.ajax({
-										type: "POST",
-										url: "/web/crm/compte/get_coordonnees_by_id/" + $('.entity-compte').val(),
-										//					url: Routing.generate("crm_compte_get_coordonnees_by_id",{"id":$('.entity-compte').val()}),
-										success: function(data) {
-												$(".input-adresse").val(data.adresse);
-												$(".input-codepostal").val(data.codePostal);
-												$(".input-ville").val(data.ville);
-												$(".input-region").val(data.region);
-												$(".input-pays").val(data.pays);
-												$(".input-telephone").val(data.telephone);
-												$(".input-fax").val(data.fax);
-										}
-								});
+			$('.typeahead-compte').typeahead({
+					order: "desc",
+                    accent: true,
+					source: {
+						url: Routing.generate("crm_compte_get_liste")
+					},
+					callback: {
+						onClickAfter: function(node, a, item, event) {
+							$('.entity-compte').val(item.id);
+							changeAddress();
 						}
+					},
+					debug: true
 
-						$("#changeDateBtn").click(function() {
-								$(".dateCreationInput").prop("disabled", false);
-						});
+			});
+
+            if($('.entity-compte').val() != "" && $('.entity-compte').val() != null){
+                changeAddress();
+                $('.typeahead-contact').typeahead({
+                        order: "desc",
+                        accent: true,
+                        source: {
+                            url: Routing.generate("crm_contact_get_liste", {'compte_id' : $('.entity-compte').val() })
+                        },
+                        callback: {
+                            onClickAfter: function(node, a, item, event) {
+                                $('.entity-contact').val(item.id);
+                            }
+                        },
+                        debug: true
+
+                });
+            } else {
+                $('.typeahead-contact').typeahead({
+                    order: "desc",
+                    accent: true,
+                    source: {
+                        url: Routing.generate("crm_contact_get_liste")
+                    },
+                    callback: {
+                        onClickAfter: function(node, a, item, event) {
+                            $('.entity-contact').val(item.id);
+                        }
+                    },
+                    debug: true
+
+                });
+
+            }
+			
+			$('.typeahead-compte').blur(function() {
+				$('div.typeahead-result', '#typeahead-container-contact').remove();
+				$(".typeahead-contact").typeahead("destroy");
+				$('.typeahead-contact').typeahead({
+						order: "desc",
+                        accent: true,
+						source: {
+                            url: Routing.generate("crm_contact_get_liste", {'compte_id' : $('.entity-compte').val() })
+						},
+						callback: {
+							onClickAfter: function(node, a, item, event) {
+								$('.entity-contact').val(item.id);
+							}
+						},
+						debug: true
+
+				});
+			});
+
+			function changeAddress() {
+				$.ajax({
+					type: "POST",
+					url: Routing.generate("crm_compte_get_coordonnees_by_id",{"id":$('.entity-compte').val()}),
+					success: function(data) {
+						$(".input-adresse").val(data.adresse);
+						$(".input-codepostal").val(data.codePostal);
+						$(".input-ville").val(data.ville);
+						$(".input-region").val(data.region);
+						$(".input-pays").val(data.pays);
+						$(".input-telephone").val(data.telephone);
+						$(".input-fax").val(data.fax);
+					}
+				});
+			}
+
+			$("#changeDateBtn").click(function() {
+				$(".dateCreationInput").prop("disabled", false);
+			});
 
         });
     </script>

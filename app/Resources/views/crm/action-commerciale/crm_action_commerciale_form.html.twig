@@ -166,263 +166,293 @@
 
         });
 
+        if($('.entity-compte').val() != "" && $('.entity-compte').val() != null){
+            $('.typeahead-contact').typeahead({
+                    order: "desc",
+                    accent: true,
+                    source: {
+                        url: Routing.generate("crm_contact_get_liste", {'compte_id' : $('.entity-compte').val() })
+                    },
+                    callback: {
+                        onClickAfter: function(node, a, item, event) {
+                            $('.entity-contact').val(item.id);
+                        }
+                    },
+                    debug: true
 
-        $('.typeahead-contact').typeahead({
-            order: "desc",
-            accent: true,
-            source: {
-                url: Routing.generate('crm_contact_get_liste', {'compte_id' : null })
-            },
-            callback: {
+            });
+        } else {
+            $('.typeahead-contact').typeahead({
+                order: "desc",
+                accent: true,
+                source: {
+                    url: Routing.generate("crm_contact_get_liste")
+                },
+                callback: {
+                    onClickAfter: function(node, a, item, event) {
+                        $('.entity-contact').val(item.id);
+                    }
+                },
+                debug: true
 
-                onClickAfter: function(node, a, item, event) {
-                    console.log('Typeahead Click on ' + node.selector);
-                    $('.entity-contact').val(item.id);
-                }
-            },
-            debug: true
+            });
 
+        }
+
+        $('.typeahead-compte').blur(function() {
+            $('div.typeahead-result', '#typeahead-container-contact').remove();
+            $(".typeahead-contact").typeahead("destroy");
+            $('.typeahead-contact').typeahead({
+                    order: "desc",
+                    accent: true,
+                    source: {
+                        url: Routing.generate("crm_contact_get_liste", {'compte_id' : $('.entity-compte').val() })
+                    },
+                    callback: {
+                        onClickAfter: function(node, a, item, event) {
+                            $('.entity-contact').val(item.id);
+                        }
+                    },
+                    debug: true
+
+            });
         });
 
-                // Récupère le div qui contient la collection de tags
-                var collectionHolder = $('ul.produits');
-                // ajoute l'ancre « ajouter un tag » et li à la balise ul
-                collectionHolder.append($newProduitLi);
-                // Récupèrer le nombre de produits pour l'incrémenter et éviter le bug du jeu de suppression
-                indexNewCollection = collectionHolder.children().length;
-                
-                if($('.produit-tarif').length > 0){
-                
-                    $.each($('.produit-tarif'), function( index, value ) {
-                        updateMontant(this);
-                    });
+        // Récupère le div qui contient la collection de tags
+        var collectionHolder = $('ul.produits');
+        // ajoute l'ancre « ajouter un tag » et li à la balise ul
+        collectionHolder.append($newProduitLi);
+        // Récupèrer le nombre de produits pour l'incrémenter et éviter le bug du jeu de suppression
+        indexNewCollection = collectionHolder.children().length;
+        
+        if($('.produit-tarif').length > 0){
+        
+            $.each($('.produit-tarif'), function( index, value ) {
+                updateMontant(this);
+            });
 
-                } else if($('.produit-tarif').length == 0){
+        } else if($('.produit-tarif').length == 0){
 
-                    addProduitForm(collectionHolder, $newProduitLi, false);
-                    $('.select_andor').addClass('visibility-hidden');
-                    
-                    $addProduitLink.on('click', function(e) {
-                        // empêche le lien de créer un « # » dans l'URL
-                        e.preventDefault();
-                        // ajoute un nouveau formulaire tag (voir le prochain bloc de code)
-                        addProduitForm(collectionHolder, $newProduitLi, true);
+            addProduitForm(collectionHolder, $newProduitLi, false);
+            $('.select_andor').addClass('visibility-hidden');
+            
+            $addProduitLink.on('click', function(e) {
+                // empêche le lien de créer un « # » dans l'URL
+                e.preventDefault();
+                // ajoute un nouveau formulaire tag (voir le prochain bloc de code)
+                addProduitForm(collectionHolder, $newProduitLi, true);
 
-                    });
-                    
+            });
+            
+        }
+
+        function addProduitForm(collectionHolder, $newLinkLi, ExecTinymceCommand) {
+            // Récupère l'élément ayant l'attribut data-prototype comme expliqué plus tôt
+            var prototype = collectionHolder.attr('data-prototype');
+
+            // Remplace '__name__' dans le HTML du prototype par un nombre basé sur
+            // Toujours incrémenter pour éviter la duplication des noms/ids
+            indexNewCollection++;   
+            var newForm = prototype.replace(/__name__/g, indexNewCollection);
+
+            // Affiche le formulaire dans la page dans un li, avant le lien "ajouter un tag"
+            var $newFormLi = $('<li></li>').append(newForm);
+            $newLinkLi.before($newFormLi);
+            // Pour ne pas exécuter la commande dans la 1ère collection de l'ajout
+            if( ExecTinymceCommand ) tinyMCE.execCommand("mceAddControl",false, $($newFormLi).find('textarea').attr("id"));
+
+            $('.remove-button').unbind('click');
+            $('.remove-button').on('click', function(e) {
+                // empêche le lien de créer un « # » dans l'URL
+                e.preventDefault();
+                // supprime l'élément li et le tinymce pour le formulaire de tag
+                tinyMCE.execCommand("mceRemoveControl",false, $(this).parents('li').find('textarea').attr("id"));
+                $(this).parents('li').remove();
+            });
+
+            $('.produit-quantite').unbind('change');
+            $('.produit-quantite').change(function(){
+                updateMontant(this);
+                updateTotaux(this);
+            });
+
+            $('.produit-tarif').unbind('change');
+            $('.produit-tarif').change(function(){
+                updateMontant(this);
+                updateTotaux(this);
+            });
+
+            $('.produit-remise').unbind('change');
+            $('.produit-remise').change(function(){
+                updateTotaux(this);
+            });
+
+            $('.produit-type').unbind('change');
+            $('.produit-type').change(function(){
+                updateProduitType();
+            });
+            
+          //  addProduitFormDeleteLink($newFormLi);
+
+            $('.select_action').unbind('change');
+            $('.select_action').change(function() {
+                if($(this).val() == 'EMPTY' || $(this).val() == 'NOT_EMPTY'){
+                    $(this).parent().next().find('.input_valeur').prop('disabled', true);
+                } else {
+                    $(this).parent().next().find('.input_valeur').prop('disabled', false);
+                }
+            });
+        }
+
+        $('.remove-button').on('click', function(e) {
+            // empêche le lien de créer un « # » dans l'URL
+            e.preventDefault();
+            // supprime l'élément li et le tinymce pour le formulaire de tag
+            tinyMCE.execCommand("mceRemoveControl",false, $(this).parents('li').find('textarea').attr("id"));
+            $(this).parents('li').remove();
+        });
+
+        $('.produit-quantite').change(function(){
+            updateMontant(this);
+        });
+
+        $('.produit-tarif').change(function(){
+            updateMontant(this);
+        });
+
+        $('.produit-remise').change(function(){
+            updateTotaux(this);
+        });
+
+        $('.devis-remise').change(function(){
+            updateDevisTotaux();
+        });
+
+        $('.devis-taxe-percent').change(function(){
+            updateTaxe();
+        });
+
+        $('.produit-type').change(function(){
+            updateProduitType();
+        });
+
+        function updateProduitType(){
+
+            var hasFC = false;
+            
+            $.each($('.produit-type'), function( index, value ) {
+                var id = $(this).attr('id');
+                var selector = $('#'+id+' option:selected');
+                if(selector.text() == 'FC'){
+                    hasFC = true;
                 }
 
-                function addProduitForm(collectionHolder, $newLinkLi, ExecTinymceCommand) {
-                    // Récupère l'élément ayant l'attribut data-prototype comme expliqué plus tôt
-                    var prototype = collectionHolder.attr('data-prototype');
-        
-                    // Remplace '__name__' dans le HTML du prototype par un nombre basé sur
-                    // Toujours incrémenter pour éviter la duplication des noms/ids
-                    indexNewCollection++;   
-                    var newForm = prototype.replace(/__name__/g, indexNewCollection);
-        
-                    // Affiche le formulaire dans la page dans un li, avant le lien "ajouter un tag"
-                    var $newFormLi = $('<li></li>').append(newForm);
-                    $newLinkLi.before($newFormLi);
-                    // Pour ne pas exécuter la commande dans la 1ère collection de l'ajout
-                    if( ExecTinymceCommand ) tinyMCE.execCommand("mceAddControl",false, $($newFormLi).find('textarea').attr("id"));
+                $(".devis-analytique option").filter(function() {
+                    //may want to use $.trim in here
+                    return $(this).text() == selector.text(); 
+                }).prop('selected', true);
 
-                    $('.remove-button').unbind('click');
-                    $('.remove-button').on('click', function(e) {
-                        // empêche le lien de créer un « # » dans l'URL
-                        e.preventDefault();
-                        // supprime l'élément li et le tinymce pour le formulaire de tag
-                        tinyMCE.execCommand("mceRemoveControl",false, $(this).parents('li').find('textarea').attr("id"));
-                        $(this).parents('li').remove();
-                    });
-
-                    $('.produit-quantite').unbind('change');
-                    $('.produit-quantite').change(function(){
-                        updateMontant(this);
-                        updateTotaux(this);
-                    });
-
-                    $('.produit-tarif').unbind('change');
-                    $('.produit-tarif').change(function(){
-                        updateMontant(this);
-                        updateTotaux(this);
-                    });
-
-                    $('.produit-remise').unbind('change');
-                    $('.produit-remise').change(function(){
-                        updateTotaux(this);
-                    });
-
-                    $('.produit-type').unbind('change');
-                    $('.produit-type').change(function(){
-                        updateProduitType();
-                    });
-                    
-                  //  addProduitFormDeleteLink($newFormLi);
-        
-                    $('.select_action').unbind('change');
-                    $('.select_action').change(function() {
-                        if($(this).val() == 'EMPTY' || $(this).val() == 'NOT_EMPTY'){
-                            $(this).parent().next().find('.input_valeur').prop('disabled', true);
-                        } else {
-                            $(this).parent().next().find('.input_valeur').prop('disabled', false);
-                        }
-                    });
-                }
-
-                $('.remove-button').on('click', function(e) {
-                    // empêche le lien de créer un « # » dans l'URL
-                    e.preventDefault();
-                    // supprime l'élément li et le tinymce pour le formulaire de tag
-                    tinyMCE.execCommand("mceRemoveControl",false, $(this).parents('li').find('textarea').attr("id"));
-                    $(this).parents('li').remove();
-                });
-
-                $('.produit-quantite').change(function(){
-                    updateMontant(this);
-                });
-
-                $('.produit-tarif').change(function(){
-                    updateMontant(this);
-                });
-
-                $('.produit-remise').change(function(){
-                    updateTotaux(this);
-                });
-
-                $('.devis-remise').change(function(){
-                    updateDevisTotaux();
-                });
-
-                $('.devis-taxe-percent').change(function(){
-                    updateTaxe();
-                });
-
-                $('.produit-type').change(function(){
-                    updateProduitType();
-                });
-
-                function updateProduitType(){
-
-                    var hasFC = false;
-                    
-                    $.each($('.produit-type'), function( index, value ) {
-                        var id = $(this).attr('id');
-                        var selector = $('#'+id+' option:selected');
-                        if(selector.text() == 'FC'){
-                            hasFC = true;
-                        }
-
-                        $(".devis-analytique option").filter(function() {
-                            //may want to use $.trim in here
-                            return $(this).text() == selector.text(); 
-                        }).prop('selected', true);
-        
-                    });
-                    
-                    if(hasFC){
-                        $('.devis-taxe-percent').prop('disabled', true);
-                        $('.devis-taxe-percent').val(null);
-                        $('.fc-taxe-hidden').removeClass('hidden');
-                        $('.devis-taxe-montant').val(null);
-                    } else {
-                        $('.devis-taxe-percent').prop('disabled', false);
-                        $('.fc-taxe-hidden').addClass('hidden');
-                    }
+            });
+            
+            if(hasFC){
+                $('.devis-taxe-percent').prop('disabled', true);
+                $('.devis-taxe-percent').val(null);
+                $('.fc-taxe-hidden').removeClass('hidden');
+                $('.devis-taxe-montant').val(null);
+            } else {
+                $('.devis-taxe-percent').prop('disabled', false);
+                $('.fc-taxe-hidden').addClass('hidden');
+            }
 
 
-                }
+        }
 
-                function updateMontant(element){
-                    var quantite = $(element).parents('li').find('.produit-quantite').val();
-                    quantite = quantite.replace(",", "."); 
-                    $(element).parents('li').find('.produit-quantite').val(quantite);
-                    
-                    var tarif = $(element).parents('li').find('.produit-tarif').val();
-                    tarif = tarif.replace(",", "."); 
-                    $(element).parents('li').find('.produit-tarif').val(tarif);
-                    
-                    var montant = quantite*tarif;
-                    if(montant<0){
-                        montant = 0;
-                    }
-                    $(element).parents('li').find('.produit-montant').val(montant.toFixed(2));
+        function updateMontant(element){
+            var quantite = $(element).parents('li').find('.produit-quantite').val();
+            quantite = quantite.replace(",", "."); 
+            $(element).parents('li').find('.produit-quantite').val(quantite);
+            
+            var tarif = $(element).parents('li').find('.produit-tarif').val();
+            tarif = tarif.replace(",", "."); 
+            $(element).parents('li').find('.produit-tarif').val(tarif);
+            
+            var montant = quantite*tarif;
+            if(montant<0){
+                montant = 0;
+            }
+            $(element).parents('li').find('.produit-montant').val(montant.toFixed(2));
 
-                    updateTotaux(element);
-                };
+            updateTotaux(element);
+        };
 
-                function updateTotaux(element){
+        function updateTotaux(element){
 
-                    //Total produit
-                    var remise = $(element).parents('li').find('.produit-remise').val();
-                    remise = remise.replace(",", "."); 
-                    $(element).parents('li').find('.produit-remise').val(remise);
-                    
-                    var montant = $(element).parents('li').find('.produit-montant').val();
-                    montant = montant.replace(",", "."); 
-                    $(element).parents('li').find('.produit-montant').val(montant);
+            //Total produit
+            var remise = $(element).parents('li').find('.produit-remise').val();
+            remise = remise.replace(",", "."); 
+            $(element).parents('li').find('.produit-remise').val(remise);
+            
+            var montant = $(element).parents('li').find('.produit-montant').val();
+            montant = montant.replace(",", "."); 
+            $(element).parents('li').find('.produit-montant').val(montant);
 
-                    var produitTotal = montant-remise;
-                    if(produitTotal<0){
-                        produitTotal = 0;
-                    }
-                    $(element).parents('li').find('.produit-total').val(produitTotal.toFixed(2));
+            var produitTotal = montant-remise;
+            if(produitTotal<0){
+                produitTotal = 0;
+            }
+            $(element).parents('li').find('.produit-total').val(produitTotal.toFixed(2));
 
-                    updateDevisTotaux();
-                    
-                };
+            updateDevisTotaux();
+            
+        };
 
-                function updateDevisTotaux(){
-                    //Sous total
-                    var sousTotal = 0;
-                    $.each($('.produit-total'), function( index, value ) {
-                          var val = $(value).val();
-                          sousTotal = +sousTotal + +val;
-                    });
-                    $('.devis-sous-total').val(sousTotal.toFixed(2));
+        function updateDevisTotaux(){
+            //Sous total
+            var sousTotal = 0;
+            $.each($('.produit-total'), function( index, value ) {
+                  var val = $(value).val();
+                  sousTotal = +sousTotal + +val;
+            });
+            $('.devis-sous-total').val(sousTotal.toFixed(2));
 
-                    //Total HT
-                    var devisRemise = $('.devis-remise').val();
-                    devisRemise = devisRemise.replace(",", "."); 
-                    $('.devis-remise').val(devisRemise);
-                    
-                    var totalHT = sousTotal-devisRemise;
-                    $('.devis-total-ht').val(totalHT.toFixed(2));
-
-
-                    updateTaxe();
-                }
-
-                function updateTaxe(){
-                    var totalHT = $('.devis-total-ht').val();
-                    var taxePercent = $('.devis-taxe-percent').val();
-                    taxePercent = taxePercent.replace(",", "."); 
-                    $('.devis-taxe-percent').val(taxePercent);
-
-                    if(taxePercent != 0){
-                        //Montant Taxe
-                        //var taxePercent = taxePercent.replace("%", "");
-                        var taxeMontant = taxePercent/100*totalHT;
-                        taxeMontant = taxeMontant.toFixed(2);
-                    } else {
-                        var taxeMontant = "";
-                    }
-                    
-                    $('.devis-taxe').val(taxeMontant);
-
-                    //Total TTC
-                    var totalTTC = +totalHT + +taxeMontant;
-                    $('.devis-total-ttc').val(totalTTC.toFixed(2));
-                }   
+            //Total HT
+            var devisRemise = $('.devis-remise').val();
+            devisRemise = devisRemise.replace(",", "."); 
+            $('.devis-remise').val(devisRemise);
+            
+            var totalHT = sousTotal-devisRemise;
+            $('.devis-total-ht').val(totalHT.toFixed(2));
 
 
+            updateTaxe();
+        }
 
-       
-            $("#{{ form.appelOffre.vars.id }}").change(function() {
+        function updateTaxe(){
+            var totalHT = $('.devis-total-ht').val();
+            var taxePercent = $('.devis-taxe-percent').val();
+            taxePercent = taxePercent.replace(",", "."); 
+            $('.devis-taxe-percent').val(taxePercent);
+
+            if(taxePercent != 0){
+                //Montant Taxe
+                //var taxePercent = taxePercent.replace("%", "");
+                var taxeMontant = taxePercent/100*totalHT;
+                taxeMontant = taxeMontant.toFixed(2);
+            } else {
+                var taxeMontant = "";
+            }
+            
+            $('.devis-taxe').val(taxeMontant);
+
+            //Total TTC
+            var totalTTC = +totalHT + +taxeMontant;
+            $('.devis-total-ttc').val(totalTTC.toFixed(2));
+        }   
+
+        $("#{{ form.appelOffre.vars.id }}").change(function() {
             $("#{{ form.contact.vars.id }}").attr("required", $(this).is(':checked'));
             $("#{{ form.contact_name.vars.id }}").attr("required", $(this).is(':checked'));
-
-            
+        
         });
     });
     JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
