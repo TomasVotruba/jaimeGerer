@@ -1,37 +1,46 @@
- {{ form_start(form) }}
+{{ form_start(form) }}
 <div class="row">
 	<div class="col-md-6">
 		{{ form_errors(form) }}
 		{{ form_row(form.nom) }}
-		{{ form_row(form.userGestion) }}
+		{{ form_row(form.secteurActivite) }}
 	</div>
 	<div class="col-md-6">
 		{{ form_row(form.compteParent) }}
+		{{ form_row(form.userGestion) }}
 	</div>
 </div>
- <div class="row">
-	 <div class="col-md-6">
-		 {{ form_row(form.secteurActivite) }}
-	 </div>
- </div>
+<div class="row">
+	<div class="col-md-12">
+		<hr />
+	</div>
+</div>
 <div class="row">
 	<div class="col-md-6">
 		{{ form_row(form.addressPicker) }}
+	</div>
+	<div class="col-md-6">
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6">
 		{{ form_row(form.adresse) }}
 		{{ form_row(form.codePostal) }}
 		{{ form_row(form.ville) }}
 		{{ form_row(form.region) }}
 		{{ form_row(form.pays) }}
+		{{ form_row(form.updateContacts) }}
     </div>
-    
     <div class="col-md-6">
     	{{ form_row(form.telephone) }}
     	{{ form_row(form.fax) }}
-    	
     	{{ form_row(form.url) }}
-
-    	
     </div> 
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<hr />
+	</div>
 </div>
 <div class="row">   
     <div class="col-md-12">

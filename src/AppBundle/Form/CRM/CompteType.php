@@ -60,7 +60,6 @@ class CompteType extends AbstractType
             	'label' => 'URL du site web',
                 'attr'   =>  array(
                     'class' => "urlId",
-                    'value' => 'http://'
                 )
         	))
             ->add('adresse', 'text', array(
@@ -129,7 +128,12 @@ class CompteType extends AbstractType
            				->setParameter('enabled', 1)
            				->setParameter('id', $this->userGestionId);
            			},
-           	));
+           	))
+            ->add('updateContacts', 'checkbox', array(
+                'label' => 'Mettre à jour les contacts avec la nouvelle adresse',
+                'mapped' => false,
+                'required' => false
+            ));
            	if( $this->formAction )
 				$builder->setAction($this->formAction);
 	

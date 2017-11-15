@@ -492,12 +492,14 @@ class CompteController extends Controller
 	 */
 	public function compteEditerAction(Compte $compte)
 	{
+		$em = $this->getDoctrine()->getManager();
+		$contactRepository = $em->getRepository('AppBundle:CRM\Contact');
 		$form = $this->createForm(
-				new CompteType(
-						$compte->getUserGestion()->getId(),
-						$this->getUser()->getCompany()->getId()
-					), $compte
-				);
+			new CompteType(
+				$compte->getUserGestion()->getId(),
+				$this->getUser()->getCompany()->getId()
+			), $compte
+		);
 
 		$form->add('addressPicker', 'text', array(
 			'label' 	=> 'Veuillez renseigner l\'adresse ici',
@@ -511,18 +513,31 @@ class CompteController extends Controller
 
 			$compte->setDateEdition(new \DateTime(date('Y-m-d')));
 			$compte->setUserEdition($this->getUser());
-			$em = $this->getDoctrine()->getManager();
+			
 			$em->persist($compte);
 			$em->flush();
 
+			if($form->get('updateContacts')->getData() == 1){
+				$arr_contacts = $contactRepository->findByCompte($compte);
+				foreach($arr_contacts as $contact){
+					$contact->setAdresse($compte->getAdresse());
+					$contact->setVille($compte->getVille());
+					$contact->setCodePostal($compte->getCodePostal());
+					$contact->setRegion($compte->getRegion());
+					$contact->setPays($compte->getPays());
+					$em->persist($contact);
+				}
+				$em->flush();
+			}
+
 			return $this->redirect($this->generateUrl(
-					'crm_compte_voir',
-					array('id' => $compte->getId())
+				'crm_compte_voir',
+				array('id' => $compte->getId())
 			));
 		}
 
 		return $this->render('crm/compte/crm_compte_editer.html.twig', array(
-				'form' => $form->createView()
+			'form' => $form->createView()
 		));
 	}
 
