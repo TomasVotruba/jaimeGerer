@@ -75,9 +75,9 @@
 			<div class="col-md-12">
 				<h3>Factures de l'organisation </h3>
 				<p>
-					<a target='_blank' href="{{ path('crm_facture_ajouter') }}" class="btn btn-xs btn-success">
-						<span class="glyphicon glyphicon-plus"></span> Ajouter
-					</a>
+					<a target='_blank' href="{{ path('crm_facture_ajouter', {'compteId' : compteId, 'contactId' : null }) }}" class="btn btn-xs btn-success">
+					<span class="glyphicon glyphicon-plus"></span> Ajouter
+				</a>
 				</p>
 				<table id="table_factures_orga" class="table table-bordered table-striped">
 					<thead>
