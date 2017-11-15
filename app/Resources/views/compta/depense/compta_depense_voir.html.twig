@@ -212,32 +212,22 @@
 		</div>
 
 		{% if arr_sousTraitances|length > 0 %}
-			<div class="row">
-		   	 	<div class="col-md-12" >
-		   	 		<strong>Sous-traitances : </strong>
-		   	 		<ul>
-		   	 		{% for sousTraitance in arr_sousTraitances %}
-		   	 			<li>{{ sousTraitance }}</li>
-		   	 		{% endfor %}
-		   	 		</ul>
-		   	 	</div>
-		   	 </div>
+		   	<div class="row">
+	    		<div class="col-md-6">
+		     		<table class="contact-view-table">
+		     			<tbody>
+		     				<tr>
+		     					<td>Sous-traitances</td>
+					    		<td>
+					    			{% for sousTraitance in arr_sousTraitances %}
+						   	 			{{ sousTraitance }}<br />
+						   	 		{% endfor %}
+					    		</td>
+		     				</tr>
+		     			</tbody>
+		     		</table>
+	     		</div>
+    		</div>
 	   	{% endif %}
 
-{% endblock %}
-
-{% block javascripts %}
-	{{ parent() }}
-	<script type="text/javascript">
-		$(document).ready( function () {
-			$('#table_contacts').DataTable({
-					language : {
-						"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"
-					},
-					paging : false,
-				    info: false,
-				    searching: false,
-			});
-		});
-	</script>
 {% endblock %}
