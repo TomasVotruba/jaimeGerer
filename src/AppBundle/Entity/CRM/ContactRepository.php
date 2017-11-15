@@ -91,9 +91,7 @@ class ContactRepository extends EntityRepository
 			$qb->andWhere('c.compte = :compte')
 			   ->setParameter('compte', $compte);
 		}
-		//~ ->getQuery()
-		//~ ->getResult();
-	//~ var_dump($qb->getParameters()); exit;
+
 		return $qb->getQuery()->getResult();
 	}
 
@@ -185,10 +183,6 @@ class ContactRepository extends EntityRepository
 
 		foreach($arr_filters as $filter){
 
-			dump($index);
-
-		//	dump($filter);
-
 			$champ = $filter->getChamp();
 			$action = $filter->getAction();
 			$andor = $filter->getAndor();
@@ -196,9 +190,9 @@ class ContactRepository extends EntityRepository
 
 			$operateur = 'LIKE';
 
-			// if($action == 'NOT_EQUALS' || $action == 'NOT_CONTAINS'){
-			// 	$operateur = 'NOT LIKE';
-			// }
+			if($action == 'NOT_EQUALS' || $action == 'NOT_CONTAINS'){
+				$operateur = 'NOT LIKE';
+			}
 
 			$arr_valeurs = explode(',', $filter->getValeur());
 
@@ -425,7 +419,6 @@ class ContactRepository extends EntityRepository
 				}
 
  			}
-			dump($where);
  			$index++;
 		}
 
