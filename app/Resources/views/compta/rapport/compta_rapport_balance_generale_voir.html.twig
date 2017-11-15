@@ -1,6 +1,6 @@
 {% for cc in arr_cc %}
 <tr>
-	<td class="col-md-2">{{ cc.num }}</td>
+	<td class="col-md-2"><a href="{{ path('compta_compte_voir', {'id' : cc.id }) }}" target="_blank">{{ cc.num }}</a></td>
 	<td class="col-md-6">{{ cc.nom }}</td>
 	<td class="col-md-1 align-right">{{ cc.totalDebit(periode)|number_format(2, ',', ' ') }}</td>
 	<td class="col-md-1 align-right">{{ cc.totalCredit(periode)|number_format(2, ',', ' ')  }}</td>

@@ -17,12 +17,12 @@ class BalanceGeneraleService extends ContainerAware {
 
   public function creerBalanceGenerale($company, $periode){
     $ccRepo = $this->em->getRepository('AppBundle:Compta\CompteComptable');
-     $arr_cc = $ccRepo->findBy(
-       array(
-         'company' => $company
-       ), array(
-         'num' => 'ASC'
-     ));
+    $arr_cc = $ccRepo->findBy(
+        array(
+            'company' => $company
+        ), array(
+            'num' => 'ASC'
+    ));
 
      $totalSoldeDebiteur = 0;
      $totalSoldeCrediteur = 0;
