@@ -8,8 +8,16 @@
 	<td class="col-md-1 align-right">{% if cc.soldeCrediteur(periode)>0 %} {{ cc.soldeCrediteur(periode)|number_format(2, ',', ' ') }} {% endif %}</td>
 </tr>
 {% endfor %}
+
 <tr>
 	<td colspan="4" class="align-right"><strong>Total</strong></td>
 	<td class="align-right"><strong>{{ totalSoldeDebiteur|number_format(2, ',', ' ') }}</strong></td>
 	<td class="align-right"><strong>{{ totalSoldeCrediteur|number_format(2, ',', ' ') }}</strong></td>
 </tr>
+{% if equilibre != "EQUILIBRE" %}
+	<tr>
+		<td colspan="4" class="align-right"><strong>Solde</strong></td>
+		<td class="align-right"><strong>{% if soldeDebiteur != 0 %}{{ soldeDebiteur|number_format(2, ',', ' ') }}{% endif %}</strong></td>
+		<td class="align-right"><strong>{% if soldeCrediteur != 0 %}{{ soldeCrediteur|number_format(2, ',', ' ') }}{% endif %}</strong></td>
+	</tr>
+{% endif %}

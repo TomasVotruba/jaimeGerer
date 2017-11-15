@@ -30,10 +30,16 @@
 	</div>
 
 	<div class="row well">
+		{{ form_start(form) }}
 		<div class="col-md-3">
-			{{ form(form) }}
+			{{ form_row(form.periode) }}
 		</div>
-		<div class="col-md-9"></div>
+		<div class="col-md-3">
+			{{ form_row(form.equilibre) }}
+		</div>
+		<div class="col-md-6"></div>
+		{{ form_rest(form) }}
+		{{ form_end(form) }}
 	</div>
 
 	<div class="row">
@@ -65,20 +71,30 @@
 		$(document).ready( function () {
 
 			var periode = $(".periode-select").val();
-			loadTable(periode);
+			var equilibre = $('input[type=radio]:checked').val();
+			loadTable(periode, equilibre);
 
 			$(".periode-select").change(function(){
 				$("#loader").removeClass("hidden");
 				$("#wrapper-ajax").html("");
 				var periode = $(this).val();
-				loadTable(periode);
+				var equilibre = $('input[type=radio]:checked').val();
+				loadTable(periode, equilibre);
 			});
 
-			function loadTable(periode){
+			$(".equilibre-radio").change(function(){
+				$("#loader").removeClass("hidden");
+				$("#wrapper-ajax").html("");
+				var periode = $(".periode-select").val();
+				var equilibre = $('input[type=radio]:checked').val();
+				loadTable(periode, equilibre);
+			});
+
+			function loadTable(periode, equilibre){
 
 				$.ajax({
 					type: "GET",
-					url: Routing.generate('compta_rapport_balance_voir_periode', {'periode' : periode}),
+					url: Routing.generate('compta_rapport_balance_voir_periode', {'periode' : periode, 'equilibre' : equilibre}),
 					success: function(data) {
 						$("#loader").addClass("hidden");
 						$("#wrapper-ajax").html(data);

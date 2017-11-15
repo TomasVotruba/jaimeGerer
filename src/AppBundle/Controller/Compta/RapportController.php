@@ -263,8 +263,9 @@ class RapportController extends Controller
 	 */
 	public function rapportBalanceGeneraleIndexAction()
 	{
-			$builder = $this->createFormBuilder();
-			$builder->add('periode-select', 'choice', array(
+		$builder = $this->createFormBuilder();
+		$builder
+			->add('periode', 'choice', array(
 				'choices' => array(
 					'ANNEE' => 'Année en cours',
 					'TRIMESTRE' => 'Trimestre en cours',
@@ -273,26 +274,38 @@ class RapportController extends Controller
 				'label' => 'Période',
 				'data' => 'ANNEE',
 				'attr' => array('class' => 'periode-select')
+			))
+			->add('equilibre', 'choice', array(
+				'choices' => array(
+					'ALL' => 'Tous les comptes',
+					'EQUILIBRE' => 'Comptes équilibrés',
+					'DESEQUILIBRE' => 'Comptes déséquilibrés'
+				),
+				'attr' => array('class' => 'equilibre-radio'),
+				'multiple' => false,
+				'expanded' => true,
+				'label' => 'Afficher les comptes',
+				'data' => 'ALL'
 			));
 
-			$form = $builder->getForm();
+		$form = $builder->getForm();
 
-			return $this->render('compta/rapport/compta_rapport_balance_generale_index.html.twig', array(
-				'form' => $form->createView()
-			));
+		return $this->render('compta/rapport/compta_rapport_balance_generale_index.html.twig', array(
+			'form' => $form->createView()
+		));
 	}
 
 	/**
-	 * @Route("/compta/rapport/balance/generale/voir/{periode}",
+	 * @Route("/compta/rapport/balance/generale/voir/{periode}/{equilibre}",
 	 *   name="compta_rapport_balance_voir_periode",
 	 *   options={"expose"=true}
 	 * )
 	 */
-	public function rapportBalanceGeneraleVoirPeriodeAction($periode)
+	public function rapportBalanceGeneraleVoirPeriodeAction($periode, $equilibre)
 	{
 			$balanceGeneraleService = $this->get('appbundle.compta_balance_generale_service');
 			try{
-				$arr_balance = $balanceGeneraleService->creerBalanceGenerale($this->getUser()->getCompany(), $periode);
+				$arr_balance = $balanceGeneraleService->creerBalanceGenerale($this->getUser()->getCompany(), $periode, $equilibre);
 			} catch(\Exception $e){
 				$response = new Response();
 				$response->setStatusCode(204);
@@ -303,7 +316,10 @@ class RapportController extends Controller
 				'arr_cc' => $arr_balance['arr_cc'],
 				'totalSoldeDebiteur' => $arr_balance['totalSoldeDebiteur'],
 				'totalSoldeCrediteur' => $arr_balance['totalSoldeCrediteur'],
-				'periode' => $periode
+				'soldeDebiteur' => $arr_balance['soldeDebiteur'],
+				'soldeCrediteur' => $arr_balance['soldeCrediteur'],
+				'periode' => $periode,
+				'equilibre' => $equilibre
 			));
 
 	}
