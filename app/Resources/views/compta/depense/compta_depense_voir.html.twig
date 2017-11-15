@@ -124,51 +124,6 @@
 	    		</table>
 	    	</div>
 	    </div>
-	    <div class="row">
-	    	<div class="col-md-6">
-	     		<table class="contact-view-table">
-	     			<tbody>
-	     				<tr>
-	     					<td>Créé le</td>
-				    		<td>
-				    			{{ depense.dateCreation|date("d/m/Y") }}
-				    		</td>
-	     				</tr>
-	     				<tr>
-	     					<td>Par</td>
-		    				<td>
-								{{ depense.userCreation }}
-							</td>
-
-	     				</tr>
-	     			</tbody>
-	     		</table>
-	     	</div>
-	     	<div class="col-md-6">
-	     		<table class="contact-view-table">
-	     			<tbody>
-	     				<tr>
-				    		<td>Modifié le</td>
-				    		<td>
-				    			{% if depense.dateEdition is empty %}
-						    		Jamais
-						    	{% else %}
-									{{ depense.dateEdition|date("d/m/Y") }}
-						    	{% endif %}
-				    		</td>
-			    		</tr>
-			    		<tr>
-		    			{% if depense.userEdition is not empty %}
-				    		<td>Par</td>
-		    				<td>
-								{{ depense.userEdition }}
-							</td>
-				    	{% endif %}
-			    		</tr>
-	     			</tbody>
-	    		</table>
-	    	</div>
-	    </div>
 
 	     <div class="row">
 	    	<hr />
@@ -229,5 +184,57 @@
 	     		</div>
     		</div>
 	   	{% endif %}
+
+	   	<div class="row">
+	   		<div class="col-md-12">
+	   			<hr />
+	   		</div>
+	   	</div>
+
+   	    <div class="row">
+   	    	<div class="col-md-6">
+   	     		<table class="contact-view-table">
+   	     			<tbody>
+   	     				<tr>
+   	     					<td>Créé le</td>
+   				    		<td>
+   				    			{{ depense.dateCreation|date("d/m/Y") }}
+   				    		</td>
+   	     				</tr>
+   	     				<tr>
+   	     					<td>Par</td>
+   		    				<td>
+   								{{ depense.userCreation }}
+   							</td>
+
+   	     				</tr>
+   	     			</tbody>
+   	     		</table>
+   	     	</div>
+   	     	<div class="col-md-6">
+   	     		<table class="contact-view-table">
+   	     			<tbody>
+   	     				<tr>
+   				    		<td>Modifié le</td>
+   				    		<td>
+   				    			{% if depense.dateEdition is empty %}
+   						    		Jamais
+   						    	{% else %}
+   									{{ depense.dateEdition|date("d/m/Y") }}
+   						    	{% endif %}
+   				    		</td>
+   			    		</tr>
+   			    		<tr>
+   		    			{% if depense.userEdition is not empty %}
+   				    		<td>Par</td>
+   		    				<td>
+   								{{ depense.userEdition }}
+   							</td>
+   				    	{% endif %}
+   			    		</tr>
+   	     			</tbody>
+   	    		</table>
+   	    	</div>
+   	    </div>
 
 {% endblock %}

@@ -703,7 +703,7 @@ class CompteComptableController extends Controller
 	public function compteVoirAnneeAction(CompteComptable $compteComptable, $year){
 
 		$start = new \DateTime($year.'-01-01');
-    $end = new \DateTime($year.'-12-31');
+    	$end = new \DateTime($year.'-12-31');
 
 		//lignes du journal de ventes pour le compte $compte
 		$repoJournalVente = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalVente');

@@ -56,7 +56,7 @@ class JournalAchatRepository extends EntityRepository
 			->setParameter('compteComptable', $compteComptable);
 
 			if($startDate && $endDate){
-				$qb->andWhere('(d.dateCreation >= :startDate and d.dateCreation <= :endDate) or (a.dateCreation >= :startDate and a.dateCreation <= :endDate)')
+				$qb->andWhere('(d.date >= :startDate and d.date <= :endDate) or (a.dateCreation >= :startDate and a.dateCreation <= :endDate)')
 					->setParameter('startDate', $startDate)
 					->setParameter('endDate', $endDate);
 			}
