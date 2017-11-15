@@ -222,7 +222,7 @@ class DepenseRepository extends EntityRepository
 
 
 
-	public function findDepensesRetardByCompany($company){
+	public function findDepensesRetardByCompany($company, $dateRange = ''){
 		$queryBuilder  = $this->_em->createQueryBuilder();
 
 		$subQueryBuilder = $this->_em->createQueryBuilder();
@@ -254,6 +254,13 @@ class DepenseRepository extends EntityRepository
 		//$query->andWhere('d.type = :type')
 		//	->setParameter('type', 'FACTURE');
 
+		if( is_array($dateRange) ){
+			$query->andWhere('d.date >= :dateDebut')
+				->setParameter('dateDebut', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['start']))
+				->andWhere('d.date <= :dateFin')
+				->setParameter('dateFin', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end']));
+		}
+
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
 		//$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($chequeSubQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($avoirSubQueryBuilder->getDQL())));
@@ -264,7 +271,7 @@ class DepenseRepository extends EntityRepository
 	}
 
 
-	public function findForListRetard($company, $length, $start, $orderBy, $dir, $search){
+	public function findForListRetard($company, $length, $start, $orderBy, $dir, $search, $dateRange = ''){
 
 		$queryBuilder  = $this->_em->createQueryBuilder();
 
@@ -292,6 +299,13 @@ class DepenseRepository extends EntityRepository
 				->setParameter('search', '%'.$search.'%');
 		}
 
+		if( is_array($dateRange) ){
+			$query->andWhere('d.date >= :dateDebut')
+				->setParameter('dateDebut', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['start']))
+				->andWhere('d.date <= :dateFin')
+				->setParameter('dateFin', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end']));
+		}
+
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($avoirSubQueryBuilder->getDQL())));
 
@@ -302,7 +316,7 @@ class DepenseRepository extends EntityRepository
 		return $query->getQuery()->getResult();
 	}
 
-	public function countForListRetard($company,$search){
+	public function countForListRetard($company,$search, $dateRange= ""){
 
 		$queryBuilder  = $this->_em->createQueryBuilder();
 
@@ -325,6 +339,13 @@ class DepenseRepository extends EntityRepository
 			->andWhere('d.dateConditionReglement <= :now')
 			->setParameter('company', $company)
 			->setParameter('now', new \DateTime('yesterday'));
+
+		if( is_array($dateRange) ){
+			$query->andWhere('d.date >= :dateDebut')
+				->setParameter('dateDebut', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['start']))
+				->andWhere('d.date <= :dateFin')
+				->setParameter('dateFin', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end']));
+		}			
 
 //		if($compta != null){
 //			$query->andWhere('d.compta = :compta')

@@ -15,12 +15,8 @@
 
     <div class="row">
         <div class="col-md-12">
-            <p class="align-right">
-                <span class="xl">Total :
-                    {{ arr_totaux['ht']|number_format(2,',',' ') }}
-                    € HT</span><br/>
-                <span class="l">{{ arr_totaux['ttc']|number_format(2,',',' ') }}
-                    € TTC</span>
+            <p class="align-right" id="wrapper-totaux">
+                <!-- filled by AJAX when dateRange is changed -->
             </p>
         </div>
     </div>
@@ -42,6 +38,7 @@
 
     <div class="row">
         <div class="col-md-12">
+            <label id="NodesToMove" class="hidden"><input id="dateRange" name="dateRange"></label>
             <table id="table_depense_list" class="table table-bordered table-striped">
                 <thead>
                     <tr>
@@ -59,16 +56,34 @@
 
 {% endblock %}
 
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/jquery.comiseo.daterangepicker.css') }}" type="text/css"/>
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('js/moment.js') }}"></script>
+    <script src="{{ asset('js/jquery.comiseo.daterangepicker.js') }}"></script>
+    <script src="{{ asset('js/datepicker-fr.js') }}"></script>
+    <script src="{{ asset('js/dateFilterConfig.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
 
+            //set date range picker to current year
+            var year = (new Date).getFullYear();
+            $("#dateRange").daterangepicker("setRange", {
+                start: new Date(year, 0, 1),
+                end: new Date()
+            });
+
+            updateTotaux();
+
             var url = Routing.generate('compta_depense_liste_retard_ajax');
-            $('#table_depense_list').DataTable({
-                "dom": 'T<"clear">lfrtip',
+            var tableau =$('#table_depense_list').DataTable({
+                "dom": '<"dataTables_dateRange">T<"clear">lfrtip',
                 "oTableTools": {
                     "sSwfPath": "/web/lib/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
                     "aButtons": [
@@ -102,7 +117,10 @@
                 "serverSide": true,
                 "ajax": {
                     url: url,
-                    type: "get"
+                    type: "post",
+                    data: function(d) {
+                        d.dateRange = $("#dateRange").daterangepicker("getRange");
+                    }
                 },
                 "columns": [
                     {
@@ -174,8 +192,27 @@
                   "fade": 250,
                   "tooltipClass": 'btn',
                   } );
-                },
+                $("#NodesToMove").detach().removeClass("hidden").appendTo('div.dataTables_dateRange');
+                $('#dateRange').change(function() {
+                      $('#table_depense_list tbody').find('tr').remove();
+                      tableau.draw();
+                      updateTotaux();
+                });
+            },
             });
+
+            function updateTotaux() {
+                $.ajax({
+                    url: Routing.generate('compta_depense_retard_total_ajax'),
+                    type: 'POST',
+                    data: {
+                        dateRange: $("#dateRange").daterangepicker("getRange")
+                    }
+                }).done(function(data) {
+                    $('#wrapper-totaux').html(data);
+                });
+
+            }
 
         });
     </script>

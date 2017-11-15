@@ -89,24 +89,7 @@ class DepenseController extends Controller
 	 */
 	public function depenseListeRetardAction()
 	{
-		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
-		$arr_depenses = $repository->findDepensesRetardByCompany(
-				$this->getUser()->getCompany()
-		);
-
-		$arr_totaux = array(
-				'ht' => 0,
-				'ttc' => 0
-		);
-
-		foreach($arr_depenses as $depense){
-			$arr_totaux['ht']+= $depense->getTotalHT();
-			$arr_totaux['ttc']+= $depense->getTotalTTC();
-		}
-
-		return $this->render('compta/depense/compta_depense_liste_retard.html.twig', array(
-				'arr_totaux' => $arr_totaux
-		));
+		return $this->render('compta/depense/compta_depense_liste_retard.html.twig');
 	}
 
 	/**
@@ -126,8 +109,9 @@ class DepenseController extends Controller
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
 
 		$arr_search = $requestData->get('search');
+		$arr_date = $requestData->get('dateRange');
+		
 		$orderBy = $arr_cols[$col]['data'];
-
 
 		$list = $repository->findForListRetard(
 				$this->getUser()->getCompany(),
@@ -135,7 +119,8 @@ class DepenseController extends Controller
 				$requestData->get('start'),
 				$orderBy,
 				$arr_sort[0]['dir'],
-				$arr_search['value']
+				$arr_search['value'],
+				$arr_date
 		);
 
 		//		$chequesRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\RemiseCheque');
@@ -152,7 +137,7 @@ class DepenseController extends Controller
 		$response->setData(array(
 				'draw' => intval( $requestData->get('draw') ),
 				'recordsTotal' => $repository->count($this->getUser()->getCompany()),
-				'recordsFiltered' => $repository->countForListRetard($this->getUser()->getCompany(), $arr_search['value']),
+				'recordsFiltered' => $repository->countForListRetard($this->getUser()->getCompany(), $arr_search['value'], $arr_date),
 				'aaData' => $list,
 		));
 
@@ -175,6 +160,40 @@ class DepenseController extends Controller
 
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
 		$arr_depenses = $repository->findForCompany($this->getUser()->getCompany(), $arr_date);
+
+		$arr_totaux = array(
+			'ht' => 0,
+			'ttc' => 0
+		);
+
+		foreach($arr_depenses as $depense){
+			$arr_totaux['ht']+= $depense->getTotalHT();
+			$arr_totaux['ttc']+= $depense->getTotalTTC();
+		}
+
+		return $this->render('compta/depense/compta_depense_liste_totaux.html.twig', array(
+			'arr_totaux' => $arr_totaux
+		));
+	}
+
+	/**
+	 * Calculate the total (HT and TTC) all invoices in a date range
+	 * passed as POST parameter
+	 * @return Response 	Rendered view
+	 *
+	 * @Route("/compta/depense-retard/total/ajax",
+	 * 	name="compta_depense_retard_total_ajax",
+	 * 	options={"expose"=true}
+	 * )
+	 */
+	public function depenseRetardTotalAjaxAction(){
+		$arr_date = $this->getRequest()->get('dateRange');
+
+		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
+		$arr_depenses = $repository->findDepensesRetardByCompany(
+				$this->getUser()->getCompany(),
+				$arr_date
+		);
 
 		$arr_totaux = array(
 			'ht' => 0,

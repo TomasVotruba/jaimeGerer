@@ -72,7 +72,7 @@
             $("#dateRange").daterangepicker("setRange", {
                 start: new Date(year, 0, 1),
                 end: new Date()
-            })
+            });
 
             updateTotaux();
 
@@ -149,7 +149,7 @@
                     }, {
                         "render": function(data, type, row) {
 
-													  var actionUrl = Routing.generate('compta_depense_voir', {'id' : row['id']});
+							var actionUrl = Routing.generate('compta_depense_voir', {'id' : row['id']});
                             var s = '<a href="' + actionUrl + '">';
                             if (data != null) {
                                 s += data;
@@ -167,11 +167,11 @@
                         "targets": 0
                     }, {
                         "render": function(data, type, row) {
-														var url = Routing.generate('compta_contact_voir', {
-																'id': row['compte_id'],
-																'type': 'FOURNISSEUR'
-														});
-														return '<a href="' + url + '">' + data + '</a>';
+    						var url = Routing.generate('compta_contact_voir', {
+    								'id': row['compte_id'],
+    								'type': 'FOURNISSEUR'
+    						});
+    						return '<a href="' + url + '">' + data + '</a>';
                         },
                         "targets": 2
                     }, {
@@ -187,35 +187,35 @@
                         "targets": 4
                     }, {
                         "render": function(data, type, row) {
-														var voirUrl = Routing.generate('compta_depense_voir', {'id' : row['id']});
-														var editerUrl = Routing.generate('compta_depense_editer', {'id' : row['id']});
-														var supprimerUrl = Routing.generate('compta_depense_supprimer', {'id' : row['id']});
+							var voirUrl = Routing.generate('compta_depense_voir', {'id' : row['id']});
+							var editerUrl = Routing.generate('compta_depense_editer', {'id' : row['id']});
+							var supprimerUrl = Routing.generate('compta_depense_supprimer', {'id' : row['id']});
 
                             var s =
-															"<p>" +
-																"<a href=" + voirUrl + " class=\"btn btn-xs btn-info\" data-toggle=\"tooltip\" title=\"Voir\"><span class=\"glyphicon glyphicon-eye-open\"></span></a> " +
-																"<a href=" + editerUrl + "  class=\"btn btn-xs btn-warning\" data-toggle=\"tooltip\" title=\"Modifier\"><span class=\"glyphicon glyphicon-pencil\"></span></a> " +
-																"<a href=" + supprimerUrl + " class=\"btn btn-xs btn-danger\" data-toggle=\"tooltip\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a>" +
-															"</p>";
+									"<p>" +
+										"<a href=" + voirUrl + " class=\"btn btn-xs btn-info\" data-toggle=\"tooltip\" title=\"Voir\"><span class=\"glyphicon glyphicon-eye-open\"></span></a> " +
+										"<a href=" + editerUrl + "  class=\"btn btn-xs btn-warning\" data-toggle=\"tooltip\" title=\"Modifier\"><span class=\"glyphicon glyphicon-pencil\"></span></a> " +
+										"<a href=" + supprimerUrl + " class=\"btn btn-xs btn-danger\" data-toggle=\"tooltip\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a>" +
+									"</p>";
                             return s;
                         },
                         "targets": 6
                     }
                 ],
                 fnDrawCallback: function () {
-                  $( 'a', this.fnGetNodes() ).tooltip( {
-                  "delay": 0,
-                  "track": true,
-                  "fade": 250,
-                  "tooltipClass": 'btn',
+                    $( 'a', this.fnGetNodes() ).tooltip( {
+                    "delay": 0,
+                    "track": true,
+                    "fade": 250,
+                    "tooltipClass": 'btn',
                   } );
                 },
                 fnInitComplete: function () {
                   $( 'a', this.fnGetNodes() ).tooltip( {
-                  "delay": 0,
-                  "track": true,
-                  "fade": 250,
-                  "tooltipClass": 'btn',
+                    "delay": 0,
+                    "track": true,
+                    "fade": 250,
+                    "tooltipClass": 'btn',
                   } );
                   $("#NodesToMove").detach().removeClass("hidden").appendTo('div.dataTables_dateRange');
                   $('#dateRange').change(function() {
