@@ -178,12 +178,16 @@ class ContactRepository extends EntityRepository
 		$query = $this->createQueryBuilder('c')
 		->leftJoin('c.settings', 's');
 
-		$index=0;
+		$index = 0;
 		$newGroup = true;
 		$where = '';
 		$andorGroup = '';
 
 		foreach($arr_filters as $filter){
+
+			dump($index);
+
+		//	dump($filter);
 
 			$champ = $filter->getChamp();
 			$action = $filter->getAction();
@@ -192,9 +196,9 @@ class ContactRepository extends EntityRepository
 
 			$operateur = 'LIKE';
 
-			if($action == 'NOT_EQUALS' || $action == 'NOT_CONTAINS'){
-				$operateur = 'NOT LIKE';
-			}
+			// if($action == 'NOT_EQUALS' || $action == 'NOT_CONTAINS'){
+			// 	$operateur = 'NOT LIKE';
+			// }
 
 			$arr_valeurs = explode(',', $filter->getValeur());
 
@@ -255,7 +259,7 @@ class ContactRepository extends EntityRepository
 					$where = 's.parametre = :param'.$index;
 					$query->setParameter('param'.$index, $champ);
 
-					$where.=' AND ';
+					
 
  					for($i=0; $i<count($arr_valeurs); $i++){
 
@@ -274,6 +278,8 @@ class ContactRepository extends EntityRepository
 
  						if($i != 0){
  							$where.=' OR ';
+ 						} else {
+ 							$where.=' AND ';
  						}
  						$where.= 's.valeur '.$operateur.' '.$param;
  						$query->setParameter($param, $val);
@@ -362,51 +368,17 @@ class ContactRepository extends EntityRepository
 					}else {
 						if($andor == 'AND'){
 							$query->andWhere('c.'.$champ.' IS NULL');
-							echo $where;
 						} else{
 							$query->orWhere('c.'.$champ.' IS NULL');
 						}
 					}
 				} else if($action == 'NOT_EMPTY'){
-					if($index == 0){
-						$query->where('c.'.$champ.' IS NOT NULL');
-					} else {
-						if($andor == 'AND'){
-							$query->andWhere('c.'.$champ.' IS NOT NULL');
-							echo $where;
-						} else{
-							$query->orWhere('c.'.$champ.' IS NOT NULL');
-						}
-
-					}
-
+					$where.= 'c.'.$champ.' IS NOT NULL';
 				} else if ($action == "IS_TRUE"){
-					if($index == 0){
-						$query->where('c.'.$champ.' =1' );
-					}else {
-						if($andor == 'AND'){
-							$query->andWhere('c.'.$champ.' =1');
-							echo $where;
-						} else{
-							$query->orWhere('c.'.$champ.' =1');
-						}
-					}
-
+					$where.= 'c.'.$champ.' =1';
 				} else if($action == 'IS_FALSE'){
-					if($index == 0){
-						$query->where('c.'.$champ.' =0');
-					} else {
-						if($andor == 'AND'){
-							$query->andWhere('c.'.$champ.' =0');
-							echo $where;
-						} else{
-							$query->orWhere('c.'.$champ.' =0');
-						}
-
-					}
-
+					$where.='c.'.$champ.' =0';
 				} else {
-
 
 					for($i=0; $i<count($arr_valeurs); $i++){
 
@@ -433,26 +405,27 @@ class ContactRepository extends EntityRepository
 
 					}
 
-					if( true === $endGroup or count($arr_filters)-1 == $index ){
-						$where.= ')';
-						$newGroup = true;
+					
+				}
 
-						if($index == 0){
-							$query->where($where);
-						} else {
-							if($andorGroup == 'AND'){
-								$query->andWhere($where);
-							} else{
-								$query->orWhere($where);
-							}
-						}
+				if( true === $endGroup or count($arr_filters)-1 == $index ){
+					$where.= ')';
+					$newGroup = true;
+					if($index == 0){
+						$query->where($where);
 					} else {
-						$newGroup = false;
+						if($andorGroup == 'AND'){
+							$query->andWhere($where);
+						} else{
+							$query->orWhere($where);
+						}
 					}
-
+				} else {
+					$newGroup = false;
 				}
 
  			}
+			dump($where);
  			$index++;
 		}
 

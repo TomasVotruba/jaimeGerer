@@ -112,8 +112,6 @@ class RapportController extends Controller
 	 */
 	public function rapportVoirAction(Rapport $rapport)
 	{
-
-
         //mautic session
         $tokenMautic = $this->get('session')->get('accessTokenData');
         //sert a savoir apres une redirection si l'utilisateur avait demandé un export de segment vers mautic
