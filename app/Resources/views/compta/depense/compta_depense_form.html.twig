@@ -140,6 +140,9 @@
 
 			$(".select-sous-traitances").multiselect();
 
+			if($('.entity-compte') != ""){
+				$('.alert-warning').addClass('hidden');
+			}
 
 			if( $('.select-mode-paiement').val() == 'Chèque'){
 				$('.wrapper-num-cheque').removeClass("hidden");

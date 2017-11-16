@@ -175,7 +175,7 @@
 		     					<td>Sous-traitances</td>
 					    		<td>
 					    			{% for sousTraitance in arr_sousTraitances %}
-						   	 			{{ sousTraitance }}<br />
+						   	 			<a href="{{ path('crm_opportunite_voir', {'id' : sousTraitance.opportunite.id }) }}#sous-traitance" target="_blank">{{ sousTraitance }}</a><br />
 						   	 		{% endfor %}
 					    		</td>
 		     				</tr>

@@ -553,13 +553,13 @@ class DepenseController extends Controller
 		$depenseOpportuniteSousTraitances = $opportuniteSousTraitancesRepo->findHavingDepense($depense);
 
 		$form = $this->createForm(
-				new DepenseType(
-						$this->getUser()->getCompany()->getId(),
-						$em,
-						$arr_opporunitesSousTraitances,
-						$depenseOpportuniteSousTraitances
-				),
-				$depense
+			new DepenseType(
+				$this->getUser()->getCompany()->getId(),
+				$em,
+				$arr_opporunitesSousTraitances,
+				$depenseOpportuniteSousTraitances
+			),
+			$depense
 		);
 
 		$form->get('compte_name')->setData($depense->getCompte()->getNom());

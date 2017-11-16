@@ -38,6 +38,10 @@ a, a:hover, a:active {
     text-decoration: none;
 }
 
+.body-wrapper{
+    height: 100%;
+}
+
 .full-height {
     height: 100%;
 }
