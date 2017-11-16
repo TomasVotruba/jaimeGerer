@@ -156,6 +156,103 @@ class CompteComptableController extends Controller
 	}
 
 	/**
+	 * @Route("/compta/plan/rechercher/{search}", name="compta_compte_rechercher")
+	 */
+	public function compteRechercherAction($search)
+	{
+		$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\CompteComptable');
+		$arr_comptes = $repo->SearchByName($search,$this->getUser()->getCompany());
+			
+		$arr_categories = array(
+			1 => "Comptes de capitaux",
+			2 => "Comptes d'immobilisations",
+			3 => "Comptes de stocks et en-cours",
+			4 => "Comptes de tiers",
+			5 => "Comptes financiers",
+			6 => "Comptes de charges",
+			7 => "Comptes de produits",
+			8 => "Comptes spéciaux",
+			10 => "Capital et réserves",
+			11 => "Report à nouveau",
+			12 => "Résultat de l'exercice",
+			13 => "Subventions d'investissement",
+			14 => "Provisions réglementées",
+			15 => "Provisions pour risques et charges",
+			16 => "Emprunts et dettes assimilées",
+			17 => "Dettes rattachées à des participations",
+			18 => "Comptes de liaison des établissements et sociétés en participation",
+			19 => "",
+			20 => "Immobilisations incorporelles",
+			21 => "Immobilisations corporelles",
+			22 => "Immobilisations mises en concession",
+			23 => "Immobilisations en cours",
+			24 => "",
+			25 => "Parts dans des entreprises liées et créances sur des entreprises liées ",
+			26 => "Participations et créances rattachées à des participations ",
+			27 => "Autres immobilisations financières ",
+			28 => "Amortissements des immobilisations",
+			29 => "Dépréciations des immobilisations ",
+			30 => "",
+			31 => "Matières premières (et fournitures) ",
+			32 => "Autres approvisionnements",
+			33 => "En-cours de production de biens ",
+			34 => "En-cours de production de services ",
+			35 => "Stocks de produits",
+			36 => "",
+			37 => "Stocks de marchandises",
+			38 => "",
+			39 => "Provisions pour dépréciation des stocks et en-cours ",
+			40 => "Fournisseurs comptes et rattachés",
+			41 => "Clients et comptes rattachés",
+			42 => "Personnel et comptes rattachés",
+			43 => "Sécurité sociale et autres organismes sociaux ",
+			44 => "État et autres collectivités publiques ",
+			45 => "Groupe et associés ",
+			46 => "Débiteurs divers et créditeurs divers ",
+			47 => "Comptes transitoires ou d'attente ",
+			48 => "Comptes de régularisation",
+			49 => "Provisions pour dépréciation des comptes de tiers",
+			50 => "Valeurs mobilières de placement",
+			51 => "Banques, établissements financiers et assimilés",
+			52 => "Instruments de trésorerie",
+			53 => "Caisse",
+			54 => "Régies d'avance et accréditifs",
+			55 => "",
+			56 => "",
+			57 => "",
+			58 => "Virements internes",
+			59 => "Provisions pour dépréciation des comptes financiers ",
+			60 => "Achats",
+			61 => "Services extérieurs",
+			62 => "Autres services extérieurs ",
+			63 => "Impôts, taxes et versements assimilés",
+			64 => "Charges de personnel",
+			65 => "Autres charges de gestion courante ",
+			66 => "Charges financières",
+			67 => "Charges exceptionnelles",
+			68 => "Dotations aux amortissements et aux provisions ",
+			69 => "Participation des salariés - impôts sur les bénéfices et assimilés ",
+			70 => "Ventes de produits fabriqués, prestations de services, marchandises",
+			71 => "Production stockée (ou déstockage)",
+			72 => "Production immobilisée",
+			73 => "",
+			74 => "Subventions d'exploitation",
+			75 => "Autres produits de gestion courante ",
+			76 => "Produits financiers",
+			77 => "Produits exceptionnels",
+			78 => "Reprises sur amortissements et provisions",
+			79 => "Transferts de charges",
+			80 => "Comptes spéciaux"
+ 		);
+
+		return $this->render('compta/plan/compta_plan_recherche_resultats.html.twig', array(
+			'arr_comptes' => $arr_comptes,
+			'arr_categories' => $arr_categories,
+			'search' => $search
+		));
+	}
+
+	/**
 	 * @Route("/compta/plan/utiliser-general/{initialisation}", name="compta_compte_utiliser_general")
 	 */
 	public function compteUtiliserGeneralAction($initialisation = false)

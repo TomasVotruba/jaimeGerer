@@ -56,9 +56,9 @@ class OpportuniteRepository extends EntityRepository
             $dateEnd = $dateRange['end'] instanceof \DateTime ? $dateRange['end'] :
                 \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end']) ;
 			$qb->andWhere('o.date >= :dateDebut')
-				->setParameter('dateDebut', $dateStart)
+				->setParameter('dateDebut', $dateStart->format('Y-m-d'))
 				->andWhere('o.date <= :dateFin')
-				->setParameter('dateFin', $dateEnd);
+				->setParameter('dateFin', $dateEnd->format('Y-m-d'));
 		}
 
 		$qb->setMaxResults($length)
@@ -105,9 +105,9 @@ class OpportuniteRepository extends EntityRepository
             $dateEnd = $dateRange['end'] instanceof \DateTime ? $dateRange['end'] :
                 \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end']) ;
 			$qb->andWhere('o.date >= :dateDebut')
-				->setParameter('dateDebut', $dateStart)
+				->setParameter('dateDebut', $dateStart->format('Y-m-d'))
 				->andWhere('o.date <= :dateFin')
-				->setParameter('dateFin', $dateEnd);
+				->setParameter('dateFin', $dateEnd->format('Y-m-d'));
 		}
 
 

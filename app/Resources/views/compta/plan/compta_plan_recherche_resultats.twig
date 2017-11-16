@@ -44,17 +44,28 @@
 	</div>
 	{{ form_rest(form) }}
 	{{ form_end(form) }}
+
 	<div class="row">
 		<div class="col-md-6">
-			{%  if form.recherche.vars.value != '' %}
-				{{ form.recherche.vars.value }} {{ dataBigCount|length + dataCount|length }} résultat{% if dataBigCount|length + dataCount|length > 1 %}s{% endif %}
-			{% endif %}
+			<h3>Résultats de la recherche  {{ search }}</h3>3>
+			<p>{{ arr_comptes|length }} résultats</p>
 		</div>
 	</div>
 	<div class="row">
     	<div class="col-md-12">
 
+
+
+
     		{% if arr_comptes|length > 0 %}
+
+
+    			{% for compte in arr_comptes %}
+
+
+    			{% endfor %}
+
+
 				<div class="wrap-plan-comptable">
 
 				  <!-- Nav tabs -->
