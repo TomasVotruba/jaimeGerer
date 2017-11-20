@@ -526,7 +526,10 @@ class RapportController extends Controller
 		 ->add('year', 'choice', array(
 		 	'label' => 'Année',
 		 	'choices' => array(
-		 		date('Y'), date('Y')+1
+		 		date('Y') => date('Y'), 
+		 		date('Y')+1 => date('Y')+1,
+		 		date('Y')+2 => date('Y')+2,
+		 		date('Y')+3 => date('Y')+3,
 		 	)
 		 ))
 		 ->add('submit', 'submit', array(

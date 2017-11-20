@@ -1145,9 +1145,9 @@ class TableauBordService extends ContainerAware {
 
   public function exportImportPrevisionnelExcel($company){
     $path = __DIR__.'/../../../../web/files/compta/tableau_bord/';
-	  $fileName = 'fichier_import_tableau_bord_previsionnel.xlsx';
+	$fileName = 'fichier_import_tableau_bord_previsionnel.xlsx';
 
-	  $objPHPExcel = $this->phpExcel->createPHPExcelObject($path.$fileName);
+	$objPHPExcel = $this->phpExcel->createPHPExcelObject($path.$fileName);
     $tableauPrevisonnel = $this->creerTableauPrevisionnel(date('Y'), $company);
 
     //actions commerciales
@@ -1186,7 +1186,6 @@ class TableauBordService extends ContainerAware {
         for($mois = 1; $mois <= 12; $mois++){
 
           $montant = $sheet->getCellByColumnAndRow($col, $row)->getValue();
-
 
           if($nomPoste == 'actions_commerciales' || $nomPoste == 'ca_mois'){
 
