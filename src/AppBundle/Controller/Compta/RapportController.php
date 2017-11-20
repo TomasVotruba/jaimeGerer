@@ -523,6 +523,12 @@ class RapportController extends Controller
 		 ->add('file', 'file', array(
 			 'label' => 'Importer le fichier rempli',
 			))
+		 ->add('year', 'choice', array(
+		 	'label' => 'Année',
+		 	'choices' => array(
+		 		date('Y'), date('Y')+1
+		 	)
+		 ))
 		 ->add('submit', 'submit', array(
 			 'label' => 'Importer',
 			 'attr' => array(
@@ -537,7 +543,7 @@ class RapportController extends Controller
 		if ($form->isSubmitted() && $form->isValid()) {
 			$objPHPExcel = $this->get('phpexcel')->createPHPExcelObject($form['file']->getData());
 			$tableauBordService = $this->get('appbundle.compta_tableau_bord_service');
-			$tableauBordService->importPrevisionnelExcel($this->getUser()->getCompany(), $objPHPExcel);
+			$tableauBordService->importPrevisionnelExcel($this->getUser()->getCompany(), $objPHPExcel, $form['year']->getData());
 			
 			return $this->redirect($this->generateUrl('compta_rapport_tableau_bord_index'));
 		}

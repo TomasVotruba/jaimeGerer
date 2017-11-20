@@ -1173,9 +1173,8 @@ class TableauBordService extends ContainerAware {
 
   }
 
-  public function importPrevisionnelExcel($company, $objPHPExcel){
+  public function importPrevisionnelExcel($company, $objPHPExcel, $year){
 
-    $year = date('Y');
     $sheet = $objPHPExcel->getActiveSheet();
     $tableauPrevisonnel = $this->creerTableauPrevisionnel($year, $company);
 

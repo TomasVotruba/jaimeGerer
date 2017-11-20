@@ -1,0 +1,69 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Plan comptable</h1>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+		    <p>
+		    	 <a class="btn btn-info" href="{{  path('compta_compte_liste') }}">Retour au plan comptable</a>
+		    </p>
+	    </div>
+    </div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<h3>Résultats de la recherche : "{{ search }}"</h3>
+			<p>{{ arr_comptes|length }} résultats</p>
+		</div>
+	</div>
+	<div class="row">
+    	<div class="col-md-12 well">
+
+    		{% if arr_comptes|length > 0 %}
+
+    			{% for compte in arr_comptes %}
+
+    				<h4>{{ compte.num|slice(0, 1) }} : {{ arr_categories[compte.num|slice(0, 1)] }}</h4>
+
+    				<div class="panel panel-default">
+						<div class="panel-heading" type="button" data-toggle="collapse" data-target="#collapse10" aria-expanded="false" 	aria-controls="collapse10">
+						  <p class="panel-title">
+						  	<span class="label label-warning">{{ compte.num|slice(0, 2) }}</span>
+						  	{{ arr_categories[compte.num|slice(0, 2)] }}
+						  </p>
+						</div>
+
+						<p><a href="{{ path('compta_compte_voir', {'id' : compte.id }) }}">{{ compte }} </a></p>
+					</div>
+
+    			{% endfor %}
+
+			{% else %}
+	  			<p>Vous n'avez pas encore de plan comptable.</p>
+	  			<p>
+		  			<a href="{{ path('compta_compte_importer') }}" class="btn btn-info"  data-toggle="modal" data-target="#modal">
+			    		<span class="glyphicon glyphicon-import"></span> Importer mon plan comptable
+			    	</a>
+			    	<a href="{{ path('compta_compte_utiliser_general') }}" class="btn btn-info">
+			    		<span class="glyphicon glyphicon-list-alt"></span> Utiliser le plan comptable général
+			    	</a>
+		   	    </p>
+	  	    {% endif %}
+		</div>
+	</div>
+
+	{% block javascripts %}
+	{{ parent() }}
+		<script type="text/javascript">
+				<!-- mettre le premier onglet du plan comptable ouvert par défaut -->
+				$('#home1').addClass('active');
+				$('.wrap-plan-comptable ul li:first-child').addClass('active');
+		</script>
+	{% endblock %}
+
+{% endblock %}
