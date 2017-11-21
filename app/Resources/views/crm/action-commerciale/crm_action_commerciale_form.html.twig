@@ -235,16 +235,16 @@
 
             addProduitForm(collectionHolder, $newProduitLi, false);
             $('.select_andor').addClass('visibility-hidden');
-            
-            $addProduitLink.on('click', function(e) {
-                // empêche le lien de créer un « # » dans l'URL
-                e.preventDefault();
-                // ajoute un nouveau formulaire tag (voir le prochain bloc de code)
-                addProduitForm(collectionHolder, $newProduitLi, true);
 
-            });
-            
         }
+
+        $addProduitLink.on('click', function(e) {
+            // empêche le lien de créer un « # » dans l'URL
+            e.preventDefault();
+            // ajoute un nouveau formulaire tag (voir le prochain bloc de code)
+            addProduitForm(collectionHolder, $newProduitLi, true);
+
+        });
 
         function addProduitForm(collectionHolder, $newLinkLi, ExecTinymceCommand) {
             // Récupère l'élément ayant l'attribut data-prototype comme expliqué plus tôt
