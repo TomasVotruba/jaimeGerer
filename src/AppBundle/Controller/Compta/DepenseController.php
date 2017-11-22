@@ -572,38 +572,39 @@ class DepenseController extends Controller
 			$data = $form->getData();
 
 			$depense->setCompte($em->getRepository('AppBundle:CRM\Compte')->findOneById($data->getCompte()));
-
 			$date = $depense->getDate();
+			$dateReglement = clone $date;
+
 			switch ($depense->getConditionReglement()) {
 				case 'reception':
-					$depense->setDateConditionReglement($date);
+					$depense->setDateConditionReglement($dateReglement);
 					break;
 				case '30':
-					$date->add(new \DateInterval('P30D'));
-					$depense->setDateConditionReglement($date);
+					$dateReglement->add(new \DateInterval('P30D'));
+					$depense->setDateConditionReglement($dateReglement);
 					break;
 				case '30finMois':
-					$date->add(new \DateInterval('P30D'));
-					$date->modify('last day of this month');
-					$depense->setDateConditionReglement($date);
+					$dateReglement->add(new \DateInterval('P30D'));
+					$dateReglement->modify('last day of this month');
+					$depense->setDateConditionReglement($dateReglement);
 					break;
 				case '45':
-					$date->add(new \DateInterval('P45D'));
-					$depense->setDateConditionReglement($date);
+					$dateReglement->add(new \DateInterval('P45D'));
+					$depense->setDateConditionReglement($dateReglement);
 					break;
 				case '45finMois':
-					$date->add(new \DateInterval('P45D'));
-					$date->modify('last day of this month');
-					$depense->setDateConditionReglement($date);
+					$dateReglement->add(new \DateInterval('P45D'));
+					$dateReglement->modify('last day of this month');
+					$depense->setDateConditionReglement($dateReglement);
 					break;
 				case '60':
-					$date->add(new \DateInterval('P60D'));
-					$depense->setDateConditionReglement($date);
+					$dateReglement->add(new \DateInterval('P60D'));
+					$depense->setDateConditionReglement($dateReglement);
 					break;
 				case '60finMois':
-					$date->add(new \DateInterval('P60D'));
-					$date->modify('last day of this month');
-					$depense->setDateConditionReglement($date);
+					$dateReglement->add(new \DateInterval('P60D'));
+					$dateReglement->modify('last day of this month');
+					$depense->setDateConditionReglement($dateReglement);
 					break;
 			}
 
