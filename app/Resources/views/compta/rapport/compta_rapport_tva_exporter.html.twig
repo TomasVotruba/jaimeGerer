@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-        <title>Relance</title>
+        <title>Récapitulatif de TVA</title>
         
 		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" href="{{ app.request.schemeAndHttpHost ~ asset('css/compta_pdf.css') }}" />
@@ -16,57 +16,95 @@
 					<thead>
 						<tr>
 							<th rowspan="2">Mois</th>
-							<th colspan="4" class="center thick-border-left">Entrée</th>
-							<th colspan="4" class="center thick-border-left">Sortie</th>
-							<th colspan="2" class="center thick-border-left">TVA à reverser</th>
+							<th rowspan="3" colspan="2" class="center thick-border-left">Régime</th>
+							<th colspan="3" class="center thick-border-left black-border-bottom">Entrée</th>
+							<th colspan="3" class="center thick-border-left black-border-bottom">Sortie</th>
+							<th rowspan="2" colspan="1" class="center thick-border-left">TVA à reverser</th>
 						</tr>
 						<tr class="thick-border-bottom">
-							<th class="center thick-border-left">Régime</th>
-							<th class="center">TTC</th>
-							<th class="center">HT ou prix net</th>
-							<th class="center">TVA</th>
-							<th class="center thick-border-left">Régime</th>
-							<th class="center">TTC</th>
-							<th class="center">HT ou prix net</th>
-							<th class="center">TVA</th>
-							<th class="center thick-border-left">Mois</th>
-							<th class="center">Trimestre</th>
+							<th class="center black-border-top">TTC</th>
+							<th class="center black-border-top">HT ou prix net</th>
+							<th class="center black-border-top">TVA</th>
+							<th class="center thick-border-left black-border-top">TTC</th>
+							<th class="center black-border-top">HT ou prix net</th>
+							<th class="center black-border-top">TVA</th>
+							{# <th class="center">Trimestre</th> #}
 						</tr>
 					</thead>
 					<tbody>
 					{% for arr_periode in arr_tva %}
-						<tr class="thick-border-top">
-							<td rowspan="2"><strong>{{ arr_periode.mois }}/{{ arr_periode.annee }}</strong></td>
-							<td class="thick-border-left">Soumis à TVA</td>
-							<td class="align-right">{{ arr_periode.entree_soumis.entreeTTC|number_format(2,',',' ') }} €</td>
-							<td class="align-right">{{ arr_periode.entree_soumis.entreeHT|number_format(2,',',' ') }} €</td>
-							<td class="align-right">
-								{{ arr_periode.entree_soumis.entreeTVA|number_format(2,',',' ') }} €<br />
-								{% if arr_periode.entree_soumis.taxe_percent.55 != 0 %}<i>5,5% : {{ arr_periode.entree_soumis.taxe_percent.55|number_format(2,',',' ') }} €</i><br />{% endif %}
-								{% if arr_periode.entree_soumis.taxe_percent.100 != 0 %}<i>10% : {{ arr_periode.entree_soumis.taxe_percent.100|number_format(2,',',' ') }} €</i><br />{% endif %}
-								{% if arr_periode.entree_soumis.taxe_percent.200 != 0 %}<i>20% : {{ arr_periode.entree_soumis.taxe_percent.200|number_format(2,',',' ') }} €</i>{% endif %}<br />
-								{% if arr_periode.entree_soumis.taxe_percent.other != 0 %}<i>Autre : {{ arr_periode.entree_soumis.taxe_percent.other|number_format(2,',',' ') }} €</i>{% endif %}
-							</td>
-							<td class="thick-border-left">Soumis à TVA</td>
-							<td class="align-right">{{ arr_periode.sortie_soumis.sortieTTC|number_format(2,',',' ') }} €</td>
-							<td class="align-right">{{ arr_periode.sortie_soumis.sortieHT|number_format(2,',',' ') }} €</td>
-							<td class="align-right">{{ arr_periode.sortie_soumis.sortieTVA|number_format(2,',',' ') }} €</td>
-							<td class="align-right thick-border-left{% if arr_periode.balance < 0 %} red {% else %} green{% endif %}" rowspan="2">{{ arr_periode.balance|number_format(2,',',' ') }} €</td>
-							{% if loop.index0%6 == 0 %}
-								<td rowspan="6"></td>
-							{% endif %}
-						</tr>
-						<tr>
-							<td class="thick-border-left">Non soumis à TVA</td>
-							<td class="align-right">{{ arr_periode.entree_non_soumis.entreePrixNet|number_format(2,',',' ') }} €</td>
-							<td class="align-right">{{ arr_periode.entree_non_soumis.entreePrixNet|number_format(2,',',' ') }} €</td>
-							<td class="align-right">-</td>
-							<td class="thick-border-left">Non soumis à TVA</td>
-							<td class="align-right">{{ arr_periode.sortie_non_soumis.sortiePrixNet|number_format(2,',',' ') }} €</td>
-							<td class="align-right">{{ arr_periode.sortie_non_soumis.sortiePrixNet|number_format(2,',',' ') }} €</td>
-							<td class="align-right">-</td>
-						</tr>
+
+						{% set types = [] %}
+						{% set types = types|merge({'France' : 'france'}) %}
+						{% set types = types|merge({'Intra-communautaire' : 'intra'}) %}
+						{% set types = types|merge({'Extra-communautaire' : 'extra'}) %}
+						
+						<!-- soumis à tva -->
+						{% for label, type in types %}
+
+							<tr class="{% if loop.last %} black-border-bottom {% elseif loop.first %} thick-border-top {% endif %}" >
+
+								{% if loop.first %}
+									<td rowspan="6" class="thick-border-top "><strong>{{ arr_periode.mois }}/{{ arr_periode.annee }}</strong></td>
+									<td class="thick-border-left thick-border-top black-border-bottom black-border-right" rowspan="3">Soumis à TVA</td>
+								{% endif %}
+
+								<td class="black-border-right">{{ label }}</td>
+								<td class="align-right thick-border-left">{{ arr_periode.entree_soumis[type].entreeTTC|number_format(2,',',' ') }} €</td>
+								<td class="align-right">{{ arr_periode.entree_soumis[type].entreeHT|number_format(2,',',' ') }} €</td>
+								<td class="align-right">
+									{{ arr_periode.entree_soumis[type].entreeTVA|number_format(2,',',' ') }} €<br />
+									{% if arr_periode.entree_soumis[type].taxe_percent.55 != 0 %}<i>5,5% : {{ arr_periode.entree_soumis[type].taxe_percent.55|number_format(2,',',' ') }} €</i><br />{% endif %}
+									{% if arr_periode.entree_soumis[type].taxe_percent.100 != 0 %}<i>10% : {{ arr_periode.entree_soumis[type].taxe_percent.100|number_format(2,',',' ') }} €</i><br />{% endif %}
+									{% if arr_periode.entree_soumis[type].taxe_percent.200 != 0 %}<i>20% : {{ arr_periode.entree_soumis[type].taxe_percent.200|number_format(2,',',' ') }} €</i>{% endif %}<br />
+									{% if arr_periode.entree_soumis[type].taxe_percent.other != 0 %}<i>Autre : {{ arr_periode.entree_soumis[type].taxe_percent.other|number_format(2,',',' ') }} €</i>{% endif %}
+								</td>
+								{# <td class="thick-border-left">Soumis à TVA</td> #}
+								<td class="align-right thick-border-left">{{ arr_periode.sortie_soumis[type].sortieTTC|number_format(2,',',' ') }} €</td>
+								<td class="align-right">{{ arr_periode.sortie_soumis[type].sortieHT|number_format(2,',',' ') }} €</td>
+								<td class="align-right">
+									{{ arr_periode.sortie_soumis[type].sortieTVA|number_format(2,',',' ') }} €<br />
+									{% if arr_periode.sortie_soumis[type].taxe_percent.55 != 0 %}<i>5,5% : {{ arr_periode.sortie_soumis[type].taxe_percent.55|number_format(2,',',' ') }} €</i><br />{% endif %}
+									{% if arr_periode.sortie_soumis[type].taxe_percent.100 != 0 %}<i>10% : {{ arr_periode.sortie_soumis[type].taxe_percent.100|number_format(2,',',' ') }} €</i><br />{% endif %}
+									{% if arr_periode.sortie_soumis[type].taxe_percent.200 != 0 %}<i>20% : {{ arr_periode.sortie_soumis[type].taxe_percent.200|number_format(2,',',' ') }} €</i>{% endif %}<br />
+									{% if arr_periode.sortie_soumis[type].taxe_percent.other != 0 %}<i>Autre : {{ arr_periode.sortie_soumis[type].taxe_percent.other|number_format(2,',',' ') }} €</i>{% endif %}
+
+
+								</td>
+
+								
+								<td class="align-right thick-border-left{% if arr_periode.balance[type] < 0 %} red {% else %} green{% endif %}">{{ arr_periode.balance[type]|number_format(2,',',' ') }} €</td>
+							
+
+							</tr>
+						{% endfor %}
+						
+						<!-- non soumis à tva  -->
+						{% for label, type in types %}
+
+							<tr class="{% if loop.last %} thick-border-bottom {% elseif loop.first %} black-border-top {% endif %}" >
+
+								{% if loop.first %}
+									<td class="thick-border-left thick-border-top black-border-bottom black-border-right" rowspan="3">Non-soumis à TVA</td>
+								{% endif %}
+
+								<td class="black-border-right">{{ label }}</td>
+								<td class="align-right thick-border-left">{{ arr_periode.entree_non_soumis[type].entreeTTC|number_format(2,',',' ') }} €</td>
+								<td class="align-right">{{ arr_periode.entree_non_soumis[type].entreeHT|number_format(2,',',' ') }} €</td>
+								<td class="align-right">
+									-
+								</td>
+								{# <td class="thick-border-left">Soumis à TVA</td> #}
+								<td class="align-right thick-border-left">{{ arr_periode.sortie_non_soumis[type].sortieTTC|number_format(2,',',' ') }} €</td>
+								<td class="align-right">{{ arr_periode.sortie_non_soumis[type].sortieHT|number_format(2,',',' ') }} €</td>
+								<td class="align-right">-</td>
+								<td class="align-right thick-border-left">-</td>
+
+							</tr>
+						{% endfor %}
+						
 					{% endfor %}
+
 					</tbody>
 				</table>
 			</div>
