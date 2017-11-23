@@ -1023,7 +1023,8 @@ class TableauBordService extends ContainerAware {
         //autres coûts
 
         //ne pas mettre les comptes 4 dans autres coûts, uniquement les comptes 6
-        if ( $this->utilsService->startsWith($compteComptable->getNum(), '6') ) {
+        //ne psa prendre 60410500 qui correpond à la sous-traitance FIPHFP
+        if ( $this->utilsService->startsWith($compteComptable->getNum(), '6') && $compteComptable->getNum() != '60410500' ) {
           $arr_details['autres_couts'][$month]['val']+= $montant;
           $this->arr_totaux['accurate']['couts_exploitation'][$month]+= $montant;
           $arr_details['autres_couts']['total']+= $montant;
