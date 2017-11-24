@@ -382,6 +382,11 @@ class ActionCommercialeController extends Controller
 			$devis->setRemise($form->get('remise')->getData());
 			$devis->setTaxe($form->get('taxe')->getData());
 			$devis->setTaxePercent($form->get('taxePercent')->getData());
+
+			foreach($form->get('produits')->getData() as $produit){
+				$devis->addProduit($produit);
+			}
+
 			$em->persist($devis);
 
 			$actionCommerciale->setDevis($devis);
