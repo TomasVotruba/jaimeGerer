@@ -365,6 +365,7 @@ class ActionCommercialeController extends Controller
 
 			$actionCommerciale->setDateEdition(new \DateTime(date('Y-m-d')));
 			$actionCommerciale->setUserEdition($this->getUser());
+			$actionCommerciale->setMontant($form->get('totalHT')->getData());
 			$em->persist($actionCommerciale);
 			$em->flush();
 
