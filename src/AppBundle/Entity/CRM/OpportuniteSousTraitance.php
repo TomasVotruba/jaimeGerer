@@ -63,7 +63,7 @@ class OpportuniteSousTraitance
     private $opportunite;
 
     /**
-    * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Compta\Depense")
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\DepenseSousTraitance", mappedBy="sousTraitance")
     */
     private $depenses;
 
@@ -304,40 +304,6 @@ class OpportuniteSousTraitance
     }
 
 
-
-    /**
-     * Add depenses
-     *
-     * @param \AppBundle\Entity\Compta\Depense $depenses
-     * @return OpportuniteSousTraitance
-     */
-    public function addDepense(\AppBundle\Entity\Compta\Depense $depenses)
-    {
-        $this->depenses[] = $depenses;
-
-        return $this;
-    }
-
-    /**
-     * Remove depenses
-     *
-     * @param \AppBundle\Entity\Compta\Depense $depenses
-     */
-    public function removeDepense(\AppBundle\Entity\Compta\Depense $depenses)
-    {
-        $this->depenses->removeElement($depenses);
-    }
-
-    /**
-     * Get depenses
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getDepenses()
-    {
-        return $this->depenses;
-    }
-
     public function getTotalFacture(){
       $totalFacture = 0;
       foreach($this->depenses as $depense){
@@ -390,5 +356,38 @@ class OpportuniteSousTraitance
     public function getRepartitions()
     {
         return $this->repartitions;
+    }
+
+    /**
+     * Add depenses
+     *
+     * @param \AppBundle\Entity\Compta\DepenseSousTraitance $depenses
+     * @return OpportuniteSousTraitance
+     */
+    public function addDepense(\AppBundle\Entity\Compta\DepenseSousTraitance $depenses)
+    {
+        $this->depenses[] = $depenses;
+
+        return $this;
+    }
+
+    /**
+     * Remove depenses
+     *
+     * @param \AppBundle\Entity\Compta\DepenseSousTraitance $depenses
+     */
+    public function removeDepense(\AppBundle\Entity\Compta\DepenseSousTraitance $depenses)
+    {
+        $this->depenses->removeElement($depenses);
+    }
+
+    /**
+     * Get depenses
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDepenses()
+    {
+        return $this->depenses;
     }
 }

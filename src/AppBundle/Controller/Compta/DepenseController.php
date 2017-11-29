@@ -1568,38 +1568,4 @@ class DepenseController extends Controller
 // 		return 0;
 // 	}
 
-
-	/**
-	 * @Route("/compta/depense/change", name="compta_depense_change")
- 	 */
-	public function changeSousTraitanceDepense(){
-
-		$em = $this->getDoctrine()->getManager();
-		$opportuniteSousTraitanceRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\OpportuniteSousTraitance');
-		
-		$depenseRepo = $em->getRepository('AppBundle:Compta\Depense');
-		$arr_depenses = $depenseRepo->findForCompany($this->getUser()->getCompany());
-
-		foreach($arr_depenses as $depense){
-
-			dump($depense->getId());
-
-			$arr_sousTraitances = $opportuniteSousTraitanceRepo->findHavingDepense($depense);
-			foreach($arr_sousTraitances as $sousTraitance){
-				$depenseSousTraitance = new DepenseSousTraitance();
-				$depenseSousTraitance->setSousTraitance($sousTraitance);
-				$depenseSousTraitance->setDepense($depense);
-				$depenseSousTraitance->setMontantMonetaire($depense->getTotalHT());
-				$em->persist($depenseSousTraitance);
-			}
-
-			
-		}
-
-		$em->flush();
-
-		return 0;
-
-	}	
-
 }

@@ -177,11 +177,6 @@ class Depense
     private $numFournisseur;
 
 
-    /**     
-    * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Compta\Depense")  
-    */         
-      private $depenses;
-
     /**
     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\DepenseSousTraitance", mappedBy="depense")
     */
