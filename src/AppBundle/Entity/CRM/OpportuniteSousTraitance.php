@@ -63,9 +63,14 @@ class OpportuniteSousTraitance
     private $opportunite;
 
     /**
-    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\Depense", mappedBy="sousTraitances")
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\DepenseSousTraitance", mappedBy="sousTraitance")
     */
     private $depenses;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\DepenseSousTraitance", mappedBy="depense")
+     */
+     private $sousTraitances;
 
 
     /**
