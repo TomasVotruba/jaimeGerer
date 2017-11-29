@@ -1582,6 +1582,8 @@ class DepenseController extends Controller
 
 		foreach($arr_depenses as $depense){
 
+			dump($depense->getId());
+
 			$arr_sousTraitances = $opportuniteSousTraitanceRepo->findHavingDepense($depense);
 			foreach($arr_sousTraitances as $sousTraitance){
 				$depenseSousTraitance = new DepenseSousTraitance();
