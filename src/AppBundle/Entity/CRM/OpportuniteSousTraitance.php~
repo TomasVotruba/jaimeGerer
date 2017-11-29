@@ -67,6 +67,7 @@ class OpportuniteSousTraitance
     */
     private $depenses;
 
+
     /**
     *
     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\SousTraitanceRepartition", mappedBy="opportuniteSousTraitance", cascade={"persist", "remove"}, orphanRemoval=true)
@@ -74,6 +75,14 @@ class OpportuniteSousTraitance
     */
     private $repartitions;
 
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->depenses = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -295,13 +304,6 @@ class OpportuniteSousTraitance
     }
 
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->depenses = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Add depenses
@@ -339,7 +341,7 @@ class OpportuniteSousTraitance
     public function getTotalFacture(){
       $totalFacture = 0;
       foreach($this->depenses as $depense){
-        $totalFacture+=$depense->getMontant();
+        $totalFacture+=$depense->getMontantMonetaire();
       }
       return $totalFacture;
     }

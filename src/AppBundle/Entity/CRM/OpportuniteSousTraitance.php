@@ -67,11 +67,6 @@ class OpportuniteSousTraitance
     */
     private $depenses;
 
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\DepenseSousTraitance", mappedBy="depense")
-     */
-     private $sousTraitances;
-
 
     /**
     *
