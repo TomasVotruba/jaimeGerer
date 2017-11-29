@@ -176,6 +176,12 @@ class Depense
     */
     private $numFournisseur;
 
+
+    /**
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\DepenseSousTraitance", mappedBy="depense")
+    */
+    private $sousTraitances;
+
   /**
    * Constructor
    */
@@ -886,4 +892,36 @@ class Depense
   	}
 
 
+    /**
+     * Add sousTraitances
+     *
+     * @param \AppBundle\Entity\Compta\DepenseSousTraitance $sousTraitances
+     * @return Depense
+     */
+    public function addSousTraitance(\AppBundle\Entity\Compta\DepenseSousTraitance $sousTraitances)
+    {
+        $this->sousTraitances[] = $sousTraitances;
+
+        return $this;
+    }
+
+    /**
+     * Remove sousTraitances
+     *
+     * @param \AppBundle\Entity\Compta\DepenseSousTraitance $sousTraitances
+     */
+    public function removeSousTraitance(\AppBundle\Entity\Compta\DepenseSousTraitance $sousTraitances)
+    {
+        $this->sousTraitances->removeElement($sousTraitances);
+    }
+
+    /**
+     * Get sousTraitances
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSousTraitances()
+    {
+        return $this->sousTraitances;
+    }
 }

@@ -166,22 +166,40 @@
 	   	 	</div>
 		</div>
 
-		{% if arr_sousTraitances|length > 0 %}
-		   	<div class="row">
-	    		<div class="col-md-6">
-		     		<table class="contact-view-table">
-		     			<tbody>
-		     				<tr>
-		     					<td>Sous-traitances</td>
-					    		<td>
-					    			{% for sousTraitance in arr_sousTraitances %}
-						   	 			<a href="{{ path('crm_opportunite_voir', {'id' : sousTraitance.opportunite.id }) }}#sous-traitance" target="_blank">{{ sousTraitance }}</a><br />
-						   	 		{% endfor %}
-					    		</td>
-		     				</tr>
-		     			</tbody>
-		     		</table>
-	     		</div>
+		{% if depense.sousTraitances|length > 0 %}
+    		<div class="row">
+				<div class="col-md-12">
+					<p><strong>Sous-traitances</strong>
+						<a href="{{ path('compta_depense_sous_traitance_repartition', {'id' : depense.id, 'action' : 'voir' }) }}" class="btn btn-warning btn-xs"><span class="glyphicon glyphicon-pencil"></span> Modifier</a>
+					</p>
+					<table style="width: 100%" class="table table-bordered">
+						<thead>
+							<tr>
+								<th>Opportunite</th>
+								<th>Sous-traitant</th>
+								<th>Montant total de la sous-traitance</th>
+								<th>Montant facturé sur cette facture</th>
+								<th>Montant restant à facturer</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for depenseSousTraitance in depense.sousTraitances %}
+							<tr>	
+								<td><a href="{{ path('crm_opportunite_voir', {'id' : depenseSousTraitance.sousTraitance.opportunite.id }) }}#sous-traitance" target="_blank">{{ depenseSousTraitance.sousTraitance.opportunite.compte }}<br />{{ depenseSousTraitance.sousTraitance.opportunite }}</a></td>
+								<td>{{ depenseSousTraitance.sousTraitance.sousTraitant }}</td>
+								<td>{{ depenseSousTraitance.sousTraitance.montantMonetaire|number_format(2, ',',' ') }} €</td>
+								<td>{{ depenseSousTraitance.montantMonetaire|number_format(2, ',',' ') }} €</td>
+								<td>{{ depenseSousTraitance.sousTraitance.resteAFacturer|number_format(2, ',',' ') }} €</td>
+								<td>
+									<a href="{{ path('compta_depense_supprimer_sous_traitance', {'id' : depenseSousTraitance.id } ) }}" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>		
+
+					</table>		
+				</div>
     		</div>
 	   	{% endif %}
 

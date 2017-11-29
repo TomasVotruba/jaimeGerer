@@ -13,12 +13,16 @@ use AppBundle\Entity\Compta\JournalVente;
 use AppBundle\Entity\Compta\CompteComptable;
 use AppBundle\Entity\Compta\Depense;
 use AppBundle\Entity\Compta\LigneDepense;
+use AppBundle\Entity\Compta\DepenseSousTraitance;
 use AppBundle\Entity\CRM\Compte;
 use AppBundle\Entity\Settings;
 
 use AppBundle\Form\Compta\DepenseType;
 use AppBundle\Form\Compta\UploadHistoriqueDepenseType;
+use AppBundle\Form\Compta\DepenseSousTraitanceRepartitionType;
 use AppBundle\Form\Compta\UploadHistoriqueDepenseMappingType;
+
+use Doctrine\ORM\Query\ResultSetMapping;
 
 
 class DepenseController extends Controller
@@ -222,12 +226,12 @@ class DepenseController extends Controller
 
 		$depense = new Depense();
 		$form = $this->createForm(
-				new DepenseType(
-						$this->getUser()->getCompany()->getId(),
-						$em,
-						$arr_opporunitesSousTraitances
-				),
-				$depense
+			new DepenseType(
+					$this->getUser()->getCompany()->getId(),
+					$em,
+					$arr_opporunitesSousTraitances
+			),
+			$depense
 		);
 
 		$request = $this->getRequest();
@@ -295,36 +299,37 @@ class DepenseController extends Controller
 				}
 
 				$date = $depense->getDate();
+				$dateReglement = clone $date;
 				switch ($depense->getConditionReglement()) {
 					case 'reception':
-						$depense->setDateConditionReglement($date);
+						$depense->setDateConditionReglement($dateReglement);
 						break;
 					case '30':
-						$date->add(new \DateInterval('P30D'));
-						$depense->setDateConditionReglement($date);
+						$dateReglement->add(new \DateInterval('P30D'));
+						$depense->setDateConditionReglement($dateReglement);
 						break;
 					case '30finMois':
-						$date->add(new \DateInterval('P30D'));
-						$date->modify('last day of this month');
-						$depense->setDateConditionReglement($date);
+						$dateReglement->add(new \DateInterval('P30D'));
+						$dateReglement->modify('last day of this month');
+						$depense->setDateConditionReglement($dateReglement);
 						break;
 					case '45':
-						$date->add(new \DateInterval('P45D'));
-						$depense->setDateConditionReglement($date);
+						$dateReglement->add(new \DateInterval('P45D'));
+						$depense->setDateConditionReglement($dateReglement);
 						break;
 					case '45finMois':
-						$date->add(new \DateInterval('P45D'));
-						$date->modify('last day of this month');
-						$depense->setDateConditionReglement($date);
+						$dateReglement->add(new \DateInterval('P45D'));
+						$dateReglement->modify('last day of this month');
+						$depense->setDateConditionReglement($dateReglement);
 						break;
 					case '60':
-						$date->add(new \DateInterval('P60D'));
-						$depense->setDateConditionReglement($date);
+						$dateReglement->add(new \DateInterval('P60D'));
+						$depense->setDateConditionReglement($dateReglement);
 						break;
 					case '60finMois':
-						$date->add(new \DateInterval('P60D'));
-						$date->modify('last day of this month');
-						$depense->setDateConditionReglement($date);
+						$dateReglement->add(new \DateInterval('P60D'));
+						$dateReglement->modify('last day of this month');
+						$depense->setDateConditionReglement($dateReglement);
 						break;
 				}
 
@@ -351,16 +356,34 @@ class DepenseController extends Controller
 				}
 	
 				$opportuniteSousTraitances = $form['opportuniteSousTraitances']->getData();
-				foreach($opportuniteSousTraitances as $sousTraitance){
-					$sousTraitance->addDepense($depense);
-					$em->persist($sousTraitance);
-				}
 
+				foreach($opportuniteSousTraitances as $sousTraitance){
+					$depenseSousTraitance = new depenseSousTraitance();
+					$depenseSousTraitance->setDepense($depense);
+					$depenseSousTraitance->setSousTraitance($sousTraitance);
+					$em->persist($depenseSousTraitance);
+					$depense->addSousTraitance($depenseSousTraitance);
+				}
+				$em->persist($depense);
 				$em->flush();
 
 				//ecrire dans le journal des achats
 				$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
 				$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+
+				if(count($depense->getSousTraitances()) > 1){
+					return $this->redirect($this->generateUrl(
+							'compta_depense_sous_traitance_repartition', array(
+								'id' => $depense->getId(),
+								'action' => $request->request->get('action')
+							)
+					));
+				} else if(count($depense->getSousTraitances()) == 1){
+					$sousTraitance = $depense->getSousTraitances()[0];
+					$sousTraitance->setMontantMonetaire($depense->getTotalHT());
+					$em->persist($sousTraitance);
+					$em->flush();
+				}
 
 				if($request->request->get('action') == "Enregistrer et créer une nouvelle dépense"){
 					return $this->redirect($this->generateUrl(
@@ -379,6 +402,86 @@ class DepenseController extends Controller
 				'form' => $form->createView(),
 		));
 	}
+
+	/**
+	 * @Route("/compta/depense/sous-traitance-repartition/{id}/{action}", 
+	 * 	name="compta_depense_sous_traitance_repartition")
+	 */
+	public function depenseSousTraitanceRepartitionAction(Depense $depense, $action){
+
+		$em = $this->getDoctrine()->getManager();
+		$formBuilder = $this->createFormBuilder();
+
+		foreach($depense->getSousTraitances() as $sousTraitance){
+			$formBuilder->add($sousTraitance->getId(), 'number', array(
+				'label' => 'Montant réglé par la dépense :',
+				'attr' => array('class' => 'montant'),
+				'data' => $sousTraitance->getMontantMonetaire()
+			));
+		}
+
+		$formBuilder->add('submit', 'submit', array(
+			'label' => 'Valider',
+			'attr' => array('class' => 'btn btn-success'),
+			'disabled' => true
+		));
+
+		$form = $formBuilder->getForm();
+
+
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			foreach($form->getData() as $id => $montant){
+				foreach($depense->getSousTraitances() as $sousTraitance){
+					if($sousTraitance->getId() == $id){
+						$sousTraitance->setMontantMonetaire($montant);
+						$em->persist($sousTraitance);
+					}
+				}
+			}
+			$em->flush();
+
+			if($action == "Enregistrer et créer une nouvelle dépense"){
+				return $this->redirect($this->generateUrl(
+						'compta_depense_ajouter'
+				));
+			}
+
+			return $this->redirect($this->generateUrl(
+					'compta_depense_voir',
+					array('id' => $depense->getId())
+			));
+
+		}
+
+		return $this->render('compta/depense/compta_depense_sous_traitance_repartition.html.twig', array(
+			'depense' => $depense,
+			'form' => $form->createView(),
+		));
+	}	
+
+	/**
+	 * @Route("/compta/depense/supprimer-sous-traitance/{id}", 
+	 * 	name="compta_depense_supprimer_sous_traitance")
+	 */
+	public function depenseSupprimerSousTraitanceAction(DepenseSousTraitance $depenseSousTraitance){
+
+		$em = $this->getDoctrine()->getManager();
+		
+		$depenseId = $depenseSousTraitance->getDepense()->getId();
+		$em->remove($depenseSousTraitance);
+		$em->flush();
+
+		return $this->redirect($this->generateUrl(
+				'compta_depense_voir',
+				array('id' => $depenseId)
+		));
+
+	}	
+
 
 	/**
 	 * @Route("/compta/depense/ajouter-modal/{mouvement_id}", name="compta_depense_ajouter_modal", options={"expose"=true})
@@ -549,15 +652,19 @@ class DepenseController extends Controller
 		$opportuniteService = $this->get('appbundle.crm_opportunite_service');
 
 		$arr_opporunitesSousTraitances = $opportuniteService->findOpportunitesSousTraitancesAFacturer($this->getUser()->getCompany());
-
-		$depenseOpportuniteSousTraitances = $opportuniteSousTraitancesRepo->findHavingDepense($depense);
+		$arr_depensesSousTraitances = array();
+		$arr_depensesSousTraitancesId = array();
+		foreach($depense->getSousTraitances() as $sousTraitance){
+			$arr_depensesSousTraitances[] = $sousTraitance->getSousTraitance();
+			$arr_depensesSousTraitancesId[] = $sousTraitance->getSousTraitance()->getId();
+		}
 
 		$form = $this->createForm(
 			new DepenseType(
 				$this->getUser()->getCompany()->getId(),
 				$em,
 				$arr_opporunitesSousTraitances,
-				$depenseOpportuniteSousTraitances
+				$arr_depensesSousTraitances
 			),
 			$depense
 		);
@@ -613,18 +720,36 @@ class DepenseController extends Controller
 			$depense->setTaxe(0); //pour empêcher que la TVA soit enregistrée à la fois dans la ligneDepense et dans la depense
 			$em->persist($depense);
 
-			$arr_sousTraitances = $opportuniteSousTraitancesRepo->findHavingDepense($depense);
-			foreach($arr_sousTraitances as $st){
-				$em->remove($st);
-				$em->flush();
-			}
-
 			$opportuniteSousTraitances = $form['opportuniteSousTraitances']->getData();
-			foreach($opportuniteSousTraitances as $sousTraitance){
-				$sousTraitance->addDepense($depense);
-				$em->persist($sousTraitance);
-			}
 
+			foreach($depense->getSousTraitances() as $depenseSousTraitance){
+				$found = false;
+				foreach($opportuniteSousTraitances as $sousTraitance){
+					if($sousTraitance->getId() == $depenseSousTraitance->getSousTraitance()->getId()){
+						$found = true;
+					}
+				}
+				if(!$found){
+					$em->remove($depenseSousTraitance);
+				}
+				
+			}
+			$em->flush();
+
+			foreach($opportuniteSousTraitances as $sousTraitance){
+				if(!in_array($sousTraitance->getId(), $arr_depensesSousTraitancesId)){
+					$depenseSousTraitance = new depenseSousTraitance();
+					$depenseSousTraitance->setDepense($depense);
+					$depenseSousTraitance->setSousTraitance($sousTraitance);
+					$em->persist($depenseSousTraitance);
+					$depense->addSousTraitance($depenseSousTraitance);
+				}
+				
+			}
+			$em->persist($depense);
+			$em->flush();
+
+			
 			//supprimer les lignes du journal des achats
 			$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
 			$arr_lignes = $journalAchatsRepo->findByDepense($depense);
@@ -637,6 +762,20 @@ class DepenseController extends Controller
 			$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
 
 			$em->flush();
+
+			if(count($depense->getSousTraitances()) > 1){
+				return $this->redirect($this->generateUrl(
+						'compta_depense_sous_traitance_repartition', array(
+							'id' => $depense->getId(),
+							'action' => $request->request->get('action')
+						)
+				));
+			} else if(count($depense->getSousTraitances()) == 1){
+				$sousTraitance = $depense->getSousTraitances()[0];
+				$sousTraitance->setMontantMonetaire($depense->getTotalHT());
+				$em->persist($sousTraitance);
+				$em->flush();
+			}
 
 			return $this->redirect($this->generateUrl(
 					'compta_depense_voir',
@@ -1428,5 +1567,37 @@ class DepenseController extends Controller
 
 // 		return 0;
 // 	}
+
+
+	/**
+	 * @Route("/compta/depense/change", name="compta_depense_change")
+ 	 */
+	public function changeSousTraitanceDepense(){
+
+		$em = $this->getDoctrine()->getManager();
+		$opportuniteSousTraitanceRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\OpportuniteSousTraitance');
+		
+		$depenseRepo = $em->getRepository('AppBundle:Compta\Depense');
+		$arr_depenses = $depenseRepo->findForCompany($this->getUser()->getCompany());
+
+		foreach($arr_depenses as $depense){
+
+			$arr_sousTraitances = $opportuniteSousTraitanceRepo->findHavingDepense($depense);
+			foreach($arr_sousTraitances as $sousTraitance){
+				$depenseSousTraitance = new DepenseSousTraitance();
+				$depenseSousTraitance->setSousTraitance($sousTraitance);
+				$depenseSousTraitance->setDepense($depense);
+				$depenseSousTraitance->setMontantMonetaire($depense->getTotalHT());
+				$em->persist($depenseSousTraitance);
+			}
+
+			
+		}
+
+		$em->flush();
+
+		return 0;
+
+	}	
 
 }

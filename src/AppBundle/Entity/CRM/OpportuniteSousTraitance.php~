@@ -63,7 +63,7 @@ class OpportuniteSousTraitance
     private $opportunite;
 
     /**
-    * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Compta\Depense")
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\DepenseSousTraitance", mappedBy="sousTraitance")
     */
     private $depenses;
 
@@ -73,6 +73,7 @@ class OpportuniteSousTraitance
     *
     */
     private $repartitions;
+
 
     /**
      * Get id
@@ -338,7 +339,7 @@ class OpportuniteSousTraitance
     public function getTotalFacture(){
       $totalFacture = 0;
       foreach($this->depenses as $depense){
-        $totalFacture+=$depense->getTotalHT();
+        $totalFacture+=$depense->getMontant();
       }
       return $totalFacture;
     }

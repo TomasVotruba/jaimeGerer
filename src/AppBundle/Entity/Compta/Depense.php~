@@ -176,10 +176,11 @@ class Depense
     */
     private $numFournisseur;
 
+
     /**
-    * @ORM\ManyToMany(targetEntity="AppBundle\Entity\CRM\OpportuniteSousTraitance")
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\DepenseSousTraitance", mappedBy="depense")
     */
-    private $opportuniteSousTraitances;
+    private $sousTraitances;
 
   /**
    * Constructor
@@ -890,38 +891,4 @@ class Depense
   		return (-$total);
   	}
 
-
-
-    /**
-     * Add opportuniteSousTraitances
-     *
-     * @param \AppBundle\CRM\OpportuniteSousTraitance $opportuniteSousTraitances
-     * @return Depense
-     */
-    public function addOpportuniteSousTraitance(\AppBundle\CRM\OpportuniteSousTraitance $opportuniteSousTraitances)
-    {
-        $this->opportuniteSousTraitances[] = $opportuniteSousTraitances;
-
-        return $this;
-    }
-
-    /**
-     * Remove opportuniteSousTraitances
-     *
-     * @param \AppBundle\CRM\OpportuniteSousTraitance $opportuniteSousTraitances
-     */
-    public function removeOpportuniteSousTraitance(\AppBundle\CRM\OpportuniteSousTraitance $opportuniteSousTraitances)
-    {
-        $this->opportuniteSousTraitances->removeElement($opportuniteSousTraitances);
-    }
-
-    /**
-     * Get opportuniteSousTraitances
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOpportuniteSousTraitances()
-    {
-        return $this->opportuniteSousTraitances;
-    }
 }

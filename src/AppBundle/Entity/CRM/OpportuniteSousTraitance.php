@@ -63,9 +63,10 @@ class OpportuniteSousTraitance
     private $opportunite;
 
     /**
-    * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Compta\Depense")
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\DepenseSousTraitance", mappedBy="sousTraitance")
     */
     private $depenses;
+
 
     /**
     *
@@ -73,6 +74,15 @@ class OpportuniteSousTraitance
     *
     */
     private $repartitions;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->depenses = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -294,13 +304,6 @@ class OpportuniteSousTraitance
     }
 
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->depenses = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Add depenses
@@ -338,7 +341,7 @@ class OpportuniteSousTraitance
     public function getTotalFacture(){
       $totalFacture = 0;
       foreach($this->depenses as $depense){
-        $totalFacture+=$depense->getTotalHT();
+        $totalFacture+=$depense->getMontantMonetaire();
       }
       return $totalFacture;
     }

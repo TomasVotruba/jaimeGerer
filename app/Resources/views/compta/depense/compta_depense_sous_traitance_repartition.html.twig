@@ -1,0 +1,162 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+
+		<div class="row">
+			<h1>Dépense : {{ depense.libelle }} - {{ depense.totalHT|number_format(2, ',', ' ')}} € HT
+			</h1>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Gestion de la sous-traitance</h2>
+			</div>
+		</div>
+
+	    {{ form_start(form) }}
+
+	    <div class="row">
+			<div class="col-md-12">
+				{{ form_errors(form) }}
+			</div>
+		</div>
+
+
+		{% for depenseSousTraitance in depense.sousTraitances %}
+			<div class="wrapper" id="{{ depenseSousTraitance.id }}">
+				<div class="row">
+					<div class="col-md-12">
+						<h4 class="jaimelacompta">{{ depenseSousTraitance.sousTraitance }} : {{ depenseSousTraitance.sousTraitance.montantMonetaire|number_format(2, ',', ' ') }} €</h4>
+						<p>Reste à facturer : <span class="jaimelacompta resteafacturer">{{ depenseSousTraitance.sousTraitance.resteAFacturer|number_format(2, ',', ' ') }} €</span></p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+						{{ form_label(attribute(form, depenseSousTraitance.id)) }}
+					</div>
+					<div class="col-md-2">
+						{{ form_widget(attribute(form, depenseSousTraitance.id)) }}
+						
+					</div>
+					<div class="col-md-8">
+						<p class="warning red hidden">
+							<span class="glyphicon glyphicon-warning-sign"></span> Montant supérieur au montant restant à facturer pour cette sous-traitance	
+						</p>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<hr />
+					</div>
+				</div>
+
+			</div>
+		{% endfor %}
+
+		<div class="row">
+			<div class="col-md-2">
+				<p><strong>
+					Total : <span id="total">0 €</span> 
+					<span class="glyphicon glyphicon-ok green ok-sign hidden"></span>
+				</strong></p>
+				<p class="feedback-total red"></p>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				{{ form_row(form.submit) }}
+			</div>
+		</div>
+	   
+	    {{ form_rest(form) }}
+	    {{ form_end(form) }}
+
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+    <script src="{{ asset('js/accounting.min.js') }}"></script>
+
+    <script type="text/javascript">
+    	$(document).ready(function() {
+
+    		updateTotal();
+
+    		$('.montant').change(function(){
+
+    			var montant = $(this).val();
+    			montant = montant.replace(",", "."); 
+    			$(this).val(montant);
+
+    			var id = $(this).parents('.wrapper').attr('id');
+
+				var resteAFacturer = $('#'+id+' .resteafacturer').text();
+				resteAFacturer = resteAFacturer.replace(",", "."); 
+				resteAFacturer = resteAFacturer.replace("€", ""); 
+				resteAFacturer = resteAFacturer.replace(" ", ""); 
+
+				if(montant > Number(resteAFacturer)){
+					$('#'+id+' .warning').removeClass('hidden');
+				} else {
+					$('#'+id+' .warning').addClass('hidden');
+				}
+				updateTotal();
+    		})
+
+    		function updateTotal(){
+    			var total = 0;
+    			$('.montant').each(function(){
+    				total+= Number($(this).val());
+    			})
+    			$('#total').text(accounting.formatMoney(total, {
+						symbol: "€",
+						format: "%v %s",
+						decimal: ",",
+						thousand: " ",
+						precision: 2
+				}));
+
+    			var depenseHT = {{ depense.totalHT }};
+    			if(depenseHT == total){
+    				$('.feedback-total').addClass("hidden");
+    				$('.ok-sign').removeClass("hidden");
+    				$('button[type=submit]').addClass("btn-success").prop("disabled", false);
+    			} else {
+
+    				$('.ok-sign').addClass("hidden");
+    				$('button[type=submit]').addClass("btn-success").prop("disabled", true);
+
+    				if (total < depenseHT) {
+
+						var reste =  depenseHT - total;
+						$('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Encore " + accounting.formatMoney(reste, {
+								symbol: "€",
+								format: "%v %s",
+								decimal: ",",
+								thousand: " ",
+								precision: 2
+						}) + " à répartir").removeClass("hidden");
+
+					} else if (total > depenseHT) {
+
+						var trop = total - depenseHT;
+						$('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Vous avez réparti " + accounting.formatMoney(trop, {
+								symbol: "€",
+								format: "%v %s",
+								decimal: ",",
+								thousand: " ",
+								precision: 2
+						}) + " en trop").removeClass("hidden");
+					}
+
+
+    			}
+    		}
+
+    	});
+    </script>
+
+
+{% endblock %}

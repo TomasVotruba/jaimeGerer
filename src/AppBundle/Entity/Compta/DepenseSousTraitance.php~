@@ -1,0 +1,99 @@
+<?php
+
+namespace AppBundle\Entity\Compta;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * DepenseSousTraitance
+ *
+ * @ORM\Table(name="depense_sous_traitance")
+ * @ORM\Entity
+ */
+class DepenseSousTraitance
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="montant", type="integer")
+     */
+    private $montant;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\Depense")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $depense;
+
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\OpportuniteSousTraitance")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $sousTraitance;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set montant
+     *
+     * @param integer $montant
+     * @return DepenseSousTraitance
+     */
+    public function setMontant($montant)
+    {
+        $this->montant = $montant;
+
+        return $this;
+    }
+
+    /**
+     * Get montant
+     *
+     * @return integer 
+     */
+    public function getMontant()
+    {
+        return $this->montant;
+    }
+
+    /**
+     * Get montant monetaire
+     *
+     * @return float
+     */
+    public function getMontantMonetaire()
+    {
+        return $this->montant/100;
+    }
+
+    /**
+     * Get montant montaire
+     *
+     * @return integer
+     */
+    public function setMontantMonetaire($montant)
+    {
+        return $this->montant = $montant*100;
+    }
+
+}
