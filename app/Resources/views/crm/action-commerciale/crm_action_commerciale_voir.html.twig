@@ -448,7 +448,7 @@
 																{% if loop.first %}
 																	(factures : 
 																{% endif %}
-																<a href=" {{ path('compta_depense_voir', {'id' : depense.id }) }} " >{{ depense.num }}</a>
+																<a href=" {{ path('compta_depense_voir', {'id' : depense.depense.id }) }} " >{{ depense.depense.num }}</a>
 																{% if loop.last %}
 																	)
 																{% else %}

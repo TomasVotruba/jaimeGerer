@@ -517,8 +517,7 @@ class TableauBordService extends ContainerAware {
     foreach($arr_depenses as $depense){
       $month = $depense->getDate()->format('n');
 
-      $sousTraitances = $sousTraitanceRepo->findHavingDepense($depense);
-      if( count($sousTraitances) ){
+      if( count($depense->getSousTraitances()) ){
         continue;
       }
 
@@ -546,9 +545,12 @@ class TableauBordService extends ContainerAware {
     foreach($arr_details['sous_traitance']['sous_traitances'] as $sousTraitance){
       foreach($sousTraitance->getRepartitions() as $repartition){
         $month = $repartition->getDate()->format('n');
-        $arr_details['sous_traitance'][$month]['val']+= $repartition->getMontantMonetaire();
-        $this->arr_totaux['accurate']['couts_marginaux'][$month]+= $repartition->getMontantMonetaire();
-        $arr_details['sous_traitance']['total']+= $repartition->getMontantMonetaire();
+        $yearSousTraitance = $repartition->getDate()->format('Y');
+        if($yearSousTraitance == $year ){
+            $arr_details['sous_traitance'][$month]['val']+= $repartition->getMontantMonetaire();
+            $this->arr_totaux['accurate']['couts_marginaux'][$month]+= $repartition->getMontantMonetaire();
+            $arr_details['sous_traitance']['total']+= $repartition->getMontantMonetaire();
+        }
       }
     }
 
@@ -592,8 +594,7 @@ class TableauBordService extends ContainerAware {
       $month = $depense->getDate()->format('n');
 
       //on ne prend pas les dépenses correspondant à de la sous-traitance car elles vont dans les coûts marginaux
-      $sousTraitances = $sousTraitanceRepo->findHavingDepense($depense);
-      if( count($sousTraitances) ){
+      if( count($depense->getSousTraitances()) ){
         continue;
       }
 
