@@ -69,6 +69,30 @@ class JournalVentesController extends Controller
 			'credit' => 0
 		);
 
+		usort($arr_journalVente, function($a, $b) {
+			$pieceA = $a->getFacture();
+			if($a->getAvoir()){
+				$pieceA = $a->getAvoir();
+			}
+
+			$pieceB = $b->getFacture();
+			if($b->getAvoir()){
+				$pieceB = $b->getAvoir();
+			}
+
+			if($pieceB->getDateCreation() == $pieceA->getDateCreation()){
+
+				if($pieceA->getId() == $pieceB->getId()){
+					return $a->getDebit() - $b->getDebit();
+				}
+
+
+				return $pieceA->getId() - $pieceB->getId();
+			}
+
+	   		return $pieceB->getDateCreation()->format('U') - $pieceA->getDateCreation()->format('U');
+		});
+
 		foreach($arr_journalVente as $ligne){
 			$arr_totaux['debit']+=$ligne->getDebit();
 			$arr_totaux['credit']+=$ligne->getCredit();

@@ -25,10 +25,6 @@ class JournalVenteRepository extends EntityRepository
 		->setParameter('startDate', $year.'-01-01')
 		->setParameter('endDate', $year.'-12-31')
 		->setParameter('company', $company)
-		->orderBy('f.dateCreation', 'DESC')
-		->addOrderBy('a.dateCreation', 'DESC')
-		->addOrderBy('j.facture', 'DESC')
-		->addOrderBy('j.debit', 'ASC')
 		->getQuery()
 		->getResult();
 
