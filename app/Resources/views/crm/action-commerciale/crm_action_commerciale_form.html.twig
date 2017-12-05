@@ -265,9 +265,9 @@
             $('.remove-button').on('click', function(e) {
                 // empêche le lien de créer un « # » dans l'URL
                 e.preventDefault();
-                // supprime l'élément li et le tinymce pour le formulaire de tag
-                tinyMCE.execCommand("mceRemoveControl",false, $(this).parents('li').find('textarea').attr("id"));
+                // supprime l'élément li pour le formulaire de tag
                 $(this).parents('li').remove();
+                updateDevisTotaux();
             });
 
             $('.produit-quantite').unbind('change');
@@ -304,12 +304,13 @@
             });
         }
 
+        $('.remove-button').unbind('click');
         $('.remove-button').on('click', function(e) {
             // empêche le lien de créer un « # » dans l'URL
             e.preventDefault();
-            // supprime l'élément li et le tinymce pour le formulaire de tag
-            tinyMCE.execCommand("mceRemoveControl",false, $(this).parents('li').find('textarea').attr("id"));
+            // supprime l'élément li pour le formulaire de tag
             $(this).parents('li').remove();
+            updateDevisTotaux();
         });
 
         $('.produit-quantite').change(function(){
