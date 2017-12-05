@@ -384,10 +384,10 @@ class ActionCommercialeController extends Controller
 			$devis->setTaxe($form->get('taxe')->getData());
 			$devis->setTaxePercent($form->get('taxePercent')->getData());
 
-			foreach($devis->getProduits() as $oldProduit){
-				$devis->removeProduit($oldProduit);
-			}
-			$em->persist($devis);
+			// foreach($devis->getProduits() as $oldProduit){
+			// 	$devis->removeProduit($oldProduit);
+			// }
+			// $em->persist($devis);
 
 			foreach($form->get('produits')->getData() as $produit){
 				$devis->addProduit($produit);
