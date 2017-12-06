@@ -38,6 +38,23 @@ class CompteFusionnerEtape2Type extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        // $arr_ccFournisseurs = array();
+        // if( $this->first_compte->getCompteComptableFournisseur() ){
+        //     $arr_ccFournisseurs['compteFournisseur1'] =  $this->first_compte->getCompteComptableFournisseur()->getNum();
+        // }
+        // if( $this->second_compte->getCompteComptableFournisseur() ){
+        //     $arr_ccFournisseurs['compteFournisseur2'] =  $this->second_compte->getCompteComptableFournisseur()->getNum();
+        // }
+
+        // $arr_ccClients = array();
+        // if( $this->first_compte->getCompteComptableClient() ){
+        //     $arr_ccClients['compteClient1'] =  $this->first_compte->getCompteComptableClient()->getNum();
+        // }
+        // if( $this->second_compte->getCompteComptableClient() ){
+        //     $arr_ccClients['compteClient2'] =  $this->second_compte->getCompteComptableClient()->getNum();
+        // }
+
 		$builder
             ->add('nom', 'choice', array(
 				 'choices' => array( 'nom1' => $this->first_compte->getNom(), 'nom2' => $this->second_compte->getNom()),
@@ -156,6 +173,28 @@ class CompteFusionnerEtape2Type extends AbstractType
 				 'mapped' => false,
             	'label' => 'Description'
         	));
+
+            // if( count($arr_ccFournisseurs) )
+            // $builder
+            // ->add('description', 'choice', array(
+            //     'required' => true,
+            //      'choices' => $arr_ccFournisseurs,
+            //      'expanded' => true,
+            //      'multiple' => false,
+            //      'mapped' => false,
+            //     'label' => 'Compte comptable fournisseur'
+            // ));
+
+            // if( count($arr_ccClients) )
+            // $builder
+            // ->add('description', 'choice', array(
+            //     'required' => true,
+            //      'choices' => $arr_ccClients,
+            //      'expanded' => true,
+            //      'multiple' => false,
+            //      'mapped' => false,
+            //     'label' => 'Compte comptable client'
+            // ));
 
                         
 			$builder

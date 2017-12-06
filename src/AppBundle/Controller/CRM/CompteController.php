@@ -275,7 +275,7 @@ class CompteController extends Controller
 	 */
 	public function compteFusionnerExecutionAction(Compte $compte)
 	{
-		//~ var_dump($_POST); exit;
+
 		$em = $this->getDoctrine()->getManager();
 
 		$request = $this->getRequest();
@@ -284,10 +284,6 @@ class CompteController extends Controller
 		$repository = $em->getRepository('AppBundle:CRM\Compte');
 		$first_compte = $repository->findOneById($request->get('id'));
 		$second_compte = $repository->findOneById($posts[0]['second_compte_id']);
-//~ var_dump($first_compte);
-//~ var_dump($second_compte);
-		//~ exit;
-
 
 		$form = $this->createForm(
 				new CompteFusionnerEtape2Type(
@@ -300,7 +296,6 @@ class CompteController extends Controller
 
 		$form->handleRequest($request);
 
-		//~ if ($form->isSubmitted() && $form->isValid()) {
 			$champs = $em->getClassMetadata('AppBundle:CRM\Compte')->getFieldNames();
 			$compte->setDateEdition(new \DateTime(date('Y-m-d')));
 			$compte->setUserEdition($this->getUser());
@@ -339,17 +334,14 @@ class CompteController extends Controller
 					}
 				}
 			}
-						//var_dump($compte);
-			//exit;
 
 			if( $fusionner_compte )
 			{
 				$em->persist($compte);
 				$em->flush();
 			}
-			//~ var_dump($second_compte->getId());
 
-			// màj dans les tables : devis, factures, opportunités, contacts
+			// màj dans les tables : devis, factures, opportunités, contacts, dépenses
 			// contacts
 			$repositoryContact = $em->getRepository('AppBundle:CRM\Contact');
 			$Compte2Contact = $repositoryContact->findBy(
@@ -372,7 +364,6 @@ class CompteController extends Controller
 				$Devis->setCompte($first_compte);
 				$em->persist($Devis);
 			}
-			//~ var_dump($Compte2Devis); exit;
 
 			// opportunités
 			$repositoryOpportunite = $em->getRepository('AppBundle:CRM\Opportunite');
@@ -385,10 +376,7 @@ class CompteController extends Controller
 				$Opportunite->setCompte($first_compte);
 				$em->persist($Opportunite);
 			}
-			//~ var_dump($Contact2Opportunite); exit;
-
-			//~ var_dump($Contact2Impulsion); exit;
-
+			
 			$em->flush();
 			$em->remove($second_compte);
 			$em->flush();

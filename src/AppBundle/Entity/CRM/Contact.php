@@ -1027,4 +1027,14 @@ class Contact
     {
         return $this->importMauticStatus;
     }
+
+    public function getSecteursActivite(){
+        $arr_secteurs = array();
+        foreach($this->settings as $setting){
+            if( $setting->getParametre() == 'SECTEUR') {
+                $arr_secteurs[] = $setting;
+            }
+        }
+        return $arr_secteurs;
+    }
 }

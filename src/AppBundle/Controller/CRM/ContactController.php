@@ -131,7 +131,6 @@ class ContactController extends Controller
 	 */
 	public function contactAjouterAction(Compte $compte = null)
 	{
-		//~ var_dump($compte); exit;
 		$contact = new Contact();
 		$contact->setUserGestion($this->getUser());
 
@@ -145,29 +144,11 @@ class ContactController extends Controller
 		);
 
         $secteurActivite = null;
-    	//~ var_dump($this->compte); exit;
     	if( $compte ){
             ///////////////////////////////////chercher le SA dans le repo si compte not null////////////////////////////
 
             $settingsRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
-            $secteurActivite = $settingsRepo->findOneBy( array(
-                'valeur' => $compte->getSecteurActivite(),
-                'company' => $this->getUser()->getCompany(),
-                'parametre' => 'SECTEUR'
-            ) );
-
-                //~ $form->remove('compte');
-			//~ $form->add('compte', 'shtumi_ajax_autocomplete', array(
-				//~ 'entity_alias'=>'comptes',
-				//~ 'required' => true,
-				//~ 'label' => 'Compte',
-				//~ 'query_builder' => function (EntityRepository $er) {
-					//~ return $er->createQueryBuilder('s')
-					//~ ->where('s.id = :id')
-					//~ ->setParameter('id', $compte->getId());
-				//~ },
-				//~ 'data' => $compte->returnObject()
-           	//~ ));
+            $secteurActivite =  $compte->getSecteurActivite();
 
 			$form->remove('compte-name');
 			$form->remove('compte');
@@ -1727,6 +1708,37 @@ class ContactController extends Controller
 				//~ 'form' => $form->createView()
 		));
 	}
+
+	/**
+	 * @Route("/crm/contact/maj-secteur/", name="crm_contact_maj_secteur")
+	 */
+	public function contactMAJSecteur()
+	{
+
+		ini_set('memory_limit', '2048');
+
+		$em = $this->getDoctrine()->getManager();
+		$contactRepo = $em->getRepository('AppBundle:CRM\Contact');
+
+		$arr_contacts = $contactRepo->findByCompany($this->getUser()->getCompany());
+
+		foreach($arr_contacts as $contact){
+			$arr_secteurs = $contact->getSecteursActivite();
+			if(count($arr_secteurs)){
+				continue;
+			}
+
+			if($contact->getCompte()->getSecteurActivite()){
+				$contact->addSetting($contact->getCompte()->getSecteurActivite());
+				$em->persist($contact);
+			}
+		}
+
+		$em->flush();
+		return new Response();
+	}
+
+
 
 
 }
