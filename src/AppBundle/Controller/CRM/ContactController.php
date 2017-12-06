@@ -640,6 +640,8 @@ class ContactController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $arr_impulsions  = $em->getRepository('AppBundle:CRM\Impulsion')->findByContact($contact->getId());
+        $arr_factures  = $em->getRepository('AppBundle:CRM\DocumentPrix')->findByContact($contact->getId());
+        $arr_actions_commerciales  = $em->getRepository('AppBundle:CRM\Opportunite')->findByContact($contact->getId());
 
 		$request = $this->getRequest();
 		$form->handleRequest($request);
@@ -648,6 +650,16 @@ class ContactController extends Controller
 
             foreach ($arr_impulsions as $impulsion){
                 $em->remove($impulsion);
+            }
+
+            foreach($arr_factures as $facture){
+            	$facture->setContact(null);
+            	$em->persist($facture);
+            }
+
+            foreach($arr_actions_commerciales as $actionCommerciale){
+            	$actionCommerciale->setContact(null);
+            	$em->persist($actionCommerciale);
             }
 
 			$em->remove($contact);
