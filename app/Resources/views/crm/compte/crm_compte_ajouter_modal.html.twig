@@ -52,8 +52,8 @@
 		$('div#modal div.modal-dialog').css('width', '60%');
 		$(document).ready( function () {
 			$('form').submit(function(){
-				$('input').attr('readonly', true);
-				$('textarea').attr('readonly', true);
+				//$('input').attr('readonly', true);
+				//$('textarea').attr('readonly', true);
 				$('#form_submit').addClass("hidden");
 				$("#loading-message").removeClass("hidden");
 			});
@@ -111,7 +111,13 @@
 							$('.typeahead-compte').val(data.nom);
 							$('.entity-compte').val(data.id).trigger('change');
 
-//							changeAddress(data.id);
+							$(".input-adresse").val(data.adresse);
+							$(".input-codepostal").val(data.codePostal);
+							$(".input-ville").val(data.ville);
+							$(".input-region").val(data.region);
+							$(".input-pays").val(data.pays);
+							$(".input-telephone").val(data.telephone);
+							$(".input-fax").val(data.fax);
 
 							return false;
 						}

@@ -428,7 +428,13 @@ class CompteController extends Controller
 			return new JsonResponse(array(
 				'status' => 'success',
 				'nom' => $compte->getNom(),
-				'id' => $compte->getId()
+				'id' => $compte->getId(),
+				'adresse' => $compte->getAdresse(),
+				'codePostal' => $compte->getCodePostal(),
+				'ville' => $compte->getVille(),
+				'region' => $compte->getRegion(),
+				'pays' => $compte->getPays()
+
 			));
 		}
 
