@@ -1715,7 +1715,7 @@ class ContactController extends Controller
 	public function contactMAJSecteur()
 	{
 
-		ini_set('memory_limit', '2048');
+		//ini_set('memory_limit', '2048');
 
 		$em = $this->getDoctrine()->getManager();
 		$contactRepo = $em->getRepository('AppBundle:CRM\Contact');
