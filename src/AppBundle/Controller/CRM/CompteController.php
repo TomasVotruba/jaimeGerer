@@ -509,8 +509,6 @@ class CompteController extends Controller
 		$request = $this->getRequest();
 		$form->handleRequest($request);
 
-		dump($compte);
-
 		if ($form->isSubmitted() && $form->isValid()) {
 
 			$compte->setDateEdition(new \DateTime(date('Y-m-d')));
