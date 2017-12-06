@@ -1709,36 +1709,5 @@ class ContactController extends Controller
 		));
 	}
 
-	/**
-	 * @Route("/crm/contact/maj-secteur/", name="crm_contact_maj_secteur")
-	 */
-	public function contactMAJSecteur()
-	{
-
-		//ini_set('memory_limit', '2048');
-
-		$em = $this->getDoctrine()->getManager();
-		$contactRepo = $em->getRepository('AppBundle:CRM\Contact');
-
-		$arr_contacts = $contactRepo->findByCompany($this->getUser()->getCompany());
-
-		foreach($arr_contacts as $contact){
-			$arr_secteurs = $contact->getSecteursActivite();
-			if(count($arr_secteurs)){
-				continue;
-			}
-
-			if($contact->getCompte()->getSecteurActivite()){
-				$contact->addSetting($contact->getCompte()->getSecteurActivite());
-				$em->persist($contact);
-			}
-		}
-
-		$em->flush();
-		return new Response();
-	}
-
-
-
 
 }
