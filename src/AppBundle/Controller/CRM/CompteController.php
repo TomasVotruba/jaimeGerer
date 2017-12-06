@@ -789,45 +789,4 @@ class CompteController extends Controller
 	}
 
 
-	/**
-	 * @Route("/crm/compte/corriger-secteurs", name="crm_compte_corriger_secteurs")
-	 */
-	public function compteCorrigerSecteursAction()
-	{
-
-		$em = $this->getDoctrine()->getManager();
-		$settingsRepo = $em->getRepository('AppBundle:Settings');
-		$compteRepo = $em->getRepository('AppBundle:CRM\Compte');
-
-		$arr_all_secteurs = $settingsRepo->findBy(array(
-			'parametre' => 'SECTEUR',
-			'module' => 'CRM',
-			'company' => $this->getUser()->getCompany()
-		));
-	
-		$arr_secteurs = array();
-		foreach($arr_all_secteurs as $secteur){
-			$arr_secteurs[$secteur->getValeur()] = $secteur;
-		}
-
-		dump($arr_secteurs);
-		$arr_comptes = $compteRepo->findBy(array(
-			'company' => $this->getUser()->getCompany()
-		));
-
-		foreach($arr_comptes as $compte){
-			if($compte->getSecteurActivite() == null){
-				continue;
-			}
-
-			$compte->setSecteurActiviteEntitity($arr_secteurs[$compte->getSecteurActivite()]);
-			$em->persist($compte);
-		}
-
-		$em->flush();
-
-		return new Response();
-	}
-
-
 }

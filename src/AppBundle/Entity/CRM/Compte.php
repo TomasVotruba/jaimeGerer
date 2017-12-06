@@ -177,14 +177,6 @@ class Compte
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
-    private $secteurActiviteEntitity;
-
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="secteurActivite", type="string", nullable=true)
-     */
     private $secteurActivite;
 
     /**
@@ -706,33 +698,10 @@ class Compte
     /**
      * Get secteurActivite
      *
-     * @return \AppBundle\Entity\Settings
+     * @return \AppBundle\Entity\Settings 
      */
     public function getSecteurActivite()
     {
         return $this->secteurActivite;
-    }
-
-    /**
-     * Set secteurActiviteEntitity
-     *
-     * @param \AppBundle\Entity\Settings $secteurActiviteEntitity
-     * @return Compte
-     */
-    public function setSecteurActiviteEntitity(\AppBundle\Entity\Settings $secteurActiviteEntitity = null)
-    {
-        $this->secteurActiviteEntitity = $secteurActiviteEntitity;
-
-        return $this;
-    }
-
-    /**
-     * Get secteurActiviteEntitity
-     *
-     * @return \AppBundle\Entity\Settings 
-     */
-    public function getSecteurActiviteEntitity()
-    {
-        return $this->secteurActiviteEntitity;
     }
 }
