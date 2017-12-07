@@ -53,7 +53,7 @@ class ContactImporterMappingType extends AbstractType
         $origine = 'T';
         $serviceInteret = 'U';
         $themeInteret = 'V';
-        $secteurActivite = 'w';
+        $secteurActivite = 'W';
 
 
 		$arr_formats = array(

@@ -253,7 +253,6 @@ class ContactController extends Controller
 	{
 		$em = $this->getDoctrine()->getManager();
 		$request = $this->getRequest();
-		//~ var_dump($request->get('id')); exit;
 		$new_contact = new Contact();
 		//~ $new_contact->setUserGestion($this->getUser());
 		$form = $this->createForm(
@@ -293,10 +292,8 @@ class ContactController extends Controller
 	 */
 	public function contactFusionnerEtape2Action(Contact $contact)
 	{
-		//~ echo "hich"; exit;
 		$em = $this->getDoctrine()->getManager();
 		$request = $this->getRequest();
-		//~ var_dump($_POST);
 		//~ $contact = new Contact();
 		//~ $contact->setUserGestion($this->getUser());
 		$form = $this->createForm(
@@ -310,10 +307,7 @@ class ContactController extends Controller
 
 		//~ $request = $this->getRequest();
 		$form->handleRequest($request);
-//~ var_dump($contact); exit;
-	//~ var_dump($form->isValid()); exit;
 		//~ if ($form->isSubmitted() && $form->isValid()) {
-			//~ var_dump($form->getData());
 			//~ exit;
 			//~ $first_contact = new Contact();
 			$posts = $request->request->get($form->getName());
@@ -328,7 +322,6 @@ class ContactController extends Controller
 					),
 					$contact
 			);
-			//~ var_dump($first_contact); exit;
 			//~ $contact->setDateCreation(new \DateTime(date('Y-m-d')));
 			//~ $contact->setUserCreation($this->getUser());
 			//~ $em = $this->getDoctrine()->getManager();
@@ -357,7 +350,6 @@ class ContactController extends Controller
 	 */
 	public function contactFusionnerExecutionAction(Contact $contact)
 	{
-		//~ var_dump($_POST); exit;
 		$em = $this->getDoctrine()->getManager();
 		//~ $contact->setUserGestion($this->getUser());
 
@@ -443,23 +435,19 @@ class ContactController extends Controller
 						$methodSet = 'set'.ucfirst($champ);
 						$methodGet = 'get'.ucfirst($champ);
 						eval("\$var = \$second_contact->$methodGet();");
-						//var_dump($var);
 						eval('$contact->$methodSet($var);');
 					}
 				}
 			}
-						//var_dump($contact);
 			//exit;
 			$NewSettings = array_unique($NewSettings);
 			$contact->removeSettings();
 			$second_contact->removeSettings();
-			//~ var_dump($NewSettings);
 			$repositorySettings = $em->getRepository('AppBundle:Settings');
 			$ContactNewSettings = $repositorySettings->findBy(
 														array('id' =>  $NewSettings),
 														array('id' => 'DESC')
 													);
-			//~ var_dump($ContactNewSettings);
 			foreach( $ContactNewSettings as $Setting )
 			{
 				$contact->addSetting($Setting);
@@ -470,7 +458,6 @@ class ContactController extends Controller
 				$em->persist($contact);
 				$em->flush();
 			}
-			//~ var_dump($second_contact->getId());
 
 			// màj dans les tables : devis, factures, opportunités, impulsions
 			// devis etfactures
@@ -484,7 +471,6 @@ class ContactController extends Controller
 				$Devis->setContact($first_contact);
 				$em->persist($Devis);
 			}
-			//~ var_dump($Contact2Devis); exit;
 
 			// opportunités
 			$repositoryOpportunite = $em->getRepository('AppBundle:CRM\Opportunite');
@@ -497,7 +483,6 @@ class ContactController extends Controller
 				$Opportunite->setContact($first_contact);
 				$em->persist($Opportunite);
 			}
-			//~ var_dump($Contact2Opportunite); exit;
 
 			// impulsions
 			$repositoryImpulsions = $em->getRepository('AppBundle:CRM\Impulsion');
@@ -510,7 +495,6 @@ class ContactController extends Controller
 				$Impulsion->setContact($first_contact);
 				$em->persist($Impulsion);
 			}
-			//~ var_dump($Contact2Impulsion); exit;
 
 			$em->flush();
 			$em->remove($second_contact);
@@ -541,9 +525,7 @@ class ContactController extends Controller
 	 */
 	public function contact_list_fusionnerAction($contact_id)
 	{
-		//~ echo "hich"; exit;
 		$request = $this->getRequest();
-		//~ var_dump($request->get('id')); exit;
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
 		//~ if( is_null($compte_id) )
 			//~ $list = $repository->findByCompany($this->getUser()->getCompany());
@@ -805,7 +787,6 @@ class ContactController extends Controller
 		$headers = array();
 		$contactData = array();
 		$enteteFichierImport = array();
-		//~ var_dump($files); exit;
 		foreach( $files as $k=>$v )
 		{
 			// charger PHPEXCEL de choisir le reader adéquat
@@ -967,14 +948,11 @@ class ContactController extends Controller
                         $err = true;
                     }
 
-
 					if( $err )
 					{
 						$data_err[$k][] = $value;
 						continue;
 					}
-
-
 
 					$contact = new Contact();
 					$contact->setDateCreation(new \DateTime(date('Y-m-d')));
@@ -990,37 +968,29 @@ class ContactController extends Controller
 
 					foreach( $fields[$k] as $cle=>$valeur )
 					{
+	
 						if( in_array($cle, $champs) && $cle != 'filepath' && $cle != 'email' )
 						{
-                            if($contact->getCarteVoeux() == "Oui" || $contact->getCarteVoeux() == "oui"){
-                                $contact->setCarteVoeux(1);
+      
+                            if($cle == "carteVoeux"){
+                            	if(strtolower($value[$valeur]) == "oui"){
+                            		$contact->setCarteVoeux(true);
+                            	} else {
+                            		$contact->setCarteVoeux(false);
+                            	}
+                            } elseif($cle == "newsletter"){
+                            	if(strtolower($value[$valeur]) == "oui"){
+                            		$contact->setCarteVoeux(true);
+                            	} else {
+                            		$contact->setCarteVoeux(false);
+                            	}
+                            } else {
+                            	$methodSet = 'set'.ucfirst($cle);
+								eval('$contact->$methodSet($value[$valeur]);');
                             }
-                            else{
-                                $contact->setCarteVoeux(0);
-                            }
-                            if($contact->getNewsletter() == "Oui" || $contact->getNewsletter() == "oui"){
-                                $contact->setNewsletter(1);
-                            }
-                            else{
-                                $contact->setNewsletter(0);
-                            }
-							$methodSet = 'set'.ucfirst($cle);
-							eval('$contact->$methodSet($value[$valeur]);');
 						}
 						else if( $cle == 'filepath' )
 						{
-                            if($contact->getCarteVoeux() == "Oui" || $contact->getCarteVoeux() == "oui"){
-                                $contact->setCarteVoeux(1);
-                            }
-                            else{
-                                $contact->setCarteVoeux(0);
-                            }
-                            if($contact->getNewsletter() == "Oui" || $contact->getNewsletter() == "oui"){
-                                $contact->setNewsletter(1);
-                            }
-                            else{
-                                $contact->setNewsletter(0);
-                            }
 							$em->persist($contact);
 							$em->flush();
 						}
@@ -1330,7 +1300,6 @@ class ContactController extends Controller
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
 
-
 			$data = $form->getData();
 			$ligneExport = array();
 			$ContactAjoute = array();
@@ -1567,11 +1536,7 @@ class ContactController extends Controller
                             $enr[$fields[$k]['themeInteret']] = $themeInteret->getValeur();
                         }
                     }
-
-
-					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+     
 					if( $save )
 					{
 
@@ -1587,11 +1552,11 @@ class ContactController extends Controller
 								'nom' => $enr[$fields[$k]['compte']],
 								'company' => $this->getUser()->getCompany()
 						));
-						$reseau = $repositoryReseau->findOneBy(array('module' => 'CRM', 'parametre' => 'RESEAU', 'valeur' =>$enr[$fields[$k]['reseau']]) );
-						$origine = $repositoryReseau->findOneBy(array('module' => 'CRM', 'parametre' => 'ORIGINE', 'valeur' =>$enr[$fields[$k]['origine']]) );
-						$serviceInteret = $repositoryReseau->findOneBy(array('module' => 'CRM', 'parametre' => 'SERVICE_INTERET', 'valeur' =>$enr[$fields[$k]['serviceInteret']]) );
-						$themeInteret = $repositoryReseau->findOneBy(array('module' => 'CRM', 'parametre' => 'THEME_INTERET', 'valeur' =>$enr[$fields[$k]['themeInteret']]) );
-						$secteurActivite = $repositoryReseau->findOneBy(array('module' => 'CRM', 'parametre' => 'SECTEUR', 'valeur' =>$enr[$fields[$k]['secteurActivite']]) );
+						$reseau = $repositoryReseau->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'RESEAU', 'valeur' =>$enr[$fields[$k]['reseau']]) );
+						$origine = $repositoryReseau->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'ORIGINE', 'valeur' =>$enr[$fields[$k]['origine']]) );
+						$serviceInteret = $repositoryReseau->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'SERVICE_INTERET', 'valeur' =>$enr[$fields[$k]['serviceInteret']]) );
+						$themeInteret = $repositoryReseau->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'THEME_INTERET', 'valeur' =>$enr[$fields[$k]['themeInteret']]) );
+						$secteurActivite = $repositoryReseau->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'SECTEUR', 'valeur' =>$enr[$fields[$k]['secteurActivite']]) );
 
 						$contact->setReseau($reseau);
 						if($origine){
@@ -1601,8 +1566,10 @@ class ContactController extends Controller
 						$contact->addSetting($themeInteret);
 						$contact->addSetting($secteurActivite);
 						$contact->setCompte($compte);
+
 						foreach( $fields[$k] as $cle=>$valeur )
 						{
+	
 							if( in_array($cle, $champs) && $cle != 'filepath' && $cle != 'email' )
 							{
 
@@ -1677,7 +1644,6 @@ class ContactController extends Controller
 		$request = $this->getRequest();
 		$session = $request->getSession();
 		$arr_filenames = $session->get('import_contacts_filename');
-		//~ var_dump($request->files); exit;
 		foreach( $request->files as $file )
 		{
 			$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
@@ -1689,7 +1655,6 @@ class ContactController extends Controller
 
 		}
 		$session->set('import_contacts_filename', $arr_filenames);
-		//var_dump($session->get('import_contacts_filename'));
 		exit;
 	}
 
