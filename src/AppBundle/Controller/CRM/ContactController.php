@@ -1487,7 +1487,9 @@ class ContactController extends Controller
                         else if( $form[$origineKey.'-radio']->getData() == 'existing' )
                         {
                             $origine = $repositoryReseau->findOneById($form[$origineKey.'-name']->getData());
-                            $enr[$fields[$k]['origine']] = $origine->getValeur();
+                            if($origine){
+                            	$enr[$fields[$k]['origine']] = $origine->getValeur();
+                            }
                         }
                     }
                     if( in_array(strtolower(trim($enr[$fields[$k]['serviceInteret']])), $err_serviceInteret) )
@@ -1592,7 +1594,9 @@ class ContactController extends Controller
 						$secteurActivite = $repositoryReseau->findOneBy(array('module' => 'CRM', 'parametre' => 'SECTEUR', 'valeur' =>$enr[$fields[$k]['secteurActivite']]) );
 
 						$contact->setReseau($reseau);
-						$contact->setOrigine($origine);
+						if($origine){
+							$contact->setOrigine($origine);
+						}
 						$contact->addSetting($serviceInteret);
 						$contact->addSetting($themeInteret);
 						$contact->addSetting($secteurActivite);
