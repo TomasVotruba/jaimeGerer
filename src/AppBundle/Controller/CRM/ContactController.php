@@ -1237,54 +1237,56 @@ class ContactController extends Controller
 					case 'email' :
 						foreach( $file as $k=>$v )
 						{
-                            if(substr($v["err"],0, 4) === "Vous"){
+							if(array_key_exists('err', $v)){
 
-                                $err_emails[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['email']]));
+	                            if(substr($v["err"],0, 4) === "Vous"){
 
-                                $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
-                                    'required' => true,
-                                    'mapped' => false,
-                                    'expanded' => true,
-                                    'choices' => array(
-                                        'cancel' => 'Ignorer le contact',
-                                        'new2' => 'Modifier l\'adresse e-mail / téléphone',
-                                    ),
-                                    'data' => 'cancel',
+	                                $err_emails[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['email']]));
 
-                                ))
-                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'text', array(
-                                        'required' => false,
-                                        'mapped' => false,
-                                        'label' => 'E-mail',
-                                    ))
-                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name2', 'text', array(
-                                        'required' => false,
-                                        'mapped' => false,
-                                        'label' => 'Téléphone fixe',
-                                    ));
-                                $key++;
-                            }
-                            else {
-                                $err_emails[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['email']]));
+	                                $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
+	                                    'required' => true,
+	                                    'mapped' => false,
+	                                    'expanded' => true,
+	                                    'choices' => array(
+	                                        'cancel' => 'Ignorer le contact',
+	                                        'new2' => 'Modifier l\'adresse e-mail / téléphone',
+	                                    ),
+	                                    'data' => 'cancel',
 
-                                $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
-                                    'required' => true,
-                                    'mapped' => false,
-                                    'expanded' => true,
-                                    'choices' => array(
-                                        'cancel' => 'Ignorer le contact',
-                                        'new' => 'Modifier l\'adresse e-mail',
-                                    ),
-                                    'data' => 'cancel',
+	                                ))
+	                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'text', array(
+	                                        'required' => false,
+	                                        'mapped' => false,
+	                                        'label' => 'E-mail',
+	                                    ))
+	                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name2', 'text', array(
+	                                        'required' => false,
+	                                        'mapped' => false,
+	                                        'label' => 'Téléphone fixe',
+	                                    ));
+	                                $key++;
+	                            } else {
+	                                $err_emails[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['email']]));
 
-                                ))
-                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'text', array(
-                                        'required' => true,
-                                        'mapped' => false,
-                                        'label' => 'E-mail',
-                                    ));
-                                $key++;
-                            }
+	                                $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
+	                                    'required' => true,
+	                                    'mapped' => false,
+	                                    'expanded' => true,
+	                                    'choices' => array(
+	                                        'cancel' => 'Ignorer le contact',
+	                                        'new' => 'Modifier l\'adresse e-mail',
+	                                    ),
+	                                    'data' => 'cancel',
+
+	                                ))
+	                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'text', array(
+	                                        'required' => true,
+	                                        'mapped' => false,
+	                                        'label' => 'E-mail',
+	                                    ));
+	                                $key++;
+	                            }
+	                        }
 						}
 						break;
 				}

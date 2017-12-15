@@ -1390,6 +1390,6 @@ class DocumentPrix
      */
     public function getFacturationBelge()
     {
-        return $this->getTotalHT()*$this->facturationBelgePercent;
+        return $this->getTotalHT();
     }
 }
