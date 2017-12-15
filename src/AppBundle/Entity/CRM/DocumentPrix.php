@@ -828,7 +828,7 @@ class DocumentPrix
             $facturationBelge = $totalHT*$this->facturationBelgePercent;
             $totalHT+= $facturationBelge;
 
-        }   
+        } 
         
     	return round($totalHT, 2);
     }
@@ -1390,6 +1390,12 @@ class DocumentPrix
      */
     public function getFacturationBelge()
     {
-        return $this->getTotalHT();
+        $sousTotal = 0;
+        foreach($this->produits as $produit){
+            $sousTotal+= $produit->getTotal();
+        }
+
+        $totalHT = $sousTotal - $this->remise;
+        return $totalHT*$this->facturationBelgePercent;
     }
 }
