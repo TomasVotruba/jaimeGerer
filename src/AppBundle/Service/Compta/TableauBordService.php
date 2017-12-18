@@ -1187,7 +1187,7 @@ class TableauBordService extends ContainerAware {
 
         for($mois = 1; $mois <= 12; $mois++){
 
-          $montant = $sheet->getCellByColumnAndRow($col, $row)->getValue();
+          $montant = $sheet->getCellByColumnAndRow($col, $row)->getCalculatedValue();
 
           if($nomPoste == 'actions_commerciales' || $nomPoste == 'ca_mois'){
 
