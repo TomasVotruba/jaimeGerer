@@ -319,7 +319,7 @@ class OpportuniteSousTraitance
 
     public function getNomEtMontant(){
       return  $this->sousTraitant.' - '.
-              $this->opportunite->getCompte()->getNom().' : '.
+              $this->opportunite->getCompte()->getNom().' - '.$this->opportunite->getNom().' : '.
               $this->getMontantMonetaire().'€ (reste à facturer : '.
               $this->getResteAFacturer().' €)';
     }
