@@ -444,17 +444,6 @@
 														{% set hasSousTraitance = true %}
 														<li>
 															{{ sousTraitance.sousTraitant }} : {{ sousTraitanceRepartition.montantMonetaire|number_format(2, ',', ' ') }} €  
-															{% for depense in sousTraitance.depenses %}
-																{% if loop.first %}
-																	(factures : 
-																{% endif %}
-																<a href=" {{ path('compta_depense_voir', {'id' : depense.depense.id }) }} " >{{ depense.depense.num }}</a>
-																{% if loop.last %}
-																	)
-																{% else %}
-																	, 
-																{% endif %}
-															{% endfor %}
 														</li>
 													{% endif %}
 												{% endfor %}
@@ -486,6 +475,17 @@
 									<td> {{ sousTraitance.sousTraitant }} </td>
 									<td>
 										{{ sousTraitance.montantMonetaire|number_format(2, ',', ' ') }} € <a href="{{ path('crm_action_commerciale_sous_traitance_editer', {'id' : sousTraitance.id }) }}" class="btn btn-xs btn-primary">Modifier</a>
+									</td>
+									<td>
+										{% for depense in sousTraitance.depenses %}
+											{% if loop.first %}
+												Factures : 
+											{% endif %}
+											<a href=" {{ path('compta_depense_voir', {'id' : depense.depense.id }) }} " >{{ depense.depense.num }} </a> ({{ depense.montantMonetaire|number_format(2, ',', ' ') }} €)
+											{% if loop.last == false %}
+												, 
+											{% endif %}
+										{% endfor %}
 									</td>
 								</tr>
 							{% endfor %}
