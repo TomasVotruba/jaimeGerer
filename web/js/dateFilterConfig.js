@@ -56,6 +56,14 @@ $(document).ready( function () {
                 dateEnd: function () {
                     return moment()
                 }
+            }, {
+                text: 'Année précédente',
+                dateStart: function () {
+                    return moment().subtract('year', 1).startOf('year')
+                },
+                dateEnd: function () {
+                    return moment().subtract('year', 1).endOf('year')
+                }
             }],
             applyButtonText: 'Valider',
             clearButtonText: 'Supprimer',
