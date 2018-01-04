@@ -41,12 +41,12 @@ $(document).ready( function () {
                     return moment()
                 }
             }, {
-                text: 'Les 2 derniers mois',
+                text: 'Les 3 derniers mois',
                 dateStart: function () {
-                    return moment().subtract('month', 1).startOf('month')
+                    return moment().subtract('month', 3)
                 },
                 dateEnd: function () {
-                    return moment().endOf('month')
+                    return moment()
                 }
             }, {
                 text: 'Année en cours',
@@ -60,7 +60,7 @@ $(document).ready( function () {
             applyButtonText: 'Valider',
             clearButtonText: 'Supprimer',
             cancelButtonText: 'Annuler',
-            initialText: 'Filtrer par date...',
+            initialText: 'Filtrer par date',
         }, $.datepicker.regional["fr"]);
 
 })

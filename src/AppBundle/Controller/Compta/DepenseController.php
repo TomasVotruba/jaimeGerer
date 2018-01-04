@@ -279,7 +279,7 @@ class DepenseController extends Controller
 					//si la dépense est antidatée, récupérer le dernier numéro de dépense de l'année concernée
 					$prefixe = 'D-'.$depenseYear.'-';
 					$depenseRepo = $em->getRepository('AppBundle:Compta\Depense');
-					$lastNum = $depenseRepo->findMaxNumForYear('DEPENSE', $depenseYear, $this->getUser()->getCompany());
+					$lastNum = $depenseRepo->findMaxNumForYear($depenseYear, $this->getUser()->getCompany());
 					$lastNum = substr($lastNum, 7);
 					$lastNum++;
 					$depense->setNum($prefixe.$lastNum);
@@ -501,12 +501,17 @@ class DepenseController extends Controller
 			$depense->setDate($mouvement->getDate());
 		}
 
+		$opportuniteService = $this->get('appbundle.crm_opportunite_service');
+		$arr_opporunitesSousTraitances = $opportuniteService->findOpportunitesSousTraitancesAFacturer($this->getUser()->getCompany());
+
+		
 		$form = $this->createForm(
-				new DepenseType(
-						$this->getUser()->getCompany()->getId(),
-						$em
-				),
-				$depense
+			new DepenseType(
+					$this->getUser()->getCompany()->getId(),
+					$em,
+					$arr_opporunitesSousTraitances
+			),
+			$depense
 		);
 
 		$request = $this->getRequest();
@@ -557,10 +562,11 @@ class DepenseController extends Controller
 				//si la dépense est antidatée, récupérer le dernier numéro de dépense de l'année concernée
 				$prefixe = 'D-'.$depenseYear.'-';
 				$depenseRepo = $em->getRepository('AppBundle:Compta\Depense');
-				$lastNum = $depenseRepo->findMaxNumForYear('DEPENSE', $depenseYear, $this->getUser()->getCompany());
+				$lastNum = $depenseRepo->findMaxNumForYear($depenseYear, $this->getUser()->getCompany());
 				$lastNum = substr($lastNum, 7);
 				$lastNum++;
 				$depense->setNum($prefixe.$lastNum);
+
 			} else {
 				$prefixe = 'D-'.date('Y').'-';
 				if($currentNum < 10){

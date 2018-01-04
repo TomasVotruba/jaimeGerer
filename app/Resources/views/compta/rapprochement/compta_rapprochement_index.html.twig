@@ -152,7 +152,7 @@
 		</div>
 		<div class="col-md-3">
 			<p><strong>Date</strong></p>
-			<input id="dateRange" name="dateRange" class="filte" />
+			<input id="dateRange" name="dateRange" class="filte" value='{"start": "{{ filtreReleveBancaire.dateRange.start }}" ,"end": "{{ filtreReleveBancaire.dateRange.end }}" }'/>
 		</div>
 		<div class="col-md-3">
 			<form onsubmit="return false;">
@@ -224,10 +224,10 @@
 			function loadTable(id){
 
 				var arr_filtres = {
-						rapprochement: $('input[name=filtre_rapprochement]:radio:checked').val(),
-						montant: $('input[name=filtre_montant]:radio:checked').val(),
-						dateRange: $("#dateRange").daterangepicker("getRange")
-						};
+					rapprochement: $('input[name=filtre_rapprochement]:radio:checked').val(),
+					montant: $('input[name=filtre_montant]:radio:checked').val(),
+					dateRange: $("#dateRange").daterangepicker("getRange")
+				};
 
 				$.ajax({
 					type: "POST",
@@ -317,7 +317,7 @@
 			      			$(last_a_clicked).parents('tr').find('.rapprochement-invalide').removeClass('hidden');
 						}
 
-			        	$('#modal').modal('hide');
+			        	$('#modal-lg').modal('hide');
 			        }
 		        });
 			});
