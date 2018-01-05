@@ -357,15 +357,7 @@ class ContactRepository extends EntityRepository
  			} else {
 
 				if($action == 'EMPTY'){
-					if($index == 0){
-						$query->where('c.'.$champ.' IS NULL' );
-					}else {
-						if($andor == 'AND'){
-							$query->andWhere('c.'.$champ.' IS NULL');
-						} else{
-							$query->orWhere('c.'.$champ.' IS NULL');
-						}
-					}
+					$where.= 'c.'.$champ.' IS NULL';
 				} else if($action == 'NOT_EMPTY'){
 					$where.= 'c.'.$champ.' IS NOT NULL';
 				} else if ($action == "IS_TRUE"){
@@ -394,7 +386,6 @@ class ContactRepository extends EntityRepository
 						}
 
 						$where.= 'c.'.$champ.' '.$operateur.' '.$param;
-
 						$query->setParameter($param, $val);
 
 					}
@@ -423,8 +414,8 @@ class ContactRepository extends EntityRepository
 		}
 
 		$query->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
-		->andWhere('co.company = :company')
-		->setParameter('company', $company);
+				->andWhere('co.company = :company')
+				->setParameter('company', $company);
 
 		$result = $query->getQuery()->getResult();
 
