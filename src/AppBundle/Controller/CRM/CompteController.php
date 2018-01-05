@@ -540,14 +540,25 @@ class CompteController extends Controller
 	 */
 	public function compteSupprimerAction(Compte $compte)
 	{
+		$em = $this->getDoctrine()->getManager();
+		$contactRepo = $em->getRepository('AppBundle:CRM\Contact');
+		$documentPrixRepo = $em->getRepository('AppBundle:CRM\DocumentPrix');
+
 		$form = $this->createFormBuilder()->getForm();
 
 		$request = $this->getRequest();
 		$form->handleRequest($request);
 
+		$arr_contacts = $contactRepo->findByCompte($compte);
+		$arr_documentPrix = $documentPrixRepo->findByCompte($compte);
+
 		if ($form->isSubmitted() && $form->isValid()) {
 
-			$em = $this->getDoctrine()->getManager();
+			foreach($arr_contacts as $contact){
+				$em->remove($contact);
+			}
+			$em->flush();
+
 			$em->remove($compte);
 			$em->flush();
 
@@ -557,8 +568,10 @@ class CompteController extends Controller
 		}
 
 		return $this->render('crm/compte/crm_compte_supprimer.html.twig', array(
-				'form' => $form->createView(),
-				'compte' => $compte
+			'form' => $form->createView(),
+			'compte' => $compte,
+			'countContacts' => count($arr_contacts),
+			'countDocumentPrix' => count($arr_documentPrix)
 		));
 	}
 

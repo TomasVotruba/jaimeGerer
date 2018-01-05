@@ -12,13 +12,20 @@
 		 
 	    <div class="col-md-12">
 	    	<p>Etes-vous sur de vouloir supprimer l'organisation {{ compte.nom }} ?</p>
+
+	    	{% if countDocumentPrix > 0 %}
+	   	 		<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-ban-circle"></span> Vous ne pouvez pas supprimer une organisation à laquelle sont liés des devis et/ou factures.</div>
+	   	 	{% elseif countContacts > 0 %}
+	    		<div class="alert alert-warning" role="alert"><span class="glyphicon glyphicon-warning-sign"></span> Les {{ countContacts }} contacts de l'organisation seront supprimés.</div>
+	    	{% endif %}
 	    	{{ form_start(form) }}
  			{{ form_widget(form) }}
 	   	 	
 	   	 	 <a class="btn" href="{{ path('crm_compte_liste') }}">
        			<span class="glyphicon glyphicon-chevron-left"></span>Annuler
     		</a>
-	   	 	<input type="submit" value="Supprimer" class="btn btn-danger" />
+	   	 	<input type="submit" value="Supprimer" class="btn btn-danger" {% if countDocumentPrix > 0 %} disabled {% endif %} />
+
 	   	 	{{ form_end(form) }}
 	    </div>
     </div>
