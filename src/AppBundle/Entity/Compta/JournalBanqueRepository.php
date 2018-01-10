@@ -73,4 +73,33 @@ class JournalBanqueRepository extends EntityRepository
 
 		return $result;
 	}
+
+	public function findByCompanyAndYear($company, $year){
+
+		$qb = $this->createQueryBuilder('j')
+		->leftJoin('AppBundle\Entity\Compta\CompteComptable', 'c', 'WITH', 'j.compteComptable = c.id')
+		->where('c.company = :company')
+		->andWhere('(j.date >= :startDate and j.date <= :endDate)')
+		->setParameter('startDate', $year.'-01-01')
+		->setParameter('endDate', $year.'-12-31')
+		->setParameter('company', $company)
+		->orderBy('j.date', 'ASC')
+		->addOrderBy('j.debit', 'DESC');
+
+		$result = $qb->getQuery()
+		->getResult();
+
+		return $result;
+	}
+
+	public function findMaxLettrage($compteComptable){
+		$result = $this->createQueryBuilder('j')
+			->select('MAX(j.lettrage as max_lettrage')
+			->where('j.compteComptable = :compteComptable')
+			->setParameter('compteComptable', $compteComptable)
+			->getQuery()
+			->getSingleResult();
+
+		return $result;
+	}
 }

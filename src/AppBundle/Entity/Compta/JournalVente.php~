@@ -74,6 +74,13 @@ class JournalVente
     private $analytique;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="lettrage", type="string", length=10)
+     */
+    private $lettrage;
+
+    /**
      * Get id
      *
      * @return integer

@@ -113,4 +113,15 @@ class JournalAchatRepository extends EntityRepository
 
 		return $result;
 	}
+
+	public function findMaxLettrage($compteComptable){
+		$result = $this->createQueryBuilder('j')
+			->select('MAX(j.lettrage as max_lettrage')
+			->where('j.compteComptable = :compteComptable')
+			->setParameter('compteComptable', $compteComptable)
+			->getQuery()
+			->getSingleResult();
+
+		return $result;
+	}
 }

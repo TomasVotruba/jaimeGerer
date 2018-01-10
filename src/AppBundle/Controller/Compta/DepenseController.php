@@ -370,7 +370,7 @@ class DepenseController extends Controller
 				//ecrire dans le journal des achats
 				$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
 				$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
-
+				
 				if(count($depense->getSousTraitances()) > 1){
 					return $this->redirect($this->generateUrl(
 							'compta_depense_sous_traitance_repartition', array(

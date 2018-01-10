@@ -81,11 +81,13 @@ class JournalAchatsController extends Controller
 	}
 
 	/**
-	 * @Route("/compta/journal-achats/ajouter/depense/{id}", name="compta_journal_achats_ajouter_depense")
+	 * @Route("/compta/journal-achats/ajouter/depense/{id}/{lettrage}", name="compta_journal_achats_ajouter_depense")
 	 */
-	public function journalAchatsAjouterDepenseAction(Depense $depense){
+	public function journalAchatsAjouterDepenseAction(Depense $depense, $lettrage = null){
 
 		$em = $this->getDoctrine()->getManager();
+		$lettrageService = $this->get('appbundle.compta_lettrage_service');
+
 		$totaux = $depense->getTotaux();
 
 		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
@@ -94,18 +96,22 @@ class JournalAchatsController extends Controller
 				'company' => $this->getUser()->getCompany()
 		));
 
-		//credit au compte 401-nom du fournisseur
+		//credit au compte 401-nom du fournisseur (ou 421NDFxxx si c'est une note de frais) du total TTC
 		$ligne = new JournalAchat();
 		$ligne->setDepense($depense);
 		$ligne->setCodeJournal('AC');
 		$ligne->setDebit(null);
 		$ligne->setCredit($totaux['TTC']);
 		if($depense->getNoteFrais()){
-			$ligne->setCompteComptable($depense->getNoteFrais()->getCompteComptable());
+			$cc = $depense->getNoteFrais()->getCompteComptable();		
 		} else {
-			$ligne->setCompteComptable($depense->getCompte()->getCompteComptableFournisseur());
+			$cc = $depense->getCompte()->getCompteComptableFournisseur();
 		}
-
+		$ligne->setCompteComptable($cc);
+		if($lettrage == null){
+			$lettrage = $lettrageService->findNextNum($cc);
+		}
+		$ligne->setLettrage($lettrage);
 		$ligne->setModePaiement($depense->getModePaiement());
 		$ligne->setAnalytique($depense->getAnalytique());
 		$em->persist($ligne);
@@ -119,6 +125,8 @@ class JournalAchatsController extends Controller
 			$ligne->setDebit($ligneDepense->getMontant());
 			$ligne->setCredit(null);
 			$ligne->setCompteComptable($ligneDepense->getCompteComptable());
+			$lettrage = $lettrageService->findNextNum($ligneDepense->getCompteComptable());
+			$ligne->setLettrage($lettrage);
 			$ligne->setModePaiement($depense->getModePaiement());
 			$ligne->setAnalytique($depense->getAnalytique());
 			$em->persist($ligne);
@@ -133,10 +141,14 @@ class JournalAchatsController extends Controller
 				$ligne->setDebit($ligneDepense->getTaxe());
 				$ligne->setCredit(null);
 				if($compteTVA != null){
-					$ligne->setCompteComptable($compteTVA);
+					$cc = $compteTVA;
 				} else {
-					$ligne->setCompteComptable($compteAttente);
+					$cc  = $compteAttente;
 				}
+				$ligne->setCompteComptable($cc);
+				$lettrage = $lettrageService->findNextNum($cc);
+				$ligne->setLettrage($lettrage);
+	
 				$ligne->setModePaiement($depense->getModePaiement());
 				$ligne->setAnalytique($depense->getAnalytique());
 				$em->persist($ligne);
@@ -154,10 +166,13 @@ class JournalAchatsController extends Controller
 			$ligne->setDebit($depense->getTaxe());
 			$ligne->setCredit(null);
 			if($compteTVA != null){
-				$ligne->setCompteComptable($compteTVA);
+				$cc = $compteTVA;
 			} else {
-				$ligne->setCompteComptable($compteAttente);
+				$cc = $compteAttente;
 			}
+			$ligne->setCompteComptable($cc);
+			$lettrage = $lettrageService->findNextNum($cc);
+			$ligne->setLettrage($lettrage);
 			$ligne->setModePaiement($depense->getModePaiement());
 			$ligne->setAnalytique($depense->getAnalytique());
 			$em->persist($ligne);
@@ -180,6 +195,7 @@ class JournalAchatsController extends Controller
 		//AVOIR FOURNISSEUR
 
 		$em = $this->getDoctrine()->getManager();
+		$lettrageService = $this->get('appbundle.compta_lettrage_service');
 		$totaux = $avoir->getTotaux();
 
 		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
@@ -196,6 +212,8 @@ class JournalAchatsController extends Controller
 		$ligne->setDebit($totaux['TTC']);
 		$ligne->setCredit(null);
 		$ligne->setCompteComptable($avoir->getDepense()->getCompte()->getCompteComptableFournisseur());
+		$lettrage = $lettrageService->findNextNum($avoir->getDepense()->getCompte()->getCompteComptableFournisseur());
+		$ligne->setLettrage($lettrage);
 		$ligne->setModePaiement($avoir->getModePaiement());
 		$ligne->setAnalytique($avoir->getDepense()->getAnalytique());
 		$em->persist($ligne);
@@ -209,6 +227,8 @@ class JournalAchatsController extends Controller
 			$ligne->setDebit(null);
 			$ligne->setCredit($ligneAvoir->getMontant());
 			$ligne->setCompteComptable($ligneAvoir->getCompteComptable());
+			$lettrage = $lettrageService->findNextNum($ligneAvoir->getCompteComptable());
+			$ligne->setLettrage($lettrage);
 			$ligne->setModePaiement($avoir->getModePaiement());
 			$ligne->setAnalytique($avoir->getDepense()->getAnalytique());
 			$em->persist($ligne);
@@ -220,11 +240,13 @@ class JournalAchatsController extends Controller
 				$ligne->setCodeJournal('AC');
 				$ligne->setDebit(null);
 				$ligne->setCredit($ligneAvoir->getTaxe());
-				if($compteTVA != null){
-					$ligne->setCompteComptable($compteTVA);
-				} else {
-					$ligne->setCompteComptable($compteAttente);
+				$cc = $compteTVA;
+				if($compteTVA == null) {
+					$cc = $compteAttente;
 				}
+				$ligne->setCompteComptable($cc);
+				$lettrage = $lettrageService->findNextNum($cc);
+				$ligne->setLettrage($lettrage);
 				$ligne->setModePaiement($avoir->getModePaiement());
 				$ligne->setAnalytique($avoir->getDepense()->getAnalytique());
 				$em->persist($ligne);

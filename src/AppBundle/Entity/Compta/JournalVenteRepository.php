@@ -108,4 +108,23 @@ class JournalVenteRepository extends EntityRepository
 
 		return $result;
 	}
+
+	public function findMaxLettrage($compteComptable, $annee){
+		$result = $this->createQueryBuilder('j')
+			->leftJoin('AppBundle\Entity\CRM\DocumentPrix', 'f', 'WITH', 'j.facture = f.id')
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c1', 'WITH', 'f.compte = c1.id')
+			->leftJoin('AppBundle\Entity\Compta\Avoir', 'a', 'WITH', 'j.avoir = a.id')
+			->leftJoin('AppBundle\Entity\CRM\DocumentPrix', 'f2', 'WITH', 'a.facture = f2.id')
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c2', 'WITH', 'f2.compte = c2.id')
+			->select('MAX(j.lettrage as max_lettrage')
+			->where('j.compteComptable = :compteComptable')
+			->andWhere('(f.dateCreation >= :startDate and f.dateCreation <= :endDate) or (a.dateCreation >= :startDate and a.dateCreation <= :endDate)')
+			->setParameter('compteComptable', $compteComptable)
+			->setParameter('startDate', $annee.'-01-01')
+			->setParameter('endDate', $annee.'-12-31')
+			->getQuery()
+			->getSingleResult();
+
+		return $result;
+	}
 }

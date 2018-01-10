@@ -8,8 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
  * JournalBanque
  *
  * @ORM\Table(name="journal_banque",
- *  uniqueConstraints={@ORM\UniqueConstraint(name="ligne_unique_debit", columns={"mouvementBancaire_id", "debit", "compteComptable_id"}),
- *  @ORM\UniqueConstraint(name="ligne_unique_credit", columns={"mouvementBancaire_id", "credit", "compteComptable_id"})},
+ *  uniqueConstraints={@ORM\UniqueConstraint(name="ligne_unique_debit", columns={"mouvementBancaire_id", "debit", "compteComptable_id", "nom"}),
+ *  @ORM\UniqueConstraint(name="ligne_unique_credit", columns={"mouvementBancaire_id", "credit", "compteComptable_id", "nom"})},
  *  )
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Compta\JournalBanqueRepository")
  */
@@ -101,6 +101,13 @@ class JournalBanque
      * @ORM\JoinColumn(nullable=true, unique=false)
      */
     private $mouvementBancaire;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="lettrage", type="string", length=10)
+     */
+    private $lettrage;
 
 
     /**

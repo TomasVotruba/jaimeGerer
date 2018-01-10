@@ -821,6 +821,21 @@ class CompteComptableController extends Controller
 		//regroupement dans 1 seul array
 		$arr_lignes = array_merge($arr_journal_vente, $arr_journal_achat, $arr_journal_banque, $arr_operation_diverse);
 
+		usort($arr_lignes, function($a, $b) {
+
+	   		if( $a->getLettrage() == $b->getLettrage()){
+	   			if($a->getDebit() > $b->getDebit()){
+	   				return 1;
+	   			}
+	   			return -1;
+	   		}
+
+	   		if($a->getLettrage() > $b->getLettrage()){
+	   			return 1;
+	   		}
+	   		return -1;
+		});
+
 		//calcul des totaux debit et credit
 		$total_debit = 0;
 		$total_credit = 0;
@@ -1101,6 +1116,32 @@ class CompteComptableController extends Controller
 				'compteId' => $compteId
 		));
 
+	}
+
+	/**
+	 * @Route("/compta/compte/corriger-lettrage/{id}/{journal}", name="compta_compte_corriger_lettrage")
+	 */
+	public function compteCorrigerLettrageAction($id, $journal){
+		$response = new Response();
+
+		$em = $this->getDoctrine()->getManager();
+		$repo = $em->getRepository('AppBundle:Compta\JournalBanque');
+		if($journal == 'VE'){
+			$repo = $em->getRepository('AppBundle:Compta\JournalVente');
+		} else if($journal == 'AC'){
+			$repo = $em->getRepository('AppBundle:Compta\JournalAchat');
+		}
+
+		$requestData = $this->getRequest();
+		$valeur = $requestData->get('value');
+
+		$ligne = $repo->find($id);
+		$ligne->setLettrage($valeur);
+		$em->persist($ligne);
+		$em->flush();
+
+		$response->setStatusCode(200);
+		return $response;
 	}
 
 }

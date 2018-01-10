@@ -224,6 +224,9 @@ class NDFController extends Controller
 	 */
 	public function NDFAjouterAction()
 	{
+		$em = $this->getDoctrine()->getManager();
+		$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
+		$lettrageService = $this->get('appbundle.compta_lettrage_service');
 
 		$ndf = new NoteFrais();
 
@@ -296,7 +299,6 @@ class NDFController extends Controller
 				$ndf->setCompteComptable($compteDefault);
 			}
 
-			$em = $this->getDoctrine()->getManager();
 			$em->persist($ndf);
 
 			//recuperation des données du formulaire
@@ -310,11 +312,12 @@ class NDFController extends Controller
 					$arr_analytiques[$recu->getAnalytique()->getId()] = $recu->getAnalytique();
 				}
 			}
-
-			$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
+			
 			$numService = $this->container->get('appbundle.num_service');
 			$arr_num = $numService->getNextNum('DEPENSE', $ndf->getUser()->getCompany());
 			$currentNum = $arr_num['num'];
+
+			$lettrage = $lettrageService->findNextNum($ndf->getCompteComptable());
 
 			foreach($arr_analytiques as $analytique){
 
@@ -357,7 +360,7 @@ class NDFController extends Controller
 				$ndf->addDepense($depense);
 
 				//ecrire dans le journal des achats
-				$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+				$journalAchatsService->journalAchatsAjouterDepenseAction($depense, $lettrage);
 			}
 
 			$numService->updateDepenseNum($ndf->getUser()->getCompany(), $currentNum);

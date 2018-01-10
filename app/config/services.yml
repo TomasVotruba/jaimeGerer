@@ -121,3 +121,8 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         arguments: [ @doctrine.orm.entity_manager, %kernel.root_dir% ]
+    appbundle.compta_lettrage_service:
+        class: AppBundle\Service\Compta\LettrageService
+        calls:
+            - [setContainer, ["@service_container"]]
+        arguments: [ @doctrine.orm.entity_manager ]

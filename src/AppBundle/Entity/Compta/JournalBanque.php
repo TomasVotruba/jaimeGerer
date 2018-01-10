@@ -102,6 +102,13 @@ class JournalBanque
      */
     private $mouvementBancaire;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="lettrage", type="string", length=10, nullable=true)
+     */
+    private $lettrage;
+
 
     /**
      * Get id
@@ -413,4 +420,27 @@ class JournalBanque
       return $num;
     }
 
+
+    /**
+     * Set lettrage
+     *
+     * @param string $lettrage
+     * @return JournalBanque
+     */
+    public function setLettrage($lettrage)
+    {
+        $this->lettrage = $lettrage;
+
+        return $this;
+    }
+
+    /**
+     * Get lettrage
+     *
+     * @return string 
+     */
+    public function getLettrage()
+    {
+        return $this->lettrage;
+    }
 }

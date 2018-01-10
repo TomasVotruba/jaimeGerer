@@ -40,6 +40,21 @@ class RapprochementRepository extends EntityRepository
 		return $query->getQuery()->getResult();
 	}
 
+	public function findForCompanyByYear($company, $annee){
+
+		$query = $this->createQueryBuilder('r')
+		->leftJoin('AppBundle\Entity\Compta\MouvementBancaire', 'm', 'WITH', 'm.id = r.mouvementBancaire')
+		->leftJoin('AppBundle\Entity\Compta\CompteBancaire', 'c', 'WITH', 'm.compteBancaire = c.id')
+		->where('c.company = :company')
+		->andWhere('m.date >= :first')
+		->andWhere('m.date <= :last')
+		->setParameter('company', $company)
+		->setParameter('first', $annee.'-01-01')
+		->setParameter('last',  $annee.'-12-31');
+
+		return $query->getQuery()->getResult();
+	}
+
 	public function findTresoForPeriode($compteBancaire, $mois, $annee){
 
 		$query = $this->createQueryBuilder('r')

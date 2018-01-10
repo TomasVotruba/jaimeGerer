@@ -10,6 +10,7 @@
         <th>Crédit</th>
         <th>Analytique</th>
         <th>Mode de paiement</th>
+        {# <th>Lettrage</th> #}
     </tr>
 </thead>
 <tbody >
@@ -44,6 +45,11 @@
             <td class="align-right">{{ ligneJournal.credit|number_format(2,',',' ') }}</td>
             <td>{{ ligneJournal.analytique }}</td>
             <td>{{ ligneJournal.modePaiement }}</td>
+           {#  <td>
+                {% if ligneJournal.lettrage is not null %}
+                    {{ ligneJournal.lettrage }}
+                {% endif %}
+            </td> #}
         </tr>
 
         {% if ligneJournal.facture is not null %}
