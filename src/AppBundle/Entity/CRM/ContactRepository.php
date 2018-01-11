@@ -393,7 +393,6 @@ class ContactRepository extends EntityRepository
 						}
 
 						$where.= 'c.'.$champ.' '.$operateur.' '.$param;
-						dump($param);
 						$query->setParameter($param, $val);
 
 					}
@@ -423,8 +422,6 @@ class ContactRepository extends EntityRepository
 		$query->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
 				->andWhere('co.company = :company')
 				->setParameter('company', $company);
-		dump($query->getQuery()->getDql());
-
 		$result = $query->getQuery()->getResult();
 
 

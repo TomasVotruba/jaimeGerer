@@ -322,8 +322,6 @@ class RapportController extends Controller
 			}
  		}
  		
- 		//~ \Doctrine\Common\Util\Debug::dump($arr_data);
- 		
 		return $this->render('crm/rapport/crm_rapport_voir.html.twig', array(
 				'arr_obj' => $arr_data,
 				'arr_headers' => $arr_headers,
@@ -419,7 +417,6 @@ class RapportController extends Controller
 		
 		$id = $request->request->get('id');
 		//~ $arr_data = json_decode($request->request->get('data'), true);
-		//~ var_dump($arr_data);exit;
 
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Rapport');
 		$rapport = $repository->find($id);
@@ -427,7 +424,7 @@ class RapportController extends Controller
 		$data = json_decode($request->request->get('data'), true);
 		//~ $data = json_decode($data);
 		$data_json = $serializer->serialize($data, 'json');
-		//~ var_dump($data_json); exit;
+
 		$rapport->setData($data_json);
 		
 		$cols = $request->request->get('cols');
@@ -450,7 +447,6 @@ class RapportController extends Controller
 	 */
 	public function rapportRowMajAction()
 	{
-		//~ var_dump($_POST); exit;
 		$request = $this->getRequest();
 		
 		$data = $request->request->get('data');
