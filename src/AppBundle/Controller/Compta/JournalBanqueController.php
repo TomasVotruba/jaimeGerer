@@ -550,6 +550,7 @@ class JournalBanqueController extends Controller
 
 		foreach($arr_rapprochements as $rapprochement){
 
+			/*
 			if($rapprochement->getFacture()){
 
 				$facture = $rapprochement->getFacture();
@@ -581,8 +582,8 @@ class JournalBanqueController extends Controller
 				} 
 				
 			} 
-			/*
-			else if ($rapprochement->getDepense()){
+			*/
+			if ($rapprochement->getDepense()){
 				$depense = $rapprochement->getDepense();
 
 				if($depense->getDate()->format('Y') != 2017){
@@ -610,7 +611,7 @@ class JournalBanqueController extends Controller
 					$em->flush();
 				} 
 			}
-			*/
+			
 		}
 
 		return new Response();
