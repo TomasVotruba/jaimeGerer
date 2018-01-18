@@ -198,7 +198,6 @@ class JournalVentesController extends Controller
 		$ligne->setLettrage($lettrage);
 		$em->persist($ligne);
 
-
 		$em->flush();
 		$response = new Response();
 		$response->setStatusCode(200);

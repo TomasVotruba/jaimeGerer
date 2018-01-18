@@ -21,7 +21,7 @@ class LettrageService extends ContainerAware {
   		$journalAchatRepo = $this->em->getRepository('AppBundle:Compta\JournalAchat');
   		$journalBanqueRepo = $this->em->getRepository('AppBundle:Compta\JournalBanque');
 
-        if($annee = null){
+        if($annee == null){
             $annee = date('Y');
         }
 
@@ -38,7 +38,7 @@ class LettrageService extends ContainerAware {
   		} else {
   			$maxLettrage++;
   		}
-  		
+
   		return $maxLettrage;
   	}
 

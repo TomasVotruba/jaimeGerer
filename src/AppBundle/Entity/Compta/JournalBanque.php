@@ -78,6 +78,13 @@ class JournalBanque
      */
     private $analytique;
 
+     /**
+     * @var string
+     * 
+     * @ORM\Column(name="stringAnalytique", type="string", length=255)
+     */
+    private $stringAnalytique;
+
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true, unique=false)
@@ -442,5 +449,28 @@ class JournalBanque
     public function getLettrage()
     {
         return $this->lettrage;
+    }
+
+    /**
+     * Set stringAnalytique
+     *
+     * @param string $stringAnalytique
+     * @return JournalBanque
+     */
+    public function setStringAnalytique($stringAnalytique)
+    {
+        $this->stringAnalytique = $stringAnalytique;
+
+        return $this;
+    }
+
+    /**
+     * Get stringAnalytique
+     *
+     * @return string 
+     */
+    public function getStringAnalytique()
+    {
+        return $this->stringAnalytique;
     }
 }

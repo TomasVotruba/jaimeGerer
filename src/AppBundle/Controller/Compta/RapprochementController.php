@@ -627,7 +627,8 @@ class RapprochementController extends Controller
      */
     public function rapprochementAvanceRapprocherAction()
     {
-        $mouvementBancaireRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\MouvementBancaire');
+        $em = $this->getDoctrine()->getManager();
+        $mouvementBancaireRepo = $em->getRepository('AppBundle:Compta\MouvementBancaire');
 
         $arr_mouvementsId = $this->getRequest()->request->get('mouvements');
         $arr_piecesId = $this->getRequest()->request->get('pieces');
@@ -658,49 +659,49 @@ class RapprochementController extends Controller
 
                 switch($type){
                   case 'DEPENSES' :
-                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
+                    $repo = $em->getRepository('AppBundle:Compta\Depense');
                     $piece = $repo->find($id);
                     $rapprochement->setDepense($piece);
                     break;
                   
                   case 'FACTURES' :
-                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
+                    $repo = $em->getRepository('AppBundle:CRM\DocumentPrix');
                     $piece = $repo->find($id);
                     $rapprochement->setFacture($piece);
                     break;
                   
                   case 'AVOIRS-FOURNISSEUR' :
-                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
+                    $repo = $em->getRepository('AppBundle:Compta\Avoir');
                     $piece = $repo->find($id);
                     $rapprochement->setAvoir($piece);
                     break;
                   
                   case 'AVOIRS-CLIENT' :
-                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
+                    $repo = $em->getRepository('AppBundle:Compta\Avoir');
                     $piece = $repo->find($id);
                     $rapprochement->setAvoir($piece);
                     break;
                  
                   case 'REMISES-CHEQUES' :
-                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\RemiseCheque');
+                    $repo = $em->getRepository('AppBundle:Compta\RemiseCheque');
                     $piece = $repo->find($id);
                     $rapprochement->setRemiseCheque($piece);
                     break;
 
                   case 'AFFECTATIONS-DIVERSES-VENTE' :
-                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\AffectationDiverse');
+                    $repo = $em->getRepository('AppBundle:Compta\AffectationDiverse');
                     $piece = $repo->find($id);
                     $rapprochement->setAffectationDiverse($piece);
                     break;
 
                   case 'AFFECTATIONS-DIVERSES-ACHAT' :
-                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\AffectationDiverse');
+                    $repo = $em->getRepository('AppBundle:Compta\AffectationDiverse');
                     $piece = $repo->find($id);
                     $rapprochement->setAffectationDiverse($piece);
                     break;
 
                   case 'NOTES-FRAIS' :
-                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:NDF\NoteFrais');
+                    $repo = $em->getRepository('AppBundle:NDF\NoteFrais');
                     $piece = $repo->find($id);
                     $rapprochement->setNoteFrais($piece);
                     break;
@@ -710,9 +711,16 @@ class RapprochementController extends Controller
 
             }
         }
-        
 
-        dump($arr_pieces);
+        try{
+            $journalBanqueService = $this->container->get('appbundle.compta_journal_banque_controller');
+            $journalBanqueService->journalBanqueAjouterPlusieursPiecesMemeCompteAction($mouvementBancaire, $arr_pieces);
+            $em->flush();
+
+        } catch(\Exception $e){
+            throw $e;
+        }
+
         return new JsonResponse();
 
     }

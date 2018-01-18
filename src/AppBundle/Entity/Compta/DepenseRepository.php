@@ -154,14 +154,14 @@ class DepenseRepository extends EntityRepository
 			->select('MAX(d.num)')
 			->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
 			->where('c.company = :company')
-			->andWhere('d.dateCreation >= :first')
-			->andWhere('d.dateCreation <= :last')
+			->andWhere('d.date >= :first')
+			->andWhere('d.date <= :last')
 			->setParameter('company', $company)
 			->setParameter('first', $year.'-01-01')
 			->setParameter('last', $year.'-12-31');
 
 		$result = $query->getQuery()->getSingleScalarResult();
-
+		dump($query->getQuery()->getSql());
 		return $result;
 	}
 

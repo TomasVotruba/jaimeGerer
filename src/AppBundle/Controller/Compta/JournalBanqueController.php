@@ -391,8 +391,83 @@ class JournalBanqueController extends Controller
 
 	}
 
-	
 
+	/**
+	 * @Route("/compta/journal-banque/ajouter-plusieurs-pieces-meme-compte", name="compta_journal_banque_ajouter_plusieurs_pieces_meme_compte")
+	 */
+	public function journalBanqueAjouterPlusieursPiecesMemeCompteAction($mouvementBancaire, $arr_pieces){
+
+		$em = $this->getDoctrine()->getManager();
+		$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
+		$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
+
+		$lettrage = '';
+		$analytique = '';
+		foreach($arr_pieces as $arr_piece){
+			foreach($arr_piece as $type => $piece){
+				$ligneJournalVente = $journalVenteRepo->findOneBy(array(
+					'facture' => $piece,
+					'compteComptable' => $piece->getCompte()->getCompteComptableClient()
+				));
+				$lettrage.= $ligneJournalVente->getLettrage();
+				$lettrage.= ',';
+
+				$analytique.= $piece->getTotalTTC();
+				$analytique.= ' ';
+				$analytique.= $piece->getAnalytique()->getValeur();
+				$analytique.= ',';
+			}
+		}
+		dump($piece->getCompte()->getCompteComptableClient());
+		try{
+			switch($type){
+
+				case 'FACTURES':
+
+					//credit au compte  411xxxx (compte du client)
+					$ligne = new JournalBanque();
+					$ligne->setMouvementBancaire($mouvementBancaire);
+					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+					$ligne->setDebit(null);
+					$ligne->setCredit($mouvementBancaire->getMontant());
+					$ligne->setAnalytique(null);
+					$ligne->setStringAnalytique($analytique);
+					$ligne->setCompteComptable($piece->getCompte()->getCompteComptableClient());
+					$ligne->setLettrage($lettrage);
+					$ligne->setNom($mouvementBancaire->getLibelle());
+					$ligne->setDate($mouvementBancaire->getDate());
+					$em->persist($ligne);
+
+					//debit au compte 512xxxx (selon banque)
+					$ligne = new JournalBanque();
+					$ligne->setMouvementBancaire($mouvementBancaire);
+					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+					$ligne->setDebit($mouvementBancaire->getMontant());
+					$ligne->setCredit(null);
+					$ligne->setAnalytique(null);
+					$ligne->setStringAnalytique($analytique);
+					$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+					$ligne->setNom($mouvementBancaire->getLibelle());
+					$ligne->setDate($mouvementBancaire->getDate());
+					$em->persist($ligne);
+
+					break;
+
+			}
+			$em->flush();
+
+		} catch (\Exception $e){
+			throw $e;
+			$response = new Response();
+			$response->setStatusCode(500);
+			return $response;
+		}
+
+		$response = new Response();
+		$response->setStatusCode(200);
+		return $response;
+
+	}
 
 
 	/**
