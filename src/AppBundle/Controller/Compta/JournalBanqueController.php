@@ -391,6 +391,8 @@ class JournalBanqueController extends Controller
 
 	}
 
+	
+
 
 
 	/**
@@ -583,35 +585,67 @@ class JournalBanqueController extends Controller
 				
 			} 
 			*/
-			if ($rapprochement->getDepense()){
-				$depense = $rapprochement->getDepense();
 
-				if($depense->getDate()->format('Y') != 2017){
+			/*
+			if ($rapprochement->getAvoir()){
+				$avoir = $rapprochement->getAvoir();
+				if($avoir->getDateCreation()->format('Y') != 2017){
 					continue;
 				}
 
-				$cc = $depense->getCompte()->getCompteComptableFournisseur();
-				$lettrage = $lettrageService->findNextNum($cc);
+				if($avoir->getDepense()){
 
-				$ligneBanque = $journalBanqueRepo->findOneBy(array(
-					'mouvementBancaire' => $rapprochement->getMouvementBancaire(),
-					'compteComptable' => $cc
-				));
+					if($avoir->getDateCreation()->format('Y') != 2017){
+						continue;
+					}
 
-				$ligneAchat = $journalAchatRepo->findOneBy(array(
-					'depense' => $depense,
-					'compteComptable' => $cc
-				));
+					$cc = $avoir->getDepense();->getCompte()->getCompteComptableFournisseur();
+					$lettrage = $lettrageService->findNextNum($cc);
 
-				if($ligneAchat && $ligneBanque){
-					$ligneAchat->setLettrage($lettrage);
-					$em->persist($ligneAchat);
-					$ligneBanque->setLettrage($lettrage);
-					$em->persist($ligneBanque);
-					$em->flush();
-				} 
+					$ligneBanque = $journalBanqueRepo->findOneBy(array(
+						'mouvementBancaire' => $rapprochement->getMouvementBancaire(),
+						'compteComptable' => $cc
+					));
+
+					$ligneAchat = $journalAchatRepo->findOneBy(array(
+						'avoir' => $avoir,
+						'compteComptable' => $cc
+					));
+
+					if($ligneAchat && $ligneBanque){
+						$ligneAchat->setLettrage($lettrage);
+						$em->persist($ligneAchat);
+						$ligneBanque->setLettrage($lettrage);
+						$em->persist($ligneBanque);
+						$em->flush();
+					} 
+				} else if ($avoir->getFacture()){
+					
+					$cc = $avoir->getFacture()->getCompte()->getCompteComptableClient();
+					$lettrage = $lettrageService->findNextNum($cc);
+
+					$ligneBanque = $journalBanqueRepo->findOneBy(array(
+						'mouvementBancaire' => $rapprochement->getMouvementBancaire(),
+						'compteComptable' => $cc
+					));
+
+					$ligneVente = $journalVenteRepo->findOneBy(array(
+						'avoir' => $avoir,
+						'compteComptable' => $cc
+					));
+
+					if($ligneVente && $ligneBanque){
+						$ligneVente->setLettrage($lettrage);
+						$em->persist($ligneVente);
+						$ligneBanque->setLettrage($lettrage);
+						$em->persist($ligneBanque);
+						$em->flush();
+
+					} 
+				}
+				
 			}
-			
+			*/
 		}
 
 		return new Response();

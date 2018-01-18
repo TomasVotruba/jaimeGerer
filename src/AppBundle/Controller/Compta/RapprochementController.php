@@ -238,48 +238,48 @@ class RapprochementController extends Controller
   }
 
 
-  /**
-   * @Route("/compta/rapprochement/supprimer/{id}", name="compta_rapprochement_supprimer", options={"expose"=true})
-   */
-  public function rapprochementSupprimerAction(Rapprochement $rapprochement)
-  {
-    $em = $this->getDoctrine()->getManager();
+    /**
+    * @Route("/compta/rapprochement/supprimer/{id}", name="compta_rapprochement_supprimer", options={"expose"=true})
+    */
+    public function rapprochementSupprimerAction(Rapprochement $rapprochement)
+    {
+        $em = $this->getDoctrine()->getManager();
 
-    //supprimer les lignes du journal de banque
-    $mouvement = $rapprochement->getMouvementBancaire();
-    $journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
+        //supprimer les lignes du journal de banque
+        $mouvement = $rapprochement->getMouvementBancaire();
+        $journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
 
-    $arr_journalBanque = $journalBanqueRepo->findByMouvementBancaire($mouvement);
-    foreach($arr_journalBanque as $ligneJournal){
-      $em->remove($ligneJournal);
+        $arr_journalBanque = $journalBanqueRepo->findByMouvementBancaire($mouvement);
+        foreach($arr_journalBanque as $ligneJournal){
+            $em->remove($ligneJournal);
+        }
+
+        $mouvement->setType(null);
+        $em->persist($mouvement);
+
+        if($rapprochement->getDepense()){
+            $depense = $rapprochement->getDepense();
+            $depense->setEtat("ENREGISTRE");
+            $em->persist($depense);
+        }
+        if($rapprochement->getFacture()){
+            $facture = $rapprochement->getFacture();
+            $facture->setEtat("ENREGISTRE");
+            $em->persist($facture);
+        }
+        if($rapprochement->getNoteFrais()){
+            $ndf = $rapprochement->getNoteFrais();
+            $ndf->setEtat("ENREGISTRE");
+            $em->persist($ndf);
+        }
+
+        //supprimer le rapprochement
+        $em->remove($rapprochement);
+
+        $em->flush();
+
+        return new JsonResponse();
     }
-
-    $mouvement->setType(null);
-    $em->persist($mouvement);
-
-    if($rapprochement->getDepense()){
-      $depense = $rapprochement->getDepense();
-      $depense->setEtat("ENREGISTRE");
-      $em->persist($depense);
-    }
-    if($rapprochement->getFacture()){
-      $facture = $rapprochement->getFacture();
-      $facture->setEtat("ENREGISTRE");
-      $em->persist($facture);
-    }
-    if($rapprochement->getNoteFrais()){
-      $ndf = $rapprochement->getNoteFrais();
-      $ndf->setEtat("ENREGISTRE");
-      $em->persist($ndf);
-    }
-
-    //supprimer le rapprochement
-    $em->remove($rapprochement);
-
-    $em->flush();
-
-    return new JsonResponse();
-  }
 
   /**
    * @Route("/compta/mouvement-bancaire/rapprocher/{id}/{type}/{piece}", name="compta_mouvement_bancaire_rapprocher", options={"expose"=true})
@@ -496,5 +496,225 @@ class RapprochementController extends Controller
         'form' => $form->createView(),
     ));
   }
+
+
+  /**
+    * @Route("/compta/rapprochement-avance", name="compta_rapprochement_avance", options={"expose"=true})
+    */
+    public function rapprochementAvanceAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $mouvementRepo = $em->getRepository('AppBundle:Compta\MouvementBancaire');
+        $compteBancaireRepo = $em->getRepository('AppBundle:Compta\CompteBancaire');
+        $remiseChequeRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\RemiseCheque');
+        $factureRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
+        $depenseRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
+        $noteFraisRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:NDF\NoteFrais');
+        $avoirRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
+        $affectationDiverseRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\AffectationDiverse');
+
+        $arr_comptesBancaires = $compteBancaireRepo->findByCompany($this->getUser()->getCompany());
+        $arr_mouvementsBancaires = array();
+        foreach($arr_comptesBancaires as $compteBancaire){
+            
+            $arr_mouvementsBancaires[$compteBancaire->getNom()] = array();
+            $arrMouvementsCompteBancaire = $mouvementRepo->findBy(
+                array('compteBancaire' => $compteBancaire),
+                array('date' => 'DESC')
+            );
+        
+            foreach($arrMouvementsCompteBancaire as $mouvement){
+                if(count($mouvement->getRapprochements()) == 0 ){
+                    $arr_mouvementsBancaires[$mouvement->getCompteBancaire()->getNom()][] = $mouvement;
+                }
+            }
+        }
+
+        $arr_pieces = array(
+            'FACTURES' => array(),
+            'DEPENSES' => array(),
+            'NOTES-FRAIS' => array(),
+            'REMISES-CHEQUES' => array(),
+            'AVOIRS-FOURNISSEUR' => array(),
+            'AVOIRS-CLIENT' => array(),
+            'AFFECTATIONS-DIVERSES-VENTE' => array(),
+            'AFFECTATIONS-DIVERSES-ACHAT' => array(),
+        );
+
+        //remises de cheque
+        $arr_all_remises_cheques = $remiseChequeRepo->findForCompany($this->getUser()->getCompany());
+        $arr_factures_rapprochees_par_remises_cheques = array();
+        $arr_avoirs_rapprochees_par_remises_cheques = array();
+        foreach($arr_all_remises_cheques as $remiseCheque){
+          if($remiseCheque->getTotalRapproche() < $remiseCheque->getTotal()){
+            $arr_pieces['REMISES-CHEQUES'][] = $remiseCheque;
+          } else {
+            foreach($remiseCheque->getCheques() as $cheque){
+              foreach($cheque->getPieces() as $piece){
+                if($piece->getFacture()){
+                  $arr_factures_rapprochees_par_remises_cheques[] = $piece->getFacture()->getId();
+                }else if($piece->getAvoir()){
+                  $arr_avoirs_rapprochees_par_remises_cheques[] = $piece->getFacture()->getId();
+                }
+              }
+            }
+          }
+        }
+
+        //factures
+        $arr_all_factures = $factureRepo->findForCompany($this->getUser()->getCompany(), 'FACTURE', true);
+        foreach($arr_all_factures as $facture){
+          if($facture->getTotalRapproche() < $facture->getTotalTTC() && $facture->getEtat() != "PAID" && !in_array($facture->getId(), $arr_factures_rapprochees_par_remises_cheques) && $facture->getTotalAvoirs() < $facture->getTotalTTC()){
+            $arr_pieces['FACTURES'][] = $facture;
+          }
+        }
+
+        //depenses
+        $arr_all_depenses = $depenseRepo->findForCompany($this->getUser()->getCompany());
+        foreach($arr_all_depenses as $depense){
+          if($depense->getEtat() != 'RAPPROCHE'){
+            if($depense->getTotalRapproche() < $depense->getTotalTTC()){
+              $arr_pieces['DEPENSES'][] = $depense;
+            }
+          }
+        }
+
+        //notes de frais
+        $arr_all_note_frais = $noteFraisRepo->findForCompany($this->getUser()->getCompany());
+        foreach($arr_all_note_frais as $ndf){
+          if($ndf->getEtat() == 'VALIDE'){
+            $arr_pieces['NOTES-FRAIS'][] = $ndf;
+          }
+        }
+
+        //avoirs fournisseurs
+        $arr_all_avoirs_fournisseurs = $avoirRepo->findForCompany('FOURNISSEUR', $this->getUser()->getCompany());
+        foreach($arr_all_avoirs_fournisseurs as $avoir){
+          if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !in_array($avoir->getId(), $arr_avoirs_rapprochees_par_remises_cheques)){
+            $arr_pieces['AVOIRS-FOURNISSEUR'][] = $avoir;
+          }
+        }
+
+        //avoirs clients
+        $arr_all_avoirs_clients = $avoirRepo->findForCompany('CLIENT', $this->getUser()->getCompany());
+        foreach($arr_all_avoirs_clients as $avoir){
+          if($avoir->getTotalRapproche() < $avoir->getTotalTTC()){
+            $arr_pieces['AVOIRS-CLIENT'][] = $avoir;
+          }
+        }
+
+        //affectations diverses vente
+        $arr_affectations_diverses_vente = $affectationDiverseRepo->findForCompany('VENTE', $this->getUser()->getCompany(), true);
+        foreach($arr_affectations_diverses_vente as $affectationDiverse){
+            $arr_pieces['AFFECTATIONS-DIVERSES-VENTE'][] = $affectationDiverse;
+        }
+         
+        //affectations diverses  achats
+        $arr_affectations_diverses_achat = $affectationDiverseRepo->findForCompany('ACHAT', $this->getUser()->getCompany(), true);
+        foreach($arr_affectations_diverses_achat as $affectationDiverse){
+            $arr_pieces['AFFECTATIONS-DIVERSES-ACHAT'][] = $affectationDiverse;
+        }
+
+        return $this->render('compta/rapprochement/compta_rapprochement_avance.html.twig', array(
+            'arr_mouvementsBancaires' => $arr_mouvementsBancaires,
+            'arr_pieces' => $arr_pieces,
+        ));
+        
+    }
+
+    /**
+     * @Route("/compta/rapprochement-avance/rapprocher", name="compta_rapprochement_avance_rapprocher", options={"expose"=true})
+     */
+    public function rapprochementAvanceRapprocherAction()
+    {
+        $mouvementBancaireRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\MouvementBancaire');
+
+        $arr_mouvementsId = $this->getRequest()->request->get('mouvements');
+        $arr_piecesId = $this->getRequest()->request->get('pieces');
+
+        if(count($arr_mouvementsId) > 1 && count($arr_piecesId) > 1){
+            return new JsonResponse(array(
+                'message' => 'TOO_MANY_ELEMENTS'), 
+                419
+            );
+        }
+
+        $arr_pieces = array();
+
+        if(count($arr_piecesId) > 1){
+
+            $mouvementId = $arr_mouvementsId[0];
+            $mouvementBancaire = $mouvementBancaireRepo->find($mouvementId);
+
+            foreach($arr_piecesId as $pieceId){
+                $arr_explode = explode('_', $pieceId);
+                $type = $arr_explode[0];
+                $id = $arr_explode[1];
+
+                //creation et hydratation du rapprochement bancaire
+                $rapprochement = new Rapprochement();
+                $rapprochement->setDate(new \DateTime(date('Y-m-d')));
+                $rapprochement->setMouvementBancaire($mouvementBancaire);
+
+                switch($type){
+                  case 'DEPENSES' :
+                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
+                    $piece = $repo->find($id);
+                    $rapprochement->setDepense($piece);
+                    break;
+                  
+                  case 'FACTURES' :
+                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
+                    $piece = $repo->find($id);
+                    $rapprochement->setFacture($piece);
+                    break;
+                  
+                  case 'AVOIRS-FOURNISSEUR' :
+                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
+                    $piece = $repo->find($id);
+                    $rapprochement->setAvoir($piece);
+                    break;
+                  
+                  case 'AVOIRS-CLIENT' :
+                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
+                    $piece = $repo->find($id);
+                    $rapprochement->setAvoir($piece);
+                    break;
+                 
+                  case 'REMISES-CHEQUES' :
+                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\RemiseCheque');
+                    $piece = $repo->find($id);
+                    $rapprochement->setRemiseCheque($piece);
+                    break;
+
+                  case 'AFFECTATIONS-DIVERSES-VENTE' :
+                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\AffectationDiverse');
+                    $piece = $repo->find($id);
+                    $rapprochement->setAffectationDiverse($piece);
+                    break;
+
+                  case 'AFFECTATIONS-DIVERSES-ACHAT' :
+                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\AffectationDiverse');
+                    $piece = $repo->find($id);
+                    $rapprochement->setAffectationDiverse($piece);
+                    break;
+
+                  case 'NOTES-FRAIS' :
+                    $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:NDF\NoteFrais');
+                    $piece = $repo->find($id);
+                    $rapprochement->setNoteFrais($piece);
+                    break;
+                }
+
+                $arr_pieces[] = array($type => $piece);
+
+            }
+        }
+        
+
+        dump($arr_pieces);
+        return new JsonResponse();
+
+    }
 
 }

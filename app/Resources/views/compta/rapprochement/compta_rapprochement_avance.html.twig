@@ -1,0 +1,302 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Banque : Rapprochements avancés</h1>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+				{% include 'compta/journal_banque/compta_banque_submenu.html.twig' %}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 center">
+			<p>
+				Total pièces : <span id="total-pieces">0,00 €</span> <span class="green glyphicon glyphicon-ok hidden"></span> <br />
+				Total mouvements bancaires : <span id="total-mouvements">0,00 €</span> <span class="green glyphicon glyphicon-ok hidden"></span><br />
+			<span class="red hidden" id="error"></span>
+			<p>
+				<a class="btn btn-success" id="btn-rapprocher">Rapprocher les éléments sélectionnés</a>
+			</p>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4 center">
+			<div class="progress hidden">
+			  	<div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+			</div>
+			<p class="alert alert-danger hidden" id="error"></p>
+			<p class="alert alert-success hidden" id="success">Les éléments ont bien été rapprochés.</p>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<h3 class="center">Pièces</h3>
+
+			{% for type, arr_type in arr_pieces %}
+				{% if arr_type|length > 0 %}
+				  	<div class="panel panel-default">
+				   	 	<div class="panel-heading" role="tab" id="heading-{{ type }}">
+				      		<h4 class="panel-title">
+				        		<a role="button" data-toggle="collapse" href="#{{ type }}" aria-expanded="true" aria-controls="{{ type }}">
+										{% if type == "NOTES-FRAIS" %}
+											Note de frais
+										{% elseif type =="REMISES-CHEQUES" %}
+											Remises de chèques
+										{% elseif type == "AVOIRS-CLIENT" %}
+											Avoirs clients
+										{% elseif type == "AVOIRS-FOURNISSEUR" %}
+											Avoirs fournisseurs
+										{% else %}
+											{{ type|capitalize  }}
+										{% endif %}
+				        		</a>
+				      		</h4>
+				    	</div>
+				    	<div id="{{ type }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-{{ type }}">
+				      		<div class="panel-body">
+				      			<table class="table table-transparent">
+						        {% for piece in arr_type %}
+						        	{% set id = type~'_'~piece.id %}
+						        	<tr id="row-{{ id }}">
+						        		<td class="col-md-2">
+											<input type="checkbox" name="pieces" id="{{ id }}" value="{% if piece.totalTTC is defined %} {{ piece.totalTTC }} {% endif %}" data-type="{{ type }}" />
+										</td>
+										<td class="col-md-2">
+											{% if type == 'NOTES-FRAIS' %}
+												{{ piece.month }}/{{ piece.year }}
+											{% elseif type == "AFFECTATIONS-DIVERSES-VENTE" or type =="AFFECTATIONS-DIVERSES-ACHAT" %}
+						        				{{ piece.nom }}
+						        			{% else %}
+												{% if piece.num is defined %} {{ piece.num }} {% endif %}
+											{% endif %}
+										</td>
+										<td class="col-md-2 align-right"> 
+											{% if type == 'AVOIRS-CLIENT' or type == "DEPENSES" or type == "NOTES-FRAIS"  %}
+												<span class="red">{{ (0-piece.totalTTC)|number_format(2, ',', ' ') }} €</span>
+											{% elseif type == "AFFECTATIONS-DIVERSES-VENTE" or type =="AFFECTATIONS-DIVERSES-ACHAT" %}
+						        				<input type="text" />
+						        			{% else %}
+												<span class="green">{{ piece.totalTTC|number_format(2, ',', ' ') }} €</span>
+											{% endif %}
+										</td>
+										<td class="col-md-6">
+											<label for="{{ id }}">
+											{% if type == 'AVOIRS-FOURNISSEUR' %}
+												{{ piece.depense.compte }}
+											{% elseif type == 'AVOIRS-CLIENT' %}
+												{{ piece.facture.compte }}
+											{% elseif type == 'NOTES-FRAIS' %}
+												{{ piece.user }}
+											{% else %}
+												{% if piece.compte is defined %} {{ piece.compte }} {% endif %}
+											{% endif %}
+											</label>
+										</td>
+									</tr>
+								{% endfor %}
+								</table>
+				      		</div>
+				    	</div>
+				  	</div>
+				{% endif %}
+		  	{% endfor %}
+
+		</div>
+
+		<div class="col-md-6" id="mouvements">
+			<h3 class="center">Mouvements bancaires</h3>
+
+			{% for nomCompte, arr_compteBancaire in arr_mouvementsBancaires %}
+				{% if arr_compteBancaire|length > 0 %}
+				  	<div class="panel panel-default">
+				   	 	<div class="panel-heading" role="tab" id="heading-{{ nomCompte }}">
+				      		<h4 class="panel-title">
+				        		<a role="button" data-toggle="collapse" href="#{{ nomCompte }}" aria-expanded="true" aria-controls="{{ nomCompte }}">
+									{{ nomCompte }}
+				        		</a>
+				      		</h4>
+				    	</div>
+				    	<div id="{{ nomCompte }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-{{ nomCompte }}">
+				      		<div class="panel-body">
+				      			<table class="table table-transparent">
+						        {% for mouvement in arr_compteBancaire %}
+						        	<tr id="row-mouvement-{{ mouvement.id }}">
+						        		<td class="col-md-2">
+											<input type="checkbox" name="mouvements" id="{{ mouvement.id }}" value="{{ mouvement.montant }}"/>
+										</td>
+										<td class="col-md-2">{{ mouvement.date|date('d/m/Y') }}</td>
+										<td class="col-md-2 align-right {% if mouvement.montant > 0 %} green {% else %} red {% endif %}"> {{ mouvement.montant|number_format(2, ',', ' ') }} €</td>
+										<td class="col-md-6"><label for="{{ mouvement.id }}">{{ mouvement.libelle }}</label></td>
+									</tr>
+								{% endfor %}
+								</table>
+				      		</div>
+				    	</div>
+				  	</div>
+				{% endif %}
+		  	{% endfor %}
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('js/accounting.min.js') }}"></script>
+
+	<script type="text/javascript">
+		$(document).ready( function () {
+
+			$('input[name="mouvements"]').change(function(){
+				checkTotaux();		
+			});
+
+			$('input[name="pieces"]').change(function(){
+				checkTotaux();		
+			});
+
+			$('#btn-rapprocher').click(function(){
+
+				$(this).attr('disabled', true);
+				$('.progress').removeClass('hidden');
+				$('#success').addClass('hidden');
+
+				var arr_pieces =  [];
+				$('input[name="pieces"]').each(function () {
+					if(this.checked){
+						arr_pieces.push($(this).attr('id'));
+					}
+				});
+
+				var arr_mouvements =  [];
+				$('input[name="mouvements"]').each(function () {
+					if(this.checked){
+						arr_mouvements.push($(this).attr('id'));
+					}
+				});
+
+				$.ajax({
+					type: "POST",
+					url: Routing.generate('compta_rapprochement_avance_rapprocher'),
+					data: { 'mouvements':  arr_mouvements, 'pieces': arr_pieces },
+					success: function(data) {
+						$('#btn-rapprocher').attr('disabled', false);
+						$('.progress').addClass("hidden");
+						$('#success').removeClass('hidden');
+
+						var arrayLength = arr_pieces.length;
+						for (var i = 0; i < arrayLength; i++) {
+						    var id = arr_pieces[i];
+						    $("#row-"+id).addClass("hidden"); 
+						}
+
+						var arrayLength = arr_mouvements.length;
+						for (var i = 0; i < arrayLength; i++) {
+						    var id = arr_mouvements[i];
+						    $("#row-mouvement-"+id).addClass("hidden"); 
+						}
+
+						$('#total-mouvements').text('0,00 €');
+						$('#total-pieces').text('0,00 €');
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(jqXHR);
+						console.log(textStatus);
+						console.log(errorThrown);
+
+						$('#error').text(textStatus);
+						$('#error').removeClass("hidden");
+
+						$('#btn-rapprocher').attr('disabled', false);
+						$('.progress').addClass("hidden");
+					},
+
+
+				});
+
+				
+
+			});
+
+		});
+
+		function calculTotalMouvements(){
+			var total = 0;
+			$('input[name="mouvements"]').each(function () {
+				if(this.checked){
+					//on multiplie puis divise par 100 pour travailler sur des entiers et éviter le problème de précision de javascript
+					total+= Number($(this).val())*100;
+			    
+				}
+			});
+			total = total/100;
+			$('#total-mouvements').text(accounting.formatMoney(total, { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 }));
+
+			return Number(total);
+		}
+
+		function calculTotalPieces(){
+			var total = 0;
+			$('input[name="pieces"]').each(function () {
+				if(this.checked){
+
+					//on multiplie puis divise par 100 pour travailler sur des entiers et éviter le problème de précision de javascript
+					if( $(this).attr('data-type') == "DEPENSES" || $(this).attr('data-type') == "AVOIRS-CLIENT" || $(this).attr('data-type') == "NOTES-FRAIS" || $(this).attr('data-type') == "DEPENSES" ){
+						val= Number($(this).val())*100;
+						total+= 0-val;
+					} else {
+						total+= Number($(this).val())*100;
+					}
+					
+				}
+			});
+			total = total/100;
+			$('#total-pieces').text(accounting.formatMoney(total, { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 }));
+
+			return Number(total);
+		}
+
+		function checkTotaux(){
+			var totalPieces = calculTotalPieces();
+			var totalMouvements = calculTotalMouvements();
+
+			if(totalPieces > totalMouvements){
+				
+				var diff = totalPieces - totalMouvements;
+				var error = "Pièces supérieures de "+diff+" €";
+				$('#error').text(error)
+							.removeClass("hidden");
+				$('#btn-rapprocher').attr('disabled', true);
+				$('.glyphicon-ok').addClass("hidden");
+
+			} else if(totalPieces > totalMouvements){
+				
+				var diff =  totalMouvements - totalPieces;
+				var error = "Mouvements bancaires supérieures de "+diff+" €";
+				$('#error').text(error)
+							.removeClass("hidden");
+				$('#btn-rapprocher').attr('disabled', true);
+				$('.glyphicon-ok').addClass("hidden");
+
+			} else {
+				
+				$('#error').text('')
+							.addClass("hidden");
+				$('#btn-rapprocher').attr('disabled', false);
+				$('.glyphicon-ok').removeClass("hidden");
+			}
+		}
+	</script>
+
+
+{% endblock %}

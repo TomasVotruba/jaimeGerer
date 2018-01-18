@@ -44,4 +44,18 @@ class MouvementBancaireRepository extends EntityRepository
 		return $result;
 
 	}
+
+	public function findByCompany($company){
+
+		$result = $this->createQueryBuilder('m')
+		->leftJoin('AppBundle\Entity\Compta\CompteBancaire', 'co', 'WITH', 'co.id = m.compteBancaire')
+		->where('co.company = :company')
+		->setParameter('company', $company)
+		->getQuery()
+		->getResult();
+
+		return $result;
+
+	}
+
 }
