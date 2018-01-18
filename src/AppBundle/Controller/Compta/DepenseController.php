@@ -279,15 +279,11 @@ class DepenseController extends Controller
 					//si la dépense est antidatée, récupérer le dernier numéro de dépense de l'année concernée
 					$prefixe = 'D-'.$depenseYear.'-';
 					$depenseRepo = $em->getRepository('AppBundle:Compta\Depense');
-					$lastNum = $depenseRepo->findMaxNumForYear($depenseYear, $this->getUser()->getCompany());
-					dump($lastNum);
+					$lastNum = $depenseRepo->findMaxNumForYear($depenseYear, $this->getUser()->getCompany());;
 					$lastNum = substr($lastNum, 7);
-					dump($lastNum);
 					$lastNum++;
 					$depense->setNum($prefixe.$lastNum);
 
-					dump($lastNum);
-					return 0;
 				} else {
 					$prefixe = 'D-'.date('Y').'-';
 					if($currentNum < 10){
