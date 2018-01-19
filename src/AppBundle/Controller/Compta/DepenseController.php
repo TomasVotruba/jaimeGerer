@@ -1463,7 +1463,7 @@ class DepenseController extends Controller
 		$arr_depenses_rapprochees = $depenseRepo->findByEtat('RAPPROCHE');
 
 		foreach($arr_depenses_rapprochees as $depense){
-			if(count($depense->getRapprochements() == 0)){
+			if(count($depense->getRapprochements()) == 0){
 				$depense->setEtat('ENREGISTRE');
 				$em->persist($depense);
 			}
