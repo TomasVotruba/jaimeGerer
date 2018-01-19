@@ -518,7 +518,7 @@ class JournalBanqueController extends Controller
 					$ligne = new JournalBanque();
 					$ligne->setMouvementBancaire($mouvementBancaire);
 					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
-					$ligne->setDebit($mouvementBancaire->getMontant());
+					$ligne->setDebit(-$mouvementBancaire->getMontant());
 					$ligne->setCredit(null);
 					$ligne->setAnalytique(null);
 					$ligne->setStringAnalytique($analytique);

@@ -22,6 +22,23 @@
 			 	{{ ligne.nom }}
 			 {% endif %}
 		</td>
+		<td>
+			{% if ligne.codeJournal == "VE" %}
+			 	{% if ligne.facture is not null %}
+			 		{{ ligne.facture.num }}
+			 	{% elseif ligne.avoir is not null %}
+			 		{{ ligne.avoir.num }}
+			 	{% endif %}
+			 {% elseif ligne.codeJournal == "AC" %}
+			 	{% if ligne.depense is not null %}
+			 		{{ ligne.depense.num }}
+			 	{% elseif ligne.avoir is not null %}
+			 		{{ ligne.avoir.num }}
+			 	{% endif %}
+			 {% elseif ligne.codeJournal == "OD" %}
+			  	OD
+			 {% endif %}
+		</td>
 		<td class="align-right">{{ ligne.debit|number_format(2,',',' ')  }}</td>
 		<td class="align-right">{{ ligne.credit|number_format(2,',',' ')  }}</td>
 		<td>{{ ligne.codeJournal }}</td>
@@ -57,8 +74,11 @@
 <tr>
 	<td class="no-border"></td>
 	<td class="no-border"></td>
+	<td class="no-border"></td>
 	<td class="align-right"><strong>{{ total_debit|number_format(2,',',' ') }}</strong></td>
 	<td class="align-right"><strong>{{ total_credit|number_format(2,',',' ')  }}</strong></td>
+	<td class="no-border"></td>
+	<td class="no-border"></td>
 	<td class="no-border"></td>
 </tr>
 

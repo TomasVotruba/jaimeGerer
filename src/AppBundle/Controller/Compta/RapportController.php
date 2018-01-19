@@ -269,7 +269,9 @@ class RapportController extends Controller
 				'choices' => array(
 					'ANNEE' => 'Année en cours',
 					'TRIMESTRE' => 'Trimestre en cours',
-					'MOIS' => 'Mois en cours'
+					'MOIS' => 'Mois en cours',
+					'ANNEE_PRECEDENTE' => 'Année précédente',
+					'ANNEE_COURS_ET_PRECEDENTE' => 'Année précédente et année en cours'
 				),
 				'label' => 'Période',
 				'data' => 'ANNEE',

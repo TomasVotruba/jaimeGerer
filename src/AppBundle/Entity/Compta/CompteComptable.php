@@ -374,21 +374,34 @@ class CompteComptable
     public function getTotalDebit($periode)
     {
 
-      $dateDebutPeriode;
-      $dateFinPeriode = new \DateTime();
-
+      $dateDebutPeriode = null;
+      $dateFinPeriode = null;
+      
       switch($periode){
         case 'ANNEE':
           $dateDebutPeriode =  new \DateTime('first day of january');
+          $dateFinPeriode = new \DateTime();
           break;
 
         case 'TRIMESTRE':
           $dateDebutPeriode =  new \DateTime('first day of january');
+          $dateFinPeriode = new \DateTime();
           break;
 
         case 'MOIS':
           $dateDebutPeriode =  new \DateTime('first day of');
+          $dateFinPeriode = new \DateTime();
           break;
+
+        case 'ANNEE_PRECEDENTE':
+          $dateDebutPeriode =  new \DateTime('first day of january last year');
+          $dateFinPeriode = new \DateTime('last day of december last year');
+          break;
+
+        case 'ANNEE_COURS_ET_PRECEDENTE':
+            $dateDebutPeriode =  new \DateTime('first day of january last year');
+            $dateFinPeriode = new \DateTime();
+            break;
       }
 
       $totalDebit = 0;
@@ -420,11 +433,12 @@ class CompteComptable
     public function getTotalCredit($periode)
     {
       $dateDebutPeriode;
-      $dateFinPeriode = new \DateTime();
+      $dateFinPeriode;
 
       switch($periode){
         case 'ANNEE':
           $dateDebutPeriode =  new \DateTime('first day of january');
+          $dateFinPeriode = new \DateTime();
           break;
 
         case 'TRIMESTRE':
@@ -440,11 +454,23 @@ class CompteComptable
           }
 
           $dateDebutPeriode =  new \DateTime('first day of '.$month);
+          $dateFinPeriode = new \DateTime();
           break;
 
         case 'MOIS':
           $dateDebutPeriode =  new \DateTime('first day of');
+          $dateFinPeriode = new \DateTime();
           break;
+
+           case 'ANNEE_PRECEDENTE':
+          $dateDebutPeriode =  new \DateTime('first day of january last year');
+          $dateFinPeriode = new \DateTime('last day of december last year');
+          break;
+
+        case 'ANNEE_COURS_ET_PRECEDENTE':
+            $dateDebutPeriode =  new \DateTime('first day of january last year');
+            $dateFinPeriode = new \DateTime();
+            break;
       }
 
       $totalCredit = 0;

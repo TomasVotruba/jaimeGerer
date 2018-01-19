@@ -198,17 +198,18 @@
 						var arrayLength = arr_pieces.length;
 						for (var i = 0; i < arrayLength; i++) {
 						    var id = arr_pieces[i];
-						    $("#row-"+id).addClass("hidden"); 
+						    $("#row-"+id).remove(); 
 						}
 
 						var arrayLength = arr_mouvements.length;
 						for (var i = 0; i < arrayLength; i++) {
 						    var id = arr_mouvements[i];
-						    $("#row-mouvement-"+id).addClass("hidden"); 
+						    $("#row-mouvement-"+id).remove(); 
 						}
 
-						$('#total-mouvements').text('0,00 €');
-						$('#total-pieces').text('0,00 €');
+						checkTotaux();
+
+
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.log(jqXHR);

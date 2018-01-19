@@ -298,7 +298,7 @@ class DepenseController extends Controller
 					$settingsNum->setValeur($currentNum);
 					$em->persist($settingsNum);
 				}
-
+				
 				$date = $depense->getDate();
 				$dateReglement = clone $date;
 				switch ($depense->getConditionReglement()) {
@@ -582,6 +582,9 @@ class DepenseController extends Controller
 				$settingsNum->setValeur($currentNum);
 				$em->persist($settingsNum);
 			}
+
+			$depense->setEtat("ENREGISTRE");
+			$depense->setTaxe(0); //pour empêcher que la TVA soit enregistrée à la fois dans la ligneDepense et dans la depense
 
 			$em->persist($depense);
 
