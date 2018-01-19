@@ -418,7 +418,7 @@ class JournalBanqueController extends Controller
 				$analytique.= ',';
 			}
 		}
-		dump($piece->getCompte()->getCompteComptableClient());
+		//dump($piece->getCompte()->getCompteComptableClient());
 		try{
 			switch($type){
 

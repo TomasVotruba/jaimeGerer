@@ -161,7 +161,6 @@ class DepenseRepository extends EntityRepository
 			->setParameter('last', $year.'-12-31');
 
 		$result = $query->getQuery()->getSingleScalarResult();
-		dump($query->getQuery()->getSql());
 		return $result;
 	}
 
