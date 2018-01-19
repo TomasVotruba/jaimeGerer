@@ -1452,6 +1452,27 @@ class DepenseController extends Controller
 		));
 	}
 
+	/**
+	 * @Route("/compta/depenses-corriger", name="compta_depenses_corriger")
+	 */
+	public function journalAchatsReinitialiser(){
+
+		$em = $this->getDoctrine()->getManager();
+		$depenseRepo = $em->getRepository('AppBundle:Compta\Depense');
+
+		$arr_depenses_rapprochees = $depenseRepo->findByEtat('RAPPROCHE');
+
+		foreach($arr_depenses_rapprochees as $depense){
+			if(count($depense->getRapprochements() == 0)){
+				$depense->setEtat('ENREGISTRE');
+				$em->persist($depense);
+			}
+		}
+		$em->flush();
+		return new Response();
+
+	}
+
 
 // 	/**
 // 	 * @Route("/compta/journal-achats/reinitialiser", name="compta_journal_achats_reinitialiser")

@@ -716,17 +716,19 @@ class RapprochementController extends Controller
                 $em->persist($rapprochement);
 
             }
+
+            try{
+                $journalBanqueService = $this->container->get('appbundle.compta_journal_banque_controller');
+                $journalBanqueService->journalBanqueAjouterPlusieursPiecesMemeCompteAction($mouvementBancaire, $arr_pieces);
+                $em->flush();
+
+            } catch(\Exception $e){
+                throw $e;
+            }
             
         }
 
-        try{
-            $journalBanqueService = $this->container->get('appbundle.compta_journal_banque_controller');
-            $journalBanqueService->journalBanqueAjouterPlusieursPiecesMemeCompteAction($mouvementBancaire, $arr_pieces);
-            $em->flush();
-
-        } catch(\Exception $e){
-            throw $e;
-        }
+       
 
         return new JsonResponse();
 
