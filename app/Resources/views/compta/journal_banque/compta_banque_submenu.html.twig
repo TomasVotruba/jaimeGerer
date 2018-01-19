@@ -3,9 +3,9 @@
       <li {% if app.request.pathInfo == "/compta/rapprochement"  %} class="active" {% endif %}>
         <a href="{{ path('compta_rapprochement_index') }}" >Rapprochements</a>
       </li>
-  {#     <li {% if app.request.pathInfo == "/compta/rapprochement-avance"  %} class="active" {% endif %}>
+      <li {% if app.request.pathInfo == "/compta/rapprochement-avance"  %} class="active" {% endif %}>
         <a href="{{ path('compta_rapprochement_avance') }}" >Rapprochements avancés</a>
-      </li> #}
+      </li>
       <li {% if app.request.pathInfo == "/compta/releve-bancaire"  %} class="active" {% endif %}>
           <a href="{{ path('compta_releve_bancaire_index') }}">Relevés bancaires</a>
       </li>
