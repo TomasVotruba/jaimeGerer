@@ -81,7 +81,7 @@ class JournalBanque
      /**
      * @var string
      * 
-     * @ORM\Column(name="stringAnalytique", type="string", length=255)
+     * @ORM\Column(name="stringAnalytique", type="string", length=255, nullable=true)
      */
     private $stringAnalytique;
 

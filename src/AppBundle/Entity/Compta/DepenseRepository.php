@@ -48,7 +48,7 @@ class DepenseRepository extends EntityRepository
 				->setParameter('dateFin', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end']));
 		}
 		if($search != ""){
-			$qb->andWhere('c.nom LIKE :search OR d.libelle LIKE :search OR l.montant LIKE :search')
+			$qb->andWhere('c.nom LIKE :search OR d.libelle LIKE :search OR d.num LIKE :search OR l.montant LIKE :search')
 			->setParameter('search', '%'.$search.'%');
 		}
 
