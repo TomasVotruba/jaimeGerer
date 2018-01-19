@@ -287,8 +287,10 @@ class DepenseController extends Controller
 				} else {
 					$prefixe = 'D-'.date('Y').'-';
 					if($currentNum < 10){
-						$prefixe.='00';
+						$prefixe.='000';
 					} else if ($currentNum < 100){
+						$prefixe.='00';
+					} else if ($currentNum < 1000){
 						$prefixe.='0';
 					}
 					$depense->setNum($prefixe.$currentNum);
@@ -571,8 +573,10 @@ class DepenseController extends Controller
 			} else {
 				$prefixe = 'D-'.date('Y').'-';
 				if($currentNum < 10){
-					$prefixe.='00';
+					$prefixe.='000';
 				} else if ($currentNum < 100){
+					$prefixe.='00';
+				} else if ($currentNum < 1000){
 					$prefixe.='0';
 				}
 				$depense->setNum($prefixe.$currentNum);
