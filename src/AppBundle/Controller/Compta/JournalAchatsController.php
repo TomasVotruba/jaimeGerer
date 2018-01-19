@@ -127,6 +127,12 @@ class JournalAchatsController extends Controller
 
 			//si TVA : debit au compte 445xxxxx (ou compte d'attente 471 si le compte n'est pas associé à un compte de TVA)
 			$compteTVA = $ligneDepense->getCompteComptable()->getCompteTVA();
+			if($compteTVA == null){
+				$compteTVA = $ccRepository->findOneBy(array(
+						'num' => '44566000',
+						'company' => $this->getUser()->getCompany()
+				));
+			}
 			if($ligneDepense->getTaxe() != null && $ligneDepense->getTaxe() != 0){
 				$ligne = new JournalAchat();
 				$ligne->setDepense($depense);
@@ -150,6 +156,12 @@ class JournalAchatsController extends Controller
 
 		//si TVA : debit au compte 445xxxxx (ou compte d'attente 471 si le compte n'est pas associé à un compte de TVA)
 		$compteTVA = $depense->getLignes()[0]->getCompteComptable()->getCompteTVA();
+		if($compteTVA == null){
+			$compteTVA = $ccRepository->findOneBy(array(
+					'num' => '44566000',
+					'company' => $this->getUser()->getCompany()
+			));
+		}
 		if($depense->getTaxe() != 0){
 			$ligne = new JournalAchat();
 			$ligne->setDepense($depense);
@@ -192,6 +204,12 @@ class JournalAchatsController extends Controller
 				'company' => $this->getUser()->getCompany()
 		));
 		$compteTVA = $avoir->getDepense()->getLignes()[0]->getCompteComptable()->getCompteTVA();
+		if($compteTVA == null){
+			$compteTVA = $ccRepository->findOneBy(array(
+					'num' => '44566000',
+					'company' => $this->getUser()->getCompany()
+			));
+		}
 
 		//debit au compte 411-nom du client
 		$ligne = new JournalAchat();

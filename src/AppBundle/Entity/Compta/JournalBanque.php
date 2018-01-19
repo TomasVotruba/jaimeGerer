@@ -112,7 +112,7 @@ class JournalBanque
     /**
      * @var string
      *
-     * @ORM\Column(name="lettrage", type="string", length=10, nullable=true)
+     * @ORM\Column(name="lettrage", type="string", length=100, nullable=true)
      */
     private $lettrage;
 

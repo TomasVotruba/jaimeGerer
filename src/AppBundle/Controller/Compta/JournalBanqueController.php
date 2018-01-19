@@ -433,6 +433,9 @@ class JournalBanqueController extends Controller
 		$journalAchatRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
 		$lettrageService = $this->get('appbundle.compta_lettrage_service');
 
+		$arr_annees = array();
+		$arr_annees[] = $mouvementBancaire->getDate()->format('Y');
+
 		$analytique = '';
 		$modePaiement = '';
 		foreach($arr_pieces as $arr_piece){
@@ -447,15 +450,37 @@ class JournalBanqueController extends Controller
 					$modePaiement.= '€ ';
 					$modePaiement.= $piece->getModePaiement();
 					$modePaiement.= ', ';
+
+					if(!in_array($piece->getDate()->format('Y'), $arr_annees)){
+						$arr_annees[] = $piece->getDate()->format('Y');
+					}
+				}
+
+				if($type == "FACTURES"){
+					if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
+						$arr_annees[] = $piece->getDateCreation()->format('Y');
+					}
 				}
 		
 			}
+
 		}
+
+		sort($arr_annees);
 
 		try{
 			switch($type){
 
 				case 'FACTURES':
+					$prefixe = '';
+					if(count($arr_annees) > 1){
+						foreach($arr_annees as $annee){
+							$prefixe.= $annee;
+							$prefixe.=' ';
+						}
+					}
+					$lettre = $lettrageService->findNextNum($piece->getCompte()->getCompteComptableClient());		
+					$lettrage = $prefixe.$lettre;
 
 					//credit au compte  411xxxx (compte du client)
 					$ligne = new JournalBanque();
@@ -466,7 +491,6 @@ class JournalBanqueController extends Controller
 					$ligne->setAnalytique(null);
 					$ligne->setStringAnalytique($analytique);
 					$ligne->setCompteComptable($piece->getCompte()->getCompteComptableClient());
-					$lettrage = $lettrageService->findNextNum($piece->getCompte()->getCompteComptableClient());
 					$ligne->setLettrage($lettrage);
 					$ligne->setNom($mouvementBancaire->getLibelle());
 					$ligne->setDate($mouvementBancaire->getDate());
@@ -500,6 +524,16 @@ class JournalBanqueController extends Controller
 
 				case 'DEPENSES':
 
+					$prefixe = '';
+					if(count($arr_annees) > 1){
+						foreach($arr_annees as $annee){
+							$prefixe.= $annee;
+							$prefixe.=' ';
+						}
+					}
+					$lettre = $lettrageService->findNextNum($piece->getCompte()->getCompteComptableFournisseur());	
+					$lettrage = $prefixe.$lettre;
+
 					//credit au compte  512xxxx (selon banque)
 					$ligne = new JournalBanque();
 					$ligne->setMouvementBancaire($mouvementBancaire);
@@ -523,7 +557,6 @@ class JournalBanqueController extends Controller
 					$ligne->setAnalytique(null);
 					$ligne->setStringAnalytique($analytique);
 					$ligne->setCompteComptable($piece->getCompte()->getCompteComptableFournisseur());
-					$lettrage = $lettrageService->findNextNum($piece->getCompte()->getCompteComptableFournisseur());
 					$ligne->setLettrage($lettrage);
 					$ligne->setNom($mouvementBancaire->getLibelle());
 					$ligne->setDate($mouvementBancaire->getDate());

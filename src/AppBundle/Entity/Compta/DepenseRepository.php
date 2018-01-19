@@ -61,7 +61,7 @@ class DepenseRepository extends EntityRepository
 		} else {
 			$qb->addOrderBy('d.'.$orderBy, $dir);
 		}
-
+	
 		return $qb->getQuery()->getResult();
 	}
 

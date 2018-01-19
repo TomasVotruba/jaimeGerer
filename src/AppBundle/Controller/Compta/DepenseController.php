@@ -63,6 +63,8 @@ class DepenseController extends Controller
 				$arr_date
 		);
 
+		$arr_depenses = array();
+		$arr_id = array();
 		for($i=0; $i<count($list); $i++){
 
 			$arr_f = $list[$i];
@@ -74,6 +76,10 @@ class DepenseController extends Controller
 			$list[$i]['avoir'] = null;
 			foreach($depense->getAvoirs() as $avoir){
 				$list[$i]['avoir'].=$avoir->getNum().' ';
+			}
+			if(!in_array($depense->getId(), $arr_id)){
+				$arr_depenses[] = $arr_f;
+				$arr_id[] = $depense->getId();
 			}
 		}
 
