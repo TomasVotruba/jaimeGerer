@@ -23,7 +23,7 @@ class Rapprochement
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\MouvementBancaire", inversedBy="rapprochements")
-     * @ORM\JoinColumn(nullable=false, unique=true)
+     * @ORM\JoinColumn(nullable=false)
      */
     private $mouvementBancaire;
 
