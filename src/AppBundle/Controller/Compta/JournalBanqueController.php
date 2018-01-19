@@ -99,6 +99,7 @@ class JournalBanqueController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
 		$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
+		$lettrageService = $this->get('appbundle.compta_lettrage_service');
 
 		try{
 			switch($type){
@@ -180,15 +181,19 @@ class JournalBanqueController extends Controller
 					$ligne->setCredit(null);
 					$ligne->setAnalytique($rapprochementBancaire->getDepense()->getAnalytique());
 					$ligne->setCompteComptable($rapprochementBancaire->getDepense()->getCompte()->getCompteComptableFournisseur());
-					$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
-						'depense' => $rapprochementBancaire->getDepense(),
-						'compteComptable' => $rapprochementBancaire->getDepense()->getCompte()->getCompteComptableFournisseur()
-					));
-					$ligne->setLettrage($ligneJournalAchats->getLettrage());
+					$lettrage = $lettrageService->findNextNum($rapprochementBancaire->getDepense()->getCompte()->getCompteComptableFournisseur());
+					$ligne->setLettrage($lettrage);
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 					$ligne->setModePaiement($rapprochementBancaire->getDepense()->getModePaiement());
 					$em->persist($ligne);
+
+					$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
+						'depense' => $rapprochementBancaire->getDepense(),
+						'compteComptable' => $rapprochementBancaire->getDepense()->getCompte()->getCompteComptableFournisseur()
+					));
+					$ligneJournalAchats->setLettrage($lettrage);
+					$em->persist($ligneJournalAchats);
 
 					break;
 
@@ -202,11 +207,8 @@ class JournalBanqueController extends Controller
 					$ligne->setCredit($rapprochementBancaire->getFacture()->getTotalTTC());
 					$ligne->setAnalytique($rapprochementBancaire->getFacture()->getAnalytique());
 					$ligne->setCompteComptable($rapprochementBancaire->getFacture()->getCompte()->getCompteComptableClient());
-					$ligneJournalVente = $journalVenteRepo->findOneBy(array(
-						'facture' => $rapprochementBancaire->getFacture(),
-						'compteComptable' => $rapprochementBancaire->getFacture()->getCompte()->getCompteComptableClient()
-					));
-					$ligne->setLettrage($ligneJournalVente->getLettrage());
+					$lettrage = $lettrageService->findNextNum($rapprochementBancaire->getFacture()->getCompte()->getCompteComptableClient());
+					$ligne->setLettrage($lettrage);
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 					$em->persist($ligne);
@@ -223,6 +225,13 @@ class JournalBanqueController extends Controller
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 					$em->persist($ligne);
 
+					$ligneJournalVente = $journalVenteRepo->findOneBy(array(
+						'facture' => $rapprochementBancaire->getFacture(),
+						'compteComptable' => $rapprochementBancaire->getFacture()->getCompte()->getCompteComptableClient()
+					));
+					$ligneJournalVente->setLettrage($lettrage);
+					$em->persist($ligneJournalVente);
+
 					break;
 
 				case 'AVOIR-FOURNISSEUR':
@@ -234,11 +243,9 @@ class JournalBanqueController extends Controller
 					$ligne->setCredit($rapprochementBancaire->getAvoir()->getTotalTTC());
 					$ligne->setAnalytique($rapprochementBancaire->getAvoir()->getDepense()->getAnalytique());
 					$ligne->setCompteComptable($rapprochementBancaire->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur());
+					$lettrage = $lettrageService->findNextNum($rapprochementBancaire->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur());
+					$ligne->setLettrage($lettrage);
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
-						'avoir' => $rapprochementBancaire->getAvoir(),
-						'compteComptable' => $rapprochementBancaire->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur()
-					));
 					$ligne->setLettrage($ligneJournalAchats->getLettrage());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 					$em->persist($ligne);
@@ -254,6 +261,13 @@ class JournalBanqueController extends Controller
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 					$em->persist($ligne);
+
+					$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
+						'avoir' => $rapprochementBancaire->getAvoir(),
+						'compteComptable' => $rapprochementBancaire->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur()
+					));
+					$ligneJournalAchats->setLettrage($lettrage);
+					$em->persist($ligneJournalAchats);
 
 					break;
 
@@ -278,14 +292,18 @@ class JournalBanqueController extends Controller
 					$ligne->setCredit(null);
 					$ligne->setAnalytique($rapprochementBancaire->getAvoir()->getFacture()->getAnalytique());
 					$ligne->setCompteComptable($rapprochementBancaire->getAvoir()->getFacture()->getCompte()->getCompteComptableClient());
+					$lettrage = $lettrageService->findNextNum($rapprochementBancaire->getAvoir()->getFacture()->getCompte()->getCompteComptableClient());
+					$ligne->setLettrage($lettrage);
+					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
+					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$em->persist($ligne);
+
 					$ligneJournalVente = $journalVenteRepo->findOneBy(array(
 						'avoir' => $rapprochementBancaire->getAvoir(),
 						'compteComptable' => $rapprochementBancaire->getAvoir()->getFacture()->getCompte()->getCompteComptableClient()
 					));
-					$ligne->setLettrage($ligneJournalVente->getLettrage());
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$em->persist($ligne);
+					$ligneJournalVente->setLettrage($lettrage);
+					$em->persist($ligneJournalVente);
 
 					break;
 
@@ -301,24 +319,33 @@ class JournalBanqueController extends Controller
 								$ligne->setCredit($piece->getFacture()->getTotalTTC());
 								$ligne->setAnalytique($piece->getFacture()->getAnalytique());
 								$ligne->setCompteComptable($piece->getFacture()->getCompte()->getCompteComptableClient());
+								$lettrage = $lettrageService->findNextNum($piece->getFacture()->getCompte()->getCompteComptableClient());
+								$ligne->setLettrage($lettrage);
+								$ligne->setFacture($piece->getFacture());
+								$ligne->setNom('Paiement facture '.$piece->getFacture()->getNum());
+
 								$ligneJournalVente = $journalVenteRepo->findOneBy(array(
 									'facture' => $piece->getFacture(),
 									'compteComptable' => $piece->getFacture()->getCompte()->getCompteComptableClient()
 								));
-								$ligne->setLettrage($ligneJournalVente->getLettrage());
-								$ligne->setFacture($piece->getFacture());
-								$ligne->setNom('Paiement facture '.$piece->getFacture()->getNum());
+								$ligneJournalVente->setLettrage($lettrage);
+								$em->persist($ligneJournalVente);
+
 							} else if($piece->getAvoir() != null){
 								$ligne->setCredit($piece->getAvoir()->getTotalTTC());
 								$ligne->setAnalytique($piece->getAvoir()->getDepense()->getAnalytique());
 								$ligne->setCompteComptable($piece->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur());
+								$lettrage = $lettrageService->findNextNum($piece->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur());
+								$ligne->setLettrage($lettrage);
+								$ligne->setNom('Avoir '.$piece->getAvoir()->getNum());
+								$ligne->setAvoir($piece->getAvoir());
+
 								$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
 									'avoir' => $piece->getAvoir(),
 									'compteComptable' => $piece->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur()
 								));
-								$ligne->setLettrage($ligneJournalAchats->getLettrage());
-								$ligne->setNom('Avoir '.$piece->getAvoir()->getNum());
-								$ligne->setAvoir($piece->getAvoir());
+								$ligneJournalAchats->setLettrage($lettrage);
+								$em->persist($ligneJournalAchats);
 							}
 							$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 							$ligne->setModePaiement('CHEQUE');
@@ -364,15 +391,19 @@ class JournalBanqueController extends Controller
 						$ligne->setCredit(null);
 						$ligne->setAnalytique($depense->getAnalytique());
 						$ligne->setCompteComptable($rapprochementBancaire->getNoteFrais()->getCompteComptable());
-						$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
-							'depense' => $depense,
-							'compteComptable' => $rapprochementBancaire->getNoteFrais()->getCompteComptable()
-						));
-						$ligne->setLettrage($ligneJournalAchats->getLettrage());
+						$lettrage = $lettrageService->findNextNum($rapprochementBancaire->getNoteFrais()->getCompteComptable());
+						$ligne->setLettrage($lettrage);
 						$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 						$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 						$ligne->setModePaiement($depense->getModePaiement());
 						$em->persist($ligne);
+
+						$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
+							'depense' => $depense,
+							'compteComptable' => $rapprochementBancaire->getNoteFrais()->getCompteComptable()
+						));
+						$ligneJournalAchats->setLettrage($lettrage);
+						$em->persist($ligneJournalAchats);
 					}
 					break;
 				}
@@ -399,26 +430,28 @@ class JournalBanqueController extends Controller
 
 		$em = $this->getDoctrine()->getManager();
 		$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
-		$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
+		$journalAchatRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
+		$lettrageService = $this->get('appbundle.compta_lettrage_service');
 
-		$lettrage = '';
 		$analytique = '';
+		$modePaiement = '';
 		foreach($arr_pieces as $arr_piece){
 			foreach($arr_piece as $type => $piece){
-				$ligneJournalVente = $journalVenteRepo->findOneBy(array(
-					'facture' => $piece,
-					'compteComptable' => $piece->getCompte()->getCompteComptableClient()
-				));
-				$lettrage.= $ligneJournalVente->getLettrage();
-				$lettrage.= ',';
-
 				$analytique.= $piece->getTotalTTC();
-				$analytique.= ' ';
+				$analytique.= '€ ';
 				$analytique.= $piece->getAnalytique()->getValeur();
-				$analytique.= ',';
+				$analytique.= ', ';
+
+				if($type == "DEPENSES"){
+					$modePaiement.= $piece->getTotalTTC();
+					$modePaiement.= '€ ';
+					$modePaiement.= $piece->getModePaiement();
+					$modePaiement.= ', ';
+				}
+		
 			}
 		}
-		//dump($piece->getCompte()->getCompteComptableClient());
+
 		try{
 			switch($type){
 
@@ -433,6 +466,7 @@ class JournalBanqueController extends Controller
 					$ligne->setAnalytique(null);
 					$ligne->setStringAnalytique($analytique);
 					$ligne->setCompteComptable($piece->getCompte()->getCompteComptableClient());
+					$lettrage = $lettrageService->findNextNum($piece->getCompte()->getCompteComptableClient());
 					$ligne->setLettrage($lettrage);
 					$ligne->setNom($mouvementBancaire->getLibelle());
 					$ligne->setDate($mouvementBancaire->getDate());
@@ -450,6 +484,62 @@ class JournalBanqueController extends Controller
 					$ligne->setNom($mouvementBancaire->getLibelle());
 					$ligne->setDate($mouvementBancaire->getDate());
 					$em->persist($ligne);
+
+					foreach($arr_pieces as $arr_piece){
+						foreach($arr_piece as $type => $piece){
+							$ligneJournalVente = $journalVenteRepo->findOneBy(array(
+								'facture' => $piece,
+								'compteComptable' => $piece->getCompte()->getCompteComptableClient()
+							));
+							$ligneJournalVente->setLettrage($lettrage);
+							$em->persist($ligneJournalVente);
+						}
+					}
+
+					break;
+
+				case 'DEPENSES':
+
+					//credit au compte  512xxxx (selon banque)
+					$ligne = new JournalBanque();
+					$ligne->setMouvementBancaire($mouvementBancaire);
+					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+					$ligne->setDebit(null);
+					$ligne->setCredit($mouvementBancaire->getMontant());
+					$ligne->setAnalytique(null);
+					$ligne->setStringAnalytique($analytique);
+					$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+					$ligne->setNom($mouvementBancaire->getLibelle());
+					$ligne->setDate($mouvementBancaire->getDate());
+					$ligne->setModePaiement($modePaiement);
+					$em->persist($ligne);
+
+					//debit au compte 401xxxx (compte du fournisseur)
+					$ligne = new JournalBanque();
+					$ligne->setMouvementBancaire($mouvementBancaire);
+					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+					$ligne->setDebit($mouvementBancaire->getMontant());
+					$ligne->setCredit(null);
+					$ligne->setAnalytique(null);
+					$ligne->setStringAnalytique($analytique);
+					$ligne->setCompteComptable($piece->getCompte()->getCompteComptableFournisseur());
+					$lettrage = $lettrageService->findNextNum($piece->getCompte()->getCompteComptableFournisseur());
+					$ligne->setLettrage($lettrage);
+					$ligne->setNom($mouvementBancaire->getLibelle());
+					$ligne->setDate($mouvementBancaire->getDate());
+					$ligne->setModePaiement($modePaiement);
+					$em->persist($ligne);
+
+					foreach($arr_pieces as $arr_piece){
+						foreach($arr_piece as $type => $piece){
+							$ligneJournalAchat = $journalAchatRepo->findOneBy(array(
+								'depense' => $piece,
+								'compteComptable' => $piece->getCompte()->getCompteComptableFournisseur()
+							));
+							$ligneJournalAchat->setLettrage($lettrage);
+							$em->persist($ligneJournalAchat);
+						}
+					}
 
 					break;
 

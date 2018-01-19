@@ -110,7 +110,6 @@ class JournalVentesController extends Controller
 	public function journalVentesAjouterFactureAction(DocumentPrix $facture){
 
 		$em = $this->getDoctrine()->getManager();
-		$lettrageService = $this->get('appbundle.compta_lettrage_service');
 		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
 
 		$compteAttente = $ccRepository->findOneBy(array(
@@ -143,9 +142,6 @@ class JournalVentesController extends Controller
 			}
 		}
 		$ligne->setCompteComptable($compteComptable);
-		$lettrage = $lettrageService->findNextNum($compteComptable);
-		$ligne->setLettrage($lettrage);
-
 		$em->persist($ligne);
 
 		//credit au compte 445xxxxx : TVA
@@ -177,8 +173,6 @@ class JournalVentesController extends Controller
 				}
 			}
 			$ligne->setCompteComptable($compteComptable);
-			$lettrage = $lettrageService->findNextNum($compteComptable);
-			$ligne->setLettrage($lettrage);
 			$em->persist($ligne);
 		}
 
@@ -194,8 +188,6 @@ class JournalVentesController extends Controller
 			$compteComptable = $compteAttente;
 		}
 		$ligne->setCompteComptable($compteComptable);
-		$lettrage = $lettrageService->findNextNum($compteComptable);
-		$ligne->setLettrage($lettrage);
 		$em->persist($ligne);
 
 		$em->flush();
@@ -212,7 +204,6 @@ class JournalVentesController extends Controller
 		//AVOIR CLIENT
 
 		$em = $this->getDoctrine()->getManager();
-		$lettrageService = $this->get('appbundle.compta_lettrage_service');
 		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
 
 		$compteAttente = $ccRepository->findOneBy(array(
@@ -253,8 +244,6 @@ class JournalVentesController extends Controller
 			$compteComptable = $compteAttente;
 		}
 		$ligne->setCompteComptable($compteComptable);
-		$lettrage = $lettrageService->findNextNum($compteComptable);
-		$ligne->setLettrage($lettrage);
 		$em->persist($ligne);
 
 		//pour chaque ligne : debit au compte 70xxxx du montant HT
@@ -267,8 +256,6 @@ class JournalVentesController extends Controller
 			$ligne->setCredit(null);
 			$ligne->setAnalytique($avoir->getFacture()->getAnalytique());
 			$ligne->setCompteComptable($ligneAvoir->getCompteComptable());
-			$lettrage = $lettrageService->findNextNum($ligneAvoir->getCompteComptable());
-			$ligne->setLettrage($lettrage);
 			$em->persist($ligne);
 
 			//si TVA : debit au compte 445xxxxx
@@ -280,8 +267,6 @@ class JournalVentesController extends Controller
 				$ligne->setCredit(null);
 				$ligne->setAnalytique($avoir->getFacture()->getAnalytique());
 				$ligne->setCompteComptable($compteTVA);
-				$lettrage = $lettrageService->findNextNum($compteTVA);
-				$ligne->setLettrage($lettrage);
 				$em->persist($ligne);
 			}
 

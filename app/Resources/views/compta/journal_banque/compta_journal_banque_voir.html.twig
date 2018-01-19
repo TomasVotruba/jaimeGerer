@@ -60,7 +60,14 @@
                 &nbsp;</td>
             <td class="align-left">&nbsp;{{ ligneJournal.debit|number_format(2,',',' ') }}</td>
             <td>&nbsp;{{ ligneJournal.credit|number_format(2,',',' ') }}</td>
-            <td>&nbsp;{{ ligneJournal.analytique }}</td>
+            <td>
+                {% if ligneJournal.analytique %}
+                    {{ ligneJournal.analytique }}
+                {% elseif ligneJournal.stringAnalytique %}
+                    {{ ligneJournal.stringAnalytique }}
+                {% endif %}
+
+            </td>
             <td>&nbsp;{{ ligneJournal.modePaiement }}</td>
         </tr>
 

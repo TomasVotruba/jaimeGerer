@@ -662,12 +662,16 @@ class RapprochementController extends Controller
                     $repo = $em->getRepository('AppBundle:Compta\Depense');
                     $piece = $repo->find($id);
                     $rapprochement->setDepense($piece);
+                    $piece->setEtat('RAPPROCHE');
+                    $em->persist($piece);
                     break;
                   
                   case 'FACTURES' :
                     $repo = $em->getRepository('AppBundle:CRM\DocumentPrix');
                     $piece = $repo->find($id);
                     $rapprochement->setFacture($piece);
+                    $piece->setEtat('RAPPROCHE');
+                    $em->persist($piece);
                     break;
                   
                   case 'AVOIRS-FOURNISSEUR' :
@@ -709,7 +713,10 @@ class RapprochementController extends Controller
 
                 $arr_pieces[] = array($type => $piece);
 
+                $em->persist($rapprochement);
+
             }
+            
         }
 
         try{

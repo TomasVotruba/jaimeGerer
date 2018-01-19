@@ -34,16 +34,16 @@ class JournalAchatsController extends Controller
 		$currentYear = date('Y');
 		$arr_years = array();
 		for($i = $yearActivation ; $i<=$currentYear; $i++){
-				$arr_years[$i] = $i;
+			$arr_years[$i] = $i;
 		}
 
 		$formBuilder = $this->createFormBuilder();
 		$formBuilder->add('years', 'choice', array(
-				'required' => true,
-				'label' => 'Année',
-				'choices' => $arr_years,
-				'attr' => array('class' => 'year-select'),
-				'data' => $currentYear
+			'required' => true,
+			'label' => 'Année',
+			'choices' => $arr_years,
+			'attr' => array('class' => 'year-select'),
+			'data' => $currentYear
 		));
 
 		$form = $formBuilder->getForm();
@@ -61,18 +61,18 @@ class JournalAchatsController extends Controller
 	 */
 	public function voirAction($year)
 	{
-		 $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalAchat');
-		 $arr_journalAchat = $repo->findJournalEntier($this->getUser()->getCompany(), $year);
+		$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalAchat');
+		$arr_journalAchat = $repo->findJournalEntier($this->getUser()->getCompany(), $year);
 
-		 $arr_totaux = array(
-		 		'debit' => 0,
-		 		'credit' => 0
-		 );
+		$arr_totaux = array(
+	 		'debit' => 0,
+	 		'credit' => 0
+		);
 
-		 foreach($arr_journalAchat as $ligne){
+		foreach($arr_journalAchat as $ligne){
 		 	$arr_totaux['debit']+=$ligne->getDebit();
 		 	$arr_totaux['credit']+=$ligne->getCredit();
-		 }
+		}
 
 		return $this->render('compta/journal_achats/compta_journal_achats_voir.html.twig', array(
 			'arr_journalAchat' => $arr_journalAchat,
@@ -86,14 +86,13 @@ class JournalAchatsController extends Controller
 	public function journalAchatsAjouterDepenseAction(Depense $depense, $lettrage = null){
 
 		$em = $this->getDoctrine()->getManager();
-		$lettrageService = $this->get('appbundle.compta_lettrage_service');
 
 		$totaux = $depense->getTotaux();
 
 		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
 		$compteAttente = $ccRepository->findOneBy(array(
-				'num' => '471',
-				'company' => $this->getUser()->getCompany()
+			'num' => '471',
+			'company' => $this->getUser()->getCompany()
 		));
 
 		//credit au compte 401-nom du fournisseur (ou 421NDFxxx si c'est une note de frais) du total TTC
@@ -108,10 +107,6 @@ class JournalAchatsController extends Controller
 			$cc = $depense->getCompte()->getCompteComptableFournisseur();
 		}
 		$ligne->setCompteComptable($cc);
-		if($lettrage == null){
-			$lettrage = $lettrageService->findNextNum($cc);
-		}
-		$ligne->setLettrage($lettrage);
 		$ligne->setModePaiement($depense->getModePaiement());
 		$ligne->setAnalytique($depense->getAnalytique());
 		$em->persist($ligne);
@@ -125,8 +120,6 @@ class JournalAchatsController extends Controller
 			$ligne->setDebit($ligneDepense->getMontant());
 			$ligne->setCredit(null);
 			$ligne->setCompteComptable($ligneDepense->getCompteComptable());
-			$lettrage = $lettrageService->findNextNum($ligneDepense->getCompteComptable());
-			$ligne->setLettrage($lettrage);
 			$ligne->setModePaiement($depense->getModePaiement());
 			$ligne->setAnalytique($depense->getAnalytique());
 			$em->persist($ligne);
@@ -146,8 +139,6 @@ class JournalAchatsController extends Controller
 					$cc  = $compteAttente;
 				}
 				$ligne->setCompteComptable($cc);
-				$lettrage = $lettrageService->findNextNum($cc);
-				$ligne->setLettrage($lettrage);
 	
 				$ligne->setModePaiement($depense->getModePaiement());
 				$ligne->setAnalytique($depense->getAnalytique());
@@ -171,8 +162,6 @@ class JournalAchatsController extends Controller
 				$cc = $compteAttente;
 			}
 			$ligne->setCompteComptable($cc);
-			$lettrage = $lettrageService->findNextNum($cc);
-			$ligne->setLettrage($lettrage);
 			$ligne->setModePaiement($depense->getModePaiement());
 			$ligne->setAnalytique($depense->getAnalytique());
 			$em->persist($ligne);
@@ -195,7 +184,6 @@ class JournalAchatsController extends Controller
 		//AVOIR FOURNISSEUR
 
 		$em = $this->getDoctrine()->getManager();
-		$lettrageService = $this->get('appbundle.compta_lettrage_service');
 		$totaux = $avoir->getTotaux();
 
 		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
@@ -212,8 +200,6 @@ class JournalAchatsController extends Controller
 		$ligne->setDebit($totaux['TTC']);
 		$ligne->setCredit(null);
 		$ligne->setCompteComptable($avoir->getDepense()->getCompte()->getCompteComptableFournisseur());
-		$lettrage = $lettrageService->findNextNum($avoir->getDepense()->getCompte()->getCompteComptableFournisseur());
-		$ligne->setLettrage($lettrage);
 		$ligne->setModePaiement($avoir->getModePaiement());
 		$ligne->setAnalytique($avoir->getDepense()->getAnalytique());
 		$em->persist($ligne);
@@ -227,8 +213,6 @@ class JournalAchatsController extends Controller
 			$ligne->setDebit(null);
 			$ligne->setCredit($ligneAvoir->getMontant());
 			$ligne->setCompteComptable($ligneAvoir->getCompteComptable());
-			$lettrage = $lettrageService->findNextNum($ligneAvoir->getCompteComptable());
-			$ligne->setLettrage($lettrage);
 			$ligne->setModePaiement($avoir->getModePaiement());
 			$ligne->setAnalytique($avoir->getDepense()->getAnalytique());
 			$em->persist($ligne);
@@ -245,8 +229,6 @@ class JournalAchatsController extends Controller
 					$cc = $compteAttente;
 				}
 				$ligne->setCompteComptable($cc);
-				$lettrage = $lettrageService->findNextNum($cc);
-				$ligne->setLettrage($lettrage);
 				$ligne->setModePaiement($avoir->getModePaiement());
 				$ligne->setAnalytique($avoir->getDepense()->getAnalytique());
 				$em->persist($ligne);
