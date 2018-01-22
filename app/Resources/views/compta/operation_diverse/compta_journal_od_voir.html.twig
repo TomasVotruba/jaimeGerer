@@ -1,0 +1,67 @@
+<thead>
+  <tr>
+    <th>Code journal</th>
+    <th>Date</th>
+    <th>Compte</th>
+    <th>Compte auxiliaire</th>
+    <th>Piece</th>
+    <th>Fournisseur</th>
+    <th>Débit</th>
+    <th>Crédit</th>
+  </tr>
+</thead>
+<tbody>
+  {% set old_id = null %}
+  {% for ligneJournal in arr_journalOD %}
+    {% if ligneJournal.depense is not null %}
+      {% set current_id = ligneJournal.depense.id %}
+    {% elseif ligneJournal.avoir is not null %}
+      {% set current_id = ligneJournal.avoir.id %}
+    {% elseif ligneJournal.facture is not null %}
+      {% set current_id = ligneJournal.facture.id %}
+    {% endif %}
+    <tr {% if old_id != current_id %} class="thick-border" {% endif %}>
+      <td>{{ ligneJournal.codeJournal }}</td>
+      <td>
+          {{ ligneJournal.date|date('j/m/Y') }}
+      </td>
+      <td>{{ ligneJournal.compteComptable.num|truncate(3, false, '') }}</td>
+      <td>{{ ligneJournal.compteComptable.num }}</td>
+      <td>
+        {% if ligneJournal.depense is not null %}
+          <a href="{{ path('compta_depense_voir', {'id' : ligneJournal.depense.id}) }}" data-toggle="modal" data-target="#modal-lg">{{ ligneJournal.piece }}</a>
+        {% elseif ligneJournal.avoir is not null %}
+          <a href="{{ path('compta_avoir_voir', {'id' : ligneJournal.avoir.id}) }}">{{ ligneJournal.piece }}</a>
+        {% elseif ligneJournal.facture is not null %}
+          <a href="{{ path('compta_facture_voir', {'id' : ligneJournal.facture.id}) }}">{{ ligneJournal.piece }}</a>
+        {% endif %}
+      </td>
+      <td>
+        {% if ligneJournal.depense is not null %}
+          {{ ligneJournal.depense.compte }}
+        {% elseif ligneJournal.avoir is not null %}
+          {{ ligneJournal.avoir.depense.compte }}
+        {% elseif ligneJournal.facture is not null %}
+          {{ ligneJournal.facture.compte }}
+        {% endif %}
+      </td>
+      <td class="align-right">{{ ligneJournal.debit|number_format(2,',',' ') }}</td>
+      <td class="align-right">{{ ligneJournal.credit|number_format(2,',',' ') }}</td>
+    </tr>
+    {% if ligneJournal.depense is not null %}
+      {% set old_id = ligneJournal.depense.id %}
+    {% elseif ligneJournal.avoir is not null %}
+      {% set old_id = ligneJournal.avoir.id %}
+    {% elseif ligneJournal.facture is not null %}
+      {% set old_id = ligneJournal.facture.id %}
+    {% endif %}
+  {% endfor %}
+</tbody>
+<tfoot>
+<tr>
+  <td colspan="6" class="align-right">Totaux :</td>
+  <td class="align-right">{{ arr_totaux.debit|number_format(2,',',' ') }}</td>
+  <td class="align-right">{{ arr_totaux.credit|number_format(2,',',' ') }}</td>
+  <td colspan="2"></td>
+</tr>
+</tfoot>

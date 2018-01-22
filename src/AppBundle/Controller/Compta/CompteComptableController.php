@@ -946,6 +946,14 @@ class CompteComptableController extends Controller
 		$compteComptable->setNom($nom);
 		$compteComptable->setCompany($this->getUser()->getCompany());
 		$compteComptable->setNum($num);
+
+		if($baseNum == '401'){
+			$compteTVA = $compteComptableRepo->findOneBy(array(
+				'num' => '44566000',
+				'company' => $this->getUser()->getCompany()
+			));
+			$compteComptable->setCompteTVA($compteTVA);
+		}
 		return $compteComptable;
 	}
 

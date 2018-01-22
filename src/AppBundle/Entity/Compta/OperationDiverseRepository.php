@@ -74,4 +74,21 @@ class OperationDiverseRepository extends EntityRepository
 
 		return $result;
 	}
+
+	public function findJournalEntier($company, $year){
+
+		$result = $this->createQueryBuilder('j')
+			->leftJoin('AppBundle\Entity\Compta\CompteComptable', 'c', 'WITH', 'j.compteComptable = c.id')
+			->where('c.company = :company')
+			->andWhere('j.date >= :startDate and j.date <= :endDate')
+			->setParameter('startDate', $year.'-01-01')
+			->setParameter('endDate', $year.'-12-31')
+			->setParameter('company', $company)
+			->addOrderBy('j.date', 'DESC')
+			->addOrderBy('j.debit', 'ASC')
+			->getQuery()
+			->getResult();
+
+		return $result;
+	}
 }

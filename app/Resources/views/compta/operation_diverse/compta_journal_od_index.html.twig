@@ -3,13 +3,13 @@
 {% block content %}
 	<div class="row">
 		<div class="col-md-12">
-			<h1>Journal des ventes</h1>
+			<h1>Journal des opérations diverses</h1>
 		</div>
 	</div>
 
 	<div class="row">
 		<div class="col-md-12">
-			{% include 'compta/facture/compta_facture_submenu.html.twig' %}
+			{% include 'compta/star_compta/compta_star_compta_submenu.html.twig' %}
 		</div>
 	</div>
 
@@ -27,7 +27,7 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<table class="table wrapper-ajax" id="table_journal_vente" >
+			<table class="table wrapper-ajax" id="table_journal_od">
 			</table>
 			<p class="center" id="loader">
 				<img src="{{ asset('images/assets/dog_loader.gif') }}" alt="Chargement en cours" /><br />
@@ -45,7 +45,7 @@
 			loadTable();
 
 			$(".year-select").change(function(){
-				$("#table_journal_vente").dataTable().fnDestroy();
+				//$("#table_journal_od").dataTable().fnDestroy();
 				loadTable();
 			});
 
@@ -58,12 +58,12 @@
 
 				$.ajax({
 					type: "POST",
-					url: Routing.generate('compta_journal_ventes_voir_annee', {'year' : year}),
+					url: Routing.generate('compta_journal_od_voir_annee', {'year' : year}),
 					success: function(data) {
 						$("#loader").addClass("hidden");
 						$(".wrapper-ajax").html(data);
 
-						$('#table_journal_vente').DataTable({
+						$('#table_journal_od').DataTable({
 							"dom": 'T<"clear">lfrtip',
 							"oTableTools": {
 								"sSwfPath": "/web/lib/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
@@ -90,8 +90,9 @@
 							"serverSide": false,
 						});
 
-						var url = Routing.generate('compta_journal_ventes_exporter', { 'year' : year} );
+						var url = Routing.generate('compta_journal_od_exporter', { 'year' : year} );
 						$('#btn-export').attr('href', url);
+
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						$("#loader").addClass("hidden");

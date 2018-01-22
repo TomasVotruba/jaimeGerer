@@ -1,13 +1,13 @@
 {% block submenu %}
     <ul class="nav nav-tabs">
       <li {% if app.request.pathInfo == "/compta/compte-attente/voir"  %} class="active" {% endif %}>
-        <a href="{{ path('compta_rapprochement_index') }}" >Compte d'attente</a>
+        <a href="{{ path('compta_compte_attente_voir') }}" >Compte d'attente</a>
       </li>
-      <li {% if app.request.pathInfo == "/compta/operation-diverse/liste"  %} class="active" {% endif %}>
-        <a href="{{ path('compta_rapprochement_avance') }}" >Opérations diverses</a>
+      <li {% if app.request.pathInfo == "/compta/journal-od"  %} class="active" {% endif %}>
+        <a href="{{ path('compta_journal_od_index') }}" >Journal des OD</a>
       </li>
       <li {% if app.request.pathInfo == "/compta/lignes-non-lettrees"  %} class="active" {% endif %}>
-          <a href="{{ path('compta_releve_bancaire_index') }}">Lignes non lettrées</a>
+          <a href="{{ path('compta_lignes_non_lettrees') }}">Lignes non lettrées</a>
       </li>
      
     </ul>
