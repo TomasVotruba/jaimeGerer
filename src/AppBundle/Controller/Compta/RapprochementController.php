@@ -666,7 +666,9 @@ class RapprochementController extends Controller
                     $rapprochement->setDepense($piece);
                     $piece->setEtat('RAPPROCHE');
                     $em->persist($piece);
-                    $arr_cc[] = $piece->getCompte()->getCompteComptableFournisseur()->getId();
+                    if( !in_array($piece->getCompte()->getCompteComptableFournisseur()->getId(), $arr_cc) ){
+                       $arr_cc[] = $piece->getCompte()->getCompteComptableFournisseur()->getId(); 
+                    }
                     break;
                   
                   case 'FACTURES' :
@@ -675,44 +677,46 @@ class RapprochementController extends Controller
                     $rapprochement->setFacture($piece);
                     $piece->setEtat('RAPPROCHE');
                     $em->persist($piece);
-                    $arr_cc[] = $piece->getCompte()->getCompteComptableClient()->getId();
+                    if( !in_array($piece->getCompte()->getCompteComptableClient()->getId(), $arr_cc) ){
+                       $arr_cc[] = $piece->getCompte()->getCompteComptableClient()->getId(); 
+                    }
                     break;
                   
-                  case 'AVOIRS-FOURNISSEUR' :
-                    $repo = $em->getRepository('AppBundle:Compta\Avoir');
-                    $piece = $repo->find($id);
-                    $rapprochement->setAvoir($piece);
-                    break;
+                  // case 'AVOIRS-FOURNISSEUR' :
+                  //   $repo = $em->getRepository('AppBundle:Compta\Avoir');
+                  //   $piece = $repo->find($id);
+                  //   $rapprochement->setAvoir($piece);
+                  //   break;
                   
-                  case 'AVOIRS-CLIENT' :
-                    $repo = $em->getRepository('AppBundle:Compta\Avoir');
-                    $piece = $repo->find($id);
-                    $rapprochement->setAvoir($piece);
-                    break;
+                  // case 'AVOIRS-CLIENT' :
+                  //   $repo = $em->getRepository('AppBundle:Compta\Avoir');
+                  //   $piece = $repo->find($id);
+                  //   $rapprochement->setAvoir($piece);
+                  //   break;
                  
-                  case 'REMISES-CHEQUES' :
-                    $repo = $em->getRepository('AppBundle:Compta\RemiseCheque');
-                    $piece = $repo->find($id);
-                    $rapprochement->setRemiseCheque($piece);
-                    break;
+                  // case 'REMISES-CHEQUES' :
+                  //   $repo = $em->getRepository('AppBundle:Compta\RemiseCheque');
+                  //   $piece = $repo->find($id);
+                  //   $rapprochement->setRemiseCheque($piece);
+                  //   break;
 
-                  case 'AFFECTATIONS-DIVERSES-VENTE' :
-                    $repo = $em->getRepository('AppBundle:Compta\AffectationDiverse');
-                    $piece = $repo->find($id);
-                    $rapprochement->setAffectationDiverse($piece);
-                    break;
+                  // case 'AFFECTATIONS-DIVERSES-VENTE' :
+                  //   $repo = $em->getRepository('AppBundle:Compta\AffectationDiverse');
+                  //   $piece = $repo->find($id);
+                  //   $rapprochement->setAffectationDiverse($piece);
+                  //   break;
 
-                  case 'AFFECTATIONS-DIVERSES-ACHAT' :
-                    $repo = $em->getRepository('AppBundle:Compta\AffectationDiverse');
-                    $piece = $repo->find($id);
-                    $rapprochement->setAffectationDiverse($piece);
-                    break;
+                  // case 'AFFECTATIONS-DIVERSES-ACHAT' :
+                  //   $repo = $em->getRepository('AppBundle:Compta\AffectationDiverse');
+                  //   $piece = $repo->find($id);
+                  //   $rapprochement->setAffectationDiverse($piece);
+                  //   break;
 
-                  case 'NOTES-FRAIS' :
-                    $repo = $em->getRepository('AppBundle:NDF\NoteFrais');
-                    $piece = $repo->find($id);
-                    $rapprochement->setNoteFrais($piece);
-                    break;
+                  // case 'NOTES-FRAIS' :
+                  //   $repo = $em->getRepository('AppBundle:NDF\NoteFrais');
+                  //   $piece = $repo->find($id);
+                  //   $rapprochement->setNoteFrais($piece);
+                  //   break;
                 }
 
                 $arr_pieces[] = array($type => $piece);
