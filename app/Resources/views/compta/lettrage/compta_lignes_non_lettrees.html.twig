@@ -1,0 +1,73 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Lignes non lettrées</h1>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			{% include 'compta/star_compta/compta_star_compta_submenu.html.twig' %}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-3">
+			{{ form(form) }}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<p class="center" id="loader">
+				<img src="{{ asset('images/assets/dog_loader.gif') }}" alt="Chargement en cours" /><br />
+				<i>Chargement en cours...</i>
+			</p>
+		</div>
+	</div>
+
+	<div id="wrapper-ajax"></div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+		$(document).ready( function () {
+
+			loadTable();
+
+			$(".year-select").change(function(){
+				loadTable();
+			});
+
+			function loadTable(){
+
+				$("#loader").removeClass("hidden");
+				$("#wrapper-ajax").html("");
+
+				var year = $(".year-select").val();
+
+				$.ajax({
+					type: "POST",
+					url: Routing.generate('compta_lignes_non_lettrees_voir_annee', {'year' : year}),
+					success: function(data) {
+						$("#loader").addClass("hidden");
+						$("#wrapper-ajax").html(data);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						$("#loader").addClass("hidden");
+					},
+				});
+
+			}
+
+
+		});
+
+	</script>
+{% endblock %}

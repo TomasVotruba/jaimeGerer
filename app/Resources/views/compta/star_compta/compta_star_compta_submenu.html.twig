@@ -1,0 +1,14 @@
+{% block submenu %}
+    <ul class="nav nav-tabs">
+      <li {% if app.request.pathInfo == "/compta/compte-attente/voir"  %} class="active" {% endif %}>
+        <a href="{{ path('compta_rapprochement_index') }}" >Compte d'attente</a>
+      </li>
+      <li {% if app.request.pathInfo == "/compta/operation-diverse/liste"  %} class="active" {% endif %}>
+        <a href="{{ path('compta_rapprochement_avance') }}" >Opérations diverses</a>
+      </li>
+      <li {% if app.request.pathInfo == "/compta/lignes-non-lettrees"  %} class="active" {% endif %}>
+          <a href="{{ path('compta_releve_bancaire_index') }}">Lignes non lettrées</a>
+      </li>
+     
+    </ul>
+{% endblock %}

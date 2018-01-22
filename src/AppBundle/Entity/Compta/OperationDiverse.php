@@ -80,6 +80,13 @@ class OperationDiverse
      */
     private $depense;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="lettrage", type="string", length=100, nullable=true)
+     */
+    private $lettrage;
+
 
     /**
      * Get id
@@ -307,5 +314,28 @@ class OperationDiverse
         return $this->facture->getNum();
       }
       return null;
+    }
+
+    /**
+     * Set lettrage
+     *
+     * @param string $lettrage
+     * @return OperationDiverse
+     */
+    public function setLettrage($lettrage)
+    {
+        $this->lettrage = $lettrage;
+
+        return $this;
+    }
+
+    /**
+     * Get lettrage
+     *
+     * @return string 
+     */
+    public function getLettrage()
+    {
+        return $this->lettrage;
     }
 }

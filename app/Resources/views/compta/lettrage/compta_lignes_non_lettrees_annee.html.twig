@@ -1,0 +1,125 @@
+{% for compteComptableId, arr_cc in arr_non_lettrees %}
+	<h3>
+		<a href="{{ path('compta_compte_voir', {'id' : arr_cc.compteComptable.id }) }}" target="_blank">{{ arr_cc.compteComptable }}</a>
+		<br /><small>Prochain lettrage : {{ arr_cc.lettre }}</small>
+	</h3>
+
+	<table class="table table-bordered table-stripped">
+		<thead>
+			<th>Date</th>
+			<th>Libellé</th>
+			<th>Pièce</th>
+			<th class="align-right">Débit</th>
+			<th class="align-right">Crédit</th>
+			<th>Journal</th>
+			<th>Lettrage</th>
+			<th>Corriger</th>
+		</thead>
+		<tbody>
+			{% for ligne in arr_cc.lignes %}
+				<tr>
+					<td>
+						{{ ligne.date|date('d/m/Y') }}
+					</td>
+					<td>
+						{% if ligne.codeJournal == "VE" %}
+						 	{% if ligne.facture is not null %}
+						 		{{ ligne.facture.objet }}
+						 	{% elseif ligne.avoir is not null %}
+						 		{{ ligne.avoir.facture.objet }}
+						 	{% endif %}
+						 {% elseif ligne.codeJournal == "AC" %}
+						 	{% if ligne.depense is not null %}
+						 		{{ ligne.depense }}
+						 	{% elseif ligne.avoir is not null %}
+						 		{{ ligne.avoir.depense }}
+						 	{% endif %}
+						 {% elseif ligne.codeJournal == "OD" %}
+						  	{{ ligne.libelle }}
+						 {% else %}
+						 	{{ ligne.nom }}
+						 {% endif %}
+					</td>
+					<td>
+						{% if ligne.codeJournal == "VE" %}
+						 	{% if ligne.facture is not null %}
+						 		{{ ligne.facture.num }}
+						 	{% elseif ligne.avoir is not null %}
+						 		{{ ligne.avoir.num }}
+						 	{% endif %}
+						 {% elseif ligne.codeJournal == "AC" %}
+						 	{% if ligne.depense is not null %}
+						 		{{ ligne.depense.num }}
+						 	{% elseif ligne.avoir is not null %}
+						 		{{ ligne.avoir.num }}
+						 	{% endif %}
+						 {% elseif ligne.codeJournal == "OD" %}
+						  	OD
+						 {% endif %}
+					</td>
+					<td class="align-right">{{ ligne.debit|number_format(2,',',' ')  }}</td>
+					<td class="align-right">{{ ligne.credit|number_format(2,',',' ')  }}</td>
+					<td>{{ ligne.codeJournal }}</td>
+					<td>
+						<a
+			            href="#"
+			            id="{{ ligne.codeJournal~ligne.id }}"
+			            data-type="text"
+			            data-pk="{{ ligne.id }}"
+			            data-url="{{ path('compta_compte_corriger_lettrage', {
+			              'id' : ligne.id,
+			              'journal' : ligne.codeJournal
+			            } ) }}"
+			            data-title="Montant"
+			            class="prev"
+			            >
+							 {% if ligne.lettrage == "" or ligne.lettrage == null %}
+			                    Completer
+			                {% else %}
+			                  {{ ligne.lettrage }}
+			                {% endif %}
+						</a>
+					</td>
+					<td>	
+						<a href="{{ path('compta_compte-comptable_corriger', {
+								'id' : ligne.id,
+								'codeJournal' : ligne.codeJournal,
+								'redirectRoute' : null }) }}"
+							class="btn btn-xs btn-info" data-toggle="modal" data-target="#modal">
+							Corriger
+						</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	
+	</table>
+
+{% endfor %}
+
+</tr>
+
+{% block javascripts %}
+    <script type="text/javascript">
+      	$(document).ready(function() {
+      		{% for compteComptableId, arr_cc in arr_non_lettrees %}
+      			{% for ligne in arr_cc.lignes %}
+	      			var id = "#{{ ligne.codeJournal~ligne.id }}";
+					$(id).editable({
+		                step: 'any',
+		                display: function(value, response) {
+		                    if (value != "Completer") {
+		                        if (value == "" || value == 0){
+		                            $(this).html("Completer");
+		                        } else {
+		                          $(this).html(value);
+		                        }
+		                    }
+		                }
+		            });
+		        {% endfor %}
+      		{% endfor %}
+		});
+	</script>
+{% endblock %}

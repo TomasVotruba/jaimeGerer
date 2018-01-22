@@ -1001,7 +1001,8 @@ class CompteComptableController extends Controller
 	 */
 	public function compteComptableCorrigerAction($id, $codeJournal, $redirectRoute = null){
 
-	 $em = $this->getDoctrine()->getManager();
+	 	$em = $this->getDoctrine()->getManager();
+	 	$banque = false;
 		switch($codeJournal){
 
 			case 'VE':
@@ -1014,6 +1015,7 @@ class CompteComptableController extends Controller
 
 			default:
 				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalBanque');
+				$banque = true;
 				break;
 
 		}
@@ -1029,10 +1031,10 @@ class CompteComptableController extends Controller
 
 		if ($form->isSubmitted() && $form->isValid()) {
 
-			 $validator = $this->get('validator');
+			$validator = $this->get('validator');
 
-	 	   $compteNotInList = $form->get('compteNotInList')->getData();
- 	   	 if($compteNotInList){
+	 	   	$compteNotInList = $form->get('compteNotInList')->getData();
+ 	   	 	if($compteNotInList){
 
 			  $prefixe = $form->get('comptePrefixe')->getData();
 				$num = $form->get('compteNum')->getData();
@@ -1072,34 +1074,36 @@ class CompteComptableController extends Controller
 			 }
 
 			 //on corrige également le rapprochement concerné pour garder le tableau de trésorerie à jour
-			 $rapprochements = $ligneJournal->getMouvementBancaire()->getRapprochements();
-			 foreach( $rapprochements as $rapprochement ){
-			 	if( $rapprochement->getAffectationDiverse() ){
-			 		$affectationDiverse = $rapprochement->getAffectationDiverse();
-			 		if( $affectationDiverse->getCompteComptable() ==  $oldCompteComptable){
+			 if($banque == true){
+			 	 $rapprochements = $ligneJournal->getMouvementBancaire()->getRapprochements();
+			 	 foreach( $rapprochements as $rapprochement ){
+			 	 	if( $rapprochement->getAffectationDiverse() ){
+			 	 		$affectationDiverse = $rapprochement->getAffectationDiverse();
+			 	 		if( $affectationDiverse->getCompteComptable() ==  $oldCompteComptable){
 
-			 			if( $affectationDiverse->getRecurrent() ){
+			 	 			if( $affectationDiverse->getRecurrent() ){
 
-			 				$newAffectationDiverse = new AffectationDiverse();
-			 				$newAffectationDiverse->setNom("Correction");
-			 				$newAffectationDiverse->setType($affectationDiverse->getType());
-			 				$newAffectationDiverse->setCompteComptable($newCompteComptable);
-			 				$newAffectationDiverse->setCompany($this->getUser()->getCompany());
-			 				$newAffectationDiverse->setRecurrent(false);
-							$em->persist($newAffectationDiverse);
-			 				$rapprochement->setAffectationDiverse($newAffectationDiverse);
-			 				$em->persist($rapprochement);
-			 			} else {
-			 				$affectationDiverse->setCompteComptable($newCompteComptable);
-			 				$em->persist($affectationDiverse);
-			 			}
+			 	 				$newAffectationDiverse = new AffectationDiverse();
+			 	 				$newAffectationDiverse->setNom("Correction");
+			 	 				$newAffectationDiverse->setType($affectationDiverse->getType());
+			 	 				$newAffectationDiverse->setCompteComptable($newCompteComptable);
+			 	 				$newAffectationDiverse->setCompany($this->getUser()->getCompany());
+			 	 				$newAffectationDiverse->setRecurrent(false);
+			 					$em->persist($newAffectationDiverse);
+			 	 				$rapprochement->setAffectationDiverse($newAffectationDiverse);
+			 	 				$em->persist($rapprochement);
+			 	 			} else {
+			 	 				$affectationDiverse->setCompteComptable($newCompteComptable);
+			 	 				$em->persist($affectationDiverse);
+			 	 			}
 
-			 			$em->flush();
+			 	 			$em->flush();
 
-			 		}
+			 	 		}
+			 	 	}
 			 	}
 			 }
-
+			
 			return new Response();
 		}
 

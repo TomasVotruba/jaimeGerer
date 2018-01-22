@@ -102,4 +102,25 @@ class JournalBanqueRepository extends EntityRepository
 
 		return $result;
 	}
+
+	public function findNonLettreesByCompanyAndYear($company, $year){
+
+		$result = $this->createQueryBuilder('j')
+		->leftJoin('AppBundle\Entity\Compta\CompteComptable', 'c', 'WITH', 'j.compteComptable = c.id')
+		->where('c.company = :company')
+		->andWhere('(j.date >= :startDate and j.date <= :endDate)')
+		->andWhere('j.lettrage IS NULL')
+		->andWhere('c.num LIKE :fournisseur or c.num LIKE :client')
+		->setParameter('startDate', $year.'-01-01')
+		->setParameter('endDate', $year.'-12-31')
+		->setParameter('company', $company)
+		->setParameter('fournisseur', '401%')
+		->setParameter('client', '411%')
+		->orderBy('j.id', 'DESC')
+		->addOrderBy('j.debit', 'DESC')
+		->getQuery()
+		->getResult();
+
+		return $result;
+	}
 }

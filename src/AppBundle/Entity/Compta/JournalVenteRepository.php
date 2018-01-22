@@ -127,4 +127,28 @@ class JournalVenteRepository extends EntityRepository
 
 		return $result;
 	}
+
+	public function findNonLettreesByCompanyAndYear($company, $year){
+
+		$result = $this->createQueryBuilder('j')
+		->leftJoin('AppBundle\Entity\CRM\DocumentPrix', 'f', 'WITH', 'j.facture = f.id')
+		->leftJoin('AppBundle\Entity\CRM\Compte', 'c1', 'WITH', 'f.compte = c1.id')
+		->leftJoin('AppBundle\Entity\Compta\Avoir', 'a', 'WITH', 'j.avoir = a.id')
+		->leftJoin('AppBundle\Entity\CRM\DocumentPrix', 'f2', 'WITH', 'a.facture = f2.id')
+		->leftJoin('AppBundle\Entity\CRM\Compte', 'c2', 'WITH', 'f2.compte = c2.id')
+		->leftJoin('AppBundle\Entity\Compta\compteComptable', 'cc', 'WITH', 'j.compteComptable = cc.id')
+		->where('c1.company = :company or c2.company = :company')
+		->andWhere('(f.dateCreation >= :startDate and f.dateCreation <= :endDate) or (a.dateCreation >= :startDate and a.dateCreation <= :endDate)')
+		->andWhere('j.lettrage IS NULL')
+		->andWhere('cc.num LIKE :fournisseur or cc.num LIKE :client')
+		->setParameter('startDate', $year.'-01-01')
+		->setParameter('endDate', $year.'-12-31')
+		->setParameter('company', $company)
+		->setParameter('fournisseur', '401%')
+		->setParameter('client', '411%')
+		->getQuery()
+		->getResult();
+
+		return $result;
+	}
 }

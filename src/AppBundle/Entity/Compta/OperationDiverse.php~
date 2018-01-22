@@ -80,6 +80,13 @@ class OperationDiverse
      */
     private $depense;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="lettrage", type="string", length=100, nullable=true)
+     */
+    private $lettrage;
+
 
     /**
      * Get id

@@ -52,4 +52,26 @@ class OperationDiverseRepository extends EntityRepository
 
 		return $result;
 	}
+
+	public function findNonLettreesByCompanyAndYear($company, $year){
+
+		$result = $this->createQueryBuilder('o')
+		->leftJoin('AppBundle\Entity\Compta\CompteComptable', 'c', 'WITH', 'o.compteComptable = c.id')
+		->where('c.company = :company')
+		->andWhere('(o.date >= :startDate and o.date <= :endDate)')
+		->andWhere('o.lettrage IS NULL')
+		->andWhere('c.num LIKE :fournisseur or c.num LIKE :client')
+		->setParameter('startDate', $year.'-01-01')
+		->setParameter('endDate', $year.'-12-31')
+		->setParameter('company', $company)
+		->setParameter('fournisseur', '401%')
+		->setParameter('client', '411%')
+		->setParameter('company', $company)
+		->orderBy('o.date', 'DESC')
+		->addOrderBy('o.debit', 'DESC')
+		->getQuery()
+		->getResult();
+
+		return $result;
+	}
 }

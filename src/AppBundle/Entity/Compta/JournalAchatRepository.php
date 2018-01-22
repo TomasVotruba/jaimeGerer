@@ -124,4 +124,35 @@ class JournalAchatRepository extends EntityRepository
 
 		return $result;
 	}
+
+	public function findNonLettreesByCompanyAndYear($company, $year){
+
+		$result = $this->createQueryBuilder('j')
+			->leftJoin('AppBundle\Entity\Compta\Depense', 'd', 'WITH', 'j.depense = d.id')
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c1', 'WITH', 'd.compte = c1.id')
+			->leftJoin('AppBundle\Entity\Compta\Avoir', 'a', 'WITH', 'j.avoir = a.id')
+			->leftJoin('AppBundle\Entity\Compta\Depense', 'd2', 'WITH', 'a.depense = d2.id')
+			->leftJoin('AppBundle\Entity\NDF\NoteFrais', 'n', 'WITH', 'd.noteFrais = n.id')
+			->leftJoin('AppBundle\Entity\Compta\CompteComptable', 'cc', 'WITH', 'cc.id = n.compteComptable')
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c2', 'WITH', 'd2.compte = c2.id')
+			->where('c1.company = :company or c2.company = :company or cc.company = :company')
+			->andWhere('(d.dateCreation >= :startDate and d.dateCreation <= :endDate) or (a.dateCreation >= :startDate and a.dateCreation <= :endDate)')
+			->andWhere('j.lettrage IS NULL')
+			->andWhere('cc.num LIKE :fournisseur or cc.num LIKE :client')
+			->setParameter('startDate', $year.'-01-01')
+			->setParameter('endDate', $year.'-12-31')
+			->setParameter('company', $company)
+			->setParameter('fournisseur', '401%')
+			->setParameter('client', '411%')
+			->orderBy('d.date', 'DESC')
+			->orderBy('a.dateCreation', 'DESC')
+			->addOrderBy('j.depense', 'DESC')
+			->addOrderBy('j.debit', 'ASC')
+			->getQuery()
+			->getResult();
+
+		return $result;
+	}
+
+
 }

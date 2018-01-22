@@ -52,6 +52,7 @@
 		<div class="loader center" style="display:none;">
 			<img src="{{ asset('images/assets/spinner_loader.gif')}}" alt="Chargement en cours..." />
 		</div>
+
 	</div>
 
 
@@ -107,10 +108,15 @@
 						var route = "";
 						{% if redirectRoute == "compta_compte_voir" %}
 							var route = "{{ path(redirectRoute, {'id' : compteId}) }}";
-						{% else %}
+							location.href = route;
+						{% elseif redirectRoute != "" %}
 							var route = "{{ path(redirectRoute) }}";
+							location.href = route;
+						{% else %}
+
+
 						{% endif %}
-						 location.href = route;
+						 
 					})
 					.error(function (jqXHR, textStatus, errorThrown) {
 						$('.form_nouveau_compte_errors').html(jqXHR.responseJSON.message);
