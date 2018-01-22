@@ -208,25 +208,17 @@
 						}
 
 						checkTotaux();
-
-
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
-						console.log(jqXHR);
-						console.log(textStatus);
-						console.log(errorThrown);
 
-						$('#error').text(textStatus);
+						$('#error').text(jqXHR.responseJSON.message);
 						$('#error').removeClass("hidden");
 
 						$('#btn-rapprocher').attr('disabled', false);
 						$('.progress').addClass("hidden");
 					},
 
-
 				});
-
-				
 
 			});
 
@@ -269,22 +261,22 @@
 		}
 
 		function checkTotaux(){
-			var totalPieces = calculTotalPieces();
-			var totalMouvements = calculTotalMouvements();
+			var totalPieces = calculTotalPieces()*100;
+			var totalMouvements = calculTotalMouvements()*100;
 
 			if(totalPieces > totalMouvements){
 				
 				var diff = totalPieces - totalMouvements;
-				var error = "Pièces supérieures de "+diff+" €";
+				var error = "Pièces supérieures de "+diff/100+" €";
 				$('#error').text(error)
 							.removeClass("hidden");
 				$('#btn-rapprocher').attr('disabled', true);
 				$('.glyphicon-ok').addClass("hidden");
 
-			} else if(totalPieces > totalMouvements){
+			} else if(totalPieces < totalMouvements){
 				
 				var diff =  totalMouvements - totalPieces;
-				var error = "Mouvements bancaires supérieures de "+diff+" €";
+				var error = "Mouvements bancaires supérieures de "+diff/100+" €";
 				$('#error').text(error)
 							.removeClass("hidden");
 				$('#btn-rapprocher').attr('disabled', true);

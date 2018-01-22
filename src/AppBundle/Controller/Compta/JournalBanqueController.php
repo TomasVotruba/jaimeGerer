@@ -426,7 +426,7 @@ class JournalBanqueController extends Controller
 	/**
 	 * @Route("/compta/journal-banque/ajouter-plusieurs-pieces-meme-compte", name="compta_journal_banque_ajouter_plusieurs_pieces_meme_compte")
 	 */
-	public function journalBanqueAjouterPlusieursPiecesMemeCompteAction($mouvementBancaire, $arr_pieces){
+	public function journalBanqueAjouterPlusieursPiecesMemeCompteAction($arr_mouvements, $arr_pieces){
 
 		$em = $this->getDoctrine()->getManager();
 		$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
@@ -434,7 +434,7 @@ class JournalBanqueController extends Controller
 		$lettrageService = $this->get('appbundle.compta_lettrage_service');
 
 		$arr_annees = array();
-		$arr_annees[] = $mouvementBancaire->getDate()->format('Y');
+		
 
 		$analytique = '';
 		$modePaiement = '';
@@ -466,6 +466,12 @@ class JournalBanqueController extends Controller
 
 		}
 
+		foreach($arr_mouvements as $mouvement){
+			if(!in_array($mouvement->getDate()->format('Y'), $arr_annees)){
+				$arr_annees[] = $mouvement->getDate()->format('Y');
+			}
+		}
+
 		sort($arr_annees);
 
 		try{
@@ -482,32 +488,35 @@ class JournalBanqueController extends Controller
 					$lettre = $lettrageService->findNextNum($piece->getCompte()->getCompteComptableClient());		
 					$lettrage = $prefixe.$lettre;
 
-					//credit au compte  411xxxx (compte du client)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($mouvementBancaire);
-					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
-					$ligne->setDebit(null);
-					$ligne->setCredit($mouvementBancaire->getMontant());
-					$ligne->setAnalytique(null);
-					$ligne->setStringAnalytique($analytique);
-					$ligne->setCompteComptable($piece->getCompte()->getCompteComptableClient());
-					$ligne->setLettrage($lettrage);
-					$ligne->setNom($mouvementBancaire->getLibelle());
-					$ligne->setDate($mouvementBancaire->getDate());
-					$em->persist($ligne);
+					foreach($arr_mouvements as $mouvementBancaire){
 
-					//debit au compte 512xxxx (selon banque)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($mouvementBancaire);
-					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
-					$ligne->setDebit($mouvementBancaire->getMontant());
-					$ligne->setCredit(null);
-					$ligne->setAnalytique(null);
-					$ligne->setStringAnalytique($analytique);
-					$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
-					$ligne->setNom($mouvementBancaire->getLibelle());
-					$ligne->setDate($mouvementBancaire->getDate());
-					$em->persist($ligne);
+						//credit au compte  411xxxx (compte du client)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit(null);
+						$ligne->setCredit($mouvementBancaire->getMontant());
+						$ligne->setAnalytique(null);
+						$ligne->setStringAnalytique($analytique);
+						$ligne->setCompteComptable($piece->getCompte()->getCompteComptableClient());
+						$ligne->setLettrage($lettrage);
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$em->persist($ligne);
+
+						//debit au compte 512xxxx (selon banque)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit($mouvementBancaire->getMontant());
+						$ligne->setCredit(null);
+						$ligne->setAnalytique(null);
+						$ligne->setStringAnalytique($analytique);
+						$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$em->persist($ligne);
+					}
 
 					foreach($arr_pieces as $arr_piece){
 						foreach($arr_piece as $type => $piece){
@@ -534,34 +543,37 @@ class JournalBanqueController extends Controller
 					$lettre = $lettrageService->findNextNum($piece->getCompte()->getCompteComptableFournisseur());	
 					$lettrage = $prefixe.$lettre;
 
-					//credit au compte  512xxxx (selon banque)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($mouvementBancaire);
-					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
-					$ligne->setDebit(null);
-					$ligne->setCredit($mouvementBancaire->getMontant());
-					$ligne->setAnalytique(null);
-					$ligne->setStringAnalytique($analytique);
-					$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
-					$ligne->setNom($mouvementBancaire->getLibelle());
-					$ligne->setDate($mouvementBancaire->getDate());
-					$ligne->setModePaiement($modePaiement);
-					$em->persist($ligne);
+					foreach($arr_mouvements as $mouvementBancaire){
 
-					//debit au compte 401xxxx (compte du fournisseur)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($mouvementBancaire);
-					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
-					$ligne->setDebit(-$mouvementBancaire->getMontant());
-					$ligne->setCredit(null);
-					$ligne->setAnalytique(null);
-					$ligne->setStringAnalytique($analytique);
-					$ligne->setCompteComptable($piece->getCompte()->getCompteComptableFournisseur());
-					$ligne->setLettrage($lettrage);
-					$ligne->setNom($mouvementBancaire->getLibelle());
-					$ligne->setDate($mouvementBancaire->getDate());
-					$ligne->setModePaiement($modePaiement);
-					$em->persist($ligne);
+						//credit au compte  512xxxx (selon banque)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit(null);
+						$ligne->setCredit($mouvementBancaire->getMontant());
+						$ligne->setAnalytique(null);
+						$ligne->setStringAnalytique($analytique);
+						$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setModePaiement($modePaiement);
+						$em->persist($ligne);
+
+						//debit au compte 401xxxx (compte du fournisseur)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit(-$mouvementBancaire->getMontant());
+						$ligne->setCredit(null);
+						$ligne->setAnalytique(null);
+						$ligne->setStringAnalytique($analytique);
+						$ligne->setCompteComptable($piece->getCompte()->getCompteComptableFournisseur());
+						$ligne->setLettrage($lettrage);
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setModePaiement($modePaiement);
+						$em->persist($ligne);
+					}
 
 					foreach($arr_pieces as $arr_piece){
 						foreach($arr_piece as $type => $piece){
