@@ -23,21 +23,13 @@
 			 {% endif %}
 		</td>
 		<td>
-			{% if ligne.codeJournal == "VE" %}
-			 	{% if ligne.facture is not null %}
-			 		{{ ligne.facture.num }}
-			 	{% elseif ligne.avoir is not null %}
-			 		{{ ligne.avoir.num }}
-			 	{% endif %}
-			 {% elseif ligne.codeJournal == "AC" %}
-			 	{% if ligne.depense is not null %}
-			 		{{ ligne.depense.num }}
-			 	{% elseif ligne.avoir is not null %}
-			 		{{ ligne.avoir.num }}
-			 	{% endif %}
-			 {% elseif ligne.codeJournal == "OD" %}
-			  	OD
-			 {% endif %}
+		 	{% if ligne.facture is defined and ligne.facture is not null %}
+		 		{{ ligne.facture.num }}
+		 	{% elseif ligne.avoir is defined and ligne.avoir is not null %}
+		 		{{ ligne.avoir.num }}
+		 	{% elseif ligne.depense is defined and ligne.depense is not null %}
+		 		{{ ligne.depense.num }}
+		 	{% endif %}
 		</td>
 		<td class="align-right">{{ ligne.debit|number_format(2,',',' ')  }}</td>
 		<td class="align-right">{{ ligne.credit|number_format(2,',',' ')  }}</td>
