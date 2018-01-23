@@ -13,6 +13,38 @@
 		</div>
 	</div>
 
+	<div class="row well">
+		<div class="col-md-12 center">
+			<h3>Filtres</h3>
+		</div>
+		<div class="col-md-3">
+			<p><strong>Pièces</strong></p>
+			<input type="checkbox" name="filtre_pieces" value="FACTURES" id="filtre-piece-factures" class="filtre" checked /> 
+			<label for="filtre-piece-factures">Factures</label><br />
+			<input type="checkbox" name="filtre_pieces" value="DEPENSES" id="filtre-piece-depenses" class="filtre" checked /> 
+			<label for="filtre-piece-depenses">Dépenses</label>
+		</div>
+		<div class="col-md-3">
+			<p><strong>Montant des mouvements bancaires</strong></p>
+			<input type="radio" name="filtre_montant_mouvements" value="ALL" id="filtre-montant-all" class="filtre" /> 
+			<label for="filtre-montant-all">Tous</label><br />
+			<input type="radio" name="filtre_montant_mouvements" value="POSITIF" id="filtre-montant-positif"  class="filtre" /> 
+			<label for="filtre-montant-positif">Montants positifs uniquement</label><br />
+			<input type="radio" name="filtre_montant_mouvements" value="NEGATIF" id="filtre-montant-negatif" class="filtre" /> 
+			<label for="filtre-montant-negatif">Montants négatifs uniquement</label>
+		</div>
+		<div class="col-md-3">
+			<p><strong>Date des mouvements bancaires</strong></p>
+			<input id="dateRange" name="dateRange" class="filtre" />
+		</div>
+		<div class="col-md-3">
+			<form onsubmit="return false;">
+				<label for="search">Rechercher</label>
+				<input id="search" type="text" class="form-control" placeholder="Libellé, date ou montant">
+			</form>
+		</div>
+	</div>
+
 	<div class="row">
 		<div class="col-md-12 center">
 			<p>
@@ -43,7 +75,7 @@
 
 			{% for type, arr_type in arr_pieces %}
 				{% if arr_type|length > 0 %}
-				  	<div class="panel panel-default">
+				  	<div class="panel panel-default" id="panel-{{ type }}">
 				   	 	<div class="panel-heading" role="tab" id="heading-{{ type }}">
 				      		<h4 class="panel-title">
 				        		<a role="button" data-toggle="collapse" href="#{{ type }}" aria-expanded="true" aria-controls="{{ type }}">
@@ -64,45 +96,47 @@
 				    	<div id="{{ type }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-{{ type }}">
 				      		<div class="panel-body">
 				      			<table class="table table-transparent">
-						        {% for piece in arr_type %}
-						        	{% set id = type~'_'~piece.id %}
-						        	<tr id="row-{{ id }}">
-						        		<td class="col-md-2">
-											<input type="checkbox" name="pieces" id="{{ id }}" value="{% if piece.totalTTC is defined %} {{ piece.totalTTC }} {% endif %}" data-type="{{ type }}" />
-										</td>
-										<td class="col-md-2">
-											{% if type == 'NOTES-FRAIS' %}
-												{{ piece.month }}/{{ piece.year }}
-											{% elseif type == "AFFECTATIONS-DIVERSES-VENTE" or type =="AFFECTATIONS-DIVERSES-ACHAT" %}
-						        				{{ piece.nom }}
-						        			{% else %}
-												{% if piece.num is defined %} {{ piece.num }} {% endif %}
-											{% endif %}
-										</td>
-										<td class="col-md-2 align-right"> 
-											{% if type == 'AVOIRS-CLIENT' or type == "DEPENSES" or type == "NOTES-FRAIS"  %}
-												<span class="red">{{ (0-piece.totalTTC)|number_format(2, ',', ' ') }} €</span>
-											{% elseif type == "AFFECTATIONS-DIVERSES-VENTE" or type =="AFFECTATIONS-DIVERSES-ACHAT" %}
-						        				<input type="text" />
-						        			{% else %}
-												<span class="green">{{ piece.totalTTC|number_format(2, ',', ' ') }} €</span>
-											{% endif %}
-										</td>
-										<td class="col-md-6">
-											<label for="{{ id }}">
-											{% if type == 'AVOIRS-FOURNISSEUR' %}
-												{{ piece.depense.compte }}
-											{% elseif type == 'AVOIRS-CLIENT' %}
-												{{ piece.facture.compte }}
-											{% elseif type == 'NOTES-FRAIS' %}
-												{{ piece.user }}
-											{% else %}
-												{% if piece.compte is defined %} {{ piece.compte }} {% endif %}
-											{% endif %}
-											</label>
-										</td>
-									</tr>
-								{% endfor %}
+				      				<tbody class="searchable">
+							        {% for piece in arr_type %}
+							        	{% set id = type~'_'~piece.id %}
+							        	<tr id="row-{{ id }}">
+							        		<td class="col-md-2">
+												<input type="checkbox" name="pieces" id="{{ id }}" value="{% if piece.totalTTC is defined %} {{ piece.totalTTC }} {% endif %}" data-type="{{ type }}" />
+											</td>
+											<td class="col-md-2 num">
+												{% if type == 'NOTES-FRAIS' %}
+													{{ piece.month }}/{{ piece.year }}
+												{% elseif type == "AFFECTATIONS-DIVERSES-VENTE" or type =="AFFECTATIONS-DIVERSES-ACHAT" %}
+							        				{{ piece.nom }}
+							        			{% else %}
+													{% if piece.num is defined %} {{ piece.num }} {% endif %}
+												{% endif %}
+											</td>
+											<td class="col-md-2 align-right montant"> 
+												{% if type == 'AVOIRS-CLIENT' or type == "DEPENSES" or type == "NOTES-FRAIS"  %}
+													<span class="red">{{ (0-piece.totalTTC)|number_format(2, ',', ' ') }} €</span>
+												{% elseif type == "AFFECTATIONS-DIVERSES-VENTE" or type =="AFFECTATIONS-DIVERSES-ACHAT" %}
+							        				<input type="text" />
+							        			{% else %}
+													<span class="green">{{ piece.totalTTC|number_format(2, ',', ' ') }} €</span>
+												{% endif %}
+											</td>
+											<td class="col-md-6 libelle">
+												<label for="{{ id }}">
+												{% if type == 'AVOIRS-FOURNISSEUR' %}
+													{{ piece.depense.compte }}
+												{% elseif type == 'AVOIRS-CLIENT' %}
+													{{ piece.facture.compte }}
+												{% elseif type == 'NOTES-FRAIS' %}
+													{{ piece.user }}
+												{% else %}
+													{% if piece.compte is defined %} {{ piece.compte }} {% endif %}
+												{% endif %}
+												</label>
+											</td>
+										</tr>
+									{% endfor %}
+									</tbody>
 								</table>
 				      		</div>
 				    	</div>
@@ -128,16 +162,18 @@
 				    	<div id="{{ nomCompte }}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-{{ nomCompte }}">
 				      		<div class="panel-body">
 				      			<table class="table table-transparent">
-						        {% for mouvement in arr_compteBancaire %}
-						        	<tr id="row-mouvement-{{ mouvement.id }}">
-						        		<td class="col-md-2">
-											<input type="checkbox" name="mouvements" id="{{ mouvement.id }}" value="{{ mouvement.montant }}"/>
-										</td>
-										<td class="col-md-2">{{ mouvement.date|date('d/m/Y') }}</td>
-										<td class="col-md-2 align-right {% if mouvement.montant > 0 %} green {% else %} red {% endif %}"> {{ mouvement.montant|number_format(2, ',', ' ') }} €</td>
-										<td class="col-md-6"><label for="{{ mouvement.id }}">{{ mouvement.libelle }}</label></td>
-									</tr>
-								{% endfor %}
+				      				<tbody class="searchable">
+							        {% for mouvement in arr_compteBancaire %}
+							        	<tr id="row-mouvement-{{ mouvement.id }}" class="row-mouvement {% if mouvement.montant > 0 %} positif {% else %} negatif {% endif %}" data-date="{{ mouvement.date|date('Ymd') }}">
+							        		<td class="col-md-2">
+												<input type="checkbox" name="mouvements" id="{{ mouvement.id }}" value="{{ mouvement.montant }}"/>
+											</td>
+											<td class="col-md-2 date">{{ mouvement.date|date('d/m/Y') }}</td>
+											<td class="col-md-2 align-right montant {% if mouvement.montant > 0 %} green {% else %} red {% endif %}"> {{ mouvement.montant|number_format(2, ',', ' ') }} €</td>
+											<td class="col-md-6 libelle"><label for="{{ mouvement.id }}">{{ mouvement.libelle }}</label></td>
+										</tr>
+									{% endfor %}
+									</tbody>
 								</table>
 				      		</div>
 				    	</div>
@@ -149,9 +185,16 @@
 
 {% endblock %}
 
-
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/jquery.comiseo.daterangepicker.css') }}" type="text/css" />
+{% endblock %}
 {% block javascripts %}
 	{{ parent() }}
+	<script src="{{ asset('js/moment.js') }}"></script>
+	<script src="{{ asset('js/jquery.comiseo.daterangepicker.js') }}"></script>
+	<script src="{{ asset('js/datepicker-fr.js') }}"></script>
+	<script src="{{ asset('js/dateFilterConfig.js') }}"></script>
 	<script src="{{ asset('js/accounting.min.js') }}"></script>
 
 	<script type="text/javascript">
@@ -220,6 +263,48 @@
 
 				});
 
+			});
+
+			$('input[name="filtre_pieces"]').change(function(){
+				var type = $(this).val();
+				$('#panel-'+type).toggle();
+			});
+
+			$('input[name="filtre_montant_mouvements"]').change(function(){
+				var value = $(this).val();
+				if(value == 'ALL'){
+					$('.row-mouvement').removeClass("hidden");
+				} else if(value == "POSITIF"){
+					$('.row-mouvement.positif').removeClass("hidden");
+					$('.row-mouvement.negatif').addClass("hidden");
+				} else {
+					$('.row-mouvement.positif').addClass("hidden");
+					$('.row-mouvement.negatif').removeClass("hidden");
+				}
+			});
+
+			$('#dateRange').change(function(){
+				var dateRange = $("#dateRange").daterangepicker("getRange");
+				var startDate = dateRange.start.getFullYear()+('0' + (dateRange.start.getMonth()+1)).slice(-2)+('0' + dateRange.start.getDate()).slice(-2);
+				var endDate = dateRange.end.getFullYear()+('0' + (dateRange.end.getMonth()+1)).slice(-2)+('0' + dateRange.end.getDate()).slice(-2);
+				
+				$('.row-mouvement').each(function () {
+					var rowDate = $(this).attr('data-date');
+					if(rowDate >= startDate && rowDate <= endDate){
+						$(this).removeClass("hidden");
+					} else {
+						$(this).addClass("hidden");
+					}
+				});
+
+			});
+
+			$('#search').keyup(function () {
+				var rex = new RegExp($(this).val().replace(/\s/g, ''), 'i');
+				$('.searchable tr').hide();
+				$('.searchable tr').filter(function () {
+					return rex.test($(this).find('.libelle, .montant, .num').text().replace(/\s/g, ''));
+				}).show();
 			});
 
 		});

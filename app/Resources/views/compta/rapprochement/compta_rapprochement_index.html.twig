@@ -387,15 +387,15 @@
 			 	});
 
 				$(function(){
-			$('#search').keyup(function () {
-					var rex = new RegExp($(this).val(), 'i');
-					$('.searchable tr').hide();
-					$('.searchable tr').filter(function () {
-							return rex.test($(this).find('.libelle, .montant, .date').text());
-					}).show();
+					$('#search').keyup(function () {
+							var rex = new RegExp($(this).val(), 'i');
+							$('.searchable tr').hide();
+							$('.searchable tr').filter(function () {
+									return rex.test($(this).find('.libelle, .montant, .date').text());
+							}).show();
 
-			});
-		});
+					});
+				});
 
 		});
 	</script>
