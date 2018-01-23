@@ -56,6 +56,9 @@
 
 				var year = $(".year-select").val();
 
+				var url = Routing.generate('compta_journal_od_exporter', { 'year' : year} );
+				$('#btn-export').attr('href', url);
+
 				$.ajax({
 					type: "POST",
 					url: Routing.generate('compta_journal_od_voir_annee', {'year' : year}),
@@ -89,9 +92,6 @@
 							"processing": false,
 							"serverSide": false,
 						});
-
-						var url = Routing.generate('compta_journal_od_exporter', { 'year' : year} );
-						$('#btn-export').attr('href', url);
 
 					},
 					error: function(jqXHR, textStatus, errorThrown) {

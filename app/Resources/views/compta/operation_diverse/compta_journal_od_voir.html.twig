@@ -5,7 +5,7 @@
     <th>Compte</th>
     <th>Compte auxiliaire</th>
     <th>Piece</th>
-    <th>Fournisseur</th>
+    <th>Tiers</th>
     <th>Débit</th>
     <th>Crédit</th>
   </tr>
@@ -40,7 +40,12 @@
         {% if ligneJournal.depense is not null %}
           {{ ligneJournal.depense.compte }}
         {% elseif ligneJournal.avoir is not null %}
-          {{ ligneJournal.avoir.depense.compte }}
+            {% if ligneJournal.avoir.type == "CLIENT" %}
+              {{ ligneJournal.avoir.facture.compte }}
+            {% else %}
+              {{ ligneJournal.avoir.depense.compte }}
+            {% endif %}
+          
         {% elseif ligneJournal.facture is not null %}
           {{ ligneJournal.facture.compte }}
         {% endif %}

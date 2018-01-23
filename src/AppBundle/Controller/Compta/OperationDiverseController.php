@@ -4,9 +4,15 @@ namespace AppBundle\Controller\Compta;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 use AppBundle\Entity\Compta\OperationDiverse;
 use AppBundle\Form\Compta\OperationDiverseType;
+
+use PHPExcel;
+use PHPExcel_IOFactory;
+use PHPExcel_Shared_Date;
+
 
 class OperationDiverseController extends Controller
 {
@@ -96,6 +102,87 @@ class OperationDiverseController extends Controller
 	 */
 	public function journalODExporterAction($year){
 
+		$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\OperationDiverse');
+		$arr_journalOD= $repo->findJournalEntier($this->getUser()->getCompany(), $year);
+
+		$arr_totaux = array(
+		 	'debit' => 0,
+		 	'credit' => 0
+		);
+
+		$objPHPExcel = new PHPExcel();
+		$objPHPExcel->getActiveSheet()->setTitle('Journal Achats '.$year);
+
+		// header row
+		$arr_header = array(
+			'Code journal',
+			'Date',
+			'Compte',
+			'Compte auxiliaire',
+			'Pièce',
+			'Tiers',
+			'Débit',
+			'Crédit',
+		);
+		$row = 1;
+		$col = 'A';
+		foreach($arr_header as $header){
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $header);
+				$col++;
+		}
+
+	  	foreach($arr_journalOD as $ligne){
+			$col = 'A';
+			$row++;
+
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCodeJournal());
+			$col++;
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, PHPExcel_Shared_Date::PHPToExcel( $ligne->getDate()) );
+			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('dd/mm/yyyy');
+			$col++;
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, substr($ligne->getCompteComptable()->getNum(),0,3));
+			$col++;
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCompteComptable()->getNum());
+			$col++;
+			if($ligne->getFacture()){
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getFacture()->getNum());
+			} else if($ligne->getDepense()){
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getDepense()->getNum());
+			} else if ($ligne->getAvoir()){
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getAvoir()->getNum());
+			}
+			$col++;
+			if($ligne->getFacture()){
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getFacture()->getCompte());
+			} else if($ligne->getDepense()){
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getDepense()->getCompte());
+			} else if ($ligne->getAvoir()){
+				if($ligne->getAvoir()->getType() == "CLIENT"){
+					$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getAvoir()->getFacture()->getCompte());
+				} else {
+					$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getAvoir()->getDepense()->getCompte());
+				}
+			}
+			$col++;
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getDebit());
+			$col++;
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCredit());
+	  	}
+
+		//set column width
+		foreach(range('A','H') as $col) {
+    		$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
+		}
+
+		$response = new Response();
+
+		$response->headers->set('Content-Type', 'application/vnd.ms-excel');
+		$response->headers->set('Content-Disposition', 'attachment;filename="journal_od.xlsx"');
+		$response->headers->set('Cache-Control', 'max-age=0');
+		$response->sendHeaders();
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+		$objWriter->save('php://output');
+		exit();
 	}
 
 
