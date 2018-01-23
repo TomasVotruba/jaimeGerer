@@ -129,6 +129,7 @@ class JournalAchatRepository extends EntityRepository
 
 		$result = $this->createQueryBuilder('j')
 			->leftJoin('AppBundle\Entity\Compta\Depense', 'd', 'WITH', 'j.depense = d.id')
+			->leftJoin('AppBundle\Entity\Compta\CompteComptable', 'jcc', 'WITH', 'jcc.id = j.compteComptable')
 			->leftJoin('AppBundle\Entity\CRM\Compte', 'c1', 'WITH', 'd.compte = c1.id')
 			->leftJoin('AppBundle\Entity\Compta\Avoir', 'a', 'WITH', 'j.avoir = a.id')
 			->leftJoin('AppBundle\Entity\Compta\Depense', 'd2', 'WITH', 'a.depense = d2.id')
@@ -138,7 +139,7 @@ class JournalAchatRepository extends EntityRepository
 			->where('c1.company = :company or c2.company = :company or cc.company = :company')
 			->andWhere('(d.dateCreation >= :startDate and d.dateCreation <= :endDate) or (a.dateCreation >= :startDate and a.dateCreation <= :endDate)')
 			->andWhere('j.lettrage IS NULL')
-			->andWhere('cc.num LIKE :fournisseur or cc.num LIKE :client')
+			->andWhere('jcc.num LIKE :fournisseur or jcc.num LIKE :client')
 			->setParameter('startDate', $year.'-01-01')
 			->setParameter('endDate', $year.'-12-31')
 			->setParameter('company', $company)
