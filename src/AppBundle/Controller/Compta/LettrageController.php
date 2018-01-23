@@ -70,17 +70,19 @@ class LettrageController extends Controller
 		$arr_non_lettrees = array();
 		foreach($arr_lignes as $ligne){
 			
-			if(!array_key_exists($ligne->getCompteComptable()->getId(), $arr_non_lettrees)){
-				$arr_non_lettrees[$ligne->getCompteComptable()->getId()] = array(
+			if(!array_key_exists($ligne->getCompteComptable()->getNum(), $arr_non_lettrees)){
+				$arr_non_lettrees[$ligne->getCompteComptable()->getNum()] = array(
 					'compteComptable' => $ligne->getCompteComptable(),
 					'lettre' => $lettrageService->findNextNum($ligne->getCompteComptable(), $year),
 					'lignes' => array()
 				);
 			}
 
-			$arr_non_lettrees[$ligne->getCompteComptable()->getId()]['lignes'][] = $ligne;
+			$arr_non_lettrees[$ligne->getCompteComptable()->getNum()]['lignes'][] = $ligne;
 
 		}
+
+		ksort($arr_non_lettrees);
 
 		return $this->render('compta/lettrage/compta_lignes_non_lettrees_annee.html.twig', array(
 			'arr_non_lettrees' => $arr_non_lettrees,
