@@ -93,6 +93,7 @@
 				<div class="progress hidden">
 			  		<div class="progress-bar progress-bar-striped active progress-bar-success" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
 				</div>
+				<div class="error red"></div>
 			{% endif %}
 		</td>
 		<td class="actions">
@@ -274,6 +275,8 @@
 			success: function(data) {
 				$(element).parent().parent().find('.select-type').addClass('hidden');
 				$(element).parent().prev().find('.form-control:not(.hidden)').addClass('hidden');
+				$(element).parent().find('.error').addClass('hidden');
+				$(element).parent().find('.error').text('');
 
 				$(element).parent().prev().html('<div>' + data.s_piece + '</div><div class="hidden">' + data.piece_id + '</div>');
 
@@ -313,11 +316,11 @@
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
-				$(".progress").addClass("hidden");
 				$(element).removeClass("hidden");
-				console.log(jqXHR.status);
-				console.log(textStatus);
-				console.log(errorThrown);
+				$(element).parent().find('.progress').addClass('hidden');
+				
+				$(element).parent().find('.error').text(jqXHR.responseJSON.message);
+				$(element).parent().find('.error').removeClass('hidden');
 			},
 		});
 

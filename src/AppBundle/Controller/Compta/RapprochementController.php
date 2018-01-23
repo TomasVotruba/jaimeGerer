@@ -297,18 +297,31 @@ class RapprochementController extends Controller
     $rapprochement->setMouvementBancaire($mouvementBancaire);
     $s_piece = ''; //string pour l'affichage dans le tableau du relevé bancaire
     switch($type){
-      case 'DEPENSE' :
-        $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
-        $depense = $repo->find($piece);
-        $rapprochement->setDepense($depense);
-        $piece = $depense;
-        $s_piece =  $piece->getCompte()->getNom().' : '.$piece->getTotalTTC().' € TTC';
-        $depense->setEtat('RAPPROCHE');
-        $em->persist($depense);
-        break;
+        case 'DEPENSE' :
+            $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
+            $depense = $repo->find($piece);
+            if($depense->getCompte()->getCompteComptableFournisseur() == null){
+                return new JsonResponse(array(
+                    'message' => 'Pas de compte comptable fournisseur associé à '.$depense->getCompte()), 
+                    419
+                );
+            }
+            $rapprochement->setDepense($depense);
+            $piece = $depense;
+            $s_piece =  $piece->getCompte()->getNom().' : '.$piece->getTotalTTC().' € TTC';
+            $depense->setEtat('RAPPROCHE');
+            $em->persist($depense);
+            break;
+
       case 'FACTURE' :
         $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
         $facture = $repo->find($piece);
+        if($facture->getCompte()->getCompteComptableClient() == null){
+            return new JsonResponse(array(
+                'message' => 'Pas de compte comptable client associé à '.$facture->getCompte()->getNom()), 
+                419
+            );
+        }
         $rapprochement->setFacture($facture);
         $piece = $facture;
         $s_piece =  $piece->getNum().' : '.$piece->getTotalTTC().' € TTC';
@@ -325,6 +338,12 @@ class RapprochementController extends Controller
       case 'AVOIR-FOURNISSEUR' :
         $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
         $avoir = $repo->find($piece);
+        if($avoir->getDepense()->getCompte()->getCompteComptableFournisseur() == null){
+            return new JsonResponse(array(
+                'message' => 'Pas de compte comptable fournisseur associé à '.$avoir->getDepense()->getCompte()->getNom()), 
+                419
+            );
+        }
         $rapprochement->setAvoir($avoir);
         $piece = $avoir;
         $s_piece = $avoir->__toString();
@@ -332,6 +351,12 @@ class RapprochementController extends Controller
       case 'AVOIR-CLIENT' :
         $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
         $avoir = $repo->find($piece);
+        if($avoir->getFacture()->getCompte()->getCompteComptableClient() == null){
+            return new JsonResponse(array(
+                'message' => 'Pas de compte comptable client associé à '.$avoir->getFacture()->getCompte()->getNom()), 
+                419
+            );
+        }
         $rapprochement->setAvoir($avoir);
         $piece = $avoir;
         $s_piece = $avoir->__toString();
@@ -633,13 +658,6 @@ class RapprochementController extends Controller
         $arr_mouvementsId = $this->getRequest()->request->get('mouvements');
         $arr_piecesId = $this->getRequest()->request->get('pieces');
 
-        // if(count($arr_mouvementsId) > 1 && count($arr_piecesId) > 1){
-        //     return new JsonResponse(array(
-        //         'message' => 'TOO_MANY_ELEMENTS'), 
-        //         419
-        //     );
-        // }
-
         $arr_cc = array();
         $arr_pieces = array();
         $arr_mouvements = array();
@@ -726,7 +744,7 @@ class RapprochementController extends Controller
 
         //ne pas rapprocher et lettrer si les pièces viennent de comptes comptables différents
         if(count($arr_cc) > 1){
-             return new JsonResponse(array(
+            return new JsonResponse(array(
                 'message' => 'Les pièces ne doivent pas venir de comptes comptables différents.'), 
                 419
             );
