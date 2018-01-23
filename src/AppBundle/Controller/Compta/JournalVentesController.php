@@ -359,63 +359,63 @@ class JournalVentesController extends Controller
 
 	}
 
-	/**
-	 * @Route("/compta/journal-ventes/reinitialiser", name="compta_journal_ventes_reinitialiser")
-	 */
-	public function journalVentesReinitialiser(){
+	// /**
+	//  * @Route("/compta/journal-ventes/reinitialiser", name="compta_journal_ventes_reinitialiser")
+	//  */
+	// public function journalVentesReinitialiser(){
 
-		$em = $this->getDoctrine()->getManager();
-		$journalVentesRepo = $em->getRepository('AppBundle:Compta\JournalVente');
-		$factureRepo = $em->getRepository('AppBundle:CRM\DocumentPrix');
-		$avoirRepo = $em->getRepository('AppBundle:Compta\Avoir');
+	// 	$em = $this->getDoctrine()->getManager();
+	// 	$journalVentesRepo = $em->getRepository('AppBundle:Compta\JournalVente');
+	// 	$factureRepo = $em->getRepository('AppBundle:CRM\DocumentPrix');
+	// 	$avoirRepo = $em->getRepository('AppBundle:Compta\Avoir');
 
-		$journalVentesService = $this->container->get('appbundle.compta_journal_ventes_controller');
-		$compteComptableService = $this->get('appbundle.compta_compte_comptable_controller');
+	// 	$journalVentesService = $this->container->get('appbundle.compta_journal_ventes_controller');
+	// 	$compteComptableService = $this->get('appbundle.compta_compte_comptable_controller');
 
-		$arr_journal = $journalVentesRepo->findJournalEntier($this->getUser()->getCompany());
-		foreach($arr_journal as $ligne){
-			$em->remove($ligne);
-		}
-		$em->flush();
+	// 	$arr_journal = $journalVentesRepo->findJournalEntier($this->getUser()->getCompany());
+	// 	foreach($arr_journal as $ligne){
+	// 		$em->remove($ligne);
+	// 	}
+	// 	$em->flush();
 
-		$arr_factures = $factureRepo->findForCompany($this->getUser()->getCompany(), 'FACTURE', true);
-		foreach($arr_factures as $facture){
-			$compte = $facture->getCompte();
-			if($compte->getCompteComptableClient() == null || $compte->getClient() == false){
+	// 	$arr_factures = $factureRepo->findForCompany($this->getUser()->getCompany(), 'FACTURE', true);
+	// 	foreach($arr_factures as $facture){
+	// 		$compte = $facture->getCompte();
+	// 		if($compte->getCompteComptableClient() == null || $compte->getClient() == false){
 
-				$compteComptable = $compteComptableService->createCompteComptableForCompte('411', $compte->getNom());
-				$em->persist($compteComptable);
+	// 			$compteComptable = $compteComptableService->createCompteComptableForCompte('411', $compte->getNom());
+	// 			$em->persist($compteComptable);
 
-				$compte->setClient(true);
-				$compte->setCompteComptableClient($compteComptable);
-				$em->persist($compte);
-			}
+	// 			$compte->setClient(true);
+	// 			$compte->setCompteComptableClient($compteComptable);
+	// 			$em->persist($compte);
+	// 		}
 
-			//ecrire dans le journal des ventes
-			$journalVentesService->journalVentesAjouterFactureAction($facture);
+	// 		//ecrire dans le journal des ventes
+	// 		$journalVentesService->journalVentesAjouterFactureAction($facture);
 
-		}
+	// 	}
 
-		$arr_avoirs = $avoirRepo->findForCompany('CLIENT', $this->getUser()->getCompany());
-		foreach($arr_avoirs as $avoir){
-			$compte = $avoir->getFacture()->getCompte();
-			if($compte->getCompteComptableClient() == null || $compte->getClient() == false){
+	// 	$arr_avoirs = $avoirRepo->findForCompany('CLIENT', $this->getUser()->getCompany());
+	// 	foreach($arr_avoirs as $avoir){
+	// 		$compte = $avoir->getFacture()->getCompte();
+	// 		if($compte->getCompteComptableClient() == null || $compte->getClient() == false){
 
-				$compteComptable = $compteComptableService->createCompteComptableForCompte('411', $compte->getNom());
-				$em->persist($compteComptable);
+	// 			$compteComptable = $compteComptableService->createCompteComptableForCompte('411', $compte->getNom());
+	// 			$em->persist($compteComptable);
 
-				$compte->setClient(true);
-				$compte->setCompteComptableClient($compteComptable);
-				$em->persist($compte);
-			}
+	// 			$compte->setClient(true);
+	// 			$compte->setCompteComptableClient($compteComptable);
+	// 			$em->persist($compte);
+	// 		}
 
-			//ecrire dans le journal des ventes
-			$journalVentesService->journalVentesAjouterAvoirAction($avoir);
+	// 		//ecrire dans le journal des ventes
+	// 		$journalVentesService->journalVentesAjouterAvoirAction($avoir);
 
-		}
+	// 	}
 
-		$em->flush();
-		return new Response();
+	// 	$em->flush();
+	// 	return new Response();
 
-	}
+	// }
 }

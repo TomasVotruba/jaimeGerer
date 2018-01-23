@@ -394,7 +394,6 @@ class ContactRepository extends EntityRepository
 
 						$where.= 'c.'.$champ.' '.$operateur.' '.$param;
 						$query->setParameter($param, $val);
-
 					}
 
 				}
@@ -411,6 +410,7 @@ class ContactRepository extends EntityRepository
 							$query->orWhere($where);
 						}
 					}
+					$where = '';
 				} else {
 					$newGroup = false;
 				}
@@ -423,7 +423,6 @@ class ContactRepository extends EntityRepository
 				->andWhere('co.company = :company')
 				->setParameter('company', $company);
 		$result = $query->getQuery()->getResult();
-
 
 		return $result;
 	}
