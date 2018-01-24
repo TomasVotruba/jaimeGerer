@@ -90,5 +90,58 @@ class LettrageController extends Controller
 	
 	}
 
+	/**
+	 * @Route("/compta/lettrage-divers", name="compta_lettrage_divers")
+	 */
+	public function lettrageDiversAction(){
+		$em = $this->getDoctrine()->getManager();
+		$ccRepo = $em->getRepository('AppBundle:Compta\CompteComptable');
+		$rapprochementRepo = $em->getRepository('AppBundle:Compta\Rapprochement');
+		$journalAchatRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
+		$journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
+		$lettrageService = $this->get('appbundle.compta_lettrage_service');
+
+		$cc = $ccRepo->find(8003);
+
+		$arr_rapprochements = $rapprochementRepo->findForCompanyByYear($this->getUser()->getCompany(), 2017);
+
+		foreach($arr_rapprochements as $rapprochement){
+			if($rapprochement->getDepense() == null){
+				continue;
+			}
+			$depense = $rapprochement->getDepense();
+
+			$ligneAchat = $journalAchatRepo->findOneBy(array(
+				'depense' => $depense,
+				'compteComptable' => $cc
+			));
+
+			$ligneBanque = $journalBanqueRepo->findOneBy(array(
+				'mouvementBancaire' => $rapprochement->getMouvementBancaire(),
+				'compteComptable' => $cc
+			));
+
+			if($ligneAchat && $ligneBanque){
+
+				//if($ligneAchat->getLettrage() == null && $ligneBanque->getLettrage() == null){
+
+					$lettrage = $lettrageService->findNextNum($cc, 2017);
+					return 0;
+					$ligneAchat->setLettrage($lettrage);
+					$em->persist($ligneAchat);
+					$ligneBanque->setLettrage($lettrage);
+					$em->persist($ligneBanque);
+					$em->flush();
+
+					
+				//}
+				
+			} 
+
+		}	
+
+		return new Response();
+
+	}
 
 }

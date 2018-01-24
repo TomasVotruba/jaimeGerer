@@ -103,6 +103,20 @@ class JournalBanqueRepository extends EntityRepository
 		return $result;
 	}
 
+	public function findAllLettrage($compteComptable, $annee){
+		$result = $this->createQueryBuilder('j')
+			->select('DISTINCT(j.lettrage)')
+			->where('j.compteComptable = :compteComptable')
+			->andWhere('(j.date >= :startDate and j.date <= :endDate)')
+			->setParameter('startDate', $annee.'-01-01')
+			->setParameter('endDate', $annee.'-12-31')
+			->setParameter('compteComptable', $compteComptable)
+			->getQuery()
+			->getArrayResult();
+
+		return $result;
+	}
+
 	public function findNonLettreesByCompanyAndYear($company, $year){
 
 		$result = $this->createQueryBuilder('j')

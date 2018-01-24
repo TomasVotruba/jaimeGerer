@@ -125,6 +125,27 @@ class JournalAchatRepository extends EntityRepository
 		return $result;
 	}
 
+	public function findAllLettrage($compteComptable, $annee){
+		$result = $this->createQueryBuilder('j')
+			->select('DISTINCT(j.lettrage)')
+			->leftJoin('AppBundle\Entity\Compta\Depense', 'd', 'WITH', 'j.depense = d.id')
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c1', 'WITH', 'd.compte = c1.id')
+			->leftJoin('AppBundle\Entity\Compta\Avoir', 'a', 'WITH', 'j.avoir = a.id')
+			->leftJoin('AppBundle\Entity\Compta\Depense', 'd2', 'WITH', 'a.depense = d2.id')
+			->leftJoin('AppBundle\Entity\NDF\NoteFrais', 'n', 'WITH', 'd.noteFrais = n.id')
+			->leftJoin('AppBundle\Entity\Compta\CompteComptable', 'cc', 'WITH', 'cc.id = n.compteComptable')
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c2', 'WITH', 'd2.compte = c2.id')
+			->where('j.compteComptable = :compteComptable')
+			->andWhere('(d.dateCreation >= :startDate and d.dateCreation <= :endDate) or (a.dateCreation >= :startDate and a.dateCreation <= :endDate)')
+			->setParameter('startDate', $annee.'-01-01')
+			->setParameter('endDate', $annee.'-12-31')
+			->setParameter('compteComptable', $compteComptable)
+			->getQuery()
+			->getArrayResult();
+
+		return $result;
+	}
+
 	public function findNonLettreesByCompanyAndYear($company, $year){
 
 		$result = $this->createQueryBuilder('j')

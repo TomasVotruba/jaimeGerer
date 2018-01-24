@@ -966,12 +966,13 @@ class ContactController extends Controller
 					$contact->setReseau($reseau);
 					$contact->setCompte($compte);
 
+
 					foreach( $fields[$k] as $cle=>$valeur )
 					{
 	
 						if( in_array($cle, $champs) && $cle != 'filepath' && $cle != 'email' )
 						{
-      
+      						
                             if($cle == "carteVoeux"){
                             	if(strtolower($value[$valeur]) == "oui"){
                             		$contact->setCarteVoeux(true);
@@ -980,9 +981,9 @@ class ContactController extends Controller
                             	}
                             } elseif($cle == "newsletter"){
                             	if(strtolower($value[$valeur]) == "oui"){
-                            		$contact->setCarteVoeux(true);
+                            		$contact->setNewsletter(true);
                             	} else {
-                            		$contact->setCarteVoeux(false);
+                            		$contact->setNewsletter(false);
                             	}
                             } else {
                             	$methodSet = 'set'.ucfirst($cle);
@@ -992,7 +993,25 @@ class ContactController extends Controller
 						else if( $cle == 'filepath' )
 						{
 							$em->persist($contact);
+
+							if($compte->getAdresse() == null){
+								$compte->setAdresse($contact->getAdresse());
+							}
+							if($compte->getCodePostal() == null){
+								$compte->setCodePostal($contact->getCodePostal());
+							}
+							if($compte->getVille() == null){
+								$compte->setVille($contact->getVille());
+							}
+							if($compte->getRegion() == null){
+								$compte->setRegion($contact->getRegion());
+							}
+							if($compte->getPays() == null){
+								$compte->setPays($contact->getPays());
+							}
+							$em->persist($compte);
 							$em->flush();
+
 						}
 					}
 				}
@@ -1574,39 +1593,44 @@ class ContactController extends Controller
 	
 							if( in_array($cle, $champs) && $cle != 'filepath' && $cle != 'email' )
 							{
-
-                                if($contact->getCarteVoeux() == "Oui" || $contact->getCarteVoeux() == "oui"){
-                                    $contact->setCarteVoeux(1);
-                                }
-                                else{
-                                    $contact->setCarteVoeux(0);
-                                }
-                                if($contact->getNewsletter() == "Oui" || $contact->getNewsletter() == "oui"){
-                                    $contact->setNewsletter(1);
-                                }
-                                else{
-                                    $contact->setNewsletter(0);
-                                }
-								$methodSet = 'set'.ucfirst($cle);
-								eval('$contact->$methodSet($enr[$valeur]);');
+								if($cle == "carteVoeux"){
+	                            	if(strtolower($enr[$valeur]) == "oui"){
+	                            		$contact->setCarteVoeux(true);
+	                            	} else {
+	                            		$contact->setCarteVoeux(false);
+	                            	}
+	                            } elseif($cle == "newsletter"){
+	                            	if(strtolower($enr[$valeur]) == "oui"){
+	                            		$contact->setNewsletter(true);
+	                            	} else {
+	                            		$contact->setNewsletter(false);
+	                            	}
+	                            } else {
+	                            	$methodSet = 'set'.ucfirst($cle);
+									eval('$contact->$methodSet($enr[$valeur]);');
+	                            }
 							}
 							else if( $cle == 'filepath' )
 							{
 
-                                if($contact->getCarteVoeux() == "Oui" || $contact->getCarteVoeux() == "oui"){
-                                    $contact->setCarteVoeux(1);
-                                }
-                                else{
-                                    $contact->setCarteVoeux(0);
-                                }
-                                if($contact->getNewsletter() == "Oui" || $contact->getNewsletter() == "oui"){
-                                    $contact->setNewsletter(1);
-                                }
-                                else{
-                                    $contact->setNewsletter(0);
-                                }
-
 								$em->persist($contact);
+
+								if($compte->getAdresse() == null){
+									$compte->setAdresse($contact->getAdresse());
+								}
+								if($compte->getCodePostal() == null){
+									$compte->setCodePostal($contact->getCodePostal());
+								}
+								if($compte->getVille() == null){
+									$compte->setVille($contact->getVille());
+								}
+								if($compte->getRegion() == null){
+									$compte->setRegion($contact->getRegion());
+								}
+								if($compte->getPays() == null){
+									$compte->setPays($contact->getPays());
+								}
+								$em->persist($compte);
 								$em->flush();
 							}
 						}

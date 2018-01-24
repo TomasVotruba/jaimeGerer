@@ -26,11 +26,29 @@ class LettrageService extends ContainerAware {
         }
 
   		$arr_max = array();
-  		$arr_max['vente'] = $journalVenteRepo->findMaxLettrage($compteComptable, $annee)['max_lettrage'];
-  		$arr_max['achat'] = $journalAchatRepo->findMaxLettrage($compteComptable, $annee)['max_lettrage'];
-  		$arr_max['banque'] = $journalBanqueRepo->findMaxLettrage($compteComptable, $annee)['max_lettrage'];
+
+        $arr_lettrage_vente = $journalVenteRepo->findAllLettrage($compteComptable, $annee);
+        rsort($arr_lettrage_vente);
+        if(count($arr_lettrage_vente) > 0){
+            $arr_max['vente'] = $arr_lettrage_vente[0][1];
+        }
+
+        $arr_lettrage_achat = $journalAchatRepo->findAllLettrage($compteComptable, $annee);
+        rsort($arr_lettrage_achat);
+        if(count($arr_lettrage_achat) > 0){
+            $arr_max['achat'] = $arr_lettrage_achat[0][1];
+        }
+
+        $arr_lettrage_banque = $journalBanqueRepo->findAllLettrage($compteComptable, $annee);
+        rsort($arr_lettrage_banque);
+        if(count($arr_lettrage_banque) > 0){
+            $arr_max['banque'] = $arr_lettrage_banque[0][1];
+        }
+        
+        
 
   		arsort($arr_max); //Trie un tableau en ordre inverse et conserve l'association des index
+        dump($arr_max);
   		$maxLettrage = reset($arr_max); // replace le pointeur de tableau array au premier élément et retourne la valeur du premier élément
   		
   		if($maxLettrage === 0 or $maxLettrage === null or $maxLettrage === ""){
@@ -38,7 +56,7 @@ class LettrageService extends ContainerAware {
   		} else {
   			$maxLettrage++;
   		}
-
+        dump($maxLettrage);
   		return $maxLettrage;
   	}
 
