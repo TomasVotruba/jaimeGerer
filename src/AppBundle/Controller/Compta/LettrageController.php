@@ -104,6 +104,7 @@ class LettrageController extends Controller
 		$cc = $ccRepo->find(8003);
 
 		$arr_rapprochements = $rapprochementRepo->findForCompanyByYear($this->getUser()->getCompany(), 2017);
+		$lettrage = $lettrageService->findNextNum($cc, 2017);
 
 		foreach($arr_rapprochements as $rapprochement){
 			if($rapprochement->getDepense() == null){
@@ -123,18 +124,17 @@ class LettrageController extends Controller
 
 			if($ligneAchat && $ligneBanque){
 
-				//if($ligneAchat->getLettrage() == null && $ligneBanque->getLettrage() == null){
+				if($ligneAchat->getLettrage() == null && $ligneBanque->getLettrage() == null){
 
-					$lettrage = $lettrageService->findNextNum($cc, 2017);
-					return 0;
+					
 					$ligneAchat->setLettrage($lettrage);
 					$em->persist($ligneAchat);
 					$ligneBanque->setLettrage($lettrage);
 					$em->persist($ligneBanque);
 					$em->flush();
 
-					
-				//}
+					$lettrage++;
+				}
 				
 			} 
 
