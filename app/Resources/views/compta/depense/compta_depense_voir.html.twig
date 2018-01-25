@@ -66,7 +66,7 @@
 								{% if depense.rapprochements|length > 0 %}
 									<p>
 									{% for rapprochement in depense.rapprochements %}
-										{{ rapprochement.mouvementBancaire.compteBancaire.nom }} : {{ rapprochement.mouvementBancaire.libelle }} ({{ rapprochement.mouvementBancaire.montant|number_format(2, ',', ' ') }} €)
+										{{ rapprochement.mouvementBancaire.compteBancaire.nom }} : {{ rapprochement.mouvementBancaire.date|date('d/m/Y') }} : {{ rapprochement.mouvementBancaire.libelle }} ({{ rapprochement.mouvementBancaire.montant|number_format(2, ',', ' ') }} €)
 										<a href="{{ path('compta_rapprochement_supprimer', {'id' : rapprochement.id }) }}" class="btn btn-xs btn-danger" title="Dévérouiller le rapprochement">
 											<span class="glyphicon glyphicon-trash"></span>
 										</a>
