@@ -360,7 +360,7 @@ class RapportController extends Controller
 			if ($form->isSubmitted() && $form->isValid()) {
 
 				$periode = $form->get('periode-select')->getData();
-				$arr_balance = $balanceGeneraleService->creerBalanceGenerale($this->getUser()->getCompany(), $periode);
+				$arr_balance = $balanceGeneraleService->creerBalanceGenerale($this->getUser()->getCompany(), $periode, 'ALL');
 
 				//convert UTF8 strings to  ISO-8859-1 since most people will open this CSV file with Excel which doesn't handle UTF8
 				$header[] = utf8_decode ('Compte');
