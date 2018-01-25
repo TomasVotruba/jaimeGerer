@@ -288,23 +288,24 @@ class FactureController extends Controller
 
 			$em->persist($facture);
 
-			//si le compte comptable du client n'existe pas, on le créé
-			$compte = $facture->getCompte();
-			if($compte->getClient() == false || $compte->getCompteComptableClient() == null){
-
-				$compteComptableService = $this->get('appbundle.compta_compte_comptable_controller');
-				$compteComptable = $compteComptableService->createCompteComptableForCompte('411', $compte->getNom());
-
-				$em->persist($compteComptable);
-
-				$compte->setClient(true);
-				$compte->setCompteComptableClient($compteComptable);
-				$em->persist($compte);
-			}
-
-			$em->flush();
-
 			if($activationCompta){
+
+				//si le compte comptable du client n'existe pas, on le créé
+				$compte = $facture->getCompte();
+				if($compte->getClient() == false || $compte->getCompteComptableClient() == null){
+
+					$compteComptableService = $this->get('appbundle.compta_compte_comptable_controller');
+					$compteComptable = $compteComptableService->createCompteComptableForCompte('411', $compte->getNom());
+
+					$em->persist($compteComptable);
+
+					$compte->setClient(true);
+					$compte->setCompteComptableClient($compteComptable);
+					$em->persist($compte);
+				}
+
+				$em->flush();
+
 				//ecrire dans le journal de vente
 				$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
 				$result = $journalVenteService->journalVentesAjouterFactureAction($facture);

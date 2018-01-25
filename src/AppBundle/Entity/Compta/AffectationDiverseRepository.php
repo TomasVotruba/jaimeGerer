@@ -24,6 +24,9 @@ class AffectationDiverseRepository extends EntityRepository
 			$qb->andWhere('a.recurrent = :recurrent')
 			->setParameter('recurrent', $recurrent);
 		}	
+
+		$qb->addOrderBy('a.nom', 'ASC');
+
 		return $qb->getQuery()->getResult();
 	}
 }
