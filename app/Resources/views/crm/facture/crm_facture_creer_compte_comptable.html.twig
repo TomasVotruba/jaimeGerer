@@ -8,7 +8,10 @@
         </div>
     </div>
 
-	<p>Créer un compte comptable</p>
+	<div class="alert alert-info">
+		<strong>Oups !</strong> Nous n'avons pas réussi à créer automatiquement un numéro pour le compte comptable client.<br />
+			Veuillez entrer un numéro pour le compte {{ facture.compte.nom }}.
+	</div>
 
  	{{ form_start(form, {'action': path('crm_facture_creer_compte_comptable', {'id' : facture.id }), 'attr': {'class': 'form-sous-compte'}} ) }}
 
@@ -28,10 +31,14 @@
 	    {{ form_widget(form.nom) }}
 	</div>
 
+	<div id="error" class="alert alert-danger hidden">
+		Ce compte existe déjà.
+	</div>
+
 	<a class="btn" href="#" data-dismiss="modal">
        	<span class="glyphicon glyphicon-chevron-left"></span>Annuler
     </a>
-	<input type="submit" value="Enregistrer" class="btn btn-success" />
+	<input type="submit" value="Enregistrer" class="btn btn-success" id="submit" />
  	<p class="center"><img src="{{ asset('images/assets/cat_loader.gif') }}" alt="Chargement" class="hidden" id="loader"/></p>
 	{{ form_end(form) }}
 
@@ -52,8 +59,31 @@
 						return false;
 					}
 				}
+
+				checkNum($(this).val());
+
 			});
 
 		});
+
+		function checkNum(nom){
+
+				var num = '411'+nom;
+				var found = false;
+				{% for existingNum in arr_existings_nums %}
+					var existingNum = "{{ existingNum }}";
+					if(existingNum == num){
+						found = true;
+					}
+				{% endfor %}
+				console.log(found);
+				if(found == true){
+					$('#error').removeClass('hidden');
+					$('#submit').attr('disabled', true);
+				} else {
+					$('#error').addClass('hidden');
+					$('#submit').attr('disabled', false);
+				}
+			}
 	</script>
 {% endblock %}

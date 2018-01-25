@@ -170,6 +170,17 @@ class FactureController extends Controller
 				}
 			}
 
+			if($facture->getEtat() == "RAPPROCHE"){
+				$etat = 'RAPPROCHEE <br />';
+				foreach($facture->getRapprochements() as $rapprochement){
+					$etat.=$rapprochement->getMouvementBancaire()->getCompteBancaire()->getNom();
+					$etat.=' : '.$rapprochement->getMouvementBancaire()->getDate()->format('d/m/Y');
+					$etat.=' : '.$rapprochement->getMouvementBancaire()->getLibelle().'<br />';
+					
+				}
+				$list[$i]['etat'].=$etat;
+			}
+
 		}
 
 		$response = new JsonResponse();

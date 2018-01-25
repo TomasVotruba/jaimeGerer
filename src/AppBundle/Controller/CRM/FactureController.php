@@ -350,6 +350,7 @@ class FactureController extends Controller
 
         $compteComptable = new CompteComptable();
 		$compteComptable->setCompany($this->getUser()->getCompany());
+		$compteComptable->setNom($facture->getCompte()->getNom());
 		$form = $this->createForm(new CompteComptableType(), $compteComptable);
 
 		$request = $this->getRequest();
