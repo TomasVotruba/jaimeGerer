@@ -358,6 +358,10 @@ class FactureController extends Controller
 
 		if ($form->isSubmitted() && $form->isValid()) {
 
+			$num = $compteComptable->getNum();
+			$num = '411'.strtoupper($num);
+			$compteComptable->setNum($num);
+
 			$em->persist($compteComptable);
 
 			$compte = $facture->getCompte();

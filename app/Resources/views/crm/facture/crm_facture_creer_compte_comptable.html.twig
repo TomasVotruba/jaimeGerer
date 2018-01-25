@@ -53,22 +53,23 @@
 			/**
 			*	Limiter le nombre de caractères à 8
 			**/
-			$('.num').keypress(function(e){
+			$('.num').keyup(function(e){
+
+				checkNum($(this).val());
+
 				if(e.keyCode != 8 && e.keyCode != 13 && e.keyCode != 37 && e.keyCode != 39 && e.keyCode != 46){
 					if($(this).val().length >= 5){
 						return false;
 					}
 				}
-
-				checkNum($(this).val());
-
+				
 			});
 
 		});
 
 		function checkNum(nom){
 
-				var num = '411'+nom;
+				var num = '411'+nom.toUpperCase();
 				var found = false;
 				{% for existingNum in arr_existings_nums %}
 					var existingNum = "{{ existingNum }}";
@@ -76,7 +77,6 @@
 						found = true;
 					}
 				{% endfor %}
-				console.log(found);
 				if(found == true){
 					$('#error').removeClass('hidden');
 					$('#submit').attr('disabled', true);
