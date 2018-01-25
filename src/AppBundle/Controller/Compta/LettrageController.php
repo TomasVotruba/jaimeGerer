@@ -102,43 +102,50 @@ class LettrageController extends Controller
 		$lettrageService = $this->get('appbundle.compta_lettrage_service');
 
 		$cc = $ccRepo->find(8003);
-
-		$arr_rapprochements = $rapprochementRepo->findForCompanyByYear($this->getUser()->getCompany(), 2017);
 		$lettrage = $lettrageService->findNextNum($cc, 2017);
+		dump($lettrage);
+		// $lettrage = $lettrageService->findNextNum($cc, 2017);
+		// dump($lettrage);
+		// $lettrage = $lettrageService->findNextNum($cc, 2017);
+		// dump($lettrage);
 
-		foreach($arr_rapprochements as $rapprochement){
-			if($rapprochement->getDepense() == null){
-				continue;
-			}
-			$depense = $rapprochement->getDepense();
 
-			$ligneAchat = $journalAchatRepo->findOneBy(array(
-				'depense' => $depense,
-				'compteComptable' => $cc
-			));
+		//$arr_rapprochements = $rapprochementRepo->findForCompanyByYear($this->getUser()->getCompany(), 2017);
+		
+		// foreach($arr_rapprochements as $rapprochement){
+		// 	if($rapprochement->getDepense() == null){
+		// 		continue;
+		// 	}
+		// 	$depense = $rapprochement->getDepense();
 
-			$ligneBanque = $journalBanqueRepo->findOneBy(array(
-				'mouvementBancaire' => $rapprochement->getMouvementBancaire(),
-				'compteComptable' => $cc
-			));
+		// 	$ligneAchat = $journalAchatRepo->findOneBy(array(
+		// 		'depense' => $depense,
+		// 		'compteComptable' => $cc
+		// 	));
 
-			if($ligneAchat && $ligneBanque){
+		// 	$ligneBanque = $journalBanqueRepo->findOneBy(array(
+		// 		'mouvementBancaire' => $rapprochement->getMouvementBancaire(),
+		// 		'compteComptable' => $cc
+		// 	));
 
-				if($ligneAchat->getLettrage() == null && $ligneBanque->getLettrage() == null){
+		// 	if($ligneAchat && $ligneBanque){
+
+		// 		if($ligneAchat->getLettrage() == null && $ligneBanque->getLettrage() == null){
 
 					
-					$ligneAchat->setLettrage($lettrage);
-					$em->persist($ligneAchat);
-					$ligneBanque->setLettrage($lettrage);
-					$em->persist($ligneBanque);
-					$em->flush();
+		// 			$ligneAchat->setLettrage($lettrage);
+		// 			$em->persist($ligneAchat);
+		// 			$ligneBanque->setLettrage($lettrage);
+		// 			$em->persist($ligneBanque);
+		// 			$em->flush();
 
-					$lettrage++;
-				}
+		// 			$lettrage++;
+		// 		}
 				
-			} 
+		// 	} 
 
-		}	
+		// }	
+
 
 		return new Response();
 
