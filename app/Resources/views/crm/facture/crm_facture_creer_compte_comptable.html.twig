@@ -1,0 +1,59 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Créer une facture</h1>
+        </div>
+    </div>
+
+	<p>Créer un compte comptable</p>
+
+ 	{{ form_start(form, {'action': path('crm_facture_creer_compte_comptable', {'id' : facture.id }), 'attr': {'class': 'form-sous-compte'}} ) }}
+
+	{{ form_errors(form) }}
+
+	<div class="form-group">
+	   	{{ form_label(form.num) }}<br />
+	   	 <div class="input-group">
+	    	{{ form_errors(form.num) }}
+	    	<div class="input-group-addon">411</div>{{ form_widget(form.num, { 'attr': {'class': 'num'}}) }}
+	    </div>
+	</div>
+
+	<div class="form-group">
+	   	{{ form_label(form.nom) }}<br />
+	    {{ form_errors(form.nom) }}
+	    {{ form_widget(form.nom) }}
+	</div>
+
+	<a class="btn" href="#" data-dismiss="modal">
+       	<span class="glyphicon glyphicon-chevron-left"></span>Annuler
+    </a>
+	<input type="submit" value="Enregistrer" class="btn btn-success" />
+ 	<p class="center"><img src="{{ asset('images/assets/cat_loader.gif') }}" alt="Chargement" class="hidden" id="loader"/></p>
+	{{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+	<script type="text/javascript">
+		$(document).ready( function () {
+
+			/**
+			*	Limiter le nombre de caractères à 8
+			**/
+			$('.num').keypress(function(e){
+				if(e.keyCode != 8 && e.keyCode != 13 && e.keyCode != 37 && e.keyCode != 39 && e.keyCode != 46){
+					if($(this).val().length >= 5){
+						return false;
+					}
+				}
+			});
+
+		});
+	</script>
+{% endblock %}

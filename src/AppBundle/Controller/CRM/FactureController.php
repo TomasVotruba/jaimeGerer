@@ -24,6 +24,7 @@ use AppBundle\Form\CRM\CompteType;
 use AppBundle\Form\CRM\ContactType;
 use AppBundle\Form\SettingsType;
 use AppBundle\Form\CRM\FactureType;
+use AppBundle\Form\Compta\CompteComptableType;
 
 use PHPExcel_IOFactory;
 use PHPExcel_Shared_Date;
@@ -197,6 +198,9 @@ class FactureController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$compteRepo = $em->getRepository('AppBundle:CRM\Compte');
 		$contactRepo = $em->getRepository('AppBundle:CRM\Contact');
+		$settingsActivationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
+		$compteComptableService = $this->get('appbundle.compta_compte_comptable_service');
+		$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
 
 		$facture = new DocumentPrix($this->getUser()->getCompany(),'FACTURE', $em);
 		$facture->setUserGestion($this->getUser());
@@ -274,11 +278,11 @@ class FactureController extends Controller
 
 			$facture->setUserCreation($this->getUser());
 
-			$settingsActivationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
 			$activationCompta = $settingsActivationRepo->findOneBy(array(
-					'company' => $this->getUser()->getCompany(),
-					'outil' => 'COMPTA',
+				'company' => $this->getUser()->getCompany(),
+				'outil' => 'COMPTA',
 			));
+
 			if($activationCompta){
 				$facture->setCompta(true);
 			}
@@ -287,6 +291,7 @@ class FactureController extends Controller
 			}
 
 			$em->persist($facture);
+			$em->flush();
 
 			if($activationCompta){
 
@@ -294,21 +299,23 @@ class FactureController extends Controller
 				$compte = $facture->getCompte();
 				if($compte->getClient() == false || $compte->getCompteComptableClient() == null){
 
-					$compteComptableService = $this->get('appbundle.compta_compte_comptable_controller');
-					$compteComptable = $compteComptableService->createCompteComptableForCompte('411', $compte->getNom());
-
-					$em->persist($compteComptable);
+					try {
+						$compteComptable = $compteComptableService->createCompteComptableClient($compte);
+					} catch(\Exception $e){
+						return $this->redirect($this->generateUrl(
+							'crm_facture_creer_compte_comptable', 
+							array('id' => $facture->getId())
+						));
+					}
 
 					$compte->setClient(true);
 					$compte->setCompteComptableClient($compteComptable);
 					$em->persist($compte);
+					$em->flush();
 				}
 
-				$em->flush();
-
 				//ecrire dans le journal de vente
-				$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
-				$result = $journalVenteService->journalVentesAjouterFactureAction($facture);
+				$journalVenteService->journalVentesAjouterFactureAction($facture);
 			}
 
 			return $this->redirect($this->generateUrl(
@@ -321,6 +328,58 @@ class FactureController extends Controller
 		return $this->render('crm/facture/crm_facture_ajouter.html.twig', array(
 				'form' => $form->createView(),
 				'facture' => $facture
+		));
+	}
+
+
+	/**
+	 * @Route("/crm/facture/creer-compte-comptable/{id}", name="crm_facture_creer_compte_comptable")
+	 */
+	public function factureCreerCompteComptableAction(DocumentPrix $facture)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$compteComptableRepo = $em->getRepository('AppBundle:Compta\CompteComptable');
+		$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
+
+		//find array of existing nums for this company
+        $arr_nums = $compteComptableRepo->findAllNumForCompany($this->getUser()->getCompany());
+        $arr_existings_nums = array();
+        foreach($arr_nums as $arr){
+            $arr_existings_nums[] = $arr['num'];
+        }
+
+        $compteComptable = new CompteComptable();
+		$compteComptable->setCompany($this->getUser()->getCompany());
+		$form = $this->createForm(new CompteComptableType(), $compteComptable);
+
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$em->persist($compteComptable);
+
+			$compte = $facture->getCompte();
+			$compte->setClient(true);
+			$compte->setCompteComptableClient($compteComptable);
+	
+			$em->flush();
+
+			//ecrire dans le journal de vente
+			$journalVenteService->journalVentesAjouterFactureAction($facture);
+
+			return $this->redirect($this->generateUrl(
+				'crm_facture_voir', 
+				array('id' => $facture->getId())
+			));
+		}
+
+
+        return $this->render('crm/facture/crm_facture_creer_compte_comptable.html.twig', array(
+			'form' => $form->createView(),
+			'facture' => $facture,
+			'compteComptable' => $compteComptable,
+			'arr_existings_nums' => $arr_existings_nums
 		));
 	}
 

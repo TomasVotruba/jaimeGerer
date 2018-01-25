@@ -80,7 +80,7 @@ services:
         class: AppBundle\Service\Compta\CompteComptableService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ @doctrine.orm.entity_manager, @appbundle.utils_service ]
     appbundle.compta_tableau_tresorerie_service:
         class: AppBundle\Service\Compta\TableauTresorerieService
         calls:

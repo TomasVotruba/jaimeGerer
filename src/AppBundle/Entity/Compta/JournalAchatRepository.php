@@ -23,7 +23,7 @@ class JournalAchatRepository extends EntityRepository
 			->leftJoin('AppBundle\Entity\Compta\CompteComptable', 'cc', 'WITH', 'cc.id = n.compteComptable')
 			->leftJoin('AppBundle\Entity\CRM\Compte', 'c2', 'WITH', 'd2.compte = c2.id')
 			->where('c1.company = :company or c2.company = :company or cc.company = :company')
-			->andWhere('(d.dateCreation >= :startDate and d.dateCreation <= :endDate) or (a.dateCreation >= :startDate and a.dateCreation <= :endDate)')
+			->andWhere('(d.date >= :startDate and d.date <= :endDate) or (a.dateCreation >= :startDate and a.dateCreation <= :endDate)')
 			->setParameter('startDate', $year.'-01-01')
 			->setParameter('endDate', $year.'-12-31')
 			->setParameter('company', $company)
