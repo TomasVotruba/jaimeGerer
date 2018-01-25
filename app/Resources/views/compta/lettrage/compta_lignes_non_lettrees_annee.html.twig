@@ -43,15 +43,15 @@
 					<td>
 						{% if ligne.codeJournal == "VE" %}
 						 	{% if ligne.facture is not null %}
-						 		{{ ligne.facture.num }}
+						 		<a target="_blank" href="{{ path('compta_facture_voir', {'id' : ligne.facture.id }) }}">{{ ligne.facture.num }}</a>
 						 	{% elseif ligne.avoir is not null %}
-						 		{{ ligne.avoir.num }}
+						 		<a target="_blank" href="{{ path('compta_avoir_voir', {'id' : ligne.avoir.id }) }}">{{ ligne.avoir.num }}</a>
 						 	{% endif %}
 						 {% elseif ligne.codeJournal == "AC" %}
 						 	{% if ligne.depense is not null %}
-						 		{{ ligne.depense.num }}
+						 		<a target="_blank" href="{{ path('compta_depense_voir', {'id' : ligne.depense.id }) }}">{{ ligne.depense.num }}</a>
 						 	{% elseif ligne.avoir is not null %}
-						 		{{ ligne.avoir.num }}
+						 		<a target="_blank" href="{{ path('compta_avoir_voir', {'id' : ligne.avoir.id }) }}">{{ ligne.avoir.num }}</a>
 						 	{% endif %}
 						 {% elseif ligne.codeJournal == "OD" %}
 						  	OD
