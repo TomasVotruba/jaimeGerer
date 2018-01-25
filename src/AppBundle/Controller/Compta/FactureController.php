@@ -178,7 +178,7 @@ class FactureController extends Controller
 					$etat.=' : '.$rapprochement->getMouvementBancaire()->getLibelle().'<br />';
 					
 				}
-				$list[$i]['etat'].=$etat;
+				$list[$i]['etat']=$etat;
 			}
 
 		}
