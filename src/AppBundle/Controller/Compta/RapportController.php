@@ -332,6 +332,9 @@ class RapportController extends Controller
 	 * )
 	 */
 	public function rapportBalanceGeneraleExporterAction(){
+
+			$balanceGeneraleService = $this->get('appbundle.compta_balance_generale_service');
+
 			$builder = $this->createFormBuilder();
 			$builder->add('periode-select', 'choice', array(
 				'choices' => array(
@@ -357,7 +360,7 @@ class RapportController extends Controller
 			if ($form->isSubmitted() && $form->isValid()) {
 
 				$periode = $form->get('periode-select')->getData();
-				$arr_balance = $this->_rapportBalanceGeneraleCreation($periode);
+				$arr_balance = $balanceGeneraleService->creerBalanceGenerale($this->getUser()->getCompany(), $periode);
 
 				//convert UTF8 strings to  ISO-8859-1 since most people will open this CSV file with Excel which doesn't handle UTF8
 				$header[] = utf8_decode ('Compte');
