@@ -246,7 +246,7 @@
           {% for id, opportunite in arr_accurate[poste][sous_poste]['opportunites']  %}
             <tr class="{{ poste }}-{{ sous_poste }} hidden">
               <th class="detail">
-                {{ opportunite.compte.nom }} : {{ opportunite.nom }}<br />
+                <a href="{{ path('crm_action_commerciale_voir', {'id' : opportunite.id }) }}" target="_blank">{{ opportunite.compte.nom }} : {{ opportunite.nom }}</a><br />
                 {{ opportunite.montant|number_format(2,',',' ') }} €
               </th>
                 {% for i in 1..12 %}

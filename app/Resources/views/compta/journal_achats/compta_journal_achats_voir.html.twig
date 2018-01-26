@@ -23,7 +23,7 @@
     <tr {% if old_id != current_id %} class="thick-border" {% endif %}>
       <td>{{ ligneJournal.codeJournal }}</td>
       <td>
-          {{ ligneJournal.date|date('j/m/Y') }}
+          {{ ligneJournal.date|date('d/m/Y') }}
       </td>
       <td>{{ ligneJournal.compteComptable.num|truncate(3, false, '') }}</td>
       <td>{{ ligneJournal.compteComptable.num }}</td>

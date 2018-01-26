@@ -823,7 +823,7 @@ class DepenseController extends Controller
 				$depense
 		);
 
-		$form->get('compte_name')->setData(	$depense->getCompte->__toString());
+		$form->get('compte_name')->setData(	$depense->getCompte()->__toString());
 
 		$request = $this->getRequest();
 		$form->handleRequest($request);
@@ -839,6 +839,20 @@ class DepenseController extends Controller
 
 			$em->persist($depense);
 			$em->flush();
+
+			//supprimer les lignes du journal des achats
+			$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
+			$arr_lignes = $journalAchatsRepo->findByDepense($depense);
+			foreach($arr_lignes as $ligne){
+				$em->remove($ligne);
+			}
+
+			//ecrire dans le journal des achats
+			$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
+			$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+
+			$em->flush();
+
 
 			return new JsonResponse(array(
 				'id' => $depense->getId(),
@@ -1452,26 +1466,26 @@ class DepenseController extends Controller
 		));
 	}
 
-	/**
-	 * @Route("/compta/depenses-corriger", name="compta_depenses_corriger")
-	 */
-	public function journalAchatsReinitialiser(){
+	// /**
+	//  * @Route("/compta/depenses-corriger", name="compta_depenses_corriger")
+	//  */
+	// public function journalAchatsReinitialiser(){
 
-		$em = $this->getDoctrine()->getManager();
-		$depenseRepo = $em->getRepository('AppBundle:Compta\Depense');
+	// 	$em = $this->getDoctrine()->getManager();
+	// 	$depenseRepo = $em->getRepository('AppBundle:Compta\Depense');
 
-		$arr_depenses_rapprochees = $depenseRepo->findByEtat('RAPPROCHE');
+	// 	$arr_depenses_rapprochees = $depenseRepo->findByEtat('RAPPROCHE');
 
-		foreach($arr_depenses_rapprochees as $depense){
-			if(count($depense->getRapprochements()) == 0){
-				$depense->setEtat('ENREGISTRE');
-				$em->persist($depense);
-			}
-		}
-		$em->flush();
-		return new Response();
+	// 	foreach($arr_depenses_rapprochees as $depense){
+	// 		if(count($depense->getRapprochements()) == 0){
+	// 			$depense->setEtat('ENREGISTRE');
+	// 			$em->persist($depense);
+	// 		}
+	// 	}
+	// 	$em->flush();
+	// 	return new Response();
 
-	}
+	// }
 
 
 // 	/**

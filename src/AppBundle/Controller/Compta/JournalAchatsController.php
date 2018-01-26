@@ -126,14 +126,16 @@ class JournalAchatsController extends Controller
 			$depense->addJournalAchat($ligne);
 
 			//si TVA : debit au compte 445xxxxx (ou compte d'attente 471 si le compte n'est pas associé à un compte de TVA)
-			$compteTVA = $ligneDepense->getCompteComptable()->getCompteTVA();
-			if($compteTVA == null){
-				$compteTVA = $ccRepository->findOneBy(array(
-						'num' => '44566000',
-						'company' => $this->getUser()->getCompany()
-				));
-			}
 			if($ligneDepense->getTaxe() != null && $ligneDepense->getTaxe() != 0){
+
+				$compteTVA = $ligneDepense->getCompteComptable()->getCompteTVA();
+				if($compteTVA == null){
+					$compteTVA = $ccRepository->findOneBy(array(
+							'num' => '44566000',
+							'company' => $this->getUser()->getCompany()
+					));
+				}
+
 				$ligne = new JournalAchat();
 				$ligne->setDepense($depense);
 				$ligne->setCodeJournal('AC');
@@ -269,12 +271,12 @@ class JournalAchatsController extends Controller
 	 */
 	public function journalAchatsExporterAction($year){
 		$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalAchat');
-	  $arr_journalAchat = $repo->findJournalEntier($this->getUser()->getCompany(), $year);
+	  	$arr_journalAchat = $repo->findJournalEntier($this->getUser()->getCompany(), $year);
 
-	  $arr_totaux = array(
-	 		'debit' => 0,
-	 		'credit' => 0
-	  );
+		 $arr_totaux = array(
+		 	'debit' => 0,
+		 	'credit' => 0
+		 );
 
 		$objPHPExcel = new PHPExcel();
 		$objPHPExcel->getActiveSheet()->setTitle('Journal Achats '.$year);
@@ -343,54 +345,54 @@ class JournalAchatsController extends Controller
 	}
 
 
-		/**
-		 * @Route("/compta/journal-achats/reinitialiser", name="compta_journal_achats_reinitialiser")
-		 */
-		public function journalAchatsReinitialiser(){
+		// /**
+		//  * @Route("/compta/journal-achats/reinitialiser", name="compta_journal_achats_reinitialiser")
+		//  */
+		// public function journalAchatsReinitialiser(){
 
-			$em = $this->getDoctrine()->getManager();
-			$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
-			$depenseRepo = $em->getRepository('AppBundle:Compta\Depense');
-			$avoirRepo = $em->getRepository('AppBundle:Compta\Avoir');
+		// 	$em = $this->getDoctrine()->getManager();
+		// 	$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
+		// 	$depenseRepo = $em->getRepository('AppBundle:Compta\Depense');
+		// 	$avoirRepo = $em->getRepository('AppBundle:Compta\Avoir');
 
-			$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
-			$compteComptableService = $this->get('appbundle.compta_compte_comptable_controller');
+		// 	$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
+		// 	$compteComptableService = $this->get('appbundle.compta_compte_comptable_controller');
 
-			$arr_journal = $journalAchatsRepo->findJournalEntier($this->getUser()->getCompany());
-			foreach($arr_journal as $ligne){
-				$em->remove($ligne);
-			}
-			$em->flush();
+		// 	$arr_journal = $journalAchatsRepo->findJournalEntier($this->getUser()->getCompany());
+		// 	foreach($arr_journal as $ligne){
+		// 		$em->remove($ligne);
+		// 	}
+		// 	$em->flush();
 
-			$arr_depenses = $depenseRepo->findForCompany($this->getUser()->getCompany());
-			foreach($arr_depenses as $depense){
-				$compte = $depense->getCompte();
-				if($compte->getCompteComptableFournisseur() == null || $compte->getFournisseur() == false){
-						$compteComptable = $compteComptableService->createCompteComptableForCompte('401', $compte->getNom());
-						$em->persist($compteComptable);
+		// 	$arr_depenses = $depenseRepo->findForCompany($this->getUser()->getCompany());
+		// 	foreach($arr_depenses as $depense){
+		// 		$compte = $depense->getCompte();
+		// 		if($compte->getCompteComptableFournisseur() == null || $compte->getFournisseur() == false){
+		// 				$compteComptable = $compteComptableService->createCompteComptableForCompte('401', $compte->getNom());
+		// 				$em->persist($compteComptable);
 
-						$compte->setFournisseur(true);
-						$compte->setCompteComptableFournisseur($compteComptable);
-						$em->persist($compte);
-				}
+		// 				$compte->setFournisseur(true);
+		// 				$compte->setCompteComptableFournisseur($compteComptable);
+		// 				$em->persist($compte);
+		// 		}
 
-				//ecrire dans le journal des achats
-				$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
-			}
+		// 		//ecrire dans le journal des achats
+		// 		$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+		// 	}
 
-			$arr_avoirs = $avoirRepo->findForCompany('FOURNISSEUR', $this->getUser()->getCompany());
-			foreach($arr_avoirs as $avoir){
-				$compte = $avoir->getDepense()->getCompte();
+		// 	$arr_avoirs = $avoirRepo->findForCompany('FOURNISSEUR', $this->getUser()->getCompany());
+		// 	foreach($arr_avoirs as $avoir){
+		// 		$compte = $avoir->getDepense()->getCompte();
 
-				//ecrire dans le journal des ventes
-				$journalAchatsService->journalAchatsAjouterAvoirAction($avoir);
+		// 		//ecrire dans le journal des ventes
+		// 		$journalAchatsService->journalAchatsAjouterAvoirAction($avoir);
 
-			}
+		// 	}
 
-			$em->flush();
-			return new Response();
+		// 	$em->flush();
+		// 	return new Response();
 
-		}
+		// }
 
 
 }
