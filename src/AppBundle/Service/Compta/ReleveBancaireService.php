@@ -41,7 +41,9 @@ class ReleveBancaireService extends ContainerAware {
 			//creation et hydratation du mouvement bancaire
 			$mouvement = new MouvementBancaire();
 			$mouvement->setCompteBancaire($compteBancaire);
-			$mouvement->setLibelle($data[$colLibelle]);
+			$libelle = $data[$colLibelle];
+			$libelleNoCarriageReturn = preg_replace('/[\r\n]+/',' - ', $libelle);
+			$mouvement->setLibelle($libelleNoCarriageReturn);
 
 			$date = \DateTime::createFromFormat($dateFormat, $data[$colDate]);
 			$mouvement->setDate($date);

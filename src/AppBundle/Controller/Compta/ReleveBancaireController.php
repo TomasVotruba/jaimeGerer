@@ -265,7 +265,6 @@ class ReleveBancaireController extends Controller
 	 	$colCredit = $session->get('import_releve_compte_col_credit');
 
 		$arr_parsed = $releveBancaireService->parseReleveCSV($colDate, $colLibelle, $colDebit, $colCredit, $dateFormat, $filename, $compteBancaire);
-
 		foreach($arr_parsed['arr_mouvements'] as $mouvement){
 			$em->persist($mouvement);
 		}
