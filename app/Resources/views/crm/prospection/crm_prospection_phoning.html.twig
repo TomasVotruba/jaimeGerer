@@ -30,7 +30,6 @@
 
 	{%   set contact = ""  %}
 
-	{#{{ dump(prospection.rapport.data) }}#}
 	var data = {{ data|raw }};
 
 </script>
@@ -68,6 +67,7 @@
 									<div class="col-md-6" id="phoning-derniere-tentative">
 										Dernière tentative le <br />
 										<h3></h3>
+										<button class="btn btn-primary btn-xs" id="priseContact">Dernières prises de contact</button>
 									</div>
 								</div>
 								<hr />
@@ -75,7 +75,7 @@
 								<div class="row">
 
 									<div class="col-md-6">
-										<a data-toggle="modal" data-target="#ajouterContactConfirmation"  class="btn btn-success" id="ajouter_contact">
+										<a data-toggle="modal" data-target="#modal-lg"  class="btn btn-success" id="ajouter_contact">
 											Enregistrer dans les contacts
 										</a>
 									</div>
@@ -100,12 +100,6 @@
 										</div>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<button class="btn btn-primary" id="priseContact">Dernières prises de contact</button>
-									</div>
-								</div>
-
 								<div class="row">
 									<div class="col-md-12">
 										<hr />
@@ -210,10 +204,7 @@
 			$('#phoningContacts').html('');
 			for( i in data )
 			{
-				console.log(data[i]);
-
 				//affiche les contacts
-
 				if(data[i].blacklisteToday !== "yes" && data[i].blackliste !== true ){
 					$('#phoningContacts').append('<div id="contact-'+data[i].id+'" data-prototype="'+i+'">'+data[i].compte+'<br>'+data[i].prenom+' '+data[i].nom+', '+data[i].titre+'</div>');
 				}
@@ -232,9 +223,6 @@
 				if( $('#phoningContacts div.active').length > 0 )
 				{
 					var indexData = $('#phoning-tentative a').attr('data-prototype');
-
-
-
 
 					var noteContent = tinyMCE.get('note').getContent();
 					data[indexData].last_seen = 0;
@@ -296,11 +284,16 @@
 				tinymce.get('note').setContent(note_content);
 
 
-
-
 				$('#phoningContacts div').removeClass('active');
 				$('#phoning-derniere-tentative h3').html(date_tentative);
-				$('#phoning-compte').html('<h2>'+data[indexData].compte+' <span class="small">'+data[indexData].prenom+' '+data[indexData].nom+' - '+data[indexData].titre+'</span></h2><p class="telNumber">' +data[indexData].telephoneFixe+' / '+data[indexData].email+' <a title="Editer" ​data-toggle="tooltip" class="btn btn-xs btn-warning" href="javascript:void(0)" data-toggle="modal" data-target="#ModalEditer"><span class="glyphicon glyphicon-pencil"></span></a></p>');
+				var strCompte = '<h2>'+data[indexData].compte+'<br /><span class="small">'+data[indexData].prenom+' '+data[indexData].nom+' - '+data[indexData].titre+'</span></h2><p class="telNumber">' +data[indexData].telephoneFixe;
+				if(data[indexData].telephonePortable){
+					strCompte+=' - '+data[indexData].telephonePortable;
+				}
+				strCompte+=' <br />'+data[indexData].email+' <br /><a title="Editer" ​data-toggle="tooltip" class="btn btn-xs btn-warning" href="javascript:void(0)" data-toggle="modal" data-target="#ModalEditer">Modifier</a></p>';
+
+
+				$('#phoning-compte').html(strCompte);
 				var tentative = typeof(data[indexData].tentative) == null ? 0 : data[indexData].tentative;
 				$('#phoning-tentative h3 .nbr-tentatives').html(tentative);
 				$('#phoning-tentative a').unbind('click');
@@ -320,6 +313,10 @@
 				});
 				$(this).addClass('active');
 				$('#phoningContacts').height($('#rightContent').height()+'px');
+
+				var ajouterContactURL = Routing.generate('crm_prospection_ajouter_contact', {'id' : data[indexData].id} );
+				$("#ajouter_contact").attr('href', ajouterContactURL);
+
 			});
 		}
 
@@ -455,44 +452,12 @@
 				debug: true
 			});
 
-
-			//enregistrer dans les contacts
-
-			$('#ajouter_contact').click(function(e){
-				e.preventDefault();
-				if( $('#phoningContacts div.active').length > 0 )
-				{
-					var indexData = $('#phoning-tentative a').attr('data-prototype');
-					var noteContent = tinyMCE.get('note').getContent();
-
-
-
-					$('#ajouter_contactModal').click(function (e) {
-						var compte =  $('#entity-compte').val();
-						$.ajax({
-							url: "{{ path('crm_prospection_ajouter_contact') }}",
-							method: 'POST',
-							data: { compte : compte,
-								rowData : data[indexData],
-								noteContent : noteContent },
-							dataType : 'json',
-							async : false,
-							success : function(d, statut){
-								if( d.success )
-								{
-									$('#ajouter_contact').addClass('not-active');
-									$('#ajouterContactConfirmation').modal('hide');
-								}
-
-							}
-						});
-					});
-				}
-			});
 			$("#phoningContacts").niceScroll({autohidemode:false});
+			
 			refresh_liste();
+			
 			$('#refresh_liste').click(function(){
-			var active = $('#phoningContacts div.active').attr('id');
+				var active = $('#phoningContacts div.active').attr('id');
 				$.ajax({
 					url: "{{ path('crm_prospection_nombre_affichage', {'id': prospection.id}) }}",
 					method: 'POST',
@@ -585,7 +550,21 @@
 
 		});
 
-
+		$(document).on("submit", '.form-contact', function(e) {
+			e.preventDefault();
+			var contactId = $('#contact-id').text();
+			$.ajax({
+				url: Routing.generate('crm_prospection_ajouter_contact', {'id' : contactId } ),
+				method: 'POST',
+				data: $(this).serialize(),
+				dataType : 'json',
+				async : false,
+				success : function(d, statut){
+					$('#modal-lg').modal('hide');
+					$('#ajouter_contact').addClass('not-active');
+				}
+			});
+		});
 
 
 		$(window).load(function(){
@@ -596,34 +575,6 @@
 	</script>
 {% endblock %}
 {% block additionalModals %}
-
-
-	<div id="ajouterContactConfirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ajouterContactConfirmation" aria-hidden="true" data-focus-on="input:first">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-					<h3>Confirmation requise</h3>
-
-				</div>
-				<div class="modal-body">
-					<div class="typeahead-container">
-						<div class="typeahead-field">
-		        		<span class="typeahead-query">
-							<label for="compte">Vous devez lier ce contact à une organisation </label>
-							<input type="text" id="compte" class="typeahead-compte input-compte-name" required>
-							<input type="hidden" id="entity-compte">
-						</span>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn-success btn" id="ajouter_contactModal">Ajouter</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
 
 
 	<div id="historique" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="historique" aria-hidden="true" data-focus-on="input:first">

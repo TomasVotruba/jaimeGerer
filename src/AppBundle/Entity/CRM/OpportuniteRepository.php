@@ -37,6 +37,7 @@ class OpportuniteRepository extends EntityRepository
 		$qb = $this->createQueryBuilder('o')
 		->select('o.id', 'o.nom', 'o.montant', 'o.date', 'o.appelOffre', 'c.nom as compte', 'o.etat')
 		->innerJoin('o.compte', 'c')
+		->innerJoin('o.devis', 'd')
 		->where('c.company = :company')
 		->setParameter('company', $company);
 
@@ -62,8 +63,15 @@ class OpportuniteRepository extends EntityRepository
 		}
 
 		$qb->setMaxResults($length)
-		->setFirstResult($start)
-		->addOrderBy('o.'.$orderBy, $dir);
+		->setFirstResult($start);
+
+
+		if($orderBy != 'numero_devis'){
+			$qb->addOrderBy('o.'.$orderBy, $dir);
+		} else {
+			$qb->addOrderBy('d.num', $dir);
+		}
+		
 
 		return $qb->getQuery()->getResult();
 	}

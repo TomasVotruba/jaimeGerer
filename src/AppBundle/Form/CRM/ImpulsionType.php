@@ -64,7 +64,7 @@ class ImpulsionType extends AbstractType
            	->add('delaiNum', 'integer', array(
            		'label' => 'Contacter tous les',
            		'required' => true,
-     		))
+     		    ))
            	->add('delaiUnit', 'choice', array(
            			'choices' => $arr_delaiUnit,
            			'label_attr' => array('class' => 'invisible'),

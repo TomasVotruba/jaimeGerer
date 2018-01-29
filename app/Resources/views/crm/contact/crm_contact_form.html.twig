@@ -73,8 +73,28 @@
      		{{ form_row(form.description) }}
 	    </div>
     </div>
+
+
+    {% if form.delaiNum is defined %}
+	    <div class="row">
+	    	<div class="col-md-12">
+	    		<hr />
+	    		<p>Ajouter un suivi</p>
+	    	</div>
+	    </div>
+	    <div class="row">
+	        <div class="col-md-6">
+	       	 	{{ form_row(form.delaiNum) }}
+	        </div>
+	        <div class="col-md-6">
+	       	 	{{ form_row(form.delaiUnit) }}
+	        </div>
+	    </div>
+    {% endif %}
+
     <input type="submit" value="Enregistrer" class="btn btn-success" />
 	{{ form_end(form) }}
+
 {% block additionalJS %}
 	<script type="text/javascript">
 		var JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
@@ -85,26 +105,22 @@
 	<script type="text/javascript">
 		$(document).ready( function () {
 
-			var addresspickerMap = $( "#{{ form.addressPicker.vars.id }}" ).addresspicker({
-			updateCallback: function(geocodeResult, parsedGeocodeResult){
-								//console.log(parsedGeocodeResult);
-								//$('#callback_result').html(JSON.stringify(parsedGeocodeResult, null, 4));
-								var addressToField = ( parsedGeocodeResult.street_number ? parsedGeocodeResult.street_number + ', ' : '' ) + parsedGeocodeResult.route;
-								$('#{{ form.adresse.vars.id }}').val(addressToField);
-								//$('#callback_result').html(parsedGeocodeResult.street_number + ', ' +parsedGeocodeResult.route);
-							},
-			  elements: {
-				//map								: '',
-				postal_code						: '#{{ form.codePostal.vars.id }}',
-				administrative_area_level_1		: '#{{ form.region.vars.id }}',
-			   // locality						: '#locality',
-				country							: '#{{ form.pays.vars.id }}',
-				//route							: '#sdz_blogbundle_service_adresse',
-				//administrative_area_level_2		: '#{{ form.ville.vars.id }}',
-				locality						: '#{{ form.ville.vars.id }}',
-				target_field					: false,
-			  },
-			});
+			// var addresspickerMap = $( "#{{ form.addressPicker.vars.id }}" ).addresspicker({
+			// 	updateCallback: function(geocodeResult, parsedGeocodeResult){
+			// 		//console.log(parsedGeocodeResult);
+			// 		//$('#callback_result').html(JSON.stringify(parsedGeocodeResult, null, 4));
+			// 		var addressToField = ( parsedGeocodeResult.street_number ? parsedGeocodeResult.street_number + ', ' : '' ) + parsedGeocodeResult.route;
+			// 		$('#{{ form.adresse.vars.id }}').val(addressToField);
+			// 		//$('#callback_result').html(parsedGeocodeResult.street_number + ', ' +parsedGeocodeResult.route);
+			// 	},
+			//   	elements: {
+			// 		postal_code						: '#{{ form.codePostal.vars.id }}',
+			// 		administrative_area_level_1		: '#{{ form.region.vars.id }}',
+			// 		country							: '#{{ form.pays.vars.id }}',
+			// 		locality						: '#{{ form.ville.vars.id }}',
+			// 		target_field					: false,
+			// 	},
+			// });
 			{% if compte_name is defined %}
 				{% if compte is not null %}
 					$('#{{ form.compte.vars.id }}').val('{{ compte.nom }}');
@@ -115,7 +131,6 @@
 				order: "desc",
 				accent: true,
 				source: {
-				//	url: "/web/app_dev.php/crm/compte/get-comptes"
 					url: "{{ path('crm_compte_get_liste') }}"
 				},
 				callback: {
@@ -124,7 +139,6 @@
 					},
 					onClickAfter: function (node, a, item, event) {
 						$('.entity-compte').val(item.id);
-
 						changeAddress();
 					}
 				},
@@ -151,9 +165,7 @@
 						for(var i = 0; i < arr_childrens.length; i++){
 
 							if(arr_childrens[i].textContent  === data.secteur){
-
 								arr_childrens[i].setAttribute("selected","");
-
 							}
 
 						}

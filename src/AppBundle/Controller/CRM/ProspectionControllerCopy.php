@@ -14,10 +14,11 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
+use Doctrine\ORM\EntityRepository;
 
 use AppBundle\Controller\CRM\ContactController;
 use AppBundle\Entity\CRM\Compte;
+use AppBundle\Entity\CRM\Impulsion;
 use AppBundle\Entity\CRM\Contact;
 use AppBundle\Entity\Settings;
 use AppBundle\Entity\CRM\Rapport;
@@ -29,6 +30,7 @@ use AppBundle\Form\CRM\ContactType;
 use AppBundle\Form\SettingsType;
 use AppBundle\Form\CRM\RapportType;
 use AppBundle\Form\CRM\ProspectionImporterMappingType;
+use AppBundle\Form\CRM\ContactFromProspectionType;
 
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
@@ -56,8 +58,6 @@ class ProspectionControllerCopy extends Controller
      */
     public function prospectionListeAjaxAction()
     {
-
-
 
         $requestData = $this->getRequest();
         $arr_sort = $requestData->get('order');
@@ -426,17 +426,14 @@ class ProspectionControllerCopy extends Controller
      */
     public function prospectionRapportRowMajAction(Prospection $prospection)
     {
-        //~ var_dump($_POST); exit;
         $request = $this->getRequest();
-
         $data = $request->request->get('data');
-
-
         $em = $this->getDoctrine()->getManager();
 
         $contactRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
         $prospectionInfosRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\ProspectionInfos');
         $contact = $contactRepo->find($data['id']);
+        
         $infos = $prospectionInfosRepo->findOneBy(array('contact' => $contact, 'prospection' => $prospection ));
         $compte = $contact->getCompte();
 
@@ -463,7 +460,6 @@ class ProspectionControllerCopy extends Controller
         $em->persist($compte);
         $em->flush();
 
-
         $response = new JsonResponse();
         $response->setData('ok');
         return $response;
@@ -479,10 +475,6 @@ class ProspectionControllerCopy extends Controller
         $em = $this->getDoctrine()->getManager();
         $prospectionInfosRepo =  $em->getRepository('AppBundle:CRM\ProspectionInfos');
         $prospects = $prospectionInfosRepo->findByProspection($prospection);
-
-
-
-
 
         $data = [];
 
@@ -503,27 +495,27 @@ class ProspectionControllerCopy extends Controller
             $blacklistToday = ($prospect->getBlacklistToday() == new \DateTime(date('Y-m-d'))) ? "yes" : null;
 
             $obj = (object) array(
-            "id" => $prospect->getContact()->getId(),
-            "prenom" => $prospect->getContact()->getPrenom(),
-            "nom" => $prospect->getContact()->getNom(),
-            "compte" => $compte,
-            "titre" => $prospect->getContact()->getTitre(),
-            "telephoneFixe" => $prospect->getContact()->getTelephoneFixe(),
-            "telephonePortable" => $prospect->getContact()->getTelephonePortable(),
-            "email" => $prospect->getContact()->getEmail(),
-            "adresse" => $prospect->getContact()->getAdresse(),
-            "ville" => $prospect->getContact()->getVille(),
-            "region" => $prospect->getContact()->getRegion(),
-            "codePostal" => $prospect->getContact()->getCodePostal(),
-            "pays" => $prospect->getContact()->getPays(),
-            "url" => $url,
-            "last_seen" => $prospection->getDateLastOpen(),
-            "date_tentative" => $prospect->getDernierContact(),
-            "blackliste" => $prospect->getBlacklist(),
-            "blacklisteToday" => $blacklistToday,
-            "tentative" => $prospect->getNbreContacts(),
-            "note" => $prospect->getNote(),
-            "onlyProspect" => $prospect->getContact()->getIsOnlyProspect()
+                "id" => $prospect->getContact()->getId(),
+                "prenom" => $prospect->getContact()->getPrenom(),
+                "nom" => $prospect->getContact()->getNom(),
+                "compte" => $compte,
+                "titre" => $prospect->getContact()->getTitre(),
+                "telephoneFixe" => $prospect->getContact()->getTelephoneFixe(),
+                "telephonePortable" => $prospect->getContact()->getTelephonePortable(),
+                "email" => $prospect->getContact()->getEmail(),
+                "adresse" => $prospect->getContact()->getAdresse(),
+                "ville" => $prospect->getContact()->getVille(),
+                "region" => $prospect->getContact()->getRegion(),
+                "codePostal" => $prospect->getContact()->getCodePostal(),
+                "pays" => $prospect->getContact()->getPays(),
+                "url" => $url,
+                "last_seen" => $prospection->getDateLastOpen(),
+                "date_tentative" => $prospect->getDernierContact(),
+                "blackliste" => $prospect->getBlacklist(),
+                "blacklisteToday" => $blacklistToday,
+                "tentative" => $prospect->getNbreContacts(),
+                "note" => $prospect->getNote(),
+                "onlyProspect" => $prospect->getContact()->getIsOnlyProspect()
             );
 
             $data[] = $obj;
@@ -677,50 +669,126 @@ class ProspectionControllerCopy extends Controller
 
     }
 
-
-
-    // ajouter contacts
-
     /**
-     * @Route("/crm/prospection/ajouter_contact", name="crm_prospection_ajouter_contact")
+     * @Route("/crm/prospection/ajouter_contact/{id}", name="crm_prospection_ajouter_contact", options={"expose"=true})
      */
-    public function prospectionAjouterContactAction()
+    public function prospectionAjouterContactAction(Contact $contact)
     {
-        $request = $this->getRequest();
-        $data = $request->get('rowData');
-
-        $contactId = intval($data["id"]);
-        $compteId =  intval($request->get('compte'));
-
-
         $em = $this->getDoctrine()->getManager();
-        $contactRepo = $em->getRepository('AppBundle:CRM\Contact');
-        $contact = $contactRepo->find($contactId);
-        $compteRepo= $em->getRepository('AppBundle:CRM\Compte');
-        $compte = $compteRepo->find($compteId);
+        $prospectionInfosRepo =  $em->getRepository('AppBundle:CRM\ProspectionInfos');
+        $compteRepo =  $em->getRepository('AppBundle:CRM\Compte');
+        $settingsRepo = $em->getRepository('AppBundle:Settings');
 
+        $form = $this->createForm(
+            new ContactFromProspectionType(
+                    $contact->getUserGestion()->getId(),
+                    $this->getUser()->getCompany()->getId()
+            ),
+            $contact
+        );
 
-        $contact->setCompte($compte);
-        $contact->setIsOnlyProspect(false);
+        if($contact->getCompte() == null){
+            $prospectInfos = $prospectionInfosRepo->findOneByContact($contact);
+            $compteName = $prospectInfos->getCompany();
 
-        $em->persist($contact);
-        $em->flush();
+            $compte = $compteRepo->findOneBy(array(
+                'company' => $this->getUser()->getCompany(),
+                'nom' => $compteName
+            ));
 
-        $response = new JsonResponse();
-        $response->setData(array(
-            'success' => true,
-            'id' => $contact->getId(),
+            if($compte == null){
+                $compte = new Compte();
+                $compte->setNom($compteName);
+                $compte->setUserCreation($this->getUser());
+                $compte->setUserGestion($this->getUser());
+                $compte->setDateCreation(new \DateTime(date('Y-m-d')));
+                $compte->setCompany($this->getUser()->getCompany());
+                $em->persist($compte);
+                $em->flush();
+            }
+
+            $contact->setCompte($compte);
+           
+        }
+
+         if($contact->getCompte()){
+
+            $secteurActivite =  $contact->getCompte()->getSecteurActivite();
+            $form->remove('compte-name');
+            $form->remove('compte');
+            $form->remove('secteur');
+            $form->add('compte_name', 'text', array(
+                'required' => true,
+                'mapped' => false,
+                'label' => 'Organisation',
+                'attr' => array('class' => 'typeahead-compte', 'autocomplete' => 'off' ),
+                'data' => $contact->getCompte()->getNom()
+            ))
+            ->add('compte', 'hidden', array(
+                'required' => true,
+                'attr' => array('class' => 'entity-compte'),
+                'data' => $contact->getCompte()->getId()
+            ))
+            ->add('secteur', 'entity', array(
+                'class'=>'AppBundle:Settings',
+                'property' => 'Valeur',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('s')
+                        ->where('s.parametre = :parametre')
+                        ->andWhere('s.company = :company')
+                        ->andWhere('s.module = :module')
+                        ->setParameter('parametre', 'SECTEUR')
+                        ->setParameter('module', 'CRM')
+                        ->setParameter('company', $this->getUser()->getcompany()->getId())
+                        ->orderBy('s.valeur');
+                },
+                'required' => false,
+                'multiple' => true,
+                'label' => 'Secteur d\'activité',
+                'empty_data'  => null,
+                'mapped' => false,
+                'data' => array($secteurActivite)
+            ));
+
+        }
+
+        $request = $this->getRequest();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $data = $form->getData();
+            $contact->setCompte($compteRepo->findOneById($data->getCompte()));
+
+            $contact->setUserCreation($this->getUser());
+            $contact->setDateCreation(new \DateTime(date('Y-m-d')));
+            $contact->setUserGestion($this->getUser());
+
+            $contact->setIsOnlyProspect(false);
+            $em->persist($contact);
+
+            $delaiNum = $form->get('delaiNum')->getData();
+            if($delaiNum){
+                $impulsion = new Impulsion();
+                $impulsion->setContact($contact);
+                $impulsion->setUser($this->getUser());
+                $impulsion->setDelaiNum($delaiNum);
+                $impulsion->setDelaiUnit($form->get('delaiUnit')->getData());
+                $impulsion->setDateCreation(new \DateTime(date('Y-m-d')));
+                $em->persist($impulsion);
+            }
+
+            $em->flush();
+
+            return new Response(1);
+        }
+
+        return $this->render('crm/prospection/crm_prospection_ajouter_contact_modal.html.twig', array(
+            'form' => $form->createView(),
+            'contact'=> $contact
         ));
 
-        return $response;
     }
-
-
-
-
-
-
-//    }
 
 
     /**
