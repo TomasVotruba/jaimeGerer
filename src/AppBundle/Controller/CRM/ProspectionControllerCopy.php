@@ -552,23 +552,14 @@ class ProspectionControllerCopy extends Controller
             )
         );
 
-
+        $date = null;
         if(gettype($data["date_tentative"])  !== 'string' ){
             $date = $data["date_tentative"]["date"];
-
         }
         else{
-            $date = date("Y-d-m", strtotime( $data["date_tentative"]));
-
+           // $date = date("Y-d-m", strtotime( $data["date_tentative"]));
+            $date = date_create_from_format("d/m/Y", $data["date_tentative"]);
         }
-
-        if($data["date_tentative"] !== "" && $data["date_tentative"] !== null){
-            $date = new \DateTime($date);
-        }
-        else{
-            $date = null;
-        }
-
 
         $contact->setNom($data["nom"]);
         $contact->setPrenom($data["prenom"]);
@@ -582,7 +573,6 @@ class ProspectionControllerCopy extends Controller
         $contact->setVille($data["ville"]);
         $contact->setCodePostal($data["codePostal"]);
 
-
         $blacklistToday = ($data["blacklisteToday"] == "yes") ? new \DateTime(date('Y-m-d')) : null ;
         $blacklist =  ($data["blackliste"] == 1) ? true : false ;
 
@@ -592,7 +582,6 @@ class ProspectionControllerCopy extends Controller
         $infos->setBlacklistToday($blacklistToday);
         $infos->setUrl($data["url"]);
         $infos->setCompany($data["compte"]);
-
 
         $em->persist($contact);
         $em->persist($infos);

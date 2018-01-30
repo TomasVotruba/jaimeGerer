@@ -29,7 +29,7 @@
 					<th>Nom du contact</th>
 					<th>Organisation</th>
 					<th>Titre</th>
-					<th>Interêts</th>
+					<th>Prises de contact</th>
 					<th>Contact</th>
 					<th>Timing</th>
 					<th>Actions</th>
@@ -48,12 +48,28 @@
 							{{ impulsion.contact.titre }}
 						</td>
 						<td>
-							{% for theme in impulsion.contact.settings if theme.parametre == 'THEME_INTERET' %}
-								<p>{{ theme.valeur }}</p>
+							<ul>
+							{% for priseContact in impulsion.contact.priseContacts %}
+								<li>{{ priseContact.date|date('d/m/Y') }} :
+									{% if priseContact.type == "PHONE" %}
+										Téléphone
+									{% elseif priseContact.type == "RDV" %}
+										Rendez-vous
+									{% elseif priseContact.type == "EMAIL" %}
+										Email
+									{% elseif priseContact.type == "LETTRE" %}
+										Lettre
+									{% elseif priseContact.type == "SOCIAL" %}
+										Réseaux sociaux
+									{% elseif priseContact.type == "DEVIS" %}
+										Envoi d'un devis
+									{% elseif priseContact.type == "FACTURE" %}
+										Envoi d'une facture
+									{% endif %} - 
+									{{ priseContact.description }}
+								</li>
 							{% endfor %}
-							{% for service in impulsion.contact.settings if service.parametre == 'SERVICE_INTERET' %}
-								<p>{{ service.valeur }}</p>
-							{% endfor %}
+							</ul>
 						</td>
 						<td>
 							{{ impulsion.contact.email }}
@@ -63,28 +79,8 @@
 							{{ impulsion.contact.telephonePortable }}
 						</td>
 						<td>
-							{# <p>
-                                <strong>Delai : </strong>
-                                {% if impulsion.delaiUnit == "WEEK" %}
-                                    Toutes
-                                {% else %}
-                                    Tous
-                                {% endif %}
-                                les {{ impulsion.delaiNum }}
-                                {% if impulsion.delaiUnit == "DAY" %}
-                                    jours
-                                {% elseif impulsion.delaiUnit == "WEEK" %}
-                                    semaines
-                                {% else %}
-                                    mois
-                                {% endif %}
-                            </p> #}
-
 							<p>
 								<strong>Temps restant : </strong>
-								{#{% if impulsion.tempsRestant < 0 %}#}
-								{#<span class="glyphicon glyphicon-time"></span> <strong>RETARD !</strong><br />#}
-								{#{% endif %}#}
 								{{ impulsion.tempsRestant }} jours
 								<br />
 								jusqu'au {{ impulsion.echeance|date("d/m/Y") }}

@@ -366,7 +366,8 @@ class ContactRepository extends EntityRepository
 				if($action == 'EMPTY'){
 					$where.= 'c.'.$champ.' IS NULL';
 				} else if($action == 'NOT_EMPTY'){
-					$where.= 'c.'.$champ.' IS NOT NULL';
+					$where.= 'c.'.$champ.' IS NOT NULL AND c.'.$champ.' <> :vide'.$index;
+					$query->setParameter('vide'.$index, '');
 				} else if ($action == "IS_TRUE"){
 					$where.= 'c.'.$champ.' =1';
 				} else if($action == 'IS_FALSE'){
@@ -423,6 +424,7 @@ class ContactRepository extends EntityRepository
 				->andWhere('co.company = :company')
 				->setParameter('company', $company);
 		$result = $query->getQuery()->getResult();
+		dump($query->getQuery()->getSql());
 
 		return $result;
 	}

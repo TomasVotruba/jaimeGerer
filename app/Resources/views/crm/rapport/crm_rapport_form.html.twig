@@ -1,5 +1,19 @@
 {% block content %}
 
+	<div class="alert alert-info">
+		<p>En ajoutant des <strong>filtres</strong>, vous créez des conditions. Seuls les contacts répondant à ces conditions seront visibles dans le rapport.<br />
+			En ajoutant des <strong>séparateurs</strong>, vous précisez l'ordre de priorité de vos filtres.
+		</p>
+		<p>Exemple : vous souhaitez afficher tous les RH se trouvant soit à Lyon, soit à Paris.<br />
+		Vous créez trois filtres et un séparateur :</p>
+		<ul>
+			<li>Titre - contient - RH</li>
+			<li>Séparateur</li>
+			<li>Et - Ville - est - Lyon</li>
+			<li>Ou - Ville - est - Paris</li>
+		</ul>
+	</div>
+
 {{ form_start(form, { 'attr': {'class': 'form-inline form-filter'}}) }}
 
 	<div class="row">
