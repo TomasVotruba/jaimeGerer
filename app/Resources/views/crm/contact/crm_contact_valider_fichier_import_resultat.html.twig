@@ -16,6 +16,7 @@
 			{% if arr_comptes['non-existant']|length > 0 %}
 				<a role="button" data-toggle="collapse" href="#collapse-comptes-non-existant" aria-expanded="false" aria-controls="collapseExample" class="btn btn-info">Voir la liste</a>
 				<a href="{{ path('crm_valider_fichier_import_export', {'type' : 'compte', 'existant' : 'non-existant'}) }}" class="btn btn-info">Exporter</a>
+				<a href="{{ path('crm_contact_importer') }}" class="btn btn-info">Importer</a>
 				<div class="collapse" id="collapse-comptes-non-existant">
 				  	<div class="well">
 				    	<ul>
@@ -31,6 +32,7 @@
 			{% if arr_comptes['existant']|length > 0 %}
 				<a role="button" data-toggle="collapse" href="#collapse-comptes-existant" aria-expanded="false" aria-controls="collapseExample" class="btn btn-info">Voir la liste</a>
 				<a href="{{ path('crm_valider_fichier_import_export', {'type' : 'compte', 'existant' : 'existant'}) }}" class="btn btn-info">Exporter</a>
+				
 				<div class="collapse" id="collapse-comptes-existant">
 				  	<div class="well">
 				    	<ul>
@@ -51,6 +53,7 @@
 			{% if arr_contacts['non-existant']|length > 0 %}
 				<a role="button" data-toggle="collapse" href="#collapse-contacts-non-existant" aria-expanded="false" aria-controls="collapseExample" class="btn btn-info">Voir la liste</a>
 				<a href="{{ path('crm_valider_fichier_import_export', {'type' : 'contact', 'existant' : 'non-existant'}) }}" class="btn btn-info">Exporter</a>
+				<a href="{{ path('crm_contact_importer') }}" class="btn btn-info">Importer</a>
 				<div class="collapse" id="collapse-contacts-non-existant">
 				  	<div class="well">
 				    	<ul>
