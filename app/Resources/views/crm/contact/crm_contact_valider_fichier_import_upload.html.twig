@@ -1,0 +1,25 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Valider un fichier d'import de contacts</h1>	
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<a href="{{ asset('files/crm/contact/fichier_import_contacts.xlsx') }}" class="btn btn-primary">
+				Télécharger le modèle Excel
+			</a>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			{{ form(form) }}
+		</div>
+	</div>
+
+{% endblock %}

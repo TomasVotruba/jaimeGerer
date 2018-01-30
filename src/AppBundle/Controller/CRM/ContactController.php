@@ -1704,5 +1704,197 @@ class ContactController extends Controller
 		));
 	}
 
+	/**
+	 * @Route("/crm/contact/valider-fichier-import/upload", name="crm_valider_fichier_import_upload")
+	 */
+	public function validerFichierImportUploadAction()
+	{
+		$formBuilder = $this->createFormBuilder();
+	 	$formBuilder->add('file', 'file', array(
+					'label'	=> 'Fichier',
+					'required' => true,
+					'attr' => array('class' => 'file-upload')
+				))
+				->add('submit','submit', array(
+					'label' => 'Suite',
+					'attr' => array('class' => 'btn btn-success')
+				));
+
+		$form = $formBuilder->getForm();
+
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			//recuperation des données du formulaire
+			$data = $form->getData();
+			$file = $data['file'];
+			
+			//enregistrement temporaire du fichier uploadé
+			$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-validation_import_contact-'.$file->getClientOriginalName();
+			$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
+			$file->move($path, $filename);
+
+			$session = $request->getSession();
+			$session->set('validation_import_contact_filename', $filename);
+
+			//creation du formulaire de mapping
+			return $this->redirect($this->generateUrl('crm_valider_fichier_import_resultat'));
+		}
+
+		return $this->render('crm/contact/crm_contact_valider_fichier_import_upload.html.twig', array(
+			'form' => $form->createView()
+		));
+	}
+
+	/**
+	 * @Route("/crm/contact/valider-fichier-import/resultat", name="crm_valider_fichier_import_resultat")
+	 */
+	public function validerFichierImportResultatAction()
+	{
+
+		$request = $this->getRequest();
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		$compteRepo = $em->getRepository('AppBundle:CRM\Compte');
+		$contactRepo = $em->getRepository('AppBundle:CRM\Contact');
+
+		$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
+		$filename = $session->get('validation_import_contact_filename');
+
+		// charger PHPEXCEL de choisir le reader adéquat
+		$objReader = PHPExcel_IOFactory::createReaderForFile($path.'/'.$filename);
+		// chargement du fichier xls/xlsx ou csv
+		$objPHPExcel = $objReader->load($path.'/'.$filename);
+		$arr_data = $objPHPExcel->getActiveSheet()->toArray(false,true,true,true);
+		
+		$arr_comptes = array(
+			'existant' => array(),
+			'non-existant' => array(),
+		);
+		$arr_contacts = array(
+			'existant' => array(),
+			'non-existant' => array(),
+		);
+		//start the loop at 2 to skip the header row
+		for($i=2; $i<count($arr_data); $i++){
+			$nom = $arr_data[$i]['A'];
+			$prenom = $arr_data[$i]['B'];
+			$orga = $arr_data[$i]['E'];
+
+			$compte = $compteRepo->findOneBy(array(
+				'nom' => $orga,
+				'company' => $this->getUser()->getCompany()
+			));
+
+			if($compte != null){
+				if( !in_array( $orga, $arr_comptes['existant']) ){
+					$arr_comptes['existant'][] = $orga;
+				}
+				
+				$contact = $contactRepo->findBy(array(
+					'compte'=> $compte,
+					'prenom' => $prenom,
+					'nom' => $nom
+				));
+
+				if($contact){
+					$arr_contacts['existant'][] = $prenom.' '.$nom.' ('.$orga.')';
+				} else {
+					$arr_contacts['non-existant'][] = $prenom.' '.$nom.' ('.$orga.')';
+				}
+	
+			} else {
+				if( !in_array($orga, $arr_comptes['non-existant']) ){
+					$arr_comptes['non-existant'][] = $orga;
+					$arr_contacts['non-existant'][] = $prenom.' '.$nom.' ('.$orga.')';
+				}
+			}
+		}
+
+		return $this->render('crm/contact/crm_contact_valider_fichier_import_resultat.html.twig', array(
+			'arr_comptes' => $arr_comptes,
+			'arr_contacts' => $arr_contacts
+		));
+	}
+
+	/**
+	 * @Route("/crm/contact/valider-fichier-import/export/{type}/{existant}", name="crm_valider_fichier_import_export")
+	 */
+	public function validerFichierImportExportAction($type, $existant)
+	{
+		$request = $this->getRequest();
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		$compteRepo = $em->getRepository('AppBundle:CRM\Compte');
+		$contactRepo = $em->getRepository('AppBundle:CRM\Contact');
+
+		$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
+		$filename = $session->get('validation_import_contact_filename');
+
+		// charger PHPEXCEL de choisir le reader adéquat
+		$objReader = PHPExcel_IOFactory::createReaderForFile($path.'/'.$filename);
+		// chargement du fichier xls/xlsx ou csv
+		$objPHPExcel = $objReader->load($path.'/'.$filename);
+		
+		$arr_data = $objPHPExcel->getActiveSheet()->toArray(false,true,true,true);
+		
+		//loop backward to avoid removing an index during the loop
+		for($i=count($arr_data); $i>1; $i--){
+			$nom = $arr_data[$i]['A'];
+			$prenom = $arr_data[$i]['B'];
+			$orga = $arr_data[$i]['E'];
+
+			$compte = $compteRepo->findOneBy(array(
+				'nom' => $orga,
+				'company' => $this->getUser()->getCompany()
+			));
+
+			if($compte != null){
+				if($type == "compte" && $existant == "non-existant"){
+					$objPHPExcel->getActiveSheet()->removeRow($i, 1);
+				}
+				
+				$contact = $contactRepo->findBy(array(
+					'compte'=> $compte,
+					'prenom' => $prenom,
+					'nom' => $nom
+				));
+
+				if($contact){
+					if($type == "contact" && $existant == "non-existant"){
+						$objPHPExcel->getActiveSheet()->removeRow($i, 1);
+					}
+				} else {
+					if($type == "contact" && $existant == "existant"){
+						$objPHPExcel->getActiveSheet()->removeRow($i, 1);
+					}
+				}
+	
+			} else {
+				if($type == "compte" && $existant == "existant"){
+					$objPHPExcel->getActiveSheet()->removeRow($i, 1);
+				}
+				if($type == "contact" && $existant == "existant"){
+					$objPHPExcel->getActiveSheet()->removeRow($i, 1);
+				}
+
+			}
+		}
+
+		$response = new Response();
+		$response->headers->set('Content-Type', 'application/vnd.ms-excel');
+		$response->headers->set('Content-Disposition', 'attachment;filename="contacts.xlsx"');
+		$response->headers->set('Cache-Control', 'max-age=0');
+		$response->sendHeaders();
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+		$objWriter->save('php://output');
+		exit();
+
+
+
+
+	}
+
 
 }

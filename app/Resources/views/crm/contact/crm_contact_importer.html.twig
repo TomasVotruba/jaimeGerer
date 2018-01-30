@@ -8,16 +8,12 @@
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-offset-5 col-md-2">
-		<a href="{{ asset('files/crm/contact/fichier_import_contacts.xlsx') }}">
-			<div class="row">
-				<div class="col-md-12" style="text-align: center;">
-					<h4><span class="glyphicon glyphicon-download-alt"></span>Télécharger le modèle Excel</h4>
-				</div>
-			</div>
-			<div class="col-md-12" style="text-align: center;">
-				<img src="{{ asset('images/assets/excel.png') }}" alt="icone-telecharger-excel" width="100" height="100"/>
-			</div>
+	<div class="col-md-12">
+		<a href="{{ asset('files/crm/contact/fichier_import_contacts.xlsx') }}" class="btn btn-primary">
+			Télécharger le modèle Excel</h4>
+		</a>
+		<a href="{{ path('crm_valider_fichier_import_upload') }}" class="btn btn-primary">
+			Valider un fichier d'import
 		</a>
 	</div>
 </div>
