@@ -257,11 +257,13 @@
                   {% endif %}
 
                   <td class="accurate s">
+                    {% set montant = 0 %}
                     {% for repartition in opportunite.opportuniteRepartitions %}
                       {% if repartition.date|date('m') == i and repartition.date|date('Y') == year %}
-                        {{ repartition.montantMonetaire|number_format(2, ',', ' ') }} €
+                        {% set montant = montant+repartition.montantMonetaire %}
                       {% endif %}
                     {% endfor %}
+                    {{ montant|number_format(2, ',', ' ') }}
                   </td>
                 {% endfor %}
             </tr>

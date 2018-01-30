@@ -191,12 +191,13 @@
 
         function calculTotal(){
 
-
             var total = 0;
             $.each($('.montant input'), function(index, value) {
                 var val = $(value).val();
-                total = +total + + val;
+                val = val.replace(",", ".");
+                total+= parseFloat(val);
             });
+
             $('.total').text(accounting.formatMoney(total, {
                 symbol: "€",
                 format: "%v %s",
@@ -204,8 +205,8 @@
                 thousand: " ",
                 precision: 2
             }));
-
-            if (total == {{ actionCommerciale.montant }}) {
+            
+            if (total == {{ actionCommerciale.montant }} ) {
 
                 $('.feedback-total').addClass("hidden");
                 $('.ok-sign').removeClass("hidden");

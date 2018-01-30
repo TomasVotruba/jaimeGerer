@@ -154,7 +154,7 @@
             calculTotal();
         });
 
-          $('.remove-button').on('click', function(e) {
+        $('.remove-button').on('click', function(e) {
             // empêche le lien de créer un « # » dans l'URL
             e.preventDefault();
             $(this).parents('li').remove();
@@ -190,7 +190,7 @@
         }
 
         function calculTotal(){
-
+            console.log('total');
 
             var total = 0;
             $.each($('.montant input'), function(index, value) {
