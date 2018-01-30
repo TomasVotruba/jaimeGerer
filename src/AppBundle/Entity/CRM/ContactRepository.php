@@ -202,9 +202,9 @@ class ContactRepository extends EntityRepository
 			} else {
 				$where.= ' '.$andor.' ';
 			}
-			
+
 			if($champ == 'TYPE' || $champ == 'THEME_INTERET' || $champ == 'SERVICE_INTERET' || $champ == 'SECTEUR'){
-				$where = '';
+
 				if($action == 'EMPTY'){
 
 					$subQueryBuilder = $this->getEntityManager()->createQueryBuilder();
@@ -217,19 +217,10 @@ class ContactRepository extends EntityRepository
 					->getQuery()
 					->getArrayResult();
 
-					if($index == 0){
-						$query->where($qb->expr()->notIn('c.id', ':subQuery'))
-								->setParameter('subQuery', $subQuery);
-					} else {
-						if($andor == 'AND'){
-							$query->andWhere($qb->expr()->notIn('c.id', ':subQuery'))
-							->setParameter('subQuery', $subQuery);
-						} else{
-							$query->orWhere($qb->expr()->notIn('c.id', ':subQuery'))
-							->setParameter('subQuery', $subQuery);
-						}
-					}
-
+					
+					$where.= $qb->expr()->notIn('c.id', ':subQuery');
+					$query->setParameter('subQuery', $subQuery);
+					
 
 				} else if($action == 'NOT_EMPTY'){
 					$qb2 = $qb;
@@ -250,10 +241,8 @@ class ContactRepository extends EntityRepository
 					}
 				}  else {
 
-					$where = 's.parametre = :param'.$index;
-					$query->setParameter('param'.$index, $champ);
-
-					
+					//$where = 's.parametre = :param'.$index;
+					//$query->setParameter('param'.$index, $champ);
 
  					for($i=0; $i<count($arr_valeurs); $i++){
 
@@ -272,27 +261,33 @@ class ContactRepository extends EntityRepository
 
  						if($i != 0){
  							$where.=' OR ';
- 						} else {
- 							$where.=' AND ';
  						}
- 						$where.= 's.valeur '.$operateur.' '.$param;
- 						$query->setParameter($param, $val);
+ 				
+ 						$where.= 's.parametre = :param'.$index.' AND s.valeur '.$operateur.' :valeur'.$index;
+ 						$query->setParameter('param'.$index, $champ);
+ 						$query->setParameter('valeur'.$index, $val);
  					}
+				}
 
- 					if($index == 0){
- 						$query->andWhere($where);
- 					} else {
- 						if($andor == 'AND'){
- 							$query->andWhere($where);
- 						} else{
- 							$query->orWhere($where);
- 						}
- 					}
-
+				if( true === $endGroup or count($arr_filters)-1 == $index ){
+					$where.= ')';
+					$newGroup = true;
+					if($index == 0){
+						$query->where($where);
+					} else {
+						if($andorGroup == 'AND'){
+							$query->andWhere($where);
+						} else{
+							$query->orWhere($where);
+						}
+					}
+					$where = '';
+				} else {
+					$newGroup = false;
 				}
 
  			} elseif( $champ == 'RESEAU' || $champ == 'ORIGINE' ||  $champ == "compte" ) {
-
+ 		
  				if($action == 'EMPTY'){
  					$where.= 'c.'.strtolower($champ).' IS NULL' ;
  				} else if($action == 'NOT_EMPTY'){
@@ -324,18 +319,16 @@ class ContactRepository extends EntityRepository
                             $qb2->select('s'.$index.'.id')
                                 ->from('AppBundle\Entity\Settings', 's'.$index)
                                 ->where('s'.$index.'.parametre = :parametre'.$index)
-                                ->andWhere('s'.$index.'.valeur LIKE :valeur'.$index);
+                                ->andWhere('s'.$index.'.valeur '.$operateur.' :valeur'.$index);
 
                             $query->setParameter('parametre'.$index, $champ)
                                 ->setParameter('valeur'.$index, $val);
-                        }
-                        else{
+                        } else {
                             $qb2->select('s'.$index.'.id')
                                 ->from('AppBundle\Entity\CRM\Compte', 's'.$index)
-                                ->where('s'.$index.'.nom LIKE :nom'.$index.$i);
+                                ->where('s'.$index.'.nom '.$operateur.' :nom'.$index.$i);
 
                				$query->setParameter('nom'.$index.$i, $val);
-   				 			
                         }
 
                         $where.= $qb->expr()->in('c.'.strtolower($champ), $qb2->getDQL());
@@ -355,10 +348,8 @@ class ContactRepository extends EntityRepository
 							$newGroup = false;
 						}
 
-
 	 				}
 
-	 				//$where = $qb->expr()->in('c.'.strtolower($champ), $qb2->getDQL());
  				}
 
  			} else {
@@ -423,7 +414,9 @@ class ContactRepository extends EntityRepository
 		$query->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
 				->andWhere('co.company = :company')
 				->setParameter('company', $company);
+		dump($query->getQuery()->getSql());
 		$result = $query->getQuery()->getResult();
+		
 
 		return $result;
 	}
