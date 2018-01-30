@@ -414,7 +414,6 @@ class ContactRepository extends EntityRepository
 		$query->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
 				->andWhere('co.company = :company')
 				->setParameter('company', $company);
-		dump($query->getQuery()->getSql());
 		$result = $query->getQuery()->getResult();
 		
 
