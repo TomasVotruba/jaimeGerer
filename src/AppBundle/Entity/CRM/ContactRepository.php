@@ -424,7 +424,6 @@ class ContactRepository extends EntityRepository
 				->andWhere('co.company = :company')
 				->setParameter('company', $company);
 		$result = $query->getQuery()->getResult();
-		dump($query->getQuery()->getSql());
 
 		return $result;
 	}
