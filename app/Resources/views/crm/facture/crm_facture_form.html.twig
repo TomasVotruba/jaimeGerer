@@ -40,7 +40,14 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            {{ form_row(form.numBCInterne) }}
+            <div class="typeahead-container">
+                <div class="typeahead-field">
+                    <span class="typeahead-query">
+                        {{ form_row(form.bc_name, {'attr' : {'class' : 'typeahead-bc input-bc-name'}}) }}
+                        {{ form_row(form.bonsCommande) }}
+                    </span>
+                </div>
+            </div>
         </div>
         <div class="col-md-4">
             {{ form_row(form.numBCClient) }}
@@ -435,6 +442,21 @@
 					debug: true
 
 			});
+
+            $('.typeahead-bc').typeahead({
+                    order: "desc",
+                    accent: true,
+                    source: {
+                        url: Routing.generate("crm_bon_commande_get_liste")
+                    },
+                    callback: {
+                        onClickAfter: function(node, a, item, event) {
+                            $('.entity-bc').val(item.id);
+                        }
+                    },
+                    debug: true
+
+            });
 
             if($('.entity-compte').val() != "" && $('.entity-compte').val() != null){
                 changeAddress();

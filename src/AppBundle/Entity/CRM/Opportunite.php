@@ -166,6 +166,13 @@ class Opportunite
   private $date;
 
   /**
+  *
+  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\BonCommande", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+  *
+  */
+  private $bonsCommande;
+
+  /**
    * Constructor
    */
   public function __construct()
@@ -823,5 +830,39 @@ class Opportunite
         } 
 
         return false;
+    }
+
+    /**
+     * Add bonsCommande
+     *
+     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
+     * @return Opportunite
+     */
+    public function addBonsCommande(\AppBundle\Entity\CRM\BonCommande $bonsCommande)
+    {
+        $this->bonsCommande[] = $bonsCommande;
+        $bonsCommande->setActionCommerciale($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove bonsCommande
+     *
+     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
+     */
+    public function removeBonsCommande(\AppBundle\Entity\CRM\BonCommande $bonsCommande)
+    {
+        $this->bonsCommande->removeElement($bonsCommande);
+    }
+
+    /**
+     * Get bonsCommande
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBonsCommande()
+    {
+        return $this->bonsCommande;
     }
 }

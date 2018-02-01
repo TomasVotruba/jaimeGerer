@@ -252,6 +252,13 @@ class DocumentPrix
    */
   private $opportunite;
 
+  /**
+  *
+  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\BonCommande", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+  *
+  */
+  private $bonsCommande;
+
     /**
      * Get id
      *
@@ -712,12 +719,17 @@ class DocumentPrix
 	    		$ht = $sous_total;
 	    	}
 
+            if($this->hasTypeProduit("Panorama")){
+                $facturationBelge = $ht*$this->facturationBelgePercent;
+                $ht+= $facturationBelge;
+            }  
+
 	    	$ttc = $ht+$this->taxe;
     	}
     	$arr_totaux = array();
     	$arr_totaux['sous_total'] = $sous_total;
-    	$arr_totaux['HT'] = $ht;
-    	$arr_totaux['TTC'] = $ttc;
+    	$arr_totaux['HT'] = round($ht, 2);
+    	$arr_totaux['TTC'] = round($ttc, 2);
 
     	return $arr_totaux;
     }
@@ -818,7 +830,14 @@ class DocumentPrix
     	}
 
     	$totalHT = $sousTotal - $this->remise;
-    	return $totalHT;
+
+        if($this->hasTypeProduit("Panorama")){
+            $facturationBelge = $totalHT*$this->facturationBelgePercent;
+            $totalHT+= $facturationBelge;
+
+        } 
+        
+    	return round($totalHT, 2);
     }
 
     public function getTotalTTC(){
@@ -829,8 +848,14 @@ class DocumentPrix
 
     	$totalHT = $sousTotal - $this->remise;
 
-    	$totalTTC = $totalHT+$this->taxe;
-    	return $totalTTC;
+        if($this->hasTypeProduit("Panorama")){
+            $facturationBelge = $totalHT*$this->facturationBelgePercent;
+            $totalTTC = $totalHT + $facturationBelge;
+        } else {
+            $totalTTC = $totalHT+$this->taxe;
+        }
+
+    	return round($totalTTC, 2);
     }
 
       public function getTotalTTCAsInt(){
@@ -841,7 +866,12 @@ class DocumentPrix
 
         $totalHT = $sousTotal - $this->remise;
 
-        $totalTTC = $totalHT+$this->taxe;
+        if($this->hasTypeProduit("Panorama")){
+            $totalTTC = $totalHT+$this->getFacturationBelge();
+        } else {
+            $totalTTC = $totalHT+$this->taxe;
+        }
+
         return intval($totalTTC*100);
     }
 
@@ -1091,6 +1121,29 @@ class DocumentPrix
     	return $s_etat;
     }
 
+    public function win(){
+      $this->etat = "WON";
+    }
+
+    public function isWon(){
+      if($this->etat == "WON"){
+        return true;
+      }
+      return false;
+    }
+
+    public function lose(){
+      $this->etat = "LOST";
+    }
+
+    public function isLost(){
+      if($this->etat == "LOST"){
+        return true;
+      }
+      return false;
+    }
+
+
     public function __clone() {
 
     	if ($this->id) {
@@ -1114,7 +1167,7 @@ class DocumentPrix
     			$cloneProduit->setDocumentPrix($this);
     			$this->produits->add($cloneProduit);
     		}
-
+            
     	 }
     }
 
@@ -1304,12 +1357,52 @@ class DocumentPrix
     public function hasTypeProduit($type){
 
       foreach($this->produits as $produit){
-        if($produit->getType()->getValeur() == $type){
-          return true;
+        if($produit->getType()){
+            if( strtoupper($produit->getType()->getValeur()) == strtoupper($type) ){
+                return true;
+            }
         }
+        
       }
 
       return false;
 
+    }
+
+    /**
+     * Set facturationBelgePercent
+     *
+     * @param string $facturationBelgePercent
+     * @return DocumentPrix
+     */
+    public function setFacturationBelgePercent($facturationBelgePercent)
+    {
+        $this->facturationBelgePercent = $facturationBelgePercent;
+
+        return $this;
+    }
+
+    /**
+     * Get facturationBelgePercent
+     *
+     * @return string
+     */
+    public function getFacturationBelgePercent()
+    {
+        return $this->facturationBelgePercent;
+    }
+
+    /**
+     * Get facturationBelge
+     */
+    public function getFacturationBelge()
+    {
+        $sousTotal = 0;
+        foreach($this->produits as $produit){
+            $sousTotal+= $produit->getTotal();
+        }
+
+        $totalHT = $sousTotal - $this->remise;
+        return $totalHT*$this->facturationBelgePercent;
     }
 }

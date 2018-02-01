@@ -27,6 +27,7 @@ use AppBundle\Form\CRM\OpportuniteSousTraitanceType;
 use AppBundle\Form\CRM\OpportuniteFilterType;
 use AppBundle\Form\CRM\ContactType;
 use AppBundle\Form\SettingsType;
+use AppBundle\Form\CRM\OpportuniteWonBonCommandeType;
 
 use \DateTime;
 
@@ -495,19 +496,50 @@ class ActionCommercialeController extends Controller
 			$devisService->win($actionCommerciale->getDevis());
 		}
 
-		$activationOutilsService = $this->get('appbundle.activation_outils');
-		$comptaActive = $activationOutilsService->isActive('COMPTA', $this->getUser()->getCompany());
-
-		//compta non activée : renvoyer vers la liste des actions commerciales
-		if(!$comptaActive){
-			return $this->redirect($this->generateUrl('crm_action_commerciale_liste'));
-		}
-
-		//compta activée : renvoyer vers la répartition des montants pour le tableau de bord
-		return $this->redirect($this->generateUrl('crm_action_commerciale_gagner_repartition', array(
+		return $this->redirect($this->generateUrl('crm_action_commerciale_gagner_bon_commande', array(
 			'id' => $actionCommerciale->getId()
 		)));
 	}
+
+	/**
+	 * @Route("/crm/action-commerciale/gagner/bon-commande/{id}/{edition}",
+	 *   name="crm_action_commerciale_gagner_bon_commande",
+	 *   options={"expose"=true}
+	 * )
+	 */
+	public function actionCommercialeGagnerBonCommandeAction(Opportunite $actionCommerciale, $edition = false)
+	{
+		$form = $this->createForm(
+			new OpportuniteWonBonCommandeType(),
+			$actionCommerciale
+		);
+
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($actionCommerciale);
+			$em->flush();
+
+			if($edition){
+				return $this->redirect($this->generateUrl('crm_action_commerciale_voir', array(
+					'id' => $actionCommerciale->getId()
+				)));
+			}
+
+			return $this->redirect($this->generateUrl('crm_action_commerciale_gagner_repartition', array(
+				'id' => $actionCommerciale->getId()
+			)));
+		}
+
+		return $this->render('crm/action-commerciale/crm_action_commerciale_won_bon_commande.html.twig', array(
+			'actionCommerciale' => $actionCommerciale,
+			'form' => $form->createView(),
+			'edition' => $edition
+		));
+	}
+
 
 	/**
 	 * @Route("/crm/action-commerciale/gagner/repartition/{id}/{edition}",

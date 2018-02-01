@@ -252,6 +252,13 @@ class DocumentPrix
    */
   private $opportunite;
 
+  /**
+  *
+  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\BonCommande", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+  *
+  */
+  private $bonsCommande;
+
     /**
      * Get id
      *
@@ -1397,5 +1404,38 @@ class DocumentPrix
 
         $totalHT = $sousTotal - $this->remise;
         return $totalHT*$this->facturationBelgePercent;
+    }
+
+    /**
+     * Add bonsCommande
+     *
+     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
+     * @return DocumentPrix
+     */
+    public function addBonsCommande(\AppBundle\Entity\CRM\BonCommande $bonsCommande)
+    {
+        $this->bonsCommande[] = $bonsCommande;
+
+        return $this;
+    }
+
+    /**
+     * Remove bonsCommande
+     *
+     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
+     */
+    public function removeBonsCommande(\AppBundle\Entity\CRM\BonCommande $bonsCommande)
+    {
+        $this->bonsCommande->removeElement($bonsCommande);
+    }
+
+    /**
+     * Get bonsCommande
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBonsCommande()
+    {
+        return $this->bonsCommande;
     }
 }

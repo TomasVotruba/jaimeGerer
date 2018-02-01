@@ -418,6 +418,30 @@
 	 	</div>
 
 		{% if opportunite.isWon() %}
+
+			<div class="row">
+				<div class="col-md-12">
+					<hr />
+					<h3>Bons de commande 
+					<a class="btn btn-primary btn-xs" href=" {{ path('crm_action_commerciale_gagner_bon_commande', {'id' : opportunite.id, 'edition' : true }) }} ">Modifer</a> 
+					</h3>
+					<table class="contact-view-table">
+						<tbody>
+						{% for bonCommande in opportunite.bonsCommande %}
+							<tr>
+								<td> {{ bonCommande.num }} </td>
+								<td>
+									{{ bonCommande.montantMonetaire|number_format(2, ',', ' ') }} €
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+
+
 			<div class="row">
 				<div class="col-md-12">
 					<hr />

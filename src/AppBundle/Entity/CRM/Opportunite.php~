@@ -35,7 +35,6 @@ class Opportunite
    * @var string
    *
    * @ORM\Column(name="montant", type="float")
-   * @Assert\NotBlank()
    */
   private $montant;
 
@@ -165,6 +164,13 @@ class Opportunite
    * @ORM\Column(name="date", type="date")
    */
   private $date;
+
+  /**
+  *
+  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\BonCommande", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+  *
+  */
+  private $bonsCommande;
 
   /**
    * Constructor
@@ -562,7 +568,10 @@ class Opportunite
     public function getCa_attendu(){
       $s_proba = $this->getProbabilite()->getValeur();
       $arr_proba = explode('-', $s_proba);
-      $proba = str_replace('%', '', $arr_proba[1]);
+
+      if(count($arr_proba)){
+         $proba = str_replace('%', '', $arr_proba[1]);
+      }
 
       return $this->getMontant()*($proba/100);
     }

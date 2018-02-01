@@ -48,15 +48,15 @@ class FactureType extends AbstractType
         			'required' => true,
         			'label' => 'Date de la facture',
         	))
-        	->add('numBCInterne', 'text', array(
-        			'required' => true,
-        			'label' => 'N° bon de commande interne'
-        	))
+        	// ->add('numBCInterne', 'text', array(
+        	// 		'required' => true,
+        	// 		'label' => 'N° bon de commande interne'
+        	// ))
         	->add('numBCClient', 'text', array(
         			'required' => false,
         			'label' => 'N° bon de commande client'
         	))
-             ->add('adresse', 'text', array(
+          ->add('adresse', 'text', array(
         		'required' => true,
             	'label' => 'Adresse',
              	'attr' => array('class' => 'input-adresse'),
@@ -121,22 +121,20 @@ class FactureType extends AbstractType
              		'label' => 'Organisation',
              		'attr' => array('class' => 'typeahead-compte', 'autocomplete' => 'off')
              ))
-
              ->add('compte', 'hidden', array(
              		'required' => true,
              		'attr' => array('class' => 'entity-compte')
              ))
-		        ->add('contact_name', 'text', array(
-		        		'required' => true,
-		        		'mapped' => false,
-		        		'label' => 'Contact',
-		        		'attr' => array('class' => 'typeahead-contact', 'autocomplete' => 'off')
-		        ))
-
-		        ->add('contact', 'hidden', array(
-		        		'required' => true,
-		        		'attr' => array('class' => 'entity-contact')
-		        ))
+		    ->add('contact_name', 'text', array(
+		        	'required' => true,
+		        	'mapped' => false,
+		        	'label' => 'Contact',
+		        	'attr' => array('class' => 'typeahead-contact', 'autocomplete' => 'off')
+		    ))
+		    ->add('contact', 'hidden', array(
+		        	'required' => true,
+		        	'attr' => array('class' => 'entity-contact')
+		    ))
            	->add('devis', 'entity', array(
            			'class'=> 'AppBundle\Entity\CRM\DocumentPrix',
            			'required' => false,
@@ -229,6 +227,16 @@ class FactureType extends AbstractType
            			},
                 'attr' => array('class' => 'facture-analytique')
            	))
+            ->add('bc_name', 'text', array(
+                    'required' => true,
+                    'mapped' => false,
+                    'label' => 'N° bon de commande interne',
+                    'attr' => array('class' => 'typeahead-bc', 'autocomplete' => 'off')
+            ))
+            ->add('bonsCommande', 'hidden', array(
+                'required' => true,
+                'attr' => array('class' => 'entity-bc')
+            ))
         ;
 
       }
