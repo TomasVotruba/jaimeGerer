@@ -12,11 +12,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class BonCommandeRepository extends EntityRepository
 {
-	public function findByCompany($company){
+	public function findByCompanyWithoutFacture($company){
 		$qb = $this->createQueryBuilder('c')
 		->leftJoin('AppBundle\Entity\CRM\Opportunite', 'o', 'WITH', 'o.id = c.actionCommerciale')
 		->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = o.compte')
 		->where('co.company = :company')
+		->andWhere('c.facture IS NULL')
 		->setParameter('company', $company);
 
 		$result = $qb->getQuery()->getResult();

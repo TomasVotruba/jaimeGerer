@@ -254,7 +254,7 @@ class DocumentPrix
 
   /**
   *
-  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\BonCommande", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\BonCommande", mappedBy="facture", cascade={"persist", "remove"})
   *
   */
   private $bonsCommande;
@@ -1414,6 +1414,7 @@ class DocumentPrix
      */
     public function addBonsCommande(\AppBundle\Entity\CRM\BonCommande $bonsCommande)
     {
+        $bonsCommande->setFacture($this);
         $this->bonsCommande[] = $bonsCommande;
 
         return $this;
@@ -1427,6 +1428,19 @@ class DocumentPrix
     public function removeBonsCommande(\AppBundle\Entity\CRM\BonCommande $bonsCommande)
     {
         $this->bonsCommande->removeElement($bonsCommande);
+    }
+
+    /**
+     * Remove bonsCommande
+     *
+     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
+     */
+    public function removeAllBonsCommande()
+    {
+        foreach($this->bonsCommande as $bc){
+            $bc->setFactureNull(null);
+            $this->bonsCommande->removeElement($bc);
+        }
     }
 
     /**

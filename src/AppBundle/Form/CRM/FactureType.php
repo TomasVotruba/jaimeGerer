@@ -233,9 +233,10 @@ class FactureType extends AbstractType
                     'label' => 'N° bon de commande interne',
                     'attr' => array('class' => 'typeahead-bc', 'autocomplete' => 'off')
             ))
-            ->add('bonsCommande', 'hidden', array(
+            ->add('bc_entity', 'hidden', array(
                 'required' => true,
-                'attr' => array('class' => 'entity-bc')
+                'attr' => array('class' => 'entity-bc'), 
+                'mapped' => false
             ))
         ;
 

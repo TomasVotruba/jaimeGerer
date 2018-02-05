@@ -42,6 +42,12 @@ class BonCommande
     private $actionCommerciale;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="bonsCommande")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $facture;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -138,5 +144,40 @@ class BonCommande
     public function getActionCommerciale()
     {
         return $this->actionCommerciale;
+    }
+
+    /**
+     * Set facture
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $facture
+     * @return BonCommande
+     */
+    public function setFacture(\AppBundle\Entity\CRM\DocumentPrix $facture)
+    {
+        $this->facture = $facture;
+
+        return $this;
+    }
+
+    /**
+     * Set facture as null
+     *
+     * @return BonCommande
+     */
+    public function setFactureNull()
+    {
+        $this->facture = null;
+
+        return $this;
+    }
+
+    /**
+     * Get facture
+     *
+     * @return \AppBundle\Entity\CRM\DocumentPrix 
+     */
+    public function getFacture()
+    {
+        return $this->facture;
     }
 }

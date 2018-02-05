@@ -73,7 +73,15 @@
                         N° bon de commande
                         {{ app.user.company }}
                         :
-                        {{ facture.numBCInterne }}<br/>
+                        {% if facture.numBCInterne is not null %}
+                            {{ facture.numBCInterne }}
+                        {% endif %}
+                        {% if facture.bonsCommande is not null %}
+                            {% for bc in facture.bonsCommande %}
+                                {{ bc.num }}
+                            {% endfor %}
+                        {% endif %}
+                        <br/>
                         {% if facture.numBCClient is not null %}
                             N° bon de commande
                             {{ facture.compte }}

@@ -16,14 +16,14 @@
                     Modifier
                 </a>
 
-                <a href="{{ path('crm_facture_exporter', {'id' : facture.id }) }}" class="btn {% if facture.numBCInterne is null %} btn-default not-active {% else %} btn-primary {% endif %}">
+                <a href="{{ path('crm_facture_exporter', {'id' : facture.id }) }}" class="btn {% if facture.numBCInterne is null and facture.bonsCommande is null %} btn-default not-active {% else %} btn-primary {% endif %}">
                     <span class="glyphicon glyphicon-floppy-disk"></span>
                     Exporter
                 </a>
 
                 <a
                     href="{{ path('crm_facture_envoyer', {'id' : facture.id }) }}"
-                    class="btn {% if (facture.contact is null) %} btn-default not-active {% else %} {% if (facture.contact.email is null) or (facture.numBCInterne is null) %} btn-default not-active {% else %} btn-primary {% endif %}{% endif %}"
+                    class="btn {% if (facture.contact is null) %} btn-default not-active {% else %} {% if (facture.contact.email is null) or (facture.numBCInterne is null and facture.bonsCommande is null) %} btn-default not-active {% else %} btn-primary {% endif %}{% endif %}"
                     data-toggle="modal"
                     data-target="#modal">
                     <span class="glyphicon glyphicon-send"></span>
@@ -42,7 +42,7 @@
             </p>
 
             <p>
-                {% if facture.numBCInterne is null %}
+                {% if facture.numBCInterne is null and facture.bonsCommande is null %}
                     <span class="s">Vous ne pouvez pas exporter ou envoyer une facture sans numéro de bon de commande interne.</span><br/>
                 {% endif %}
                 {% if facture.contact is null %}
@@ -145,7 +145,14 @@
                     <tr>
                         <td>Numéro de bon de commande interne</td>
                         <td>
-                            {{ facture.numBCInterne  }}
+                            {% if facture.numBCInterne is not null %}
+                                {{ facture.numBCInterne  }}
+                            {% endif %}
+                            {% if facture.bonsCommande is not null %}
+                                {% for bc in facture.bonsCommande %}
+                                    <a href="{{ path('crm_action_commerciale_voir', {'id' : bc.actionCommerciale.id }) }}">{{ bc.num }}</a>
+                                {% endfor %}
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>

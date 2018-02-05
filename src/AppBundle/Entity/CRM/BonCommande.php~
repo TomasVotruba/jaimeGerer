@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BonCommande
  *
- * @ORM\Table()
+ * @ORM\Table(name="bon_commande")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\CRM\BonCommandeRepository")
  */
 class BonCommande
@@ -41,7 +41,11 @@ class BonCommande
      */
     private $actionCommerciale;
 
-
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="bonsCommande")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $facture;
 
     /**
      * Get id
@@ -117,5 +121,28 @@ class BonCommande
     public function setMontantMonetaire($montant)
     {
         return $this->montant = $montant*100;
+    }
+
+    /**
+     * Set actionCommerciale
+     *
+     * @param \AppBundle\Entity\CRM\Opportunite $actionCommerciale
+     * @return BonCommande
+     */
+    public function setActionCommerciale(\AppBundle\Entity\CRM\Opportunite $actionCommerciale)
+    {
+        $this->actionCommerciale = $actionCommerciale;
+
+        return $this;
+    }
+
+    /**
+     * Get actionCommerciale
+     *
+     * @return \AppBundle\Entity\CRM\Opportunite 
+     */
+    public function getActionCommerciale()
+    {
+        return $this->actionCommerciale;
     }
 }
