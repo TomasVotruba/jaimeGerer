@@ -395,7 +395,7 @@ class FactureController extends Controller
 	{
 		$_compte = $facture->getCompte();
 		$_contact = $facture->getContact();
-		$_bc = $facture->getBonsCommande();
+	
 		$dateCreation = $facture->getDateCreation();
 		$facture->setCompte($_compte->getId());
 		if($_contact!=null){
@@ -415,7 +415,7 @@ class FactureController extends Controller
 		if($_contact!=null){
 			$form->get('contact_name')->setData($_contact->__toString());
 		}
-		if($_bc!=null){
+		if($facture->getBonsCommande() != null){
 			$form->get('bc_name')->setData($_bc[0]->getNum());
 			$form->get('bc_entity')->setData($_bc[0]->getId());
 		}

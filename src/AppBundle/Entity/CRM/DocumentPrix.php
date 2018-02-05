@@ -1450,6 +1450,9 @@ class DocumentPrix
      */
     public function getBonsCommande()
     {
+        if(count($this->bonsCommande) == 0){
+            return null;
+        }
         return $this->bonsCommande;
     }
 }
