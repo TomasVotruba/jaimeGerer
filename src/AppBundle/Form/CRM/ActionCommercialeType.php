@@ -73,7 +73,7 @@ class ActionCommercialeType extends AbstractType
                 'required' => true,
                 'mapped' => false,
                 'label' => 'Organisation',
-                'attr' => array('class' => 'typeahead-compte')
+                'attr' => array('class' => 'typeahead-compte', 'autocomplete' => 'off')
             ))
             ->add('compte', 'hidden', array(
                 'required' => true,
@@ -83,7 +83,7 @@ class ActionCommercialeType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'label' => 'Contact',
-                'attr' => array('class' => 'typeahead-contact')
+                'attr' => array('class' => 'typeahead-contact', 'autocomplete' => 'off')
             ))
             ->add('contact', 'hidden', array(
                 'required' => false,
