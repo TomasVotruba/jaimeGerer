@@ -36,8 +36,8 @@ class OpportuniteRepository extends EntityRepository
 	public function findForList($company, $length, $start, $orderBy, $dir, $search, $dateRange = '', $etat=null){
 		$qb = $this->createQueryBuilder('o')
 		->select('o.id', 'o.nom', 'o.montant', 'o.date', 'o.appelOffre', 'c.nom as compte', 'o.etat')
-		->innerJoin('o.compte', 'c')
-		->innerJoin('o.devis', 'd')
+		->leftJoin('o.compte', 'c')
+		->leftJoin('o.devis', 'd')
 		->where('c.company = :company')
 		->setParameter('company', $company);
 
@@ -98,7 +98,7 @@ class OpportuniteRepository extends EntityRepository
 	public function countForList($company, $search, $dateRange = '', $etat=null){
 		$qb = $this->createQueryBuilder('o')
 		->select('COUNT(o)')
-		->innerJoin('o.compte', 'c')
+		->leftJoin('o.compte', 'c')
 		->where('c.company = :company')
 		->setParameter('company', $company);
 

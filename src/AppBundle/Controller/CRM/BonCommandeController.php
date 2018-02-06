@@ -27,10 +27,11 @@ class BonCommandeController extends Controller
 
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\BonCommande');
 
-		$list = $repository->findByCompanyWithoutFacture($this->getUser()->getCompany());
+		$list = $repository->findByCompany($this->getUser()->getCompany());
 
 		$res = array();
 		foreach ($list as $bc) {
+
 			$_res = array('id' => $bc->getId(), 'display' => $bc->getNum());
 			$res[] = $_res;
 		}
