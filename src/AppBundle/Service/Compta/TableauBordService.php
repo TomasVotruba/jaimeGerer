@@ -508,6 +508,8 @@ class TableauBordService extends ContainerAware {
        $arr_details[$cout]['total'] = 0;
     }
 
+    dump($arr_depenses);
+
     $this->arr_totaux['accurate']['couts_marginaux'] = array();
     $this->arr_totaux['accurate']['couts_marginaux']['total'] = 0;
     for($i = 1; $i<=12; $i++){
@@ -522,11 +524,6 @@ class TableauBordService extends ContainerAware {
       }
 
       foreach($depense->getLignes() as $ligne){
-
-        if($ligne->getId() >= 5461 && $ligne->getId() <= 5476){
-          dump($ligne);
-          dump($month);
-        }
 
        if( $this->utilsService->startsWith($ligne->getCompteComptable(), '6251') ||
          ( $this->ccAutoroute && $ligne->getCompteComptable()->getId() == $this->ccAutoroute->getId() )  ||
