@@ -523,6 +523,11 @@ class TableauBordService extends ContainerAware {
 
       foreach($depense->getLignes() as $ligne){
 
+        if($ligne->getId() >= 5461 && $ligne->getId() <= 5476){
+          dump($ligne);
+          dump($month);
+        }
+
        if( $this->utilsService->startsWith($ligne->getCompteComptable(), '6251') ||
          ( $this->ccAutoroute && $ligne->getCompteComptable()->getId() == $this->ccAutoroute->getId() )  ||
          ( $this->ccCarburant && $ligne->getCompteComptable()->getId() == $this->ccCarburant->getId() )
@@ -530,8 +535,6 @@ class TableauBordService extends ContainerAware {
            $arr_details['couts_deplacements'][$month]['val']+= $ligne->getMontant();
            $this->arr_totaux['accurate']['couts_marginaux'][$month]+= $ligne->getMontant();
            $arr_details['couts_deplacements']['total']+= $ligne->getMontant();
-           dump($month);
-           dump($ligne);
 
         } else if( $this->ccResaSalle && $ligne->getCompteComptable()->getId() == $this->ccResaSalle->getId() ){
 
