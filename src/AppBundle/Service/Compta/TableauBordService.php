@@ -530,6 +530,8 @@ class TableauBordService extends ContainerAware {
            $arr_details['couts_deplacements'][$month]['val']+= $ligne->getMontant();
            $this->arr_totaux['accurate']['couts_marginaux'][$month]+= $ligne->getMontant();
            $arr_details['couts_deplacements']['total']+= $ligne->getMontant();
+           dump($month);
+           dump($ligne);
 
         } else if( $this->ccResaSalle && $ligne->getCompteComptable()->getId() == $this->ccResaSalle->getId() ){
 

@@ -162,24 +162,25 @@ class RapportController extends Controller
 		$currentYear = date('Y');
 		$arr_years = array();
 		for($i = $yearActivation ; $i<=$currentYear; $i++){
-				$arr_years[$i] = $i;
+			$arr_years[$i] = $i;
 		}
 
 		$formBuilder = $this->createFormBuilder();
 
-		$formBuilder->add('comptes', 'choice', array(
+		$formBuilder
+			->add('comptes', 'choice', array(
 				'required' => true,
 				'label' => 'Compte bancaire',
 				'choices' => $arr_choices,
 				'attr' => array('class' => 'compte-select')
-		))
-							->add('years', 'choice', array(
+			))
+			->add('years', 'choice', array(
 				'required' => true,
 				'label' => 'Année',
 				'choices' => $arr_years,
 				'attr' => array('class' => 'year-select'),
 				'data' => $currentYear
-		));
+			));
 
 		return $this->render('compta/rapport/compta_rapport_tableau_tresorerie_index.html.twig', array(
 				'form' => $formBuilder->getForm()->createView(),

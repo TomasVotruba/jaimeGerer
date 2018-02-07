@@ -776,13 +776,11 @@ class ContactController extends Controller
 	 */
 	public function contactImporterMappingAction()
 	{
-		//~ exit;
 		$request = $this->getRequest();
 		$session = $request->getSession();
 		$files = $session->get('import_contacts_filename');
 
 		$output = array();
-		//~ $form_mapping = array();
 		$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
 		$headers = array();
 		$contactData = array();
