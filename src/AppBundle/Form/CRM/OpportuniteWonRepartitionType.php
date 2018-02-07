@@ -28,7 +28,7 @@ class OpportuniteWonRepartitionType extends AbstractType
     {
         $builder
            	->add('opportuniteRepartitions', 'collection', array(
-           			'type' => new OpportuniteRepartitionType(),
+           			'type' => new OpportuniteRepartitionType($this->isEdition),
            			'allow_add' => true,
            			'allow_delete' => true,
            			'by_reference' => false,

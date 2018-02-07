@@ -8,6 +8,14 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class OpportuniteRepartitionType extends AbstractType
 {
+
+   protected $isEdition;
+
+    public function __construct ($isEdition = false)
+    {
+      $this->isEdition = $isEdition;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -15,17 +23,28 @@ class OpportuniteRepartitionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder
-          ->add('date', 'date', array(
-            'years' => range(date('Y')-2, date('Y')+10),
+        if($this->isEdition){
+            $builder->add('date', 'date', array(
+                'years' => range(date('Y')-2, date('Y')+10),
+                'required' => true,
+                'input' => 'datetime',
+                'widget' => 'choice',
+            ));
+        } else {
+            $builder->add('date', 'date', array(
+                'years' => range(date('Y')-2, date('Y')+10),
+                'required' => true,
+                'input' => 'datetime',
+                'widget' => 'choice',
+                'data' => new \DateTime(date('d-m-Y'))
+            ));
+        }
+        
+         
+        $builder->add('montantMonetaire', 'number', array(
             'required' => true,
-            'input' => 'datetime',
-            'widget' => 'choice',
-          ))
-          ->add('montantMonetaire', 'number', array(
-              'required' => true,
-              'attr' => array('class' => 'align-right')
-          ))
+            'attr' => array('class' => 'align-right')
+        ))
         ;
     }
 

@@ -209,24 +209,25 @@ class ContactWebFormController extends Controller
 	{
 
 		//autoriser le cross domain
-    if(isset($_SERVER['HTTP_ORIGIN'])){
-      switch ($_SERVER['HTTP_ORIGIN']) {
-        case 'https://www.jaime-gerer.com':
-          header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
-          header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
-          header('Access-Control-Max-Age: 1000');
-          header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-          break;
-      }
-    }
+	    if(isset($_SERVER['HTTP_ORIGIN'])){
+	      switch ($_SERVER['HTTP_ORIGIN']) {
+	        case 'https://www.jaime-gerer.com':
+	          header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
+	          header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+	          header('Access-Control-Max-Age: 1000');
+	          header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+	          break;
+	      }
+	    }
 
+	    $request = $this->getRequest();
+		$posts = array_values($request->request->all());
 
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\ContactWebForm');
 		$contactRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
-		$request = $this->getRequest();
-		$posts = array_values($request->request->all());
-		$ContactWebForm = $repository->find($posts[0]['id']);
 		$em = $this->getDoctrine()->getManager();
+
+		$ContactWebForm = $repository->find($posts[0]['id']);
 		$champs = $em->getClassMetadata('AppBundle:CRM\Contact')->getFieldNames();
 
 		$exists = false;
