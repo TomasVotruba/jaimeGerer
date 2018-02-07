@@ -166,15 +166,14 @@ class DepenseRepository extends EntityRepository
 
 	public function findForCompanyByYear($company, $year){
 		$qb = $this->createQueryBuilder('d')
-		->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
-		->where('c.company = :company')
+		->leftJoin('AppBundle\Entity\User', 'u', 'WITH', 'u.id = d.userCreation')
+		->where('u.company = :company')
 		->andWhere('d.date >= :first')
 		->andWhere('d.date <= :last')
 		->setParameter('company', $company)
 		->setParameter('first', $year.'-01-01')
 		->setParameter('last', $year.'-12-31')
 		->orderBy('d.date', 'ASC');
-
 		return $qb->getQuery()->getResult();
 	}
 

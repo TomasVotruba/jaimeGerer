@@ -508,7 +508,7 @@ class TableauBordService extends ContainerAware {
        $arr_details[$cout]['total'] = 0;
     }
 
-    dump($arr_depenses);
+    
 
     $this->arr_totaux['accurate']['couts_marginaux'] = array();
     $this->arr_totaux['accurate']['couts_marginaux']['total'] = 0;
@@ -517,6 +517,7 @@ class TableauBordService extends ContainerAware {
     }
 
     foreach($arr_depenses as $depense){
+
       $month = $depense->getDate()->format('n');
 
       if( count($depense->getSousTraitances()) ){
