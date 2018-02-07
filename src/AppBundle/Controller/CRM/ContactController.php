@@ -1767,20 +1767,36 @@ class ContactController extends Controller
 		// chargement du fichier xls/xlsx ou csv
 		$objPHPExcel = $objReader->load($path.'/'.$filename);
 		$arr_data = $objPHPExcel->getActiveSheet()->toArray(false,true,true,true);
-		
+
 		$arr_comptes = array(
 			'existant' => array(),
 			'non-existant' => array(),
 		);
+
 		$arr_contacts = array(
 			'existant' => array(),
 			'non-existant' => array(),
+			'doublons' => array(),
+			'all' => array()
 		);
 		//start the loop at 2 to skip the header row
 		for($i=2; $i<count($arr_data); $i++){
-			$nom = $arr_data[$i]['A'];
-			$prenom = $arr_data[$i]['B'];
-			$orga = $arr_data[$i]['E'];
+
+			$nom = trim($arr_data[$i]['A']);
+			$prenom = trim($arr_data[$i]['B']);
+			$orga = trim($arr_data[$i]['E']);
+			$email = trim($arr_data[$i]['J']);
+
+			if($nom == null && $orga == null){
+				break;
+			}
+
+			if( array_key_exists($email, $arr_contacts['all']) ){
+				$arr_contacts['doublons'][] =  $prenom.' '.$nom.' ('.$orga.')';
+				continue;
+			} else {
+				$arr_contacts['all'][$email] = $prenom.' '.$nom.' ('.$orga.')';
+			}
 
 			$compte = $compteRepo->findOneBy(array(
 				'nom' => $orga,
@@ -1807,8 +1823,8 @@ class ContactController extends Controller
 			} else {
 				if( !in_array($orga, $arr_comptes['non-existant']) ){
 					$arr_comptes['non-existant'][] = $orga;
-					$arr_contacts['non-existant'][] = $prenom.' '.$nom.' ('.$orga.')';
 				}
+				$arr_contacts['non-existant'][] = $prenom.' '.$nom.' ('.$orga.')';
 			}
 		}
 
@@ -1838,17 +1854,31 @@ class ContactController extends Controller
 		$objPHPExcel = $objReader->load($path.'/'.$filename);
 		
 		$arr_data = $objPHPExcel->getActiveSheet()->toArray(false,true,true,true);
+
+		$arr_contacts = array();
 		
 		//loop backward to avoid removing an index during the loop
 		for($i=count($arr_data); $i>1; $i--){
-			$nom = $arr_data[$i]['A'];
-			$prenom = $arr_data[$i]['B'];
-			$orga = $arr_data[$i]['E'];
+			$nom = trim($arr_data[$i]['A']);
+			$prenom = trim($arr_data[$i]['B']);
+			$orga = trim($arr_data[$i]['E']);
+			$email = trim($arr_data[$i]['J']);
 
 			$compte = $compteRepo->findOneBy(array(
 				'nom' => $orga,
 				'company' => $this->getUser()->getCompany()
 			));
+
+			if( in_array($email, $arr_contacts) ){
+				if($type == "contact" && $existant != "doublons"){
+					$objPHPExcel->getActiveSheet()->removeRow($i, 1);
+				}
+			} else {
+				$arr_contacts[] = $email;
+				if($type == "contact" && $existant == "doublons"){
+					$objPHPExcel->getActiveSheet()->removeRow($i, 1);
+				}
+			}
 
 			if($compte != null){
 				if($type == "compte" && $existant == "non-existant"){
