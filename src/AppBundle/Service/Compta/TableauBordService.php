@@ -534,11 +534,6 @@ class TableauBordService extends ContainerAware {
            $this->arr_totaux['accurate']['couts_marginaux'][$month]+= $ligne->getMontant();
            $arr_details['couts_deplacements']['total']+= $ligne->getMontant();
 
-           if($month == 1){
-              dump($ligne->getDepense()->getLibelle());
-              dump($ligne->getMontant());
-           }
-
         } else if( $this->ccResaSalle && $ligne->getCompteComptable()->getId() == $this->ccResaSalle->getId() ){
 
            $arr_details['reservation_salles'][$month]['val']+= $ligne->getMontant();
@@ -1150,7 +1145,6 @@ class TableauBordService extends ContainerAware {
     $this->_initCoutsParCompteComptable($company);
 
     $arr_accurate = $this->creerTableauAccurate($annee, $company);
-    dump($arr_accurate);
     return $arr_accurate[$poste][$sousPoste][$mois]['details'];
   }
 
