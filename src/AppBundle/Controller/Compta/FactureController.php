@@ -809,8 +809,8 @@ class FactureController extends Controller
 		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../web/files/crm/'.$this->getUser()->getCompany()->getId().'/facture/';
 
 		$nomClient = strtolower(str_ireplace(' ','', $facture->getCompte()->getNom()));
-		$accents = array('á','à','â','ä','ã','å','ç','é','è','ê','ë','í','ì','î','ï','ñ','ó','ò','ô','ö','õ','ú','ù','û','ü','ý','ÿ');
-		$sans_accents = array('a','a','a','a','a','a','c','e','e','e','e','i','i','i','i','n','o','o','o','o','o','u','u','u','u','y','y');
+		$accents = array('á','à','â','ä','ã','å','ç','é','è','ê','ë','í','ì','î','ï','ñ','ó','ò','ô','ö','õ','ú','ù','û','ü','ý','ÿ', '-');
+		$sans_accents = array('a','a','a','a','a','a','c','e','e','e','e','i','i','i','i','n','o','o','o','o','o','u','u','u','u','y','y', '');
 		$nomClient=str_ireplace($accents, $sans_accents, $nomClient);
 		$fileName =$pdfFolder.$facture->getNum().'.'.$nomClient.'.pdf';
 
