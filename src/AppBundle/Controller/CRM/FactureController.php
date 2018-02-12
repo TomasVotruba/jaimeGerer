@@ -425,8 +425,9 @@ class FactureController extends Controller
 			$form->get('contact_name')->setData($_contact->__toString());
 		}
 		if($facture->getBonsCommande() != null){
-			$form->get('bc_name')->setData($_bc[0]->getNum());
-			$form->get('bc_entity')->setData($_bc[0]->getId());
+			$bc = $facture->getBonsCommande()[0];
+			$form->get('bc_name')->setData($bc->getNum());
+			$form->get('bc_entity')->setData($bc->getId());
 		}
 
 		$request = $this->getRequest();
