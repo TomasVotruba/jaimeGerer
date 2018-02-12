@@ -139,6 +139,12 @@ class ActionCommercialeController extends Controller
 				$list[$i]['devis_id'] = null;
 			}
 
+			$bonsCommande = "";
+			foreach($opportunite->getBonsCommande() as $bc){
+				$bonsCommande.=$bc->getNum().'<br />';
+			}
+			$list[$i]['bon_commande'] = $bonsCommande;
+
 		}
 
 		$response = new JsonResponse();

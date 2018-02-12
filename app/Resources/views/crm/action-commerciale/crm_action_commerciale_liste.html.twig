@@ -81,8 +81,9 @@
                     <th class="col-md-3">Objet</th>
                     <th class="col-md-1">Date</th>
                     <th class="col-md-1">Numéro du devis</th>
+                    <th class="col-md-1">Bon de commande</th>
                     <th class="col-md-1">Montant</th>
-                    <th class="col-md-3">Organisation</th>
+                    <th class="col-md-2">Organisation</th>
                     <th class="col-md-1 center">AO</th>
                     <th class="col-md-1 center">Etat</th>
                     <th class="col-md-1 center">Actions</th>
@@ -172,6 +173,8 @@
                     }, {
                         "data": "numero_devis"
                     },{
+                        "data": "bon_commande"
+                    },{
                         "data": "montant"
                     }, {
                         "data": "compte"
@@ -200,6 +203,11 @@
                         "targets": 2
                     },{
                         "render": function(data, type, row) {
+                            return data;
+                        },
+                        "targets": 3
+                    },{
+                        "render": function(data, type, row) {
                             var s= row.totaux.HT+" € HT"+"<br />";
                             if(row.totaux.TTC != null){
                                 s+="<i>"+row.totaux.TTC+" € TTC </i>";
@@ -207,13 +215,13 @@
                                 
                             return s;
                         },
-                        "targets": 3
+                        "targets": 4
                     }, {
                         "render": function(data, type, row) {
                             var compteVoirUrl = Routing.generate('crm_compte_voir', {'id': row['id']});
                             return '<a target="_blank" href="' + compteVoirUrl + '">' + data + '</a>';
                         },
-                        "targets": 4
+                        "targets": 5
                     },  {
                         "render": function(data, type, row) {
                             var s= "<p class='center'>";
@@ -225,7 +233,7 @@
                             s+= "</p>";
                             return s;
                         },
-                        "targets": 5
+                        "targets": 6
                     },  {
                         "render": function(data, type, row) {
                             var s= "<p class='center'>";
@@ -239,7 +247,7 @@
                             s+= "</p>";
                             return s;
                         },
-                        "targets": 6
+                        "targets": 7
                     },{
                         "render": function(data, type, row) {
 
@@ -268,7 +276,7 @@
                            
                             return s;
                         },
-                        "targets": 7
+                        "targets": 8
                     }, {
                         "visible": false,
                         "targets": ['id']

@@ -65,8 +65,7 @@ class OpportuniteRepository extends EntityRepository
 		$qb->setMaxResults($length)
 		->setFirstResult($start);
 
-
-		if($orderBy != 'numero_devis'){
+		if($orderBy != 'numero_devis' && $orderBy != 'bon_commande'){
 			$qb->addOrderBy('o.'.$orderBy, $dir);
 		} else {
 			$qb->addOrderBy('d.num', $dir);

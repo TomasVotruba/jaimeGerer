@@ -569,6 +569,7 @@ class Opportunite
       $s_proba = $this->getProbabilite()->getValeur();
       $arr_proba = explode('-', $s_proba);
 
+      $proba = 0;
       if(count($arr_proba)){
          $proba = str_replace('%', '', $arr_proba[1]);
       }
