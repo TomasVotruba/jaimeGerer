@@ -140,6 +140,15 @@ class FactureController extends Controller
 			} else {
 				$list[$i]['avoir'] = false;
 			}
+
+			$bonsCommande = "";
+			if($facture->getBonsCommande()){
+				foreach($facture->getBonsCommande() as $bc){
+					$bonsCommande.=$bc->getNum().'<br />';
+				}
+			}
+			
+			$list[$i]['bon_commande'] = $bonsCommande;
 		}
 
 		$response = new JsonResponse();
