@@ -508,8 +508,14 @@ class DevisController extends Controller
 			} else{
 				$facture->setCompta(false);
 			}
+
+			$em->persist($facture);
       		$em->persist($devis);
 			$em->persist($settingsNum);
+
+			//ecrire dans le journal de vente
+			$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
+			$journalVenteService->journalVentesAjouterFactureAction($facture);
 
 			$em->flush();
 
