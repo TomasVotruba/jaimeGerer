@@ -30,7 +30,7 @@
 				{% for opportunite in arr_opportunites %}
 					<tr>
 						<td>
-							<a target='_blank' href="{{ path('crm_opportunite_voir', {'id' : opportunite.id }) }}">{{ opportunite.nom }}</a>
+							<a target='_blank' href="{{ path('crm_action_commerciale_voir', {'id' : opportunite.id }) }}">{{ opportunite.nom }}</a>
 						</td>
 						<td>
 							{{ opportunite.montant }} &euro;
@@ -42,13 +42,13 @@
 							{{ opportunite.date|date("d/m/Y") }}
 						</td>
 						<td>
-							<a target='_blank' href="{{ path('crm_opportunite_voir', {'id' : opportunite.id }) }}" class="btn btn-xs btn-info" ​data-toggle="tooltip-btn-xs" title="Voir">
+							<a target='_blank' href="{{ path('crm_action_commerciale_voir', {'id' : opportunite.id }) }}" class="btn btn-xs btn-info" ​data-toggle="tooltip-btn-xs" title="Voir">
 								<span class="glyphicon glyphicon-eye-open"></span>
 							</a>
-							<a target='_blank' href="{{ path('crm_opportunite_editer', {'id' : opportunite.id }) }}" class="btn btn-xs btn-warning" ​data-toggle="tooltip-btn-xs" title="Editer">
+							<a target='_blank' href="{{ path('crm_action_commerciale_editer', {'id' : opportunite.id }) }}" class="btn btn-xs btn-warning" ​data-toggle="tooltip-btn-xs" title="Editer">
 								<span class="glyphicon glyphicon-pencil"></span>
 							</a>
-							<a target='_blank' href="{{ path('crm_opportunite_supprimer', {'id' : opportunite.id }) }}" class="btn btn-xs btn-danger" ​data-toggle="tooltip-btn-xs" title="Supprimer">
+							<a target='_blank' href="{{ path('crm_action_commerciale_supprimer', {'id' : opportunite.id }) }}" class="btn btn-xs btn-danger" ​data-toggle="tooltip-btn-xs" title="Supprimer">
 								<span class="glyphicon glyphicon-trash"></span>
 							</a>
 						</td>
