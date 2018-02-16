@@ -748,6 +748,112 @@ class ActionCommercialeController extends Controller
 		));
 	}
 
+		/**
+		 * @Route("/crm/action-commerciale/convertir/{id}", name="crm_action_commerciale_convertir")
+		 */
+		public function actionCommercialeConvertirAction(Opportunite $actionCommerciale)
+		{
+			$devis = $actionCommerciale->getDevis();
+
+			$form = $this->createFormBuilder()->getForm();
+
+			$form->add('objet', 'text', array(
+				'required' => true,
+				'label' => 'Objet',
+				'data' => $devis->getObjet()
+			));
+
+			$form->add('submit', 'submit', array(
+	  		  'label' => 'Enregistrer',
+			  'attr' => array('class' => 'btn btn-success')
+			));
+
+			$request = $this->getRequest();
+			$form->handleRequest($request);
+
+			if ($form->isSubmitted() && $form->isValid()) {
+
+				$em = $this->getDoctrine()->getManager();
+				$data = $form->getData();
+				$facture = clone $devis;
+
+	            $devis->setEtat("WON");
+
+				$settingsRepository = $em->getRepository('AppBundle:Settings');
+				$settingsNum = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'NUMERO_FACTURE', 'company'=>$this->getUser()->getCompany()));
+				$currentNum = $settingsNum->getValeur();
+
+				$facture->setType('FACTURE');
+				$facture->setObjet($data['objet']);
+				$facture->setDevis($devis);
+				$facture->setDateCreation(new \DateTime(date('Y-m-d')));
+				$facture->setUserCreation($this->getUser());
+
+				$settingsCGV = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'CGV_FACTURE', 'company'=>$this->getUser()->getCompany()));
+				$facture->setCgv($settingsCGV->getValeur());
+
+				$prefixe = date('Y').'-';
+				if($currentNum < 10){
+					$prefixe.='00';
+				} else if ($currentNum < 100){
+					$prefixe.='0';
+				}
+				$facture->setNum($prefixe.$currentNum);
+				$em->persist($facture);
+
+				foreach($actionCommerciale->getBonsCommande() as $bonCommande){
+					$facture->addBonsCommande($bonCommande);
+				}
+
+				$currentNum++;
+				$settingsNum->setValeur($currentNum);
+
+	      		$settingsActivationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
+				$activationCompta = $settingsActivationRepo->findOneBy(array(
+						'company' => $this->getUser()->getCompany(),
+						'outil' => 'COMPTA',
+				));
+				if($activationCompta){
+					$facture->setCompta(true);
+			        //si le compte comptable du client n'existe pas, on le créé
+			        $compte = $facture->getCompte();
+			        if($compte->getClient() == false || $compte->getCompteComptableClient() == null){
+
+			          $compteComptableService = $this->get('appbundle.compta_compte_comptable_controller');
+			          $compteComptable = $compteComptableService->createCompteComptableForCompte('411', $compte->getNom());
+
+			          $em->persist($compteComptable);
+
+			          $compte->setClient(true);
+			          $compte->setCompteComptableClient($compteComptable);
+			          $em->persist($compte);
+			        }
+				} else{
+					$facture->setCompta(false);
+				}
+
+				$em->persist($facture);
+	      		$em->persist($devis);
+				$em->persist($settingsNum);
+
+				//ecrire dans le journal de vente
+				$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
+				$journalVenteService->journalVentesAjouterFactureAction($facture);
+
+				$em->flush();
+
+				return $this->redirect($this->generateUrl(
+						'crm_facture_voir',
+						array('id' => $facture->getId())
+				));
+			}
+			return $this->render('crm/action-commerciale/crm_action_commerciale_convertir.html.twig', array(
+					'form' 		=> $form->createView(),
+					'actionCommerciale'		=> $actionCommerciale
+			));
+		}
+
+
 
 
 }

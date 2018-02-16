@@ -38,7 +38,7 @@
 
 		    		{% if opportunite.isWon %}
 	    		    	{% if facture is null or facture|length == 0 %}
-	    			    	<a href="{{ path('crm_devis_convertir', {'id' : opportunite.devis.id }) }}"  class="btn btn-primary" data-toggle="modal" data-target="#modal">
+	    			    	<a href="{{ path('crm_action_commerciale_convertir', {'id' : opportunite.id }) }}"  class="btn btn-primary" data-toggle="modal" data-target="#modal">
 	    			    		<span class="glyphicon glyphicon-check"></span> Convertir en facture
 	    			    	</a>
 	    		    	{% else %}

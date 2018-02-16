@@ -509,6 +509,12 @@ class DevisController extends Controller
 				$facture->setCompta(false);
 			}
 
+			if($devis->getOpportunite()){
+				foreach($devis->getOpportunite()->getBonsCommande() as $bonCommande){
+					$facture->addBonCommande($bonCommande);
+				}
+			}
+
 			$em->persist($facture);
       		$em->persist($devis);
 			$em->persist($settingsNum);
