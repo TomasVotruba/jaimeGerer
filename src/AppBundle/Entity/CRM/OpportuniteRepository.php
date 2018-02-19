@@ -35,7 +35,7 @@ class OpportuniteRepository extends EntityRepository
 
 	public function findForList($company, $length, $start, $orderBy, $dir, $search, $dateRange = '', $etat=null){
 		$qb = $this->createQueryBuilder('o')
-		->select('o.id', 'o.nom', 'o.montant', 'o.date', 'o.appelOffre', 'c.nom as compte', 'o.etat')
+		->select('o.id', 'o.nom', 'o.montant', 'o.date', 'o.appelOffre', 'c.nom as compte', 'c.id as compte_id', 'o.etat')
 		->leftJoin('o.compte', 'c')
 		->leftJoin('o.devis', 'd')
 		->where('c.company = :company')

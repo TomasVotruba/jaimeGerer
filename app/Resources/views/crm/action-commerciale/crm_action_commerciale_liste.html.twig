@@ -218,7 +218,7 @@
                         "targets": 4
                     }, {
                         "render": function(data, type, row) {
-                            var compteVoirUrl = Routing.generate('crm_compte_voir', {'id': row['id']});
+                            var compteVoirUrl = Routing.generate('crm_compte_voir', {'id': row['compte_id']});
                             return '<a target="_blank" href="' + compteVoirUrl + '">' + data + '</a>';
                         },
                         "targets": 5
