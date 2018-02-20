@@ -29,7 +29,7 @@
 					<th>Nom du contact</th>
 					<th>Organisation</th>
 					<th>Titre</th>
-					<th>Prises de contact</th>
+					<th>Dernière prise de contact</th>
 					<th>Contact</th>
 					<th>Timing</th>
 					<th>Actions</th>
@@ -48,28 +48,25 @@
 							{{ impulsion.contact.titre }}
 						</td>
 						<td>
-							<ul>
-							{% for priseContact in impulsion.contact.priseContacts %}
-								<li>{{ priseContact.date|date('d/m/Y') }} :
-									{% if priseContact.type == "PHONE" %}
-										Téléphone
-									{% elseif priseContact.type == "RDV" %}
-										Rendez-vous
-									{% elseif priseContact.type == "EMAIL" %}
-										Email
-									{% elseif priseContact.type == "LETTRE" %}
-										Lettre
-									{% elseif priseContact.type == "SOCIAL" %}
-										Réseaux sociaux
-									{% elseif priseContact.type == "DEVIS" %}
-										Envoi d'un devis
-									{% elseif priseContact.type == "FACTURE" %}
-										Envoi d'une facture
-									{% endif %} - 
-									{{ priseContact.description }}
-								</li>
+							{% for priseContact in impulsion.contact.priseContacts|slice(0,1) %}
+								{{ priseContact.date|date('d/m/Y') }} :
+								{% if priseContact.type == "PHONE" %}
+									Téléphone
+								{% elseif priseContact.type == "RDV" %}
+									Rendez-vous
+								{% elseif priseContact.type == "EMAIL" %}
+									Email
+								{% elseif priseContact.type == "LETTRE" %}
+									Lettre
+								{% elseif priseContact.type == "SOCIAL" %}
+									Réseaux sociaux
+								{% elseif priseContact.type == "DEVIS" %}
+									Envoi d'un devis
+								{% elseif priseContact.type == "FACTURE" %}
+									Envoi d'une facture
+								{% endif %} - 
+								{{ priseContact.description }}
 							{% endfor %}
-							</ul>
 						</td>
 						<td>
 							{{ impulsion.contact.email }}

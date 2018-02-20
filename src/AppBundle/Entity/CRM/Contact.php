@@ -232,6 +232,7 @@ class Contact
     /**
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\PriseContact", mappedBy="contact", cascade={"persist", "remove"}, orphanRemoval=true)
+     *  @ORM\OrderBy({"date" = "DESC"})
      *
      */
     private $priseContacts;
@@ -906,11 +907,9 @@ class Contact
      */
     public function getPriseContacts()
     {
-         $criteria = Criteria::create()
-	      ->orderBy(array("date" => Criteria::DESC));
-	
-	    return $this->priseContacts->matching($criteria);
+	    return $this->priseContacts;
     }
+
 	public function getRejetEmail() {
 		return $this->rejetEmail;
 	}
