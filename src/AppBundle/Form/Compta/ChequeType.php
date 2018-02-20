@@ -56,9 +56,15 @@ class ChequeType extends AbstractType
             ))
             ->add('libelle', 'text', array(
                 'required' => false,
-                'label' => 'Emetteur',
+                'label' => 'Libellé',
                 'mapped' => false,
                 'attr' => array('class' => 'input-libelle'),
+            ))
+            ->add('emetteur', 'text', array(
+                'required' => false,
+                'label' => 'Emetteur',
+                'mapped' => false,
+                'attr' => array('class' => 'input-emetteur'),
             ))
             ->add('compteComptable', 'entity', array(
                 'class'=>'AppBundle:Compta\CompteComptable',

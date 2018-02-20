@@ -246,7 +246,7 @@ body{
 	width: 100px;
 }
 
-#table-remise-cheque tr{
+.produits #table-remise-cheque tr{
 	vertical-align: top;
 }
 

@@ -76,9 +76,16 @@ class JournalVente
     /**
      * @var string
      *
-     * @ORM\Column(name="lettrage", type="string", length=10)
+     * @ORM\Column(name="lettrage", type="string", length=100, nullable=true)
      */
     private $lettrage;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="libelle", type="string", length=255, nullable=true)
+     */
+    private $libelle;
 
     /**
      * Get id
@@ -253,5 +260,28 @@ class JournalVente
         return $this->avoir->getNum();
       }
       return null;
+    }
+
+    /**
+     * Set lettrage
+     *
+     * @param string $lettrage
+     * @return JournalVente
+     */
+    public function setLettrage($lettrage)
+    {
+        $this->lettrage = $lettrage;
+
+        return $this;
+    }
+
+    /**
+     * Get lettrage
+     *
+     * @return string 
+     */
+    public function getLettrage()
+    {
+        return $this->lettrage;
     }
 }

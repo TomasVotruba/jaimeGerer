@@ -35,6 +35,13 @@ class Cheque
      */
     private $num;
 
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="emetteur", type="string", length=255, nullable=true)
+     */
+    private $emetteur;
+
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\RemiseCheque", inversedBy="cheques")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
@@ -232,4 +239,27 @@ class Cheque
     	return $montant;
     }
 
+
+    /**
+     * Set emetteur
+     *
+     * @param string $emetteur
+     * @return Cheque
+     */
+    public function setEmetteur($emetteur)
+    {
+        $this->emetteur = $emetteur;
+
+        return $this;
+    }
+
+    /**
+     * Get emetteur
+     *
+     * @return string 
+     */
+    public function getEmetteur()
+    {
+        return $this->emetteur;
+    }
 }

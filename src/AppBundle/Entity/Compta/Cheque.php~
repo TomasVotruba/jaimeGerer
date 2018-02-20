@@ -35,6 +35,13 @@ class Cheque
      */
     private $num;
 
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="emetteur", type="string", length=255, nullable=true)
+     */
+    private $emetteur;
+
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\RemiseCheque", inversedBy="cheques")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
@@ -197,8 +204,8 @@ class Cheque
     			$montant+=$piece->getFacture()->getTotalTTC();
     		} else if($piece->getAvoir() != null){
     			$montant+=$piece->getAvoir()->getTotalTTC();
-    		}else if($piece->getOd() != null){
-    			$montant+=$piece->getOd()->getTotalTTC();
+    		}else if($piece->getOperationDiverse() != null){
+    			$montant+=$piece->getOperationDiverse()->getDebit();
     		}
     	}
     	return $montant;
@@ -211,8 +218,8 @@ class Cheque
     			$montant+=$piece->getFacture()->getTotalHT();
     		} else if($piece->getAvoir() != null){
     			$montant+=$piece->getAvoir()->getTotalHT();
-    		}else if($piece->getOd() != null){
-    			$montant+=$piece->getOd()->getTotalHT();
+    		}else if($piece->getOperationDiverse() != null){
+    			$montant+=$piece->getOperationDiverse()->getDebit();
     		}
     	}
     	return $montant;
@@ -225,8 +232,8 @@ class Cheque
     			$montant+=$piece->getFacture()->getTaxe();
     		} else if($piece->getAvoir() != null){
     			$montant+=$piece->getAvoir()->getTaxe();
-    		}else if($piece->getOd() != null){
-    			$montant+=$piece->getOd()->getTaxe();
+    		}else if($piece->getOperationDiverse() != null){
+    			$montant+=$piece->getOperationDiverse()->getDebit();
     		}
     	}
     	return $montant;

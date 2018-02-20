@@ -81,6 +81,13 @@ class JournalAchat
     private $lettrage;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="libelle", type="string", length=255, nullable=true)
+     */
+    private $libelle;
+
+    /**
      * Get id
      *
      * @return integer
@@ -331,5 +338,18 @@ class JournalAchat
     public function getLettrage()
     {
         return $this->lettrage;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     * @return JournalAchat
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
+
+        return $this;
     }
 }

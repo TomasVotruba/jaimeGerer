@@ -85,6 +85,8 @@
                                 $(id).find('.select-piece').attr("required", false);
                                 $(id).find('.input-libelle').val(libelle);
                                 $(id).find('.input-libelle').attr("required", true);
+                                $(id).find('.input-emetteur').val(libelle);
+                                $(id).find('.input-emetteur').attr("required", true);
                                 $(id).find('.select-cc').attr("required", true);
                                 $(id).find('.select-cc').val(cc);
 
@@ -133,6 +135,7 @@
                         $(this).parents('tr').find('.input-montant').val("");
                         $(this).parents('tr').find('.select-piece').attr("required", false);
                         $(this).parents('tr').find('.input-libelle').attr("required", true);
+                        $(this).parents('tr').find('.input-emetteur').attr("required", true);
                         $(this).parents('tr').find('.select-cc').attr("required", true);
                         
                      } else {
@@ -141,6 +144,7 @@
                         $(this).parents('tr').find('.input-montant').attr("readonly", true);
                         $(this).parents('tr').find('.select-piece').attr("required", true);
                          $(this).parents('tr').find('.input-libelle').attr("required", false);
+                         $(this).parents('tr').find('.input-emetteur').attr("required", false);
                         $(this).parents('tr').find('.select-cc').attr("required", false);
 
                      }

@@ -19,6 +19,8 @@
       {% set current_id = ligneJournal.avoir.id %}
     {% elseif ligneJournal.facture is not null %}
       {% set current_id = ligneJournal.facture.id %}
+    {% else %}
+      {% set current_id = ligneJournal.id %}
     {% endif %}
     <tr {% if old_id != current_id %} class="thick-border" {% endif %}>
       <td>{{ ligneJournal.codeJournal }}</td>
@@ -26,7 +28,7 @@
           {{ ligneJournal.date|date('j/m/Y') }}
       </td>
       <td>{{ ligneJournal.compteComptable.num|truncate(3, false, '') }}</td>
-      <td>{{ ligneJournal.compteComptable.num }}</td>
+      <td><a href="{{ path('compta_compte_voir', {'id' : ligneJournal.compteComptable.id }) }}">{{ ligneJournal.compteComptable.num }}</a></td>
       <td>
         {% if ligneJournal.depense is not null %}
           <a href="{{ path('compta_depense_voir', {'id' : ligneJournal.depense.id}) }}" data-toggle="modal" data-target="#modal-lg">{{ ligneJournal.piece }}</a>
@@ -34,6 +36,8 @@
           <a href="{{ path('compta_avoir_voir', {'id' : ligneJournal.avoir.id}) }}">{{ ligneJournal.piece }}</a>
         {% elseif ligneJournal.facture is not null %}
           <a href="{{ path('compta_facture_voir', {'id' : ligneJournal.facture.id}) }}">{{ ligneJournal.piece }}</a>
+        {% elseif ligneJournal.libelle is not null %}
+          {{ ligneJournal.libelle }}
         {% endif %}
       </td>
       <td>
@@ -59,6 +63,8 @@
       {% set old_id = ligneJournal.avoir.id %}
     {% elseif ligneJournal.facture is not null %}
       {% set old_id = ligneJournal.facture.id %}
+     {% else %}
+      {% set current_id = ligneJournal.id %}
     {% endif %}
   {% endfor %}
 </tbody>

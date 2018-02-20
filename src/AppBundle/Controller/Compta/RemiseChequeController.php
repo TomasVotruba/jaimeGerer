@@ -169,6 +169,8 @@ class RemiseChequeController extends Controller
 					$od->setDebit($form_cheque['montant']->getData());
 					$em->persist($od);
 
+					$cheque->setEmetteur($form_cheque['emetteur']->getData());
+
 					$chequePiece = new ChequePiece();
 					$chequePiece->setCheque($cheque);
 					$chequePiece->setOperationDiverse($od);
@@ -332,6 +334,8 @@ class RemiseChequeController extends Controller
 					$od->setCompteComptable($form_cheque['compteComptable']->getData());
 					$od->setDebit($form_cheque['montant']->getData());
 					$em->persist($od);
+
+					$cheque->setEmetteur($form_cheque['emetteur']->getData());
 
 					$chequePiece = new ChequePiece();
 					$chequePiece->setCheque($cheque);

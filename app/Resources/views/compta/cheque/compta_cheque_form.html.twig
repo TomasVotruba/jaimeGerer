@@ -9,15 +9,16 @@
 				<th class="produit-input-button">&nbsp;</td>
 		</thead>
 		<tbody>
-			<tr>
+			<tr style="vertical-align: top;">
 				<td class="cheque-input-banque">{{ form_widget(form.nomBanque) }}</td>
 				<td class="cheque-input-num">{{ form_widget(form.num) }}</td>
 				<td class="cheque-input-pieces">
 					{{ form_widget(form.select) }}
 					{{ form_row(form.autre) }}
 					<div class="autre-details hidden">
-						{{ form_row(form.compteComptable) }}
+						{{ form_row(form.emetteur) }}
 						{{ form_row(form.libelle) }}
+						{{ form_row(form.compteComptable) }}
 					</div>
 				</td>
 				<td class="cheque-input-montant">{{ form_widget(form.montant) }}</td>
