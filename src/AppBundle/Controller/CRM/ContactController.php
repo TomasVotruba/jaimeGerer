@@ -1777,8 +1777,10 @@ class ContactController extends Controller
 			'doublons' => array(),
 			'all' => array()
 		);
+
+
 		//start the loop at 2 to skip the header row
-		for($i=2; $i<count($arr_data); $i++){
+		for($i=2; $i<count($arr_data)+1; $i++){
 
 			$nom = trim($arr_data[$i]['A']);
 			$prenom = trim($arr_data[$i]['B']);
