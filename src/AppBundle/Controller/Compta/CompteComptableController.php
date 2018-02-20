@@ -1021,6 +1021,10 @@ class CompteComptableController extends Controller
 				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalAchat');
 				break;
 
+			case 'OD':
+				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\OperationDiverse');
+				break;
+
 			default:
 				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalBanque');
 				$banque = true;
