@@ -77,11 +77,12 @@ class AffectationDiverseType extends AbstractType
     					'query_builder' => function (EntityRepository $er) {
     						return $er->createQueryBuilder('c')
     						->where('c.company = :company')
-    						->andWhere('c.num NOT LIKE :num2 and c.num NOT LIKE :num401 and c.num NOT LIKE :num411')
+    						->andWhere('c.num NOT LIKE :num2 and c.num NOT LIKE :num401 and c.num NOT LIKE :num411 and c.num NOT LIKE :num6')
     						->setParameter('company', $this->companyId)
     						->setParameter('num2', "2%")
     						->setParameter('num401', "401%")
     						->setParameter('num411', "411%")
+                            ->setParameter('num6', "6%")
     						->orderBy('c.num');
     					}
     			));

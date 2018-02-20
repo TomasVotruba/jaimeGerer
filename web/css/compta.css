@@ -246,6 +246,10 @@ body{
 	width: 100px;
 }
 
+#table-remise-cheque tr{
+	vertical-align: top;
+}
+
 #table-releve .libelle{
 	width: 25%;
 }

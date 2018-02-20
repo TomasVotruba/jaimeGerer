@@ -24,15 +24,15 @@ class OperationDiverseType extends AbstractType
     {
         $builder
             ->add('compteComptable', 'entity', array(
-        			'required' => false,
-        			'class' => 'AppBundle:Compta\CompteComptable',
-        			'label' => 'Compte comptable',
-        			'query_builder' => function (EntityRepository $er) {
-        				return $er->createQueryBuilder('c')
-        				->andWhere('c.company = :company')
-        				->setParameter('company', $this->companyId)
-        				->orderBy('c.num', 'ASC');
-        			}
+    			'required' => false,
+    			'class' => 'AppBundle:Compta\CompteComptable',
+    			'label' => 'Compte comptable',
+    			'query_builder' => function (EntityRepository $er) {
+    				return $er->createQueryBuilder('c')
+    				->andWhere('c.company = :company')
+    				->setParameter('company', $this->companyId)
+    				->orderBy('c.num', 'ASC');
+    			}
         	));
         ;
     }

@@ -346,6 +346,15 @@ class JournalBanqueController extends Controller
 								));
 								$ligneJournalAchats->setLettrage($lettrage);
 								$em->persist($ligneJournalAchats);
+							} else if($piece->getOperationDiverse() != null){
+								$ligne->setCredit($piece->getOperationDiverse()->getDebit());
+								//$ligne->setAnalytique($piece->getAvoir()->getDepense()->getAnalytique());
+								$ligne->setCompteComptable($piece->getOperationDiverse()->getCompteComptable());
+								$lettrage = $lettrageService->findNextNum($piece->getOperationDiverse()->getCompteComptable());
+								$ligne->setLettrage($lettrage);
+								$ligne->setNom($piece->getOperationDiverse()->getLibelle());
+								$piece->getOperationDiverse()->setLettrage($lettrage);
+								$em->persist($piece->getOperationDiverse());
 							}
 							$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 							$ligne->setModePaiement('CHEQUE');

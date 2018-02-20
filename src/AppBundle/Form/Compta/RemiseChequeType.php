@@ -54,7 +54,7 @@ class RemiseChequeType extends AbstractType
         			'label' => 'Date de la remise de chèque',
         	))
         	->add('cheques', 'collection', array(
-        			'type' => new ChequeType($this->arr_cheque_pieces),
+        			'type' => new ChequeType($this->arr_cheque_pieces, $this->companyId),
         			'allow_add' => true,
         			'allow_delete' => true,
         			'by_reference' => false,

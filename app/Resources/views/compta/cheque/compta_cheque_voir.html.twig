@@ -6,11 +6,11 @@
 		{% for piece in cheque.pieces %}
 			<li>
 			{% if piece.facture is not null %}
-				<a href="{{path('compta_facture_voir', {'id' : piece.facture.id }) }}" data-toggle="modal" data-target="#modal-lg">Facture {{ piece.facture.num }} - {{ piece.facture.compte }} - {{ piece.facture.totalTTC }}€</a>
+				<a href="{{path('compta_facture_voir', {'id' : piece.facture.id }) }}" data-toggle="modal" data-target="#modal-lg">Facture {{ piece.facture.num }} - {{ piece.facture.compte }} - {{ piece.facture.totalTTC }} €</a>
 			{% elseif piece.avoir is not null %}
-				<a href="{{path('compta_avoir_voir', {'id' : piece.avoir.id }) }}">Avoir {{ piece.avoir.num }} - {{ piece.avoir.compte }} - {{ piece.avoir.totalTTC }}€</a>
-			{% elseif piece.od is not null %}
-				{{ piece.od }}
+				<a href="{{path('compta_avoir_voir', {'id' : piece.avoir.id }) }}">Avoir {{ piece.avoir.num }} - {{ piece.avoir.compte }} - {{ piece.avoir.totalTTC }} €</a>
+			{% elseif piece.operationDiverse is not null %}
+				<a href="{{path('compta_compte_voir', {'id' : piece.operationDiverse.compteComptable.id }) }}">OD : {{ piece.operationDiverse.libelle }}</a>
 			{% endif %}
 			</li>
 		{% endfor %}

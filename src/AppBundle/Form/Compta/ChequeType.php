@@ -6,14 +6,21 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\DataTransformer\ChequeToArrayTransformer;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+
 
 class ChequeType extends AbstractType
 {
-	protected $arr_cheque_pieces;
+    protected $arr_cheque_pieces;
+    protected $companyId;
+	protected $autre;
 
-	public function __construct ( $arr_cheque_pieces = null)
+	public function __construct ( $arr_cheque_pieces = null, $companyId)
 	{
-		$this->arr_cheque_pieces = $arr_cheque_pieces;
+        $this->arr_cheque_pieces = $arr_cheque_pieces;
+		$this->companyId = $companyId;
 	}
 
     /**
@@ -22,34 +29,67 @@ class ChequeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
-          ->add('nomBanque', 'text', array(
-      			'required' => false,
-          	'label' => 'Banque'
-        	))
-          ->add('num', 'text', array(
-      			'required' => false,
-          	'label' => 'N° chèque'
-        	))
-           ->add('select', 'choice', array(
-           		'choices' => $this->arr_cheque_pieces,
-      				'required' => true,
-           		'multiple' => true,
-           		'expanded' => false,
-           		'mapped' => false,
-      				'attr' => array('class' => 'select-piece'),
-           		'label' => 'Pièces',
-        	))
+            ->add('nomBanque', 'text', array(
+          		'required' => false,
+              	'label' => 'Banque'
+            ))
+            ->add('num', 'text', array(
+          		'required' => false,
+              	'label' => 'N° chèque'
+            ))
+            ->add('select', 'choice', array(
+               	'choices' => $this->arr_cheque_pieces,
+          		'required' => true,
+               	'multiple' => true,
+               	'expanded' => false,
+               	'mapped' => false,
+          		'attr' => array('class' => 'select-piece'),
+               	'label' => 'Pièces',
+            ))
+            ->add('autre', 'checkbox', array(
+                'label' => 'Autre',
+                'attr' => array('class' => 'checkbox-autre'),
+                'mapped' => false,
+                'required' => false,
+            ))
+            ->add('libelle', 'text', array(
+                'required' => false,
+                'label' => 'Emetteur',
+                'mapped' => false,
+                'attr' => array('class' => 'input-libelle'),
+            ))
+            ->add('compteComptable', 'entity', array(
+                'class'=>'AppBundle:Compta\CompteComptable',
+                'property' => 'nom',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.company = :company')
+                        ->andWhere('c.num NOT LIKE :num2 and c.num NOT LIKE :num401 and c.num NOT LIKE :num411 and c.num NOT LIKE :num6')
+                        ->setParameter('company', $this->companyId)
+                        ->setParameter('num2', "2%")
+                        ->setParameter('num401', "401%")
+                        ->setParameter('num411', "411%")
+                        ->setParameter('num6', "6%")
+                        ->orderBy('c.num');
+                },
+                'required' => false,
+                'label' => 'Compte comptable',
+                'attr' => array('class' => 'select-cc'),
+                'mapped' => false,
+            ))
            ->add('montant', 'number', array(
-     	   		'required' => false,
+     	   		'required' => true,
      	   		'label' => 'Montant (€)',
      	   		'precision' => 2,
      	   		'mapped' => false,
      	   		'read_only' => true,
-           	'attr' => array('class' => 'input-montant')
-      	   ))
+           	    'attr' => array('class' => 'input-montant')
+      	   ));
         ;
 
+       
     }
 
     /**

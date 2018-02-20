@@ -21,7 +21,6 @@ class ChequePiece
      */
     private $id;
     
-
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\Cheque", inversedBy="pieces")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
@@ -39,6 +38,12 @@ class ChequePiece
      * @ORM\JoinColumn(nullable=true)
      */
     private $facture;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\OperationDiverse")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $operationDiverse;
 
     /**
      * @var float
@@ -148,5 +153,28 @@ class ChequePiece
     public function getAutreMontant()
     {
         return $this->autreMontant;
+    }
+
+    /**
+     * Set operationDiverse
+     *
+     * @param \AppBundle\Entity\Compta\OperationDiverse $operationDiverse
+     * @return ChequePiece
+     */
+    public function setOperationDiverse(\AppBundle\Entity\Compta\OperationDiverse $operationDiverse = null)
+    {
+        $this->operationDiverse = $operationDiverse;
+
+        return $this;
+    }
+
+    /**
+     * Get operationDiverse
+     *
+     * @return \AppBundle\Entity\Compta\OperationDiverse 
+     */
+    public function getOperationDiverse()
+    {
+        return $this->operationDiverse;
     }
 }

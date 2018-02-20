@@ -49,6 +49,8 @@
 									{{ piece.facture.compte }}
 								{% elseif piece.avoir is not null %}
 									{{ piece.avoir.compte }}
+								{% elseif piece.operationDiverse is not null %}
+									{{ piece.operationDiverse.libelle }}
 								{% endif %}
 								</li>
 							{% endfor %}

@@ -14,9 +14,9 @@
         <div class="col-md-12">
             <h4>Chèques :</h4>
             <ul class="produits" id="collectionContainer" data-prototype="
-		 {% filter escape %}
-		    	{{ include('compta/cheque/compta_cheque_form.html.twig', { 'form':  form.cheques.vars.prototype }) }}
-	     {% endfilter %}">
+        		 {% filter escape %}
+        		    	{{ include('compta/cheque/compta_cheque_form.html.twig', { 'form':  form.cheques.vars.prototype }) }}
+        	     {% endfilter %}">
                 {% for chequeField in form.cheques %}
                     <li id="{{ chequeField.vars.value.id }}">
                         {{ include('compta/cheque/compta_cheque_form.html.twig', { 'form': chequeField }) }}
@@ -50,31 +50,51 @@
     <script type="text/javascript">
         $(function() {
 
-						var $addLink = $('<a href="#" class="add_produit_link btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"</a>');
-						var $newLinkLi = $('<li></li>').append($addLink);
+			var $addLink = $('<a href="#" class="add_produit_link btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"</a>');
+			var $newLinkLi = $('<li></li>').append($addLink);
             var collectionHolder = $('ul.produits');
             collectionHolder.append($newLinkLi);
             indexNewCollection = collectionHolder.children().length;
 
-						{% if remiseCheque is not defined %}
-							addProduitForm(collectionHolder, $newLinkLi, false);
-						{% else %}
+			{% if remiseCheque is not defined %}
+				addProduitForm(collectionHolder, $newLinkLi, false);
+			{% else %}
 
-							{% for cheque in remiseCheque.cheques %}
-									var val = [];
-									var id = "#{{ cheque.id }}";
-									{% for piece in cheque.pieces %}
-											{% if piece.facture %}
-													val.push("F" + {{ piece.facture.id }});
-											{% elseif piece.avoir %}
-													val.push("A" + {{ piece.avoir.id }});
-											{% endif %}
-									{% endfor %}
-									$(id).find('.select-piece').val(val);
-									updateMontant($(id).find('.select-piece').attr('id'));
-							{% endfor %}
+				{% for cheque in remiseCheque.cheques %}
+						var val = [];
+						var id = "#{{ cheque.id }}";
+						{% for piece in cheque.pieces %}
+							{% if piece.facture %}
+								val.push("F" + {{ piece.facture.id }});
+                                $(id).find('.select-piece').val(val);
+                                updateMontant($(id).find('.select-piece').attr('id'));
+							{% elseif piece.avoir %}
+								val.push("A" + {{ piece.avoir.id }});
+                                $(id).find('.select-piece').val(val);
+                                updateMontant($(id).find('.select-piece').attr('id'));
+                            {% elseif piece.operationDiverse %}
 
-						{% endif %}
+                                var montant = {{ piece.operationDiverse.debit }};
+                                var libelle = "{{ piece.operationDiverse.libelle }}";
+                                var cc = {{ piece.operationDiverse.compteComptable.id }};
+
+                                $(id).find('.checkbox-autre').prop('checked', true);
+                                $(id).find('.autre-details').removeClass("hidden");
+                                $(id).find('.input-montant').attr("readonly", false);
+                                $(id).find('.input-montant').val(montant);
+                                $(id).find('.select-piece').attr("required", false);
+                                $(id).find('.input-libelle').val(libelle);
+                                $(id).find('.input-libelle').attr("required", true);
+                                $(id).find('.select-cc').attr("required", true);
+                                $(id).find('.select-cc').val(cc);
+
+							{% endif %}
+						{% endfor %}
+						
+						
+				{% endfor %}
+                updateTotal();
+			{% endif %}
 
             init();
 
@@ -104,6 +124,27 @@
                 });
 
                 $('#nb_cheques').text(collectionHolder.children().length - 1);
+
+                $('.checkbox-autre').click(function(){
+                    if($(this).is(":checked") ){
+                        
+                        $(this).parents('td').find('.autre-details').removeClass("hidden");
+                        $(this).parents('tr').find('.input-montant').attr("readonly", false);
+                        $(this).parents('tr').find('.input-montant').val("");
+                        $(this).parents('tr').find('.select-piece').attr("required", false);
+                        $(this).parents('tr').find('.input-libelle').attr("required", true);
+                        $(this).parents('tr').find('.select-cc').attr("required", true);
+                        
+                     } else {
+
+                        $(this).parents('td').find('.autre-details').addClass("hidden");
+                        $(this).parents('tr').find('.input-montant').attr("readonly", true);
+                        $(this).parents('tr').find('.select-piece').attr("required", true);
+                         $(this).parents('tr').find('.input-libelle').attr("required", false);
+                        $(this).parents('tr').find('.select-cc').attr("required", false);
+
+                     }
+                });
 
             }
 
@@ -179,6 +220,9 @@
                 $(element).val(montant);
                 updateTotal();
             }
+
+
+            
         });
     </script>
 {% endblock %}

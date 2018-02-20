@@ -131,14 +131,10 @@ class RemiseChequeController extends Controller
 			$arr_avoirs['A'.$avoir->getId()] = $avoir->getNum().' - '.$avoir->getCompte().' - '.$avoir->getTotalTTC();
 		}
 
-		$arr_autres = array(
-			'AUTRE' => 'Autre'
-		);
 
 		$arr_pieces = array(
 			'FACTURES' => $arr_factures,
-			'AVOIRS FOURNISSEURS' => $arr_avoirs,
-			'AUTRE' => $arr_autres,
+			'AVOIRS FOURNISSEURS' => $arr_avoirs
 		);
 
 		$remiseCheque = new RemiseCheque();
@@ -161,25 +157,43 @@ class RemiseChequeController extends Controller
 			$arr_cheques = $form['cheques'];
 			$i = 0;
 			foreach($arr_cheques as $form_cheque){
-				$arr_pieces_id = $form_cheque['select']->getData();
-				foreach($arr_pieces_id as $s_id){
+
+				$cheque = $data->getCheques()[$i];
+
+				if( $form_cheque['autre']->getData() ){
+					$od = new OperationDiverse();
+					$od->setDate(new \DateTime(date('Y-m-d')));
+					$od->setLibelle($form_cheque['libelle']->getData());
+					$od->setCodeJournal('OD');
+					$od->setCompteComptable($form_cheque['compteComptable']->getData());
+					$od->setDebit($form_cheque['montant']->getData());
+					$em->persist($od);
+
 					$chequePiece = new ChequePiece();
-					$cheque = $data->getCheques()[$i];
 					$chequePiece->setCheque($cheque);
-
-					$type = substr($s_id,0,1);
-					$num = substr($s_id,1);
-
-					if($type == 'F'){
-						$facture = $repoFactures->find($num);
-						$facture->setEtat('PAID');
-						$em->persist($facture);
-						$chequePiece->setFacture($facture);
-					} else if($type == 'A'){
-						$avoir = $avoirsRepo->find($num);
-						$chequePiece->setAvoir($avoir);
-					}
+					$chequePiece->setOperationDiverse($od);
 					$cheque->addPiece($chequePiece);
+
+				} else {
+					$arr_pieces_id = $form_cheque['select']->getData();
+					foreach($arr_pieces_id as $s_id){
+						$chequePiece = new ChequePiece();
+						
+						$chequePiece->setCheque($cheque);
+						$type = substr($s_id,0,1);
+						$num = substr($s_id,1);
+
+						if($type == 'F'){
+							$facture = $repoFactures->find($num);
+							$facture->setEtat('PAID');
+							$em->persist($facture);
+							$chequePiece->setFacture($facture);
+						} else if($type == 'A'){
+							$avoir = $avoirsRepo->find($num);
+							$chequePiece->setAvoir($avoir);
+						}
+						$cheque->addPiece($chequePiece);
+					}
 				}
 				$i++;
 			}
@@ -204,12 +218,12 @@ class RemiseChequeController extends Controller
 			$settingsNum->setValeur($currentNum);
 			$em->persist($settingsNum);
 
-
 			$em->persist($remiseCheque);
 			$em->flush();
 
 			return $this->redirect($this->generateUrl(
-					'compta_remise_cheque_liste'));
+				'compta_remise_cheque_liste')
+			);
 
 		}
 
@@ -235,6 +249,7 @@ class RemiseChequeController extends Controller
 		$arr_remises_cheques = array();
 		$arr_factures_rapprochees_par_remises_cheques = array();
 		$arr_avoirs_rapprochees_par_remises_cheques = array();
+		$arr_od_rapprochees_par_remises_cheques = array();
 		foreach($arr_all_remises_cheques as $remiseCheque){
 			if($remiseCheque->getTotalRapproche() < $remiseCheque->getTotal()){
 				$arr_remises_cheques[] = $remiseCheque;
@@ -243,7 +258,7 @@ class RemiseChequeController extends Controller
 					foreach($cheque->getPieces() as $piece){
 						if($piece->getFacture()){
 							$arr_factures_rapprochees_par_remises_cheques[] = $piece->getFacture()->getId();
-						}else if($piece->getAvoir()){
+						} else if($piece->getAvoir()){
 							$arr_avoirs_rapprochees_par_remises_cheques[] = $piece->getFacture()->getId();
 						}
 					}
@@ -276,14 +291,9 @@ class RemiseChequeController extends Controller
 			$arr_avoirs['A'.$avoir->getId()] = $avoir->getNum().' - '.$avoir->getCompte().' - '.$avoir->getTotalTTC();
 		}
 
-		$arr_autres = array(
-			'AUTRE' => 'Autre'
-		);
-
 		$arr_pieces = array(
 			'FACTURES' => $arr_factures,
-			'AVOIRS FOURNISSEURS' => $arr_avoirs,
-			'AUTRE' => $arr_autres,
+			'AVOIRS FOURNISSEURS' => $arr_avoirs
 		);
 
 		$form = $this->createForm(
@@ -309,31 +319,49 @@ class RemiseChequeController extends Controller
 				// $em->remove($oldCheque);
 			}
 
+			$i = 0;
 			foreach($arr_cheques as $form_cheque){
-				$arr_pieces_id = $form_cheque['select']->getData();
-				foreach($arr_pieces_id as $s_id){
+
+				$cheque = $data->getCheques()[$i];
+
+				if( $form_cheque['autre']->getData() ){
+					$od = new OperationDiverse();
+					$od->setDate(new \DateTime(date('Y-m-d')));
+					$od->setLibelle($form_cheque['libelle']->getData());
+					$od->setCodeJournal('OD');
+					$od->setCompteComptable($form_cheque['compteComptable']->getData());
+					$od->setDebit($form_cheque['montant']->getData());
+					$em->persist($od);
+
 					$chequePiece = new ChequePiece();
-					$cheque = $form_cheque->getData();
-					// $chequePiece->setCheque($cheque);
-
-					$type = substr($s_id,0,1);
-					$num = substr($s_id,1);
-					if($type == 'F'){
-						$facture = $repoFactures->find($num);
-						$facture->setEtat('PAID');
-						$em->persist($facture);
-						$chequePiece->setFacture($facture);
-					} else if($type == 'A'){
-						$avoir = $avoirsRepo->find($num);
-						$chequePiece->setAvoir($avoir);
-					}
-					$em->persist($chequePiece);
+					$chequePiece->setCheque($cheque);
+					$chequePiece->setOperationDiverse($od);
 					$cheque->addPiece($chequePiece);
-					$em->persist($cheque);
 
+				} else {
+					$arr_pieces_id = $form_cheque['select']->getData();
+					foreach($arr_pieces_id as $s_id){
+						$chequePiece = new ChequePiece();
+						
+						$chequePiece->setCheque($cheque);
+						$type = substr($s_id,0,1);
+						$num = substr($s_id,1);
+
+						if($type == 'F'){
+							$facture = $repoFactures->find($num);
+							$facture->setEtat('PAID');
+							$em->persist($facture);
+							$chequePiece->setFacture($facture);
+						} else if($type == 'A'){
+							$avoir = $avoirsRepo->find($num);
+							$chequePiece->setAvoir($avoir);
+						}
+						$cheque->addPiece($chequePiece);
+					}
 				}
-				$remiseCheque->addCheque($cheque);
+				$i++;
 			}
+
 
 			$remiseCheque->setDateEdition(new \DateTime(date('Y-m-d')));
 			$remiseCheque->setUserEdition($this->getUser());
