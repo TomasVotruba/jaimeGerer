@@ -163,8 +163,10 @@ class FactureController extends Controller
 			foreach($arr_remise_cheques as $remiseCheque){
 				foreach($remiseCheque->getCheques() as $cheque){
 					foreach($cheque->getPieces() as $piece){
-						if($piece->getFacture()->getId() == $arr_f['id']){
-							$list[$i]['cheque'] = $remiseCheque->getNum();
+						if($piece->getFacture()){
+							if($piece->getFacture()->getId() == $arr_f['id']){
+								$list[$i]['cheque'] = $remiseCheque->getNum();
+							}
 						}
 					}
 				}
@@ -280,8 +282,10 @@ class FactureController extends Controller
 			foreach($arr_remise_cheques as $remiseCheque){
 				foreach($remiseCheque->getCheques() as $cheque){
 					foreach($cheque->getPieces() as $piece){
-						if($piece->getFacture()->getId() == $arr_f['id']){
-							$list[$i]['cheque'] = $remiseCheque->getNum();
+						if($piece->getFacture()){
+							if($piece->getFacture()->getId() == $arr_f['id']){
+								$list[$i]['cheque'] = $remiseCheque->getNum();
+							}
 						}
 					}
 				}
@@ -349,8 +353,10 @@ class FactureController extends Controller
 			foreach($arr_remise_cheques as $remiseCheque){
 				foreach($remiseCheque->getCheques() as $cheque){
 					foreach($cheque->getPieces() as $piece){
-						if($piece->getFacture()->getId() == $arr_f['id']){
-							$list[$i]['cheque'] = $remiseCheque->getNum();
+						if($piece->getFacture()){
+							if($piece->getFacture()->getId() == $arr_f['id']){
+								$list[$i]['cheque'] = $remiseCheque->getNum();
+							}
 						}
 					}
 				}
