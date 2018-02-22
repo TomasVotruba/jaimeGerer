@@ -1,0 +1,44 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Documents comptables</h1>
+		</div>
+	</div>
+
+	<div class="row">
+			<div class="col-md-12">
+					{% include 'compta/rapport/compta_rapport_submenu.html.twig' %}
+			</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<h2>Fichier des écritures comptables</h2>
+		</div>
+	</div>
+
+	<div class="well">
+
+		{{ form_start(form) }}
+		<div class="row">
+			<div class="col-md-2">
+				{{ form_row(form.year) }}	
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-1">
+				{{ form_row(form.downloadFEC) }}	
+			</div>
+			<div class="col-md-1">
+				{{ form_row(form.downloadDesc) }}	
+			</div>
+		</div>
+		{{ form_rest(form) }}
+		{{ form_end(form) }}
+
+	</div>
+
+	
+{% endblock %}

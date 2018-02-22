@@ -290,6 +290,15 @@ class JournalAchat
       return null;
     }
 
+    public function getDateCreation(){
+      if($this->depense){
+        return $this->depense->getDateCreation();
+      } else if($this->avoir) {
+        return $this->avoir->getDateCreation();
+      }
+      return null;
+    }
+
     public function getLibelle(){
       if($this->depense){
         return $this->depense->getNum().' : '.$this->depense->getLibelle();
@@ -313,6 +322,15 @@ class JournalAchat
         return $this->depense->getNum();
       } else if($this->avoir) {
         return $this->avoir->getNum();
+      }
+      return null;
+    }
+
+    public function getDatePiece(){
+      if($this->depense){
+        return $this->depense->getDate();
+      } else if($this->avoir) {
+        return $this->avoir->getDateCreation();
       }
       return null;
     }

@@ -722,7 +722,8 @@ class JournalBanqueController extends Controller
 			$col++;
 			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCompteComptable()->getNum());
 			$col++;
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getLibelle());
+			$libelle =  preg_replace('/[\r\n]+/',' - ', $ligne->getLibelle());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $libelle);
 			$col++;
 			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getDebit());
 			$col++;

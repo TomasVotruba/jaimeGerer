@@ -129,6 +129,13 @@ class Company
      */
     private $credits = 0;
 
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="siren", type="string", length=255)
+     */
+    private $siren;
+
     /**
      * Get id
      *
@@ -564,5 +571,28 @@ class Company
     {
         $this->credits -= (float)$credits;
         return $this;
+    }
+
+    /**
+     * Set siren
+     *
+     * @param string $siren
+     * @return Company
+     */
+    public function setSiren($siren)
+    {
+        $this->siren = $siren;
+
+        return $this;
+    }
+
+    /**
+     * Get siren
+     *
+     * @return string 
+     */
+    public function getSiren()
+    {
+        return $this->siren;
     }
 }

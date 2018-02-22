@@ -1,0 +1,29 @@
+Fichier de description des donnÃ©es particuliÃ¨res
+* CaractÃ©ristiques techniques :
+encodage = UTF-8
+sÃ©parateur de zone = |
+sÃ©parateur d'enregistrement = retour chariot
+Longueur des enregistrements variable
+
+* Nom, Nature et Signification de chaque zone :
+JournalCode AlphanumÃ©rique  Le code journal de l'Ã©criture comptable
+JournalLib  AlphanumÃ©rique  Le libellÃ© journal de l'Ã©criture comptable
+EcritureNum AlphanumÃ©rique  Le numÃ©ro sur une sÃ©quence continue de l'Ã©criture comptable
+EcritureDate    Date    La date de l'Ã©criture comptable
+CompteNum   AlphanumÃ©rique  Le numÃ©ro de compte, dont les 3 premiers caractÃ¨res doivent correspondre Ã  des chiffres respctant les normes du plan comptable franÃ§ais
+CompteLib   AlphanumÃ©rique  Le libellÃ© de compte, conformÃ©ment Ã  la nomenclature du plan comptable franÃ§ais
+CompAuxNum  AlphanumÃ©rique  Le numÃ©ro de compte auxiliaire (Ã  blanc si non utilisÃ©)
+CompAuxLib  AlphanumÃ©rique  Le libellÃ© de compte auxiliaire (Ã  blanc si non utilisÃ©)
+PieceRef    AlphanumÃ©rique  La rÃ©fÃ©rence de la piÃ¨ce justificative
+PieceDate   Date    La date de la piÃ¨ce justificative
+EcritureLib AlphanumÃ©rique  Le libellÃ© de l'Ã©criture comptable
+Debit   NumÃ©rique   Le montant au dÃ©bit
+Credit  NumÃ©rique   Le montant au crÃ©dit
+EcritureLet AlphanumÃ©rique  Le lettrage de l'Ã©criture comptable (Ã  blanc si non utilisÃ©)
+DateLet Date    La date de lettrage (Ã  blanc si non utilisÃ©)
+ValidDate   Date    La date de validation de l'Ã©criture comptable
+Montantdevise   NumÃ©rique   Le montant en devise (Ã  blanc si non utilisÃ©)
+Idevise AlphanumÃ©rique  L'identifiant de la devise (Ã  blanc si non utilisÃ©)
+
+* Tables de correspondance :
+

@@ -9,6 +9,9 @@
 		{{ form_row(form.nom) }}
 	</div>
 	<div class="col-md-6">
+		{{ form_row(form.nomComplet) }}
+	</div>
+	<div class="col-md-6">
 		<div class="form-group">
 		   	{{ form_label(form.compteComptable) }}
 		   	<a data-toggle="modal" data-target="#modal" href="{{ path('compta_compte_ajouter_sous_compte', {'id' : compteComptable.id }) }}" class="do-modal">Ajouter</a><br />

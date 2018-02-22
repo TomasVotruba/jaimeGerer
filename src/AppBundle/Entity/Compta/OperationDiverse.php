@@ -122,6 +122,16 @@ class OperationDiverse
     }
 
     /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDateCreation()
+    {
+        return $this->date;
+    }
+
+    /**
      * Set libelle
      *
      * @param string $libelle
@@ -312,6 +322,17 @@ class OperationDiverse
         return $this->avoir->getNum();
       } else if($this->facture){
         return $this->facture->getNum();
+      }
+      return null;
+    }
+
+     public function getDatePiece(){
+      if($this->depense){
+        return $this->depense->getDate();
+      } else if($this->avoir) {
+        return $this->avoir->getDateCreation();
+      } else if($this->facture){
+        return $this->facture->getDate();
       }
       return null;
     }

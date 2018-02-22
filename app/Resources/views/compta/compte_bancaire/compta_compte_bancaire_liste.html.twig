@@ -29,7 +29,8 @@
 			<table id="table_comptes_bancaires" class="table table-bordered table-striped">
 				<thead>
 					<tr>
-						<th>Nom</th>
+						<th>Nom journal</th>
+						<th>Nom complet</th>
 						<th>Solde</th>
 						<th>Compte comptable</th>
 						<th>Actions</th>
@@ -39,6 +40,7 @@
 				{% for compteBancaire in arr_comptesBancaires %}
 					<tr>
 						<td><a href="{{ path('compta_compte_bancaire_voir', {'id' : compteBancaire.id}) }}">{{ compteBancaire.nom }}</a></td>
+						<td>{{ compteBancaire.nomComplet }}</td>
 						<td>{{ arr_soldes[compteBancaire.id]|number_format(2,',',' ') }} €</td>
 						<td>{{ compteBancaire.compteComptable }}</td>
 						<td>

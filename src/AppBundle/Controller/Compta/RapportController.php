@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 use AppBundle\Entity\Compta\CompteBancaire;
 
@@ -753,6 +755,71 @@ class RapportController extends Controller
 
 		return new Response();
 
+	}
+
+		/**
+	 * @Route("/compta/rapport/fec",
+	 *   name="compta_rapport_fec_index"
+	 * )
+	 */
+	public function rapportFECIndexAction()
+	{
+		$activationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
+		$fecService = $this->get('appbundle.compta_fec_service');
+
+		$activation = $activationRepo->findOneBy(array(
+			'company' => $this->getUser()->getCompany(),
+			'outil' => 'COMPTA'
+		));
+		$yearActivation = $activation->getDate()->format('Y');
+
+		$currentYear = date('Y');
+		$arr_years = array();
+		for($i = $yearActivation ; $i<=$currentYear; $i++){
+			$arr_years[$i] = $i;
+		}
+
+		$formBuilder = $this->createFormBuilder();
+		$formBuilder
+			->add('year', 'choice', array(
+				'required' => true,
+				'label' => 'Année',
+				'choices' => $arr_years,
+				'attr' => array('class' => 'year-select'),
+				'data' => $currentYear-1
+			))
+			->add('downloadFEC', 'submit', array(
+				'label' => 'Exporter le FEC',
+				'attr' => array('class' => 'btn btn-primary')
+			))
+			->add('downloadDesc', 'submit', array(
+				'label' => 'Exporter le fichier descriptif',
+				'attr' => array('class' => 'btn btn-primary')
+			));
+
+		$form = $formBuilder->getForm();
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$year = $form->get('year')->getData();
+
+			if($form->get('downloadFEC')->isClicked()){
+				$filename = $fecService->createFECFile($this->getUser()->getCompany(), $year);
+			} else {
+				$filename = $fecService->createFECDescFile($this->getUser()->getCompany(), $year);
+			}
+
+			$response = new BinaryFileResponse($filename);
+			$response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+
+			return $response;
+		}
+
+		return $this->render('compta/rapport/compta_rapport_fec_index.html.twig', array(
+			'form' => $form->createView()
+		));
 	}
 
 }

@@ -25,8 +25,7 @@ class ProspectionRepository extends EntityRepository
 		
 	public function findForList($company, $length, $start, $orderBy, $dir, $search){
 		$qb = $this->createQueryBuilder('c')
-		//~ ->select('c');
-			->select('c.id', 'c.nom', 'c.dateCreation', 'u.firstname', 'u.lastname', 'r.data as nbreContacts', 'c.nbreJour')
+		->select('c.id', 'c.nom', 'c.dateCreation', 'u.firstname', 'u.lastname', 'r.data as nbreContacts', 'c.nbreJour')
 		->leftJoin('AppBundle\Entity\User', 'u', 'WITH', 'u.id = c.userCreation')
 		->leftJoin('AppBundle\Entity\CRM\Rapport', 'r', 'WITH', 'r.id = c.rapport')
 		->where('c.company = :company')
@@ -34,18 +33,14 @@ class ProspectionRepository extends EntityRepository
 		
 		if($search != ""){
 			$search = trim($search);
-			$qb->where('c.nom LIKE :search')
+			$qb->andWhere('c.nom LIKE :search')
 			->setParameter('search', '%'.$search.'%');
 		}
 		
 		$qb->setMaxResults($length)
 		->setFirstResult($start)
 		->addOrderBy('c.'.$orderBy, $dir);
-		//~ print_r(array(
-    //~ 'sql'        => $qb->getQuery()->getSQL(),
-    //~ 'parameters' => $qb->getQuery()->getParameters(),
-//~ ));
-	//~ die($qb->getQuery()->getSQL());
+
 		return $qb->getQuery()->getResult();
 	}
 	
@@ -58,7 +53,7 @@ class ProspectionRepository extends EntityRepository
 		
 		if($search != ""){
 			$search = trim($search);
-			$qb->where('c.nom LIKE :search')
+			$qb->andWhere('c.nom LIKE :search')
 			->setParameter('search', '%'.$search.'%');
 		}
 	

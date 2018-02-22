@@ -244,6 +244,15 @@ class JournalVente
       return null;
     }
 
+    public function getDateCreation(){
+      if($this->facture){
+        return $this->facture->getDateCreation();
+      } else if($this->avoir) {
+        return $this->avoir->getDateCreation();
+      }
+      return null;
+    }
+
     public function getLibelle(){
       if($this->facture){
         return $this->facture->getNum().' : '.$this->facture->getObjet();
@@ -258,6 +267,15 @@ class JournalVente
         return $this->facture->getNum();
       } else if($this->avoir) {
         return $this->avoir->getNum();
+      }
+      return null;
+    }
+
+    public function getDatePiece(){
+      if($this->facture){
+        return $this->facture->getDateCreation();
+      } else if($this->avoir) {
+        return $this->avoir->getDateCreation();
       }
       return null;
     }

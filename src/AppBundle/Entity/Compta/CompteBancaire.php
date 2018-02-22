@@ -28,6 +28,13 @@ class CompteBancaire
      */
     private $nom;
 
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="nom_complet", type="string", length=255)
+     */
+    private $nomComplet;
+
     /**
      * @var string
      *
@@ -212,5 +219,28 @@ class CompteBancaire
     public function getNum()
     {
         return $this->num;
+    }
+
+    /**
+     * Set nomComplet
+     *
+     * @param string $nomComplet
+     * @return CompteBancaire
+     */
+    public function setNomComplet($nomComplet)
+    {
+        $this->nomComplet = $nomComplet;
+
+        return $this;
+    }
+
+    /**
+     * Get nomComplet
+     *
+     * @return string 
+     */
+    public function getNomComplet()
+    {
+        return $this->nomComplet;
     }
 }

@@ -243,6 +243,16 @@ class JournalBanque
     }
 
     /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDateCreation()
+    {
+        return $this->date;
+    }
+
+    /**
      * Set nom
      *
      * @param string $nom
@@ -425,6 +435,26 @@ class JournalBanque
         }
       }
       return $num;
+    }
+
+     public function getDatePiece(){
+      $date = null;
+      foreach($this->mouvementBancaire->getRapprochements() as $rapprochement){
+        if($rapprochement->getRemiseCheque() ){
+          $date = $rapprochement->getRemiseCheque()->getDate();
+        } else if ($rapprochement->getFacture()){
+          $date = $rapprochement->getFacture()->getDateCreation();
+        } else if ($rapprochement->getDepense()){
+          $date = $rapprochement->getDepense()->getDate();
+        } else if ($rapprochement->getAvoir()){
+          $date = $rapprochement->getAvoir()->getDateCreation();
+        } else if ($rapprochement->getAffectationDiverse()){
+        //  $num = $rapprochement->getAffectationDiverse()->__toString();
+        } else if ($rapprochement->getNoteFrais()){
+        //  $num = $rapprochement->getNoteFrais()->__toString();
+        }
+      }
+      return $date;
     }
 
 

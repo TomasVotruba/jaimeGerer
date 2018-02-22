@@ -126,3 +126,8 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         arguments: [ @doctrine.orm.entity_manager ]
+    appbundle.compta_fec_service:
+        class: AppBundle\Service\Compta\FECService
+        calls:
+            - [setContainer, ["@service_container"]]
+        arguments: [ @doctrine.orm.entity_manager, '%kernel.root_dir%' ]

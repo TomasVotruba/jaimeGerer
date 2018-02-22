@@ -30,8 +30,12 @@ class CompteBancaireType extends AbstractType
         $builder
             ->add('nom', 'text', array(
         		'required' => true,
-            	'label' => 'Nom du compte'	
+            	'label' => 'Nom du compte dans le journal de banque'	
        	 	))
+            ->add('nomComplet', 'text', array(
+                'required' => true,
+                'label' => 'Nom complet du compte'  
+            ))
        	 	->add('num', 'text', array(
        	 			'required' => true,
        	 			'label' => 'Numéro de compte'

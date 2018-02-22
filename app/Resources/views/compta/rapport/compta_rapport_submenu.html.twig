@@ -15,5 +15,8 @@
       <li {% if app.request.pathInfo == "/compta/rapport/grand-livre"  %} class="active" {% endif %}>
           <a href="{{ path('compta_rapport_grand_livre_index') }}">Grand livre</a>
       </li>
+      <li {% if app.request.pathInfo == "/compta/rapport/fec"  %} class="active" {% endif %}>
+          <a href="{{ path('compta_rapport_fec_index') }}">Fichier des écritures comptables</a>
+      </li>
     </ul>
 {% endblock %}

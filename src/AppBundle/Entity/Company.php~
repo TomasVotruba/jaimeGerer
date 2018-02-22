@@ -129,6 +129,13 @@ class Company
      */
     private $credits = 0;
 
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="siren", type="string", length=255)
+     */
+    private $siren;
+
     /**
      * Get id
      *
