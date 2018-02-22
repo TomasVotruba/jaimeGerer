@@ -44,7 +44,7 @@
 
 						</td>
 						<td>
-							{{ prise_contact.description }}
+							{{ prise_contact.description|raw }}
 							{% if prise_contact.documentPrix is not null %}
 								{% if prise_contact.documentPrix.type == "DEVIS" %}
 									<a target='_blank' href="{{ path('crm_devis_voir', { 'id' : prise_contact.documentPrix.id }) }}">{{ prise_contact.documentPrix.num }}</a>

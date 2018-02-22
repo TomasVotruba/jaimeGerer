@@ -242,7 +242,7 @@ class FECService extends ContainerAware {
 
             $string.=PHP_EOL;
 
-            file_put_contents ( $filename , utf8_encode($string), FILE_APPEND );
+            file_put_contents ( $filename , $string, FILE_APPEND );
         }
 
 
@@ -306,6 +306,8 @@ class FECService extends ContainerAware {
         }
 
         $string = 'Fichier de description des données particulières'.PHP_EOL;
+        $string.= PHP_EOL;
+
         $string.= '* Caractéristiques techniques :'.PHP_EOL;
         $string.= 'encodage = UTF-8'.PHP_EOL;
         $string.= 'séparateur de zone = |'.PHP_EOL;
@@ -318,7 +320,7 @@ class FECService extends ContainerAware {
         $string.= 'JournalLib  Alphanumérique  Le libellé journal de l\'écriture comptable'.PHP_EOL;
         $string.= 'EcritureNum Alphanumérique  Le numéro sur une séquence continue de l\'écriture comptable'.PHP_EOL;
         $string.= 'EcritureDate    Date    La date de l\'écriture comptable'.PHP_EOL;
-        $string.= 'CompteNum   Alphanumérique  Le numéro de compte, dont les 3 premiers caractères doivent correspondre à des chiffres respctant les normes du plan comptable français'.PHP_EOL;
+        $string.= 'CompteNum   Alphanumérique  Le numéro de compte, dont les 3 premiers caractères doivent correspondre à des chiffres respectant les normes du plan comptable français'.PHP_EOL;
         $string.= 'CompteLib   Alphanumérique  Le libellé de compte, conformément à la nomenclature du plan comptable français'.PHP_EOL;
         $string.= 'CompAuxNum  Alphanumérique  Le numéro de compte auxiliaire (à blanc si non utilisé)'.PHP_EOL;
         $string.= 'CompAuxLib  Alphanumérique  Le libellé de compte auxiliaire (à blanc si non utilisé)'.PHP_EOL;
@@ -337,9 +339,7 @@ class FECService extends ContainerAware {
         $string.= '* Tables de correspondance :'.PHP_EOL;
         $string.= PHP_EOL;
 
-        
-
-        file_put_contents ( $filename , utf8_encode($string), FILE_APPEND );
+        file_put_contents ( $filename , $string, FILE_APPEND );
 
         return $filename;
 
