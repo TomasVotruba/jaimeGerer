@@ -806,9 +806,18 @@ class RapportController extends Controller
 			$year = $form->get('year')->getData();
 
 			if($form->get('downloadFEC')->isClicked()){
-				$filename = $fecService->createFECFile($this->getUser()->getCompany(), $year);
+				try{
+					$filename = $fecService->createFECFile($this->getUser()->getCompany(), $year);
+				} catch(\Exception $e){
+					throw $e;
+				}
+				
 			} else {
-				$filename = $fecService->createFECDescFile($this->getUser()->getCompany(), $year);
+				try{
+					$filename = $fecService->createFECDescFile($this->getUser()->getCompany(), $year);
+				} catch(\Exception $e){
+					throw $e;
+				}
 			}
 
 			$response = new BinaryFileResponse($filename);

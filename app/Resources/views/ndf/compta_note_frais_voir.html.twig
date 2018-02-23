@@ -8,6 +8,26 @@
 		</div>
 	</div>
 
+	<div class="row">
+		<div class="col-md-12">
+			<p>
+				
+				<a href="{{ path('ndf_exporter', {'id' : noteFrais.id }) }}" class="btn btn-primary">
+					<span class="glyphicon glyphicon-floppy-disk"></span> Exporter
+				</a>
+			
+				{% if noteFrais.etatPourCompta == "A valider" %}
+					 <a href="{{ path('ndf_valider', {'id' : noteFrais.id }) }}" class="btn btn-success">
+					 	<span class="glyphicon glyphicon-ok"></span> Accepter
+					 </a>
+		             <a href="{{ path('ndf_refuser', {'id' : noteFrais.id }) }}" class="btn btn-danger" data-toggle="modal" data-target="#modal">
+		             	<span class="glyphicon glyphicon-remove"></span> Refuser
+		             </a>
+	        	 {% endif %}
+	        </p>	
+		</div>
+	</div>
+
       <div class="row">
 		<div class="col-md-12">
 			{% for flashMessage in app.session.flashbag.get('success') %}

@@ -4,17 +4,22 @@ namespace AppBundle\Service\Compta;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Service\UtilsService;
 
 
 class FECService extends ContainerAware {
 
     protected $em;
   	protected $rootDir;
+    protected $utilsService;
+    protected $separator;
 
-  	public function __construct(\Doctrine\ORM\EntityManager $em, $rootDir)
+  	public function __construct(\Doctrine\ORM\EntityManager $em, $rootDir, UtilsService $utilsService)
   	{
    		$this->em = $em;
         $this->rootDir = $rootDir;
+        $this->utilsService = $utilsService;
+        $this->separator = '|';
   	}
 
     /**
@@ -24,7 +29,10 @@ class FECService extends ContainerAware {
      **/
     public function createFECFile($company, $year){
 
+        ini_set('memory_limit', '2048M');
+
         $compteBancaireRepo = $this->em->getRepository('AppBundle:Compta\CompteBancaire');
+        $compteComptableRepo = $this->em->getRepository('AppBundle:Compta\CompteComptable');
 
         $all_comptesBancaires = $compteBancaireRepo->findByCompany($company);
         $arr_comptesBancaires = array();
@@ -33,7 +41,6 @@ class FECService extends ContainerAware {
         }
 
         $arr_lignes = $this->getFECData($company, $year);
-
        
         $path = $this->rootDir.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web'.DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.'compta'.DIRECTORY_SEPARATOR.$company->getId().DIRECTORY_SEPARATOR.'fec';
         if(!is_dir($path)){
@@ -62,7 +69,7 @@ class FECService extends ContainerAware {
                 Ces codes peuvent correspondre à des chiffres, des lettres ou une combinaison des deux
             */
             $string.= $ligne->getCodeJournal();
-            $string.='|';
+            $string.=$this->separator;
             
             /*
                 CHAMP 2 : LIBELLÉ JOURNAL
@@ -96,49 +103,69 @@ class FECService extends ContainerAware {
                     break;
             } 
             $string.= $libelleJournal;
-            $string.='|';
+            $string.=$this->separator;
 
             /*
+                CHAMP 3 : NUMÉROTATION DES ÉCRITURES
                 Les écritures doivent être numérotées chronologiquement de manière croissante, sans rupture
                 ni inversion dans la séquence. 
             */
             
-            $string.='|';
+            $string.=$this->separator;
 
             /*
+                CHAMP 4 : DATE DE COMPTABILISATION
                 Pour l’administration, la date de comptabilisation de l’écriture comptable correspond à la
                 date à laquelle l’enregistrement comptable de l’opération a été porté au débit ou au crédit
                 du compte. 
             */
             $string.= $ligne->getDate()->format('Ymd');
-            $string.='|';
+            $string.=$this->separator;
 
             /*
+                CHAMP 5 : NUMÉRO DE COMPTE
                 Le champ « CompteNum » doit être rempli par les numéros de compte (au moins les trois
                 premiers caractères) du PCG, utilisés pour chaque ligne d’écriture comptable.
                 Lorsque l’entreprise décline le compte du PCG en subdivisions qui lui sont propres, 
                 celles-ci doivent figurer dans le champ « numéro de compte ». 
             */
-            $string.= $ligne->getCompteComptable()->getNum();
-            $string.='|';
+            $shortNum = substr($ligne->getCompteComptable()->getNum(), 0, 3);
+            $string.= str_pad($shortNum, 8, '0');
+            $string.=$this->separator;
 
             /*
+                CHAMP 6 : LIBELLÉ DU COMPTE
                 Il faut reprendre l’intitulé complet du compte du PCG (ou du plan comptable particulier).
                 Néanmoins, selon l’administration, les libellés utilisés au sein de l’entreprise ou ceux
                 correspondant à des subdivisions plus détaillées du plan comptable français doivent figurer
                 dans le fichier remis à l’administration et ne pas être remplacés par un libellé générique
             */
-            $string.= $ligne->getCompteComptable()->getNom();
-            $string.='|';
+            $compteComptable = $compteComptableRepo->findOneBy(array(
+                'company' => $company,
+                'num' => $shortNum
+            ));
+            if($compteComptable == null){
+
+                $compteComptable = $compteComptableRepo->findOneBy(array(
+                     'company' => $company,
+                     'num' => str_pad($shortNum, 8, '0')
+                 ));
+
+            }
+            $string.= $compteComptable->getNom();
+            $string.=$this->separator;
 
             /*
                 CHAMPS 7 ET 8 : NUMÉRO ET LIBELLÉ DE COMPTE AUXILIAIRE
                 Le numéro de compte auxiliaire correspond à la codifi cation des comptes de tiers utilisée au
                 sein de l’entreprise. Le libellé de compte auxiliaire reprend la désignation littérale du tiers.
             */
-            $string.='|';
-            $string.='|';
-           
+            
+            $string.= $ligne->getCompteComptable()->getNum();
+            $string.=$this->separator;
+
+            $string.= $ligne->getCompteComptable()->getNom();
+            $string.=$this->separator;
 
             /*
                 CHAMP 9 : RÉFÉRENCE DE LA PIÈCE JUSTIFICATIVE
@@ -149,8 +176,8 @@ class FECService extends ContainerAware {
                 comptabilité (PCG art. 410-3), afin de pouvoir faire le lien avec les pièces justificatives qui
                 motivent les écritures comptables (PCG art. 420-3).
                 C’est pourquoi toutes les écritures devraient en principe faire référence à une pièce
-                justifi cative, même si celle-ci est d’origine interne (calcul de provision par exemple). Ce lien
-                est établi soit en utilisant la référence fi gurant sur les pièces justificatives, soit grâce à une
+                justificative, même si celle-ci est d’origine interne (calcul de provision par exemple). Ce lien
+                est établi soit en utilisant la référence figurant sur les pièces justificatives, soit grâce à une
                 numérotation séquentielle des pièces comptables dans le système, qui est aussi apposée
                 sur la pièce.
                 Les pièces justificatives, obligatoirement datées (PCG art. 420-3), sont classées dans un ordre
@@ -164,8 +191,8 @@ class FECService extends ContainerAware {
                 être rempli par une valeur conventionnelle défi nie par l’entreprise. Celle-ci sera précisée
                 dans le descriptif 
             */
-            $string.= $ligne->getPiece();
-            $string.='|';  
+            $string.= $ligne->getPiece().' '.$ligne->getAnalytique();
+            $string.=$this->separator;  
 
             /*
                 CHAMP 10 : DATE DE LA PIÈCE JUSTIFICATIVE
@@ -177,7 +204,7 @@ class FECService extends ContainerAware {
                 $date = $date->format('Ymd');
             }
             $string.= $date;
-            $string.='|'; 
+            $string.=$this->separator;
 
             /*
                 CHAMP 11 : LIBELLÉ DE L’ÉCRITURE COMPTABLE
@@ -186,7 +213,7 @@ class FECService extends ContainerAware {
             */
             $libelle = $this->purify($ligne->getLibelle());
             $string.= $libelle;
-            $string.='|';
+            $string.=$this->separator;
 
             /*
                 CHAMPS 12 ET 13 : DÉBIT ET CRÉDIT
@@ -196,14 +223,14 @@ class FECService extends ContainerAware {
             } else {
                 $string.= number_format($ligne->getDebit(),2,',','');
             }
-            $string.='|';
+            $string.=$this->separator;
 
             if($ligne->getCredit() == null){
                 $string.= '0';
             } else {
                 $string.= number_format($ligne->getCredit(),2,',','');
             }
-            $string.='|';
+            $string.=$this->separator;
 
             /*
                 CHAMPS 14 ET 15 : LETTRAGE DE L’ÉCRITURE COMPTABLE ET DATE DE LETTRAGE
@@ -213,8 +240,8 @@ class FECService extends ContainerAware {
                 validée dans le système comptable.
             */
             $string.= $ligne->getLettrage();
-            $string.='|';  
-            $string.='|';  
+            $string.=$this->separator; 
+            $string.=$this->separator;  
 
             /*
                 CHAMP 16 : DATE DE VALIDATION
@@ -222,8 +249,8 @@ class FECService extends ContainerAware {
                 débit ou au crédit du compte, c’est-à-dire porté dans le livre-journal sans possibilité de
                 modification ou suppression ultérieure.
             */
-            $string.= $ligne->getDate()->format('Ymd');
-            $string.='|';
+            $string.= date('Ymd');
+            $string.=$this->separator;
 
             /*
                 CHAMPS 17 ET 18 : MONTANT EN DEVISES ET IDENTIFICATION DE LA DEVISE
@@ -237,7 +264,7 @@ class FECService extends ContainerAware {
                 code 03 : yen ; etc.). Ces codes peuvent correspondre à des chiffres, des lettres ou une
                 combinaison des deux
             */
-            $string.='|';
+            $string.=$this->separator;
 
 
             $string.=PHP_EOL;
@@ -310,7 +337,7 @@ class FECService extends ContainerAware {
 
         $string.= '* Caractéristiques techniques :'.PHP_EOL;
         $string.= 'encodage = UTF-8'.PHP_EOL;
-        $string.= 'séparateur de zone = |'.PHP_EOL;
+        $string.= 'séparateur de zone = '.$this->separator.$PHP_EOL;
         $string.= 'séparateur d\'enregistrement = retour chariot'.PHP_EOL;
         $string.= 'Longueur des enregistrements variable'.PHP_EOL;
         $string.= PHP_EOL;
