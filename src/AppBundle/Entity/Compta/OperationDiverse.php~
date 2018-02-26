@@ -80,18 +80,19 @@ class OperationDiverse
      */
     private $depense;
 
-     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\Cheque", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=true, unique=false)
-     */
-    private $cheque;
-
     /**
      * @var string
      *
      * @ORM\Column(name="lettrage", type="string", length=100, nullable=true)
      */
     private $lettrage;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="num_ecriture", type="string", length=50, nullable=false)
+     */
+    private $numEcriture;
 
 
     /**
@@ -123,6 +124,16 @@ class OperationDiverse
      * @return \DateTime
      */
     public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDateCreation()
     {
         return $this->date;
     }
@@ -318,6 +329,17 @@ class OperationDiverse
         return $this->avoir->getNum();
       } else if($this->facture){
         return $this->facture->getNum();
+      }
+      return null;
+    }
+
+     public function getDatePiece(){
+      if($this->depense){
+        return $this->depense->getDate();
+      } else if($this->avoir) {
+        return $this->avoir->getDateCreation();
+      } else if($this->facture){
+        return $this->facture->getDate();
       }
       return null;
     }

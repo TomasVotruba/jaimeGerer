@@ -81,7 +81,7 @@ class JournalBanque
      /**
      * @var string
      * 
-     * @ORM\Column(name="stringAnalytique", type="string", length=255)
+     * @ORM\Column(name="stringAnalytique", type="string", length=255, nullable=true)
      */
     private $stringAnalytique;
 
@@ -112,9 +112,16 @@ class JournalBanque
     /**
      * @var string
      *
-     * @ORM\Column(name="lettrage", type="string", length=10, nullable=true)
+     * @ORM\Column(name="lettrage", type="string", length=100, nullable=true)
      */
     private $lettrage;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="num_ecriture", type="string", length=50, nullable=false)
+     */
+    private $numEcriture;
 
 
     /**
@@ -238,6 +245,16 @@ class JournalBanque
      * @return \DateTime
      */
     public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDateCreation()
     {
         return $this->date;
     }
@@ -427,6 +444,26 @@ class JournalBanque
       return $num;
     }
 
+     public function getDatePiece(){
+      $date = null;
+      foreach($this->mouvementBancaire->getRapprochements() as $rapprochement){
+        if($rapprochement->getRemiseCheque() ){
+          $date = $rapprochement->getRemiseCheque()->getDate();
+        } else if ($rapprochement->getFacture()){
+          $date = $rapprochement->getFacture()->getDateCreation();
+        } else if ($rapprochement->getDepense()){
+          $date = $rapprochement->getDepense()->getDate();
+        } else if ($rapprochement->getAvoir()){
+          $date = $rapprochement->getAvoir()->getDateCreation();
+        } else if ($rapprochement->getAffectationDiverse()){
+        //  $num = $rapprochement->getAffectationDiverse()->__toString();
+        } else if ($rapprochement->getNoteFrais()){
+        //  $num = $rapprochement->getNoteFrais()->__toString();
+        }
+      }
+      return $date;
+    }
+
 
     /**
      * Set lettrage
@@ -449,5 +486,28 @@ class JournalBanque
     public function getLettrage()
     {
         return $this->lettrage;
+    }
+
+    /**
+     * Set stringAnalytique
+     *
+     * @param string $stringAnalytique
+     * @return JournalBanque
+     */
+    public function setStringAnalytique($stringAnalytique)
+    {
+        $this->stringAnalytique = $stringAnalytique;
+
+        return $this;
+    }
+
+    /**
+     * Get stringAnalytique
+     *
+     * @return string 
+     */
+    public function getStringAnalytique()
+    {
+        return $this->stringAnalytique;
     }
 }

@@ -116,6 +116,13 @@ class JournalBanque
      */
     private $lettrage;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="num_ecriture", type="string", length=50, nullable=true)
+     */
+    private $numEcriture;
+
 
     /**
      * Get id
@@ -502,5 +509,28 @@ class JournalBanque
     public function getStringAnalytique()
     {
         return $this->stringAnalytique;
+    }
+
+    /**
+     * Set numEcriture
+     *
+     * @param string $numEcriture
+     * @return JournalBanque
+     */
+    public function setNumEcriture($numEcriture)
+    {
+        $this->numEcriture = $numEcriture;
+
+        return $this;
+    }
+
+    /**
+     * Get numEcriture
+     *
+     * @return string 
+     */
+    public function getNumEcriture()
+    {
+        return $this->numEcriture;
     }
 }

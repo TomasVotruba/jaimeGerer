@@ -88,6 +88,13 @@ class JournalVente
     private $libelle;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="num_ecriture", type="string", length=50, nullable=true)
+     */
+    private $numEcriture;
+
+    /**
      * Get id
      *
      * @return integer
@@ -314,5 +321,28 @@ class JournalVente
         $this->libelle = $libelle;
 
         return $this;
+    }
+
+    /**
+     * Set numEcriture
+     *
+     * @param string $numEcriture
+     * @return JournalVente
+     */
+    public function setNumEcriture($numEcriture)
+    {
+        $this->numEcriture = $numEcriture;
+
+        return $this;
+    }
+
+    /**
+     * Get numEcriture
+     *
+     * @return string 
+     */
+    public function getNumEcriture()
+    {
+        return $this->numEcriture;
     }
 }

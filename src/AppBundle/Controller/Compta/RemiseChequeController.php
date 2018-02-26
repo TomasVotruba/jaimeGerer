@@ -169,6 +169,14 @@ class RemiseChequeController extends Controller
 					$od->setDebit($form_cheque['montant']->getData());
 					$em->persist($od);
 
+					$od = new OperationDiverse();
+					$od->setDate(new \DateTime(date('Y-m-d')));
+					$od->setLibelle($form_cheque['libelle']->getData());
+					$od->setCodeJournal('OD');
+					$od->setCompteComptable($form_cheque['compteComptableTiers']->getData());
+					$od->setCredit($form_cheque['montant']->getData());
+					$em->persist($od);
+
 					$cheque->setEmetteur($form_cheque['emetteur']->getData());
 
 					$chequePiece = new ChequePiece();
@@ -333,6 +341,14 @@ class RemiseChequeController extends Controller
 					$od->setCodeJournal('OD');
 					$od->setCompteComptable($form_cheque['compteComptable']->getData());
 					$od->setDebit($form_cheque['montant']->getData());
+					$em->persist($od);
+
+					$od = new OperationDiverse();
+					$od->setDate(new \DateTime(date('Y-m-d')));
+					$od->setLibelle($form_cheque['libelle']->getData());
+					$od->setCodeJournal('OD');
+					$od->setCompteComptable($form_cheque['compteComptableTiers']->getData());
+					$od->setCredit($form_cheque['montant']->getData());
 					$em->persist($od);
 
 					$cheque->setEmetteur($form_cheque['emetteur']->getData());

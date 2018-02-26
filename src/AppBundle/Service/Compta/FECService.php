@@ -110,7 +110,7 @@ class FECService extends ContainerAware {
                 Les écritures doivent être numérotées chronologiquement de manière croissante, sans rupture
                 ni inversion dans la séquence. 
             */
-            
+            $string.=$ligne->getNumEcriture();
             $string.=$this->separator;
 
             /*

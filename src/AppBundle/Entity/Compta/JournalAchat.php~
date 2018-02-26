@@ -88,6 +88,13 @@ class JournalAchat
     private $libelle;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="num_ecriture", type="string", length=50, nullable=false)
+     */
+    private $numEcriture;
+
+    /**
      * Get id
      *
      * @return integer
@@ -290,6 +297,15 @@ class JournalAchat
       return null;
     }
 
+    public function getDateCreation(){
+      if($this->depense){
+        return $this->depense->getDateCreation();
+      } else if($this->avoir) {
+        return $this->avoir->getDateCreation();
+      }
+      return null;
+    }
+
     public function getLibelle(){
       if($this->depense){
         return $this->depense->getNum().' : '.$this->depense->getLibelle();
@@ -317,6 +333,15 @@ class JournalAchat
       return null;
     }
 
+    public function getDatePiece(){
+      if($this->depense){
+        return $this->depense->getDate();
+      } else if($this->avoir) {
+        return $this->avoir->getDateCreation();
+      }
+      return null;
+    }
+
     /**
      * Set lettrage
      *
@@ -338,5 +363,18 @@ class JournalAchat
     public function getLettrage()
     {
         return $this->lettrage;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     * @return JournalAchat
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
+
+        return $this;
     }
 }

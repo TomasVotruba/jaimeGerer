@@ -87,6 +87,13 @@ class OperationDiverse
      */
     private $lettrage;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="num_ecriture", type="string", length=50, nullable=true)
+     */
+    private $numEcriture;
+
 
     /**
      * Get id
@@ -358,5 +365,28 @@ class OperationDiverse
     public function getLettrage()
     {
         return $this->lettrage;
+    }
+
+    /**
+     * Set numEcriture
+     *
+     * @param string $numEcriture
+     * @return OperationDiverse
+     */
+    public function setNumEcriture($numEcriture)
+    {
+        $this->numEcriture = $numEcriture;
+
+        return $this;
+    }
+
+    /**
+     * Get numEcriture
+     *
+     * @return string 
+     */
+    public function getNumEcriture()
+    {
+        return $this->numEcriture;
     }
 }

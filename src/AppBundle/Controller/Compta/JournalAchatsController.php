@@ -86,6 +86,7 @@ class JournalAchatsController extends Controller
 	public function journalAchatsAjouterDepenseAction(Depense $depense, $lettrage = null){
 
 		$em = $this->getDoctrine()->getManager();
+		$numService = $this->get('appbundle.num_service');
 
 		$totaux = $depense->getTotaux();
 
@@ -94,6 +95,8 @@ class JournalAchatsController extends Controller
 			'num' => '471',
 			'company' => $this->getUser()->getCompany()
 		));
+
+		$num = $numService->getNumEcriture($this->getUser()->getCompany());
 
 		//credit au compte 401-nom du fournisseur (ou 421NDFxxx si c'est une note de frais) du total TTC
 		$ligne = new JournalAchat();
@@ -109,6 +112,8 @@ class JournalAchatsController extends Controller
 		$ligne->setCompteComptable($cc);
 		$ligne->setModePaiement($depense->getModePaiement());
 		$ligne->setAnalytique($depense->getAnalytique());
+		
+		$ligne->setNumEcriture($num);
 		$em->persist($ligne);
 		$depense->addJournalAchat($ligne);
 
@@ -122,6 +127,7 @@ class JournalAchatsController extends Controller
 			$ligne->setCompteComptable($ligneDepense->getCompteComptable());
 			$ligne->setModePaiement($depense->getModePaiement());
 			$ligne->setAnalytique($depense->getAnalytique());
+			$ligne->setNumEcriture($num);
 			$em->persist($ligne);
 			$depense->addJournalAchat($ligne);
 
@@ -150,6 +156,7 @@ class JournalAchatsController extends Controller
 	
 				$ligne->setModePaiement($depense->getModePaiement());
 				$ligne->setAnalytique($depense->getAnalytique());
+				$ligne->setNumEcriture($num);;
 				$em->persist($ligne);
 				$depense->addJournalAchat($ligne);
 			}
@@ -178,12 +185,16 @@ class JournalAchatsController extends Controller
 			$ligne->setCompteComptable($cc);
 			$ligne->setModePaiement($depense->getModePaiement());
 			$ligne->setAnalytique($depense->getAnalytique());
+			$ligne->setNumEcriture($num);
 			$em->persist($ligne);
 			$depense->addJournalAchat($ligne);
 		}
 
 		$em->persist($depense);
 		$em->flush();
+
+		$num++;
+		$numService->updateNumEcriture($this->getUser()->getCompany(), $num);
 
 		$response = new Response();
 		$response->setStatusCode(200);

@@ -140,5 +140,51 @@ class NumService extends ContainerAware {
 
   }
 
+  public function getNumEcriture($company){
+
+    $settingsRepository = $this->em->getRepository('AppBundle:Settings');
+
+    $settingsNum = $settingsRepository->findOneBy(array(
+      'module' => 'COMPTA',
+      'parametre' => 'NUMERO_ECRITURE',
+      'company'=> $company
+    ));
+
+    if( count($settingsNum) == 0) {
+      $settingsNum = new Settings();
+      $settingsNum->setModule('COMPTA');
+      $settingsNum->setParametre('NUMERO_ECRITURE');
+      $settingsNum->setHelpText('Le numéro d\'écriture courant - ne pas modifier si vous n\'êtes pas sûr de ce que vous faites !');
+      $settingsNum->setTitre('Numéro d\'écriture');
+      $settingsNum->setType('NUM');
+      $settingsNum->setNoTVA(false);
+      $settingsNum->setCategorie('JOURNAUX');
+      $settingsNum->setCompany($company);
+      $num = 1;
+    } else {
+      $num = $settingsNum->getValeur();
+    }
+
+    return $num;
+  }
+
+  public function updateNumEcriture($company, $num){
+
+    $settingsRepository = $this->em->getRepository('AppBundle:Settings');
+    $settingsNum = $settingsRepository->findOneBy(array(
+      'module' => 'COMPTA',
+      'parametre' => 'NUMERO_ECRITURE',
+      'company'=> $company
+    ));
+
+    //mise à jour du numéro de depense
+    $settingsNum->setValeur($num);
+    $this->em->persist($settingsNum);
+    $this->em->flush();
+
+    return new Response();
+
+  }
+
 
 }

@@ -66,6 +66,21 @@ class ChequeType extends AbstractType
                 'mapped' => false,
                 'attr' => array('class' => 'input-emetteur'),
             ))
+            ->add('compteComptableTiers', 'entity', array(
+                'class'=>'AppBundle:Compta\CompteComptable',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.company = :company')
+                        ->andWhere('c.num  LIKE :num4 ')
+                        ->setParameter('company', $this->companyId)
+                        ->setParameter('num4', "4%")
+                        ->orderBy('c.num');
+                },
+                'required' => false,
+                'label' => 'Compte comptable du tiers',
+                'attr' => array('class' => 'select-cc'),
+                'mapped' => false,
+            ))
             ->add('compteComptable', 'entity', array(
                 'class'=>'AppBundle:Compta\CompteComptable',
                 'property' => 'nom',
