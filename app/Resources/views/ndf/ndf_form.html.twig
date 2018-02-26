@@ -2,17 +2,11 @@
 	<link rel="stylesheet" href="{{ asset('lib/jquery-file-upload/css/jquery.fileupload.css') }}">
 {% endblock %}
 
-{{ form_start(form) }}
-
-<strong>Date de la note de frais</strong>
-<div class="row">
-	<div class="col-md-2">
-		{{ form_widget(form.month) }}
-	</div>
-	<div class="col-md-2">
-		{{ form_widget(form.year) }}
-	</div>
+<div class="alert alert-info">
+	<span class="glyphicon glyphicon-info-sign"></span> La date de votre note de frais sera calculée automatiquement à partir de vos reçus.
 </div>
+
+{{ form_start(form) }}
 
 <div class="row">
 	<div class="col-md-12">

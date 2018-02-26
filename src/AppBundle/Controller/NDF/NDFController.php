@@ -305,14 +305,28 @@ class NDFController extends Controller
 			$arr_recus_id = $form['recus']->getData();
 			$arr_recus_checked = array();
 			$arr_analytiques = array();
+			$arr_dates = array();
 			foreach($arr_recus_id as $id){
 				$recu = $recuRepo->find($id);
 				$arr_recus_checked[] = $recu;
 				if(!array_key_exists($recu->getAnalytique()->getId(), $arr_analytiques)){
 					$arr_analytiques[$recu->getAnalytique()->getId()] = $recu->getAnalytique();
 				}
+
+				$date = $recu->getDate()->format('Y-m');
+				if( !array_key_exists($date, $arr_dates) ){
+					$arr_dates[$date] = 0;
+				}
+				$arr_dates[$date]++;
+
 			}
-			
+
+			arsort($arr_dates);
+			reset($arr_dates);
+			$ndfDate = explode('-',key($arr_dates));
+			$ndf->setYear($ndfDate[0]);
+			$ndf->setMonth($ndfDate[1]);
+
 			$numService = $this->container->get('appbundle.num_service');
 			$arr_num = $numService->getNextNum('DEPENSE', $ndf->getUser()->getCompany());
 			$currentNum = $arr_num['num'];
@@ -439,13 +453,27 @@ class NDFController extends Controller
 			$arr_recus_id = $form['recus']->getData();
 			$arr_recus_checked = array();
 			$arr_analytiques = array();
+			$arr_dates = array();
 			foreach($arr_recus_id as $id){
 				$recu = $recuRepo->find($id);
 				$arr_recus_checked[] = $recu;
 				if(!array_key_exists($recu->getAnalytique()->getId(), $arr_analytiques)){
 					$arr_analytiques[$recu->getAnalytique()->getId()] = $recu->getAnalytique();
 				}
+
+				$date = $recu->getDate()->format('Y-m');
+				if( !array_key_exists($date, $arr_dates) ){
+					$arr_dates[$date] = 0;
+				}
+				$arr_dates[$date]++;
+
 			}
+
+			arsort($arr_dates);
+			reset($arr_dates);
+			$ndfDate = explode('-',key($arr_dates));
+			$ndf->setYear($ndfDate[0]);
+			$ndf->setMonth($ndfDate[1]);
 
 			$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
 			$numService = $this->container->get('appbundle.num_service');

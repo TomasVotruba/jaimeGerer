@@ -23,40 +23,8 @@ class NoteFraisType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $ndf = $builder->getData();
-        $arr_mois = array(
-          1 => 'Janvier',
-          2 => 'Février',
-          3 => 'Mars',
-          4 => 'Avril',
-          5 => 'Mai',
-          6 => 'Juin',
-          7 => 'Juillet',
-          8 => 'Août',
-          9 => 'Septembre',
-          10 => 'Octobre',
-          11 => 'Novembre',
-          12 => 'Décembre'
-        );
-        
-        $annee = date('Y');
-        $arr_annees = array(
-          $annee-1 => $annee-1,
-          $annee => $annee
-        );
 
         $builder
-          ->add('month', 'choice', array(
-            'label' => '',
-            'required' => true,
-            'choices' => $arr_mois,
-            'data' => $ndf->getMonth() ? $ndf->getMonth() : date('n')
-          ))
-         ->add('year', 'choice', array(
-            'label' => '',
-            'required' => true,
-            'choices' => $arr_annees,
-            'data' => $annee
-          ))
           ->add('recus', 'choice', array(
             'mapped' => false,
             'label' => 'Choisir les reçus',
