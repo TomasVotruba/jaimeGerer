@@ -170,7 +170,7 @@ class FactureController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/facture/voir/{id}", name="crm_facture_voir")
+	 * @Route("/crm/facture/voir/{id}", name="crm_facture_voir", options={"expose"=true})
 	 */
 	public function factureVoirAction(DocumentPrix $facture)
 	{

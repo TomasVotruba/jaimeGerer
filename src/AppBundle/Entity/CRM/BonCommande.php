@@ -180,4 +180,32 @@ class BonCommande
     {
         return $this->facture;
     }
+
+    /**
+     * Get total facture
+     *
+     * @return \AppBundle\Entity\CRM\DocumentPrix 
+     */
+    public function getTotalFacture()
+    {
+        if($this->facture){
+            return intval($this->facture->getTotalHT()*100);
+        }
+        return 0;
+       
+    }
+
+    /**
+     * Get total facture monetaire
+     *
+     * @return \AppBundle\Entity\CRM\DocumentPrix 
+     */
+    public function getTotalFactureMonetaire()
+    {
+        if($this->facture){
+            return $this->facture->getTotalHT();
+        }
+        return 0;
+       
+    }
 }

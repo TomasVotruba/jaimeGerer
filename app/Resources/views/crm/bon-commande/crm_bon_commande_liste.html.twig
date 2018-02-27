@@ -1,0 +1,151 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Bons de commande</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+                {% include 'crm/action-commerciale/crm_action_commerciale_submenu.html.twig' %}
+        </div>
+    </div>
+
+    <div class="row well">
+        {{ form_start(form) }}
+        <div class="col-md-2">
+             {{ form_row(form.year) }}
+        </div>
+        <div class="col-md-2">
+             {{ form_row(form.etat) }}
+        </div>
+        {{ form_end(form) }}
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table id="table_bc_list" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th class="col-md-1">Numéro bon de commande</th>
+                    <th class="col-md-1">Organisation</th>
+                    <th class="col-md-1">Objet</th>
+                    <th class="col-md-1">Montant</th>
+                    <th class="col-md-1">Total facturé</th>
+                    <th class="col-md-1 center">Factures</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/moment.js') }}"></script>
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function() {
+
+            var url = Routing.generate('crm_bon_commande_check');
+
+            var table = $('#table_bc_list').DataTable({
+                "dom": 'T<"clear">lfrtip',
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"
+                },
+                "responsive": true,
+                "order": [
+                    [0, "desc"]
+                ],
+                "responsive": true,
+                "processing": true,
+                "serverSide": true,
+                "iDisplayLength": 100,
+                "ajax":{
+                    url : url, // json datasource
+                    type: "post",  // method  , by default get
+                    data: function ( d ) {
+                        d.year = $('.year-select').val();
+                        d.etat = $('input[name="form[etat]"]:checked').val();
+                    }
+                },
+                "columns": [
+                    { "data": "num" },
+                    { "data": "compte"},
+                    { "data": "objet"},
+                    { "data": "montant"},
+                    { "data": "montant_facture"},
+                    { "data": "facture"},
+                ],
+                "columnDefs": [
+                    {
+                        "render": function ( data, type, row ) {
+                            var url = Routing.generate('crm_action_commerciale_voir', {'id' : row.action_commerciale });
+                            return '<a target="_blank" href="'+url+'">'+data+'</a>';
+                        },
+                        "targets": 2
+                    },
+                    {
+                        "render": function ( data, type, row ) {
+                            return data+" €";
+                        },
+                        "targets": 3
+                    },
+                    {
+                        "render": function ( data, type, row ) {
+                            if(data != null){
+                                return data+" €";
+                            }
+                            return "";
+                        },
+                        "targets": 4
+                    },
+                    {
+                        "render": function ( data, type, row ) {
+                            if(data){
+                                var url = Routing.generate('crm_facture_voir', {'id' : row.facture_id });
+                                return '<a target="_blank" href="'+url+'">'+data+'</a>';
+                            }
+                            return "";
+                            
+                        },
+                        "targets": 5
+                    },
+                ],
+                 fnDrawCallback: function () {
+                    $( 'a', this.fnGetNodes() ).tooltip( {
+                        "delay": 0,
+                        "track": true,
+                        "fade": 250,
+                        "tooltipClass": 'btn btn-default',
+                    } );
+                },
+                fnInitComplete: function () {
+                    $( 'a', this.fnGetNodes() ).tooltip( {
+                        "delay": 0,
+                        "track": true,
+                        "fade": 250,
+                        "tooltipClass": 'btn btn-default',
+                    } );
+                },
+    
+            });
+
+            $('.year-select').change(function() {
+                table.ajax.reload();
+            });
+
+            $('input[name="form[etat]"]').click(function(){
+                table.ajax.reload();
+            }); 
+
+        });
+    </script>
+{% endblock %}

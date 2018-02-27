@@ -22,4 +22,47 @@ class BonCommandeRepository extends EntityRepository
 		$result = $qb->getQuery()->getResult();
 		return $result;
 	}
+
+	public function findForList($company, $length, $start, $orderBy, $dir, $search, $year){
+		$qb = $this->createQueryBuilder('bc')
+			->leftJoin('AppBundle\Entity\CRM\Opportunite', 'o', 'WITH', 'o.id = bc.actionCommerciale')
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = o.compte')
+			->where('c.company = :company')
+			->setParameter('company', $company);
+
+		if($search != ""){
+			$search = trim($search);
+			$qb->andWhere('c.nom LIKE :search OR o.nom LIKE :search OR bc.num LIKE :search ')
+			->setParameter('search', '%'.$search.'%');
+		}
+
+		$qb->andWhere('bc.num LIKE :year')
+		->setParameter('year', $year.'%');
+
+		if($orderBy == null){
+			$orderBy = 'num';
+		}
+		$qb->setMaxResults($length)
+	        ->setFirstResult($start)
+	        ->addOrderBy('bc.'.$orderBy, $dir);
+
+		return $qb->getQuery()->getResult();
+	}
+
+	public function countForList($company, $search){
+		$qb = $this->createQueryBuilder('bc')
+			->select('COUNT(bc)')
+			->leftJoin('AppBundle\Entity\CRM\Opportunite', 'o', 'WITH', 'o.id = bc.actionCommerciale')
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = o.compte')
+			->where('c.company = :company')
+			->setParameter('company', $company);
+
+		if($search != ""){
+			$search = trim($search);
+			$qb->andWhere('c.nom LIKE :search OR o.nom LIKE :search OR bc.num LIKE :search ')
+			->setParameter('search', '%'.$search.'%');
+		}
+
+		return $qb->getQuery()->getSingleScalarResult();
+	}
 }
