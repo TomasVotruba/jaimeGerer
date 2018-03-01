@@ -6,19 +6,24 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Compta\OperationDiverse;
 use AppBundle\Service\Compta\CompteComptableService;
+use AppBundle\Service\NumService;
 
 class OperationDiverseService extends ContainerAware {
 
   protected $em;
   protected $compteComptableService;
+  protected $numService;
 
-  public function __construct(\Doctrine\ORM\EntityManager $em, CompteComptableService $compteComptableService)
+  public function __construct(\Doctrine\ORM\EntityManager $em, CompteComptableService $compteComptableService, NumService $numService)
   {
     $this->em = $em;
     $this->compteComptableService = $compteComptableService;
+    $this->numService = $numService;
   }
 
   public function corrigerAffectationAvecOD($ligneJournal, $compteChoisi){
+
+    $numEcriture = $this->numService->getNumEcriture($compteChoisi->getCompany());
 
     //ecriture d'une ligne Opération Diverse au compte choisi
     $od =  new OperationDiverse();
@@ -55,6 +60,7 @@ class OperationDiverseService extends ContainerAware {
       $od->setCredit($ligneJournal->getCredit());
     }
     $od->setCompteComptable($compteChoisi);
+    $od->setNumEcriture($numEcriture);
     $this->em->persist($od);
 
 
@@ -73,9 +79,13 @@ class OperationDiverseService extends ContainerAware {
       $od->setDebit($ligneJournal->getCredit());
     }
     $od->setCompteComptable($compteAttente);
+    $od->setNumEcriture($numEcriture);
     $this->em->persist($od);
 
     $this->em->flush();
+
+    $numEcriture++;
+    $this->numService->updateNumEcriture($compteChoisi, $numEcriture);
   }
 
 

@@ -110,12 +110,15 @@ class JournalVentesController extends Controller
 	public function journalVentesAjouterFactureAction(DocumentPrix $facture){
 
 		$em = $this->getDoctrine()->getManager();
+		$numService = $this->get('appbundle.num_service');
 		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
 
 		$compteAttente = $ccRepository->findOneBy(array(
 			'num' => '471',
 			'company' => $this->getUser()->getCompany()
 		));
+
+		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
 		$totaux = $facture->getTotaux();
 
@@ -126,6 +129,7 @@ class JournalVentesController extends Controller
 		$ligne->setDebit(null);
 		$ligne->setCredit($totaux['HT']);
 		$ligne->setAnalytique($facture->getAnalytique());
+		$ligne->setNumEcriture($numEcriture);
 
 		$produits = $facture->getProduits();
 		$type = "";
@@ -155,6 +159,7 @@ class JournalVentesController extends Controller
 			$ligne->setDebit(null);
 			$ligne->setCredit($totaux['HT']*$facture->getTaxePercent());
 			$ligne->setAnalytique($facture->getAnalytique());
+			$ligne->setNumEcriture($numEcriture);
 
 			$settingsRepository = $em->getRepository('AppBundle:Settings');
 			$settings_tva = $settingsRepository->findOneBy(array(
@@ -183,6 +188,7 @@ class JournalVentesController extends Controller
 		$ligne->setDebit($totaux['TTC']);
 		$ligne->setCredit(null);
 		$ligne->setAnalytique($facture->getAnalytique());
+		$ligne->setNumEcriture($numEcriture);
 		$compteComptable = $facture->getCompte()->getCompteComptableClient();
 		if($compteComptable == null){
 			$compteComptable = $compteAttente;
@@ -191,6 +197,10 @@ class JournalVentesController extends Controller
 		$em->persist($ligne);
 
 		$em->flush();
+
+		$numEcriture++;
+		$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+
 		$response = new Response();
 		$response->setStatusCode(200);
 		return $response;
@@ -205,11 +215,14 @@ class JournalVentesController extends Controller
 
 		$em = $this->getDoctrine()->getManager();
 		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
+		$numService = $this->get('appbundle.num_service');
 
 		$compteAttente = $ccRepository->findOneBy(array(
 				'num' => '471',
 				'company' => $this->getUser()->getCompany()
 		));
+
+		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
 		$tva = $avoir->getFacture()->getTaxePercent()*100;
 		$tva.='%';
@@ -244,6 +257,7 @@ class JournalVentesController extends Controller
 			$compteComptable = $compteAttente;
 		}
 		$ligne->setCompteComptable($compteComptable);
+		$ligne->setNumEcriture($numEcriture);
 		$em->persist($ligne);
 
 		//pour chaque ligne : debit au compte 70xxxx du montant HT
@@ -256,6 +270,7 @@ class JournalVentesController extends Controller
 			$ligne->setCredit(null);
 			$ligne->setAnalytique($avoir->getFacture()->getAnalytique());
 			$ligne->setCompteComptable($ligneAvoir->getCompteComptable());
+			$ligne->setNumEcriture($numEcriture);
 			$em->persist($ligne);
 
 			//si TVA : debit au compte 445xxxxx
@@ -267,12 +282,17 @@ class JournalVentesController extends Controller
 				$ligne->setCredit(null);
 				$ligne->setAnalytique($avoir->getFacture()->getAnalytique());
 				$ligne->setCompteComptable($compteTVA);
+				$ligne->setNumEcriture($numEcriture);
 				$em->persist($ligne);
 			}
 
 		}
 
 		$em->flush();
+
+		$numEcriture++;
+		$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+		
 		$response = new Response();
 		$response->setStatusCode(200);
 		return $response;

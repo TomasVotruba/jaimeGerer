@@ -1814,6 +1814,10 @@ class ContactController extends Controller
 					'nom' => $nom
 				));
 
+				if(!$contact){
+					$contact = $contactRepo->findByEmail($email);
+				}
+
 				if($contact){
 					$arr_contacts['existant'][] = $prenom.' '.$nom.' ('.$orga.')';
 				} else {

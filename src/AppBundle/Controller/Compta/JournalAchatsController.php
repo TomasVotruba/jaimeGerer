@@ -96,7 +96,7 @@ class JournalAchatsController extends Controller
 			'company' => $this->getUser()->getCompany()
 		));
 
-		$num = $numService->getNumEcriture($this->getUser()->getCompany());
+		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
 		//credit au compte 401-nom du fournisseur (ou 421NDFxxx si c'est une note de frais) du total TTC
 		$ligne = new JournalAchat();
@@ -112,8 +112,7 @@ class JournalAchatsController extends Controller
 		$ligne->setCompteComptable($cc);
 		$ligne->setModePaiement($depense->getModePaiement());
 		$ligne->setAnalytique($depense->getAnalytique());
-		
-		$ligne->setNumEcriture($num);
+		$ligne->setNumEcriture($numEcriture);
 		$em->persist($ligne);
 		$depense->addJournalAchat($ligne);
 
@@ -127,7 +126,7 @@ class JournalAchatsController extends Controller
 			$ligne->setCompteComptable($ligneDepense->getCompteComptable());
 			$ligne->setModePaiement($depense->getModePaiement());
 			$ligne->setAnalytique($depense->getAnalytique());
-			$ligne->setNumEcriture($num);
+			$ligne->setNumEcriture($numEcriture);
 			$em->persist($ligne);
 			$depense->addJournalAchat($ligne);
 
@@ -156,7 +155,7 @@ class JournalAchatsController extends Controller
 	
 				$ligne->setModePaiement($depense->getModePaiement());
 				$ligne->setAnalytique($depense->getAnalytique());
-				$ligne->setNumEcriture($num);;
+				$ligne->setNumEcriture($numEcriture);;
 				$em->persist($ligne);
 				$depense->addJournalAchat($ligne);
 			}
@@ -185,7 +184,7 @@ class JournalAchatsController extends Controller
 			$ligne->setCompteComptable($cc);
 			$ligne->setModePaiement($depense->getModePaiement());
 			$ligne->setAnalytique($depense->getAnalytique());
-			$ligne->setNumEcriture($num);
+			$ligne->setNumEcriture($numEcriture);
 			$em->persist($ligne);
 			$depense->addJournalAchat($ligne);
 		}
@@ -193,8 +192,8 @@ class JournalAchatsController extends Controller
 		$em->persist($depense);
 		$em->flush();
 
-		$num++;
-		$numService->updateNumEcriture($this->getUser()->getCompany(), $num);
+		$numEcriture++;
+		$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 		$response = new Response();
 		$response->setStatusCode(200);
@@ -209,7 +208,11 @@ class JournalAchatsController extends Controller
 		//AVOIR FOURNISSEUR
 
 		$em = $this->getDoctrine()->getManager();
+		$numService = $this->get('appbundle.num_service');
+
 		$totaux = $avoir->getTotaux();
+
+		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
 		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
 		$compteAttente = $ccRepository->findOneBy(array(
@@ -233,6 +236,7 @@ class JournalAchatsController extends Controller
 		$ligne->setCompteComptable($avoir->getDepense()->getCompte()->getCompteComptableFournisseur());
 		$ligne->setModePaiement($avoir->getModePaiement());
 		$ligne->setAnalytique($avoir->getDepense()->getAnalytique());
+		$ligne->setNumEcriture($numEcriture);
 		$em->persist($ligne);
 
 		foreach($avoir->getLignes() as $ligneAvoir){
@@ -246,6 +250,7 @@ class JournalAchatsController extends Controller
 			$ligne->setCompteComptable($ligneAvoir->getCompteComptable());
 			$ligne->setModePaiement($avoir->getModePaiement());
 			$ligne->setAnalytique($avoir->getDepense()->getAnalytique());
+			$ligne->setNumEcriture($numEcriture);
 			$em->persist($ligne);
 
 
@@ -262,11 +267,15 @@ class JournalAchatsController extends Controller
 				$ligne->setCompteComptable($cc);
 				$ligne->setModePaiement($avoir->getModePaiement());
 				$ligne->setAnalytique($avoir->getDepense()->getAnalytique());
+				$ligne->setNumEcriture($numEcriture);
 				$em->persist($ligne);
 			}
 		}
 
 		$em->flush();
+
+		$numEcriture++;
+		$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 		$response = new Response();
 		$response->setStatusCode(200);
@@ -340,18 +349,18 @@ class JournalAchatsController extends Controller
 
 		//set column width
 		foreach(range('A','H') as $col) {
-    	$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
+    		$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
 		}
 
 		$response = new Response();
 
-		 $response->headers->set('Content-Type', 'application/vnd.ms-excel');
-		 $response->headers->set('Content-Disposition', 'attachment;filename="journal_achats.xlsx"');
-		 $response->headers->set('Cache-Control', 'max-age=0');
-		 $response->sendHeaders();
-		 $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-		 $objWriter->save('php://output');
-		 exit();
+		$response->headers->set('Content-Type', 'application/vnd.ms-excel');
+		$response->headers->set('Content-Disposition', 'attachment;filename="journal_achats.xlsx"');
+		$response->headers->set('Cache-Control', 'max-age=0');
+		$response->sendHeaders();
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+		$objWriter->save('php://output');
+		exit();
 
 	}
 

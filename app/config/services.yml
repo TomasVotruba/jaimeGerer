@@ -75,7 +75,7 @@ services:
           class: AppBundle\Service\Compta\OperationDiverseService
           calls:
               - [setContainer, ["@service_container"]]
-          arguments: [ @doctrine.orm.entity_manager, @appbundle.compta_compte_comptable_service ]
+          arguments: [ @doctrine.orm.entity_manager, @appbundle.compta_compte_comptable_service, @appbundle.num_service ]
     appbundle.compta_compte_comptable_service:
         class: AppBundle\Service\Compta\CompteComptableService
         calls:

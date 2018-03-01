@@ -1,0 +1,763 @@
+JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise
+CA|Crédit Agricole||20180102|51200000|Banques|51214000|Crédit agricole| ||Virement Unitair N°1800200049044  - Frais  - |0|0,22|||20180301||
+CA|Crédit Agricole||20180102|51200000|Banques|51214000|Crédit agricole| ||Virement Unitair N°1800200049045  - Frais  - |0|0,22|||20180301||
+CA|Crédit Agricole||20180102|51200000|Banques|51214000|Crédit agricole|D-2017-0969 FG|20171130|Virement Emis  - Web Eolas Eolas Heb1711003297  - Eolas Heb1711003297  - 02/01/2018  - |0|294,04|||20180301||
+CA|Crédit Agricole||20180102|51200000|Banques|51214000|Crédit agricole|D-2017-0916 FG|20171130|Virement Emis  - Web Apf Consultant Apf Consultan  - Apf Consultant F171103  - 02/01/2018  - |0|1908,00|||20180301||
+CA|Crédit Agricole||20180102|51200000|Banques|51214000|Crédit agricole|D-2017-0878 |20171030|Virement Emis  - Web Mme Pegaz Fiornet So Pegaz F  - Pegaz F 2017 032 Deuxieme Tiers  - 02/01/2018  - |0|2816,00|||20180301||
+CA|Crédit Agricole||20180102|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Virement Unitair N°1800200049044  - Frais  - |0,22|0|||20180301||
+CA|Crédit Agricole||20180102|41100000|Clients|411ENSP|ENSP - Cannes Ecluse|2017-212 FC|20171020|Drfip Auvergne Rhone Alpes Depar  - Virement En Votre Faveur  - Pilot Collabo Directs 18-19.10.2017 - /ecole Nationale Superieure De La P  - Olice  - 1d0690000/127/nicomak  - Ecole Nationale Superieure De La Po - Lice     |0|2000,00|||20180301||
+CA|Crédit Agricole||20180102|51200000|Banques|51214000|Crédit agricole|2017-212 FC|20171020|Drfip Auvergne Rhone Alpes Depar  - Virement En Votre Faveur  - Pilot Collabo Directs 18-19.10.2017 - /ecole Nationale Superieure De La P  - Olice  - 1d0690000/127/nicomak  - Ecole Nationale Superieure De La Po - Lice     |2000,00|0|||20180301||
+CA|Crédit Agricole||20180102|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Virement Unitair N°1800200049045  - Frais  - |0,22|0|||20180301||
+CA|Crédit Agricole||20180102|40100000|Fournisseurs|401ARI|Arielle Prunet-Foch Consultant|D-2017-0916 FG|20171130|Virement Emis  - Web Apf Consultant Apf Consultan  - Apf Consultant F171103  - 02/01/2018  - |1908,00|0|||20180301||
+CA|Crédit Agricole||20180102|40100000|Fournisseurs|401PEGAZ|Cabinet PEGAZ-FIORNET|D-2017-0878 |20171030|Virement Emis  - Web Mme Pegaz Fiornet So Pegaz F  - Pegaz F 2017 032 Deuxieme Tiers  - 02/01/2018  - |2816,00|0|2017 2018 A||20180301||
+CA|Crédit Agricole||20180102|40100000|Fournisseurs|401EOL|Eolas|D-2017-0969 FG|20171130|Virement Emis  - Web Eolas Eolas Heb1711003297  - Eolas Heb1711003297  - 02/01/2018  - |294,04|0|||20180301||
+CA|Crédit Agricole||20180103|51200000|Banques|51214000|Crédit agricole|D-2017-1009 Conseil|20171225|Free Mobile  - Prelevmnt  - Fr07zzz591778  - Fm-20220316-1  - |0|23,29|||20180301||
+SG|Société Générale||20180103|51200000|Banques|51215000|Soge| ||CIONS TENUE DE COMPTE|0|0,68|||20180301||
+SG|Société Générale||20180103|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||CIONS TENUE DE COMPTE|0,68|0|||20180301||
+CA|Crédit Agricole||20180103|40100000|Fournisseurs|401ILIAD|Iliad - maison-mère de Free|D-2017-1009 Conseil|20171225|Free Mobile  - Prelevmnt  - Fr07zzz591778  - Fm-20220316-1  - |23,29|0|||20180301||
+CA|Crédit Agricole||20180103|51200000|Banques|51214000|Crédit agricole|2017-282 Conseil|20171222|Hr A M Van Den Boogaard Objet :  - Virement En Votre Faveur  - Numero Du Devis : 2017-144 - Objet : Red Star Part 1  -   |2035,00|0|||20180301||
+SG|Société Générale||20180103|51200000|Banques|51215000|Soge| ||INT DEBITEURS ET CION DECOUVERT|0|1,13|||20180301||
+SG|Société Générale||20180103|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||INT DEBITEURS ET CION DECOUVERT|1,13|0|||20180301||
+CA|Crédit Agricole||20180103|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Assu. Cnp Pret Profession. 01/18  - Prelevement  - |23,50|0|||20180301||
+VE|Journal des ventes||20180103|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-002 Web|20180103|2018-002 : Licences Panorama|0|600,00|||20180301||
+VE|Journal des ventes||20180103|41100000|Clients|411CAPA|CAPAC|2018-002 Web|20180103|2018-002 : Licences Panorama|600,00|0|A||20180301||
+CA|Crédit Agricole||20180103|41100000|Clients|411ETH|EthiekZaak|2017-282 Conseil|20171222|Hr A M Van Den Boogaard Objet :  - Virement En Votre Faveur  - Numero Du Devis : 2017-144 - Objet : Red Star Part 1  -   |0|2035,00|||20180301||
+VE|Journal des ventes||20180103|70600000|Prestations de services|70600100|PS Formation initiale 19.6%|2018-001 FI|20180103|2018-001 : Cours de management stratégique (20h)|0|1000,00|||20180301||
+CA|Crédit Agricole||20180103|51200000|Banques|51214000|Crédit agricole| ||Assu. Cnp Pret Profession. 01/18  - Prelevement  - |0|23,50|||20180301||
+VE|Journal des ventes||20180103|44500000|Etat - Taxes sur le chiffre d'affaires|44571200|TVA Collectée à 20%|2018-001 FI|20180103|2018-001 : Cours de management stratégique (20h)|0|200,00|||20180301||
+VE|Journal des ventes||20180103|41100000|Clients|411ECOR|Ecoris|2018-001 FI|20180103|2018-001 : Cours de management stratégique (20h)|1200,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0001 FI|20180101|D-2018-0001 : NDF Céline Gindre 1/2018 (FI)|12,02|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0001 FI|20180101|D-2018-0001 : NDF Céline Gindre 1/2018 (FI)|13,55|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0001 FI|20180101|D-2018-0001 : NDF Céline Gindre 1/2018 (FI)|9,60|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0001 FI|20180101|D-2018-0001 : NDF Céline Gindre 1/2018 (FI)|7,00|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0001 FI|20180101|D-2018-0001 : NDF Céline Gindre 1/2018 (FI)|0,48|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGIN|Note de frais Céline Gindre|D-2018-0001 FI|20180101|D-2018-0001 : NDF Céline Gindre 1/2018 (FI)|0|70,55|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0002 FG|20180101|D-2018-0002 : NDF Céline Gindre 1/2018 (FG)|16,60|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0001 FI|20180101|D-2018-0001 : NDF Céline Gindre 1/2018 (FI)|0,70|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0001 FI|20180101|D-2018-0001 : NDF Céline Gindre 1/2018 (FI)|0,88|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0001 FI|20180101|D-2018-0001 : NDF Céline Gindre 1/2018 (FI)|5,77|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0001 FI|20180101|D-2018-0001 : NDF Céline Gindre 1/2018 (FI)|1,35|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0001 FI|20180101|D-2018-0001 : NDF Céline Gindre 1/2018 (FI)|19,20|0|||20180301||
+SG|Société Générale||20180104|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat| FG||000001 VIR EUROPEEN EMIS   NET|406,58|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0002 FG|20180101|D-2018-0002 : NDF Céline Gindre 1/2018 (FG)|10,70|0|||20180301||
+SG|Société Générale||20180104|42100000|Personnel - rémunérations dues|421MUR|Salaire Murat| ||000001 VIR EUROPEEN EMIS   NET|4859,46|0|||20180301||
+CA|Crédit Agricole||20180104|58100000|Virement de fonds|58100000|Virement de fonds| ||Virement Emis  - Web Nicomak Treso  - Treso  - 04/01/2018  - |15000,00|0|||20180301||
+CAL|Crédit Agricole||20180104|51200000|Banques|512|Banques| ||Virement En Votre Faveur  - Treso Nicomak  - Treso -  |15000,00|0|||20180301||
+CA|Crédit Agricole||20180104|40100000|Fournisseurs|401PEGAZ|Cabinet PEGAZ-FIORNET|D-2017-0878 |20171030|Virement Emis  - Web Mme Pegaz Fiornet So 3e Et D  - Facture De 8448 De Pegaz Boubaker  - Comptable  - 3e Et Dernier Virement  - 05/01/2018  - |2816,00|0|2017 2018 A||20180301||
+SG|Société Générale||20180104|42100000|Personnel - rémunérations dues|421GILQ|Salaire Gilquin| ||000001 VIR EUROPEEN EMIS   NET|2091,85|0|||20180301||
+SG|Société Générale||20180104|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat| Conseil||000001 VIR EUROPEEN EMIS   NET|557,38|0|||20180301||
+CA|Crédit Agricole||20180104|51200000|Banques|51214000|Crédit agricole|2017-280 |20171221|Amos Lyon 55  - Virement En Votre Faveur  - Vir De Amos Lyon 55 -  |699,88|0|||20180301||
+CA|Crédit Agricole||20180104|16400000|Emprunts auprès des établissements de crédit|16440000|Emprunt Alize 25KE 2016| ||Chambre De Commerce  - Prelevmnt  - Alize Savoie  - Fr21zzz123404  - Nicomak  - |833,33|0|||20180301||
+CA|Crédit Agricole||20180104|42100000|Personnel - rémunérations dues|421GUIB|Salaire Guibert| ||Virement Emis  - Web Laetitia Guibert Salaire Lae  - Salaire Laetitia Decembre  - 04/01/2018  - |2004,63|0|||20180301||
+SG|Société Générale||20180104|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat| FC||000001 VIR EUROPEEN EMIS   NET|539,40|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-0002 FG|20180101|D-2018-0002 : NDF Céline Gindre 1/2018 (FG)|1,42|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|6,20|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|4,41|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|3,98|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|0,24|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|6,20|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|9,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|30,10|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|29,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|18,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|13,00|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGIN|Note de frais Céline Gindre|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|0|608,03|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0005 EV|20180101|D-2018-0005 : NDF Céline Gindre 1/2018 (EV)|16,90|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0006 FI|20180101|D-2018-0006 : NDF Céline Gindre 1/2018 (FI)|5,43|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGIN|Note de frais Céline Gindre|D-2018-0006 FI|20180101|D-2018-0006 : NDF Céline Gindre 1/2018 (FI)|0|194,39|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0007 FC|20180101|D-2018-0007 : NDF Céline Gindre 1/2018 (FC)|54,30|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGIN|Note de frais Céline Gindre|D-2018-0007 FC|20180101|D-2018-0007 : NDF Céline Gindre 1/2018 (FC)|0|54,30|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0006 FI|20180101|D-2018-0006 : NDF Céline Gindre 1/2018 (FI)|10,86|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0006 FI|20180101|D-2018-0006 : NDF Céline Gindre 1/2018 (FI)|10,86|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGIN|Note de frais Céline Gindre|D-2018-0005 EV|20180101|D-2018-0005 : NDF Céline Gindre 1/2018 (EV)|0|16,90|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0006 FI|20180101|D-2018-0006 : NDF Céline Gindre 1/2018 (FI)|112,94|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0006 FI|20180101|D-2018-0006 : NDF Céline Gindre 1/2018 (FI)|54,30|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|38,20|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|39,72|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0003 Conseil|20180101|D-2018-0003 : NDF Céline Gindre 1/2018 (Conseil)|58,30|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0003 Conseil|20180101|D-2018-0003 : NDF Céline Gindre 1/2018 (Conseil)|44,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0003 Conseil|20180101|D-2018-0003 : NDF Céline Gindre 1/2018 (Conseil)|9,60|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-0003 Conseil|20180101|D-2018-0003 : NDF Céline Gindre 1/2018 (Conseil)|4,83|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGIN|Note de frais Céline Gindre|D-2018-0002 FG|20180101|D-2018-0002 : NDF Céline Gindre 1/2018 (FG)|0|37,61|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0002 FG|20180101|D-2018-0002 : NDF Céline Gindre 1/2018 (FG)|0,28|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-0002 FG|20180101|D-2018-0002 : NDF Céline Gindre 1/2018 (FG)|2,08|0|||20180301||
+SG|Société Générale||20180104|40100000|Fournisseurs|401THCON|TH conseil|D-2017-1031 Conseil|20171026|000001 VIR EUROPEEN EMIS   NET|302,86|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0002 FG|20180101|D-2018-0002 : NDF Céline Gindre 1/2018 (FG)|0,56|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0002 FG|20180101|D-2018-0002 : NDF Céline Gindre 1/2018 (FG)|0,42|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-0003 Conseil|20180101|D-2018-0003 : NDF Céline Gindre 1/2018 (Conseil)|2,42|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0003 Conseil|20180101|D-2018-0003 : NDF Céline Gindre 1/2018 (Conseil)|0,97|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|55,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|47,30|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|40,30|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|40,20|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|55,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|61,20|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0003 Conseil|20180101|D-2018-0003 : NDF Céline Gindre 1/2018 (Conseil)|0,48|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGIN|Note de frais Céline Gindre|D-2018-0003 Conseil|20180101|D-2018-0003 : NDF Céline Gindre 1/2018 (Conseil)|0|120,60|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|61,20|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0002 FG|20180101|D-2018-0002 : NDF Céline Gindre 1/2018 (FG)|5,55|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0004 FC|20180101|D-2018-0004 : NDF Céline Gindre 1/2018 (FC)|49,78|0|||20180301||
+SG|Société Générale||20180104|51200000|Banques|51215000|Soge| Conseil||000001 VIR EUROPEEN EMIS   NET|0|557,38|||20180301||
+SG|Société Générale||20180104|51200000|Banques|51215000|Soge| FG||000001 VIR EUROPEEN EMIS   NET|0|406,58|||20180301||
+SG|Société Générale||20180104|51200000|Banques|51215000|Soge| FC||000001 VIR EUROPEEN EMIS   NET|0|539,40|||20180301||
+SG|Société Générale||20180104|51200000|Banques|51215000|Soge| FI||000001 VIR EUROPEEN EMIS   NET|0|10,50|||20180301||
+CA|Crédit Agricole||20180104|51200000|Banques|51214000|Crédit agricole| ||Chambre De Commerce  - Prelevmnt  - Alize Savoie  - Fr21zzz123404  - Nicomak  - |0|833,33|||20180301||
+SG|Société Générale||20180104|51200000|Banques|51215000|Soge| ||000001 VIR EUROPEEN EMIS   NET|0|2091,85|||20180301||
+SG|Société Générale||20180104|51200000|Banques|51215000|Soge| ||000001 VIR EUROPEEN EMIS   NET|0|4859,46|||20180301||
+SG|Société Générale||20180104|51200000|Banques|51215000|Soge|D-2017-1031 Conseil|20171026|000001 VIR EUROPEEN EMIS   NET|0|302,86|||20180301||
+VE|Journal des ventes||20180104|41100000|Clients|411SPF|SPF P&O|2018-003 Web|20180104|2018-003 : Licences Panorama|484,00|0|||20180301||
+CA|Crédit Agricole||20180104|40100000|Fournisseurs|401BIR|Bird Office|D-2018-0036 |20180103|Bird Office Paris          02/01  - Paiement Par Carte  - |177,60|0|2017 2018 D||20180301||
+VE|Journal des ventes||20180104|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-003 Web|20180104|2018-003 : Licences Panorama|0|484,00|||20180301||
+CAL|Crédit Agricole||20180104|58100000|Virement de fonds|58100000|Virement de fonds| ||Virement En Votre Faveur  - Treso Nicomak  - Treso -  |0|15000,00|||20180301||
+CA|Crédit Agricole||20180104|51200000|Banques|51214000|Crédit agricole|D-2017-0878 |20171030|Virement Emis  - Web Mme Pegaz Fiornet So 3e Et D  - Facture De 8448 De Pegaz Boubaker  - Comptable  - 3e Et Dernier Virement  - 05/01/2018  - |0|2816,00|||20180301||
+CA|Crédit Agricole||20180104|51200000|Banques|51214000|Crédit agricole|D-2018-0036 |20180103|Bird Office Paris          02/01  - Paiement Par Carte  - |0|177,60|||20180301||
+CA|Crédit Agricole||20180104|51200000|Banques|51214000|Crédit agricole| ||Virement Emis  - Web Laetitia Guibert Salaire Lae  - Salaire Laetitia Decembre  - 04/01/2018  - |0|2004,63|||20180301||
+SG|Société Générale||20180104|51200000|Banques|51215000|Soge| EV||000001 VIR EUROPEEN EMIS   NET|0|2,90|||20180301||
+CA|Crédit Agricole||20180104|51200000|Banques|51214000|Crédit agricole| ||Virement Emis  - Web Nicomak Treso  - Treso  - 04/01/2018  - |0|15000,00|||20180301||
+CA|Crédit Agricole||20180104|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Virement Unitair N°1800400031679  - Frais  - |0,22|0|||20180301||
+SG|Société Générale||20180104|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat| EV||000001 VIR EUROPEEN EMIS   NET|2,90|0|||20180301||
+SG|Société Générale||20180104|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat| FI||000001 VIR EUROPEEN EMIS   NET|10,50|0|||20180301||
+CA|Crédit Agricole||20180104|61600000|Primes d'assurances|61610000|Assurance multirisque| ||Groupama Rhone Alpes Auvergne  - Prelevmnt  - Tip Sepa Groupama Rhones Alpes Auve  - Rgne  - Fr39zzz115223  - Tip009060000135506901900020000000  - |91,50|0|||20180301||
+CA|Crédit Agricole||20180104|40100000|Fournisseurs|401ZOOM|zoom|D-2017-1008 Conseil|20171229|Zoom.Us 08887999666        03/01  - Paiement Par Carte  - |12,49|0|||20180301||
+CA|Crédit Agricole||20180104|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Virement Unitair N°1800400031678  - Frais  - |0,22|0|||20180301||
+CA|Crédit Agricole||20180104|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Carte Hors Euro  N°1800400031680  - Frais  - |0,72|0|||20180301||
+CA|Crédit Agricole||20180104|51200000|Banques|51214000|Crédit agricole|D-2017-1008 Conseil|20171229|Zoom.Us 08887999666        03/01  - Paiement Par Carte  - |0|12,49|||20180301||
+CA|Crédit Agricole||20180104|51200000|Banques|51214000|Crédit agricole| ||Groupama Rhone Alpes Auvergne  - Prelevmnt  - Tip Sepa Groupama Rhones Alpes Auve  - Rgne  - Fr39zzz115223  - Tip009060000135506901900020000000  - |0|91,50|||20180301||
+CA|Crédit Agricole||20180104|51200000|Banques|51214000|Crédit agricole| ||Virement Unitair N°1800400031678  - Frais  - |0|0,22|||20180301||
+CA|Crédit Agricole||20180104|41100000|Clients|411AMO|AMOS Lyon|2017-280 |20171221|Amos Lyon 55  - Virement En Votre Faveur  - Vir De Amos Lyon 55 -  |0|699,88|2017 2018 ||20180301||
+CA|Crédit Agricole||20180104|51200000|Banques|51214000|Crédit agricole| ||Virement Unitair N°1800400031679  - Frais  - |0|0,22|||20180301||
+CA|Crédit Agricole||20180104|51200000|Banques|51214000|Crédit agricole| ||Carte Hors Euro  N°1800400031680  - Frais  - |0|0,72|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-00010 FG|20180101|D-2018-00010 : NDF Alice Lousson 1/2018 (FG)|84,18|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|42100000|Personnel - rémunérations dues|D-2018-00010 FG|20180101|D-2018-00010 : NDF Alice Lousson 1/2018 (FG)|0|86,02|C||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-00010 FG|20180101|D-2018-00010 : NDF Alice Lousson 1/2018 (FG)|1,84|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|42100000|Personnel - rémunérations dues|D-2018-0009 Conseil|20180101|D-2018-0009 : NDF Alice Lousson 1/2018 (Conseil)|0|5,20|C||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0009 Conseil|20180101|D-2018-0009 : NDF Alice Lousson 1/2018 (Conseil)|1,18|0|||20180301||
+CA|Crédit Agricole||20180105|51200000|Banques|51214000|Crédit agricole|D-2018-0027 FG|20180102|Free Telecom  - Prelevmnt  - Free Hautdebit 761892808  - Fr83zzz459654  - 19257561  - |0|29,99|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0009 Conseil|20180101|D-2018-0009 : NDF Alice Lousson 1/2018 (Conseil)|3,90|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0009 Conseil|20180101|D-2018-0009 : NDF Alice Lousson 1/2018 (Conseil)|0,12|0|||20180301||
+CA|Crédit Agricole||20180105|61600000|Primes d'assurances|61630000|Assurance véhicule| ||Mma Iard Sa-Mma Iard  - Prelevmnt  - Fr58zzz106054  - Ms0010332708234  - |108,40|0|||20180301||
+CA|Crédit Agricole||20180105|51200000|Banques|51214000|Crédit agricole| ||Assureo  - Prelevmnt  - Fr22zzz423116  - 000002284143ti0003883266  - |0|160,43|||20180301||
+CA|Crédit Agricole||20180105|51200000|Banques|51214000|Crédit agricole| ||Mma Iard Sa-Mma Iard  - Prelevmnt  - Fr58zzz106054  - Ms0010332708234  - |0|108,40|||20180301||
+SG|Société Générale||20180105|51200000|Banques|51215000|Soge|D-2017-0827 FG|20171010|CHEQUE      24|0|864,00|||20180301||
+CA|Crédit Agricole||20180105|40100000|Fournisseurs|401BIR|Bird Office|D-2018-0036 |20180103|Carte Bird Office          03/01  - Avoir  - |-42,00|0|2017 2018 D||20180301||
+CA|Crédit Agricole||20180105|40100000|Fournisseurs|401ZEN|zendesk|D-2017-1018 Conseil|20171230|Zendesk Inc Dublin 6       03/01  - Paiement Par Carte  - |1,82|0|B||20180301||
+SG|Société Générale||20180105|40100000|Fournisseurs|401DIVER|FOURNISSEUR DIVERS|D-2017-0827 FG|20171010|CHEQUE      24|864,00|0|||20180301||
+CA|Crédit Agricole||20180105|61600000|Primes d'assurances|61630000|Assurance véhicule| ||Assureo  - Prelevmnt  - Fr22zzz423116  - 000002284143ti0003883266  - |160,43|0|||20180301||
+CA|Crédit Agricole||20180105|40100000|Fournisseurs|401ILIAD|Iliad - maison-mère de Free|D-2018-0027 FG|20180102|Free Telecom  - Prelevmnt  - Free Hautdebit 761892808  - Fr83zzz459654  - 19257561  - |29,99|0|B||20180301||
+CA|Crédit Agricole||20180105|51200000|Banques|51214000|Crédit agricole|D-2017-1018 Conseil|20171230|Zendesk Inc Dublin 6       03/01  - Paiement Par Carte  - |0|1,82|||20180301||
+CA|Crédit Agricole||20180105|51200000|Banques|51214000|Crédit agricole|D-2018-0036 |20180103|Carte Bird Office          03/01  - Avoir  - |0|-42,00|||20180301||
+AC|Journal des achats||20180108|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0013 FG|20180108|D-2018-0013 : 04 79 336994|5,00|0|||20180301||
+CA|Crédit Agricole||20180108|51200000|Banques|51214000|Crédit agricole| ||Virement Unitair N°1800800093479  - Frais  - |0|0,22|||20180301||
+AC|Journal des achats||20180108|40100000|Fournisseurs|401FRA|France Telecom Orange|D-2018-0013 FG|20180108|D-2018-0013 : 04 79 336994|0|30,00|||20180301||
+CA|Crédit Agricole||20180108|51200000|Banques|51214000|Crédit agricole|D-2018-0026 FG|20180111|Ctre Equip Savo 01 Arbin   05/01  - Paiement Par Carte  - |0|14,60|||20180301||
+CA|Crédit Agricole||20180108|51200000|Banques|51214000|Crédit agricole|D-2018-0025 FG|20180105|Intermarche Dac Chapareill 05/01  - Paiement Par Carte  - |0|65,60|||20180301||
+AC|Journal des achats||20180108|62600000|Frais postaux et de télécommunications|62641000|Orange 04 79 33 69 94|D-2018-0013 FG|20180108|D-2018-0013 : 04 79 336994|25,00|0|||20180301||
+AC|Journal des achats||20180102|40100000|Fournisseurs|401FRA|France Telecom Orange|D-2018-0012 FG|20180102|D-2018-0012 : Orange 04 79757629|0|51,56|A||20180301||
+AC|Journal des achats||20180108|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0011 Web|20180108|D-2018-0011 : Eolas decembre|50,30|0|||20180301||
+AC|Journal des achats||20180108|40100000|Fournisseurs|401EOL|Eolas|D-2018-0011 Web|20180108|D-2018-0011 : Eolas decembre|0|301,81|J||20180301||
+AC|Journal des achats||20180102|62600000|Frais postaux et de télécommunications|62640000|Orange 04 79 75 76 29|D-2018-0012 FG|20180102|D-2018-0012 : Orange 04 79757629|42,97|0|||20180301||
+AC|Journal des achats||20180102|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0012 FG|20180102|D-2018-0012 : Orange 04 79757629|8,59|0|||20180301||
+AC|Journal des achats||20180108|62600000|Frais postaux et de télécommunications|62680000|1&1 hébergement|D-2018-0011 Web|20180108|D-2018-0011 : Eolas decembre|251,51|0|||20180301||
+CA|Crédit Agricole||20180108|51200000|Banques|51214000|Crédit agricole| FG||Virement Emis  - Web Laetitia Guibert Ndf Decembr  - Ndf Decembre Laetitia  - 09/01/2018  - |0|111,80|||20180301||
+CA|Crédit Agricole||20180108|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Virement Unitair N°1800800093480  - Frais  - |0,22|0|||20180301||
+CA|Crédit Agricole||20180108|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Virement Unitair N°1800800093479  - Frais  - |0,22|0|||20180301||
+CA|Crédit Agricole||20180108|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Virement Unitair N°1800800093481  - Frais  - |0,22|0|||20180301||
+CA|Crédit Agricole||20180108|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Virement Unitair N°1800800093482  - Frais  - |0,22|0|||20180301||
+CA|Crédit Agricole||20180108|42100000|Personnel - rémunérations dues|42100000|Personnel - rémunérations dues| Conseil||Virement Emis  - Web Alice Lousson Ndf Decembre A  - Ndf Decembre Alice  - 09/01/2018  - |5,20|0|C||20180301||
+CA|Crédit Agricole||20180108|51200000|Banques|51214000|Crédit agricole|D-2018-0011 Web|20180108|Virement Emis  - Web Eolas Eolas Facture Heb17120  - Eolas Facture Heb1712003687  - 09/01/2018  - |0|301,81|||20180301||
+CA|Crédit Agricole||20180108|51200000|Banques|51214000|Crédit agricole|D-2017-0959 Web|20171205|Virement Emis  - Web Katrien Sand Facture 2017/9/  - Facture 2017/9/45  - 09/01/2018  - |0|152,00|||20180301||
+CA|Crédit Agricole||20180108|51200000|Banques|51214000|Crédit agricole| ||Virement Unitair N°1800800093480  - Frais  - |0|0,22|||20180301||
+CA|Crédit Agricole||20180108|41100000|Clients|411CCA|CCA INTERNATIONAL|2017-206 Conseil|20171011|Cca International Fris11712sct00  - Virement En Votre Faveur  - Fris11712sct0018 - Cca International  -   |0|15789,00|C||20180301||
+CA|Crédit Agricole||20180108|51200000|Banques|51214000|Crédit agricole| Conseil||Virement Emis  - Web Alice Lousson Ndf Decembre A  - Ndf Decembre Alice  - 09/01/2018  - |0|5,20|||20180301||
+CA|Crédit Agricole||20180108|51200000|Banques|51214000|Crédit agricole| FG||Virement Emis  - Web Alice Lousson Ndf Decembre A  - Ndf Decembre Alice  - 09/01/2018  - |0|86,02|||20180301||
+CA|Crédit Agricole||20180108|40100000|Fournisseurs|401CES|CES Point S centre d'équipement savoyard|D-2018-0026 FG|20180111|Ctre Equip Savo 01 Arbin   05/01  - Paiement Par Carte  - |14,60|0|B||20180301||
+CA|Crédit Agricole||20180108|40100000|Fournisseurs|401INT|intermarche chapareillan|D-2018-0025 FG|20180105|Intermarche Dac Chapareill 05/01  - Paiement Par Carte  - |65,60|0|B||20180301||
+CA|Crédit Agricole||20180108|51200000|Banques|51214000|Crédit agricole| ||Virement Unitair N°1800800093481  - Frais  - |0|0,22|||20180301||
+CA|Crédit Agricole||20180108|51200000|Banques|51214000|Crédit agricole| ||Virement Unitair N°1800800093482  - Frais  - |0|0,22|||20180301||
+CA|Crédit Agricole||20180108|51200000|Banques|51214000|Crédit agricole|2017-206 Conseil|20171011|Cca International Fris11712sct00  - Virement En Votre Faveur  - Fris11712sct0018 - Cca International  -   |15789,00|0|||20180301||
+CA|Crédit Agricole||20180108|40100000|Fournisseurs|401EOL|Eolas|D-2018-0011 Web|20180108|Virement Emis  - Web Eolas Eolas Facture Heb17120  - Eolas Facture Heb1712003687  - 09/01/2018  - |301,81|0|J||20180301||
+CA|Crédit Agricole||20180108|42100000|Personnel - rémunérations dues|42100000|Personnel - rémunérations dues| FG||Virement Emis  - Web Alice Lousson Ndf Decembre A  - Ndf Decembre Alice  - 09/01/2018  - |86,02|0|C||20180301||
+CA|Crédit Agricole||20180108|40100000|Fournisseurs|401KAT|Katrien Sand-Servranckx|D-2017-0959 Web|20171205|Virement Emis  - Web Katrien Sand Facture 2017/9/  - Facture 2017/9/45  - 09/01/2018  - |152,00|0|A||20180301||
+CA|Crédit Agricole||20180108|42100000|Personnel - rémunérations dues|42100000|Personnel - rémunérations dues| FG||Virement Emis  - Web Laetitia Guibert Ndf Decembr  - Ndf Decembre Laetitia  - 09/01/2018  - |111,80|0|2017-2018 B||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|1,53|0|||20180301||
+AC|Journal des achats||20180101|60600000|Achats non stockés|60680000|Autres matières et fournitures|D-2018-0018 FG|20180101|D-2018-0018 : NDF Geoffroy Murat 1/2018 (FG)|26,54|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|0,87|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|1,53|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|0,80|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|0,52|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|0|338,34|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|4,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0016 EV|20180101|D-2018-0016 : NDF Geoffroy Murat 1/2018 (EV)|3,36|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0016 EV|20180101|D-2018-0016 : NDF Geoffroy Murat 1/2018 (EV)|1,90|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0016 EV|20180101|D-2018-0016 : NDF Geoffroy Murat 1/2018 (EV)|0,52|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0016 EV|20180101|D-2018-0016 : NDF Geoffroy Murat 1/2018 (EV)|0,34|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0016 EV|20180101|D-2018-0016 : NDF Geoffroy Murat 1/2018 (EV)|5,18|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0016 EV|20180101|D-2018-0016 : NDF Geoffroy Murat 1/2018 (EV)|6,50|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0016 EV|20180101|D-2018-0016 : NDF Geoffroy Murat 1/2018 (EV)|61,20|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0016 EV|20180101|D-2018-0016 : NDF Geoffroy Murat 1/2018 (EV)|61,20|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0016 EV|20180101|D-2018-0016 : NDF Geoffroy Murat 1/2018 (EV)|32,50|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0016 EV|20180101|D-2018-0016 : NDF Geoffroy Murat 1/2018 (EV)|9,50|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat|D-2018-0016 EV|20180101|D-2018-0016 : NDF Geoffroy Murat 1/2018 (EV)|0|308,35|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|55,00|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|9,37|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|8,68|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|7,67|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|6,63|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|15,97|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|30,91|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|55,00|0|||20180301||
+AC|Journal des achats||20180101|60600000|Achats non stockés|60640000|Achats fournitures administatives|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|46,77|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|45,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|45,00|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0017 Conseil|20180101|D-2018-0017 : NDF Geoffroy Murat 1/2018 (Conseil)|3,09|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|1,62|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|2,29|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|1,90|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|1,90|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|3,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|3,09|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|6,91|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|3,45|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0016 EV|20180101|D-2018-0016 : NDF Geoffroy Murat 1/2018 (EV)|126,15|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|0,98|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|0,31|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|0|161,86|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|0,35|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|0,46|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|0,69|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|0,60|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|8,24|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|9,50|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0018 FG|20180101|D-2018-0018 : NDF Geoffroy Murat 1/2018 (FG)|1,46|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0018 FG|20180101|D-2018-0018 : NDF Geoffroy Murat 1/2018 (FG)|1,18|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0018 FG|20180101|D-2018-0018 : NDF Geoffroy Murat 1/2018 (FG)|2,93|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0018 FG|20180101|D-2018-0018 : NDF Geoffroy Murat 1/2018 (FG)|3,33|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0018 FG|20180101|D-2018-0018 : NDF Geoffroy Murat 1/2018 (FG)|10,17|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0018 FG|20180101|D-2018-0018 : NDF Geoffroy Murat 1/2018 (FG)|5,64|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0018 FG|20180101|D-2018-0018 : NDF Geoffroy Murat 1/2018 (FG)|0,67|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0018 FG|20180101|D-2018-0018 : NDF Geoffroy Murat 1/2018 (FG)|0,56|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|11,72|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|9,50|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|16,18|0|||20180301||
+AC|Journal des achats||20180101|60700000|Achats de marchandises|607|Achats de marchandises|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|30,17|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat|D-2018-0018 FG|20180101|D-2018-0018 : NDF Geoffroy Murat 1/2018 (FG)|0|71,69|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0019 FC|20180101|D-2018-0019 : NDF Geoffroy Murat 1/2018 (FC)|49,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0018 FG|20180101|D-2018-0018 : NDF Geoffroy Murat 1/2018 (FG)|19,21|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|45,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|55,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|52,00|0|||20180301||
+CA|Crédit Agricole||20180109|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Carte Business I N°1800900057578  - Cotisation  - |54,70|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|58,30|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|61,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|46,34|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|45,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|18,40|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|18,77|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|26,91|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|34,00|0|||20180301||
+VE|Journal des ventes||20180109|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-004 Web|20180109|2018-004 : Licences Panorama|0|500,00|||20180301||
+VE|Journal des ventes||20180109|41100000|Clients|411SPFA|SPF Affaires étrangères|2018-004 Web|20180109|2018-004 : Licences Panorama|500,00|0|||20180301||
+CA|Crédit Agricole||20180109|51200000|Banques|51214000|Crédit agricole| ||Eng Garantie     N°1800900057579  - Prelevement  - |0|29,48|||20180301||
+CA|Crédit Agricole||20180109|40100000|Fournisseurs|401ADOBE|Adobe|D-2017-1015 FG|20171107|Paypal (europe) S.A.R.L. Et Cie., S  - Prelevmnt  - 1002345967832 Paypal  - Lu96zzz0000000000000000058  - 4ajj224myykr2  - |24,99|0|Q||20180301||
+CA|Crédit Agricole||20180109|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Eng Garantie     N°1800900057579  - Prelevement  - |29,48|0|||20180301||
+CA|Crédit Agricole||20180109|64400000|Rémunération Gérant|64411000|Loi Madelin Gérante| ||V - Predica  - Prelevmnt  - De88196727669946/01/ucp132180103/pr  - Edicaaccordance Multisupports  - Prime Period. Ucmad1ucmad1  - Fr88zzz237434  - /81000574659/26102013/01  - |32,75|0|||20180301||
+CA|Crédit Agricole||20180109|51200000|Banques|51214000|Crédit agricole| ||Carte Business I N°1800900057578  - Cotisation  - |0|54,70|||20180301||
+CA|Crédit Agricole||20180109|51200000|Banques|51214000|Crédit agricole|D-2017-1015 FG|20171107|Paypal (europe) S.A.R.L. Et Cie., S  - Prelevmnt  - 1002345967832 Paypal  - Lu96zzz0000000000000000058  - 4ajj224myykr2  - |0|24,99|||20180301||
+VE|Journal des ventes||20180109|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-005 Web|20180109|2018-005 : Licences Panorama|0|600,00|||20180301||
+VE|Journal des ventes||20180109|41100000|Clients|411SERV|Service Fédéral des Pensions|2018-005 Web|20180109|2018-005 : Licences Panorama|600,00|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|0|388,02|||20180301||
+CA|Crédit Agricole||20180109|51200000|Banques|51214000|Crédit agricole| ||V - Predica  - Prelevmnt  - De88196727669946/01/ucp132180103/pr  - Edicaaccordance Multisupports  - Prime Period. Ucmad1ucmad1  - Fr88zzz237434  - /81000574659/26102013/01  - |0|32,75|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|17,27|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|55,00|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|0,50|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|1,35|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|8,33|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|13,55|0|||20180301||
+AC|Journal des achats||20180101|60600000|Achats non stockés|60627000|Carburant|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|41,28|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|1,40|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|2,50|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|8,26|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|8,09|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|13,15|0|||20180301||
+AC|Journal des achats||20180101|60600000|Achats non stockés|60630000|Achats de petit équipement|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|6,98|0|||20180301||
+AC|Journal des achats||20180101|60600000|Achats non stockés|60630000|Achats de petit équipement|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|49,01|0|||20180301||
+AC|Journal des achats||20180101|60600000|Achats non stockés|60627000|Carburant|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|41,67|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|1,73|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|2,69|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|4,56|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|6,15|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|1,73|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|1,40|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|50,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|56,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-0015 FG|20180101|D-2018-0015 : NDF Geoffroy Murat 1/2018 (FG)|99,10|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|0|565,35|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0014 FC|20180101|D-2018-0014 : NDF Geoffroy Murat 1/2018 (FC)|0,95|0|||20180301||
+CA|Crédit Agricole||20180110|40100000|Fournisseurs|401LAP|La Poste Groupe|D-2018-0023 Conseil|20180109|La Poste 731710 Montmelian 09/01  - Paiement Par Carte  - |32,80|0|I||20180301||
+CA|Crédit Agricole||20180110|16400000|Emprunts auprès des établissements de crédit|16460000|Emprunt CRCA 2015| ||00000808048 Capital     10/01/18  - Remboursement De Pret  - |989,31|0|||20180301||
+CA|Crédit Agricole||20180110|66100000|Charges d'intérêts|66110000|Intérets des emprunts| ||00000808048 Interets    10/01/18  - Remboursement De Pret  - |29,34|0|||20180301||
+CA|Crédit Agricole||20180110|51200000|Banques|51214000|Crédit agricole|D-2018-0024 FG|20180109|Infogreffe Cb Vincennes Ce 09/01  - Paiement Par Carte  - |0|3,70|||20180301||
+CA|Crédit Agricole||20180110|51200000|Banques|51214000|Crédit agricole| ||00000808048 Interets    10/01/18  - Remboursement De Pret  - |0|29,34|||20180301||
+CA|Crédit Agricole||20180110|40100000|Fournisseurs|401LAP|La Poste Groupe|D-2018-0022 FG|20180111|La Poste 731710 Montmelian 09/01  - Paiement Par Carte  - |26,40|0|H||20180301||
+CA|Crédit Agricole||20180110|51200000|Banques|51214000|Crédit agricole|D-2018-0022 FG|20180111|La Poste 731710 Montmelian 09/01  - Paiement Par Carte  - |0|26,40|||20180301||
+CA|Crédit Agricole||20180110|51200000|Banques|51214000|Crédit agricole| ||00000808048 Capital     10/01/18  - Remboursement De Pret  - |0|989,31|||20180301||
+CA|Crédit Agricole||20180110|40100000|Fournisseurs|401DIVER|FOURNISSEUR DIVERS|D-2018-0024 FG|20180109|Infogreffe Cb Vincennes Ce 09/01  - Paiement Par Carte  - |3,70|0|||20180301||
+CA|Crédit Agricole||20180110|51200000|Banques|51214000|Crédit agricole|D-2018-0023 Conseil|20180109|La Poste 731710 Montmelian 09/01  - Paiement Par Carte  - |0|32,80|||20180301||
+AC|Journal des achats||20180105|60600000|Achats non stockés|60627000|Carburant|D-2018-0025 FG|20180105|D-2018-0025 : Carburant Intermarche 5/01 CB|54,67|0|A||20180301||
+AC|Journal des achats||20180109|40100000|Fournisseurs|401DIVER|FOURNISSEUR DIVERS|D-2018-0024 FG|20180109|D-2018-0024 : Infogreffe - demande extrait Kbis - 3,80e CB|0|3,70|||20180301||
+AC|Journal des achats||20180109|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0024 FG|20180109|D-2018-0024 : Infogreffe - demande extrait Kbis - 3,80e CB|0,61|0|B||20180301||
+AC|Journal des achats||20180105|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0025 FG|20180105|D-2018-0025 : Carburant Intermarche 5/01 CB|10,93|0|C||20180301||
+AC|Journal des achats||20180109|60600000|Achats non stockés|60640000|Achats fournitures administatives|D-2018-0024 FG|20180109|D-2018-0024 : Infogreffe - demande extrait Kbis - 3,80e CB|3,09|0|D||20180301||
+AC|Journal des achats||20180102|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0027 FG|20180102|D-2018-0027 : Box free 2/01|5,00|0|G||20180301||
+AC|Journal des achats||20180111|40100000|Fournisseurs|401CES|CES Point S centre d'équipement savoyard|D-2018-0026 FG|20180111|D-2018-0026 : ces 14,60e CB|0|14,60|B||20180301||
+AC|Journal des achats||20180102|62600000|Frais postaux et de télécommunications|62621000|Free 04 79 33 69 94|D-2018-0027 FG|20180102|D-2018-0027 : Box free 2/01|24,99|0|B||20180301||
+AC|Journal des achats||20180111|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0026 FG|20180111|D-2018-0026 : ces 14,60e CB|2,43|0|D||20180301||
+AC|Journal des achats||20180111|61500000|Entretien et réparations|61560000|Maintenance|D-2018-0026 FG|20180111|D-2018-0026 : ces 14,60e CB|12,17|0|A||20180301||
+AC|Journal des achats||20180105|40100000|Fournisseurs|401INT|intermarche chapareillan|D-2018-0025 FG|20180105|D-2018-0025 : Carburant Intermarche 5/01 CB|0|65,60|B||20180301||
+CA|Crédit Agricole||20180111|51200000|Banques|51214000|Crédit agricole| ||C.I.P.A.V  - Prelevmnt  - 20091134615389  - Fr98zzz423785  - Rumci2009113461538915112015  - |0|918,09|||20180301||
+AC|Journal des achats||20180102|40100000|Fournisseurs|401ILIAD|Iliad - maison-mère de Free|D-2018-0027 FG|20180102|D-2018-0027 : Box free 2/01|0|29,99|C||20180301||
+AC|Journal des achats||20180106|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-0021 Conseil|20180106|D-2018-0021 : Area autoroutes facture 217.38|217,38|0|A||20180301||
+CA|Crédit Agricole||20180111|64400000|Rémunération Gérant|64410003|CIPAV gérante| ||C.I.P.A.V  - Prelevmnt  - 20091134615389  - Fr98zzz423785  - Rumci2009113461538915112015  - |918,09|0|||20180301||
+CA|Crédit Agricole||20180111|51200000|Banques|51214000|Crédit agricole|2017-231 FC|20171027|Sarl Pegase Partners  - Virement En Votre Faveur  - Fact 2017-231 -  |200,00|0|||20180301||
+CA|Crédit Agricole||20180111|41100000|Clients|411PÉ|Pégase Partners|2017-231 FC|20171027|Sarl Pegase Partners  - Virement En Votre Faveur  - Fact 2017-231 -  |0|200,00|A||20180301||
+AC|Journal des achats||20180106|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0021 Conseil|20180106|D-2018-0021 : Area autoroutes facture 217.38|43,47|0|A||20180301||
+AC|Journal des achats||20180106|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-0021 Conseil|20180106|D-2018-0021 : Area autoroutes facture 217.38|4,20|0|A||20180301||
+AC|Journal des achats||20180109|62600000|Frais postaux et de télécommunications|62610000|Frais d'affranchissements|D-2018-0023 Conseil|20180109|D-2018-0023 : la poste 11/01 CB 32?80|31,20|0|B||20180301||
+AC|Journal des achats||20180111|40100000|Fournisseurs|401LAP|La Poste Groupe|D-2018-0022 FG|20180111|D-2018-0022 : Facture 26,40 du 9/01 CB|0|26,40|H||20180301||
+AC|Journal des achats||20180111|62600000|Frais postaux et de télécommunications|62610000|Frais d'affranchissements|D-2018-0022 FG|20180111|D-2018-0022 : Facture 26,40 du 9/01 CB|26,40|0|A||20180301||
+AC|Journal des achats||20180106|40100000|Fournisseurs|401AREA|area|D-2018-0021 Conseil|20180106|D-2018-0021 : Area autoroutes facture 217.38|0|265,05|Z||20180301||
+AC|Journal des achats||20180109|62600000|Frais postaux et de télécommunications|62610000|Frais d'affranchissements|D-2018-0023 Conseil|20180109|D-2018-0023 : la poste 11/01 CB 32?80|1,60|0|B||20180301||
+AC|Journal des achats||20180109|40100000|Fournisseurs|401LAP|La Poste Groupe|D-2018-0023 Conseil|20180109|D-2018-0023 : la poste 11/01 CB 32?80|0|32,80|I||20180301||
+VE|Journal des ventes||20180111|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-006 Web|20180111|2018-006 : Licences Panorama|0|200,00|A||20180301||
+VE|Journal des ventes||20180111|41100000|Clients|411SPFD|SPF de l'Intérieur|2018-006 Web|20180111|2018-006 : Licences Panorama|200,00|0|A||20180301||
+VE|Journal des ventes||20180111|41100000|Clients|411SPFE|SPF Economie, PME, Classes Moyennes et Energie|2018-007 Web|20180111|2018-007 : Licences Panorama|300,00|0|A||20180301||
+VE|Journal des ventes||20180111|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-007 Web|20180111|2018-007 : Licences Panorama|0|300,00|A||20180301||
+CA|Crédit Agricole||20180112|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Virement Unitair N°1801200119205  - Frais  - |0,22|0|||20180301||
+CA|Crédit Agricole||20180112|41100000|Clients|411SPFSS|SPF Sécurité Sociale|2017-262 Web|20171214|Soc Zekerheid - Sec Soc 24002000  - Virement En Votre Faveur  - 2017-262 - 240020000002932018  -   |0|100,00|B||20180301||
+CAL|Crédit Agricole||20180112|51200000|Banques|512|Banques| ||Virement Emis  - Web Nicomak Treso  - Treso  - 12/01/2018  - |0|1500,00|||20180301||
+CA|Crédit Agricole||20180112|40100000|Fournisseurs|401FRA|France Telecom Orange|D-2018-0012 FG|20180102|Orange  - Prelevmnt  - Votre Abonnement Fixe: 04xxxxx629 (  - Facture: Xxxxx6297j5) - P  - Fr18zzz002305  - M0036781040  - |51,56|0|A||20180301||
+CA|Crédit Agricole||20180112|51200000|Banques|51214000|Crédit agricole|D-2017-1020 FC|20171219|Virement Emis  - Web Futurskill Facture 1712243  - Facture 1712243  - 12/01/2018  - |0|85,68|||20180301||
+CA|Crédit Agricole||20180112|51200000|Banques|51214000|Crédit agricole|2017-262 Web|20171214|Soc Zekerheid - Sec Soc 24002000  - Virement En Votre Faveur  - 2017-262 - 240020000002932018  -   |100,00|0|||20180301||
+CA|Crédit Agricole||20180112|51200000|Banques|51214000|Crédit agricole|2017-281 FC|20171222|Eesc - Gem 2000001399  - Virement En Votre Faveur  - Virement - 2000001399  -   |2200,00|0|||20180301||
+CA|Crédit Agricole||20180112|51200000|Banques|51214000|Crédit agricole| ||Virement En Votre Faveur  - Treso Nicomak  - Treso -  |1500,00|0|||20180301||
+CAL|Crédit Agricole||20180112|58100000|Virement de fonds|58100000|Virement de fonds| ||Virement Emis  - Web Nicomak Treso  - Treso  - 12/01/2018  - |1500,00|0|||20180301||
+CA|Crédit Agricole||20180112|51200000|Banques|51214000|Crédit agricole| ||Virement Unitair N°1801200119205  - Frais  - |0|0,22|||20180301||
+CA|Crédit Agricole||20180112|40100000|Fournisseurs|401FUT|Futurskill|D-2017-1020 FC|20171219|Virement Emis  - Web Futurskill Facture 1712243  - Facture 1712243  - 12/01/2018  - |85,68|0|D||20180301||
+CA|Crédit Agricole||20180112|58100000|Virement de fonds|58100000|Virement de fonds| ||Virement En Votre Faveur  - Treso Nicomak  - Treso -  |0|1500,00|||20180301||
+CA|Crédit Agricole||20180112|51200000|Banques|51214000|Crédit agricole|D-2018-0012 FG|20180102|Orange  - Prelevmnt  - Votre Abonnement Fixe: 04xxxxx629 (  - Facture: Xxxxx6297j5) - P  - Fr18zzz002305  - M0036781040  - |0|51,56|||20180301||
+CA|Crédit Agricole||20180112|41100000|Clients|411GRENO|Grenoble Ecole de Management GEM|2017-281 FC|20171222|Eesc - Gem 2000001399  - Virement En Votre Faveur  - Virement - 2000001399  -   |0|2200,00|B||20180301||
+CA|Crédit Agricole||20180115|41100000|Clients|411CAPA|CAPAC|2018-002 Web|20180103|Capac - Hvw 3402 48  - Virement En Votre Faveur  - 2018-002 - 3402           48  -   |0|600,00|A||20180301||
+CA|Crédit Agricole||20180115|51200000|Banques|51214000|Crédit agricole|D-2018-0021 Conseil|20180106|Area  - Prelevmnt  - A.R.E.A./contrat 030284642/17122251  - 78/??rep250030284642  - Fr47zzz128465  - ??rep250030284642  - |0|265,05|||20180301||
+CA|Crédit Agricole||20180115|51200000|Banques|51214000|Crédit agricole| ||Aviva Assurances  - Prelevmnt  - Prlv Aviva Assurance Nicomak 009013  - 15012018  - Fr63zzz205389  - Vaaiv3063880  - |0|118,25|||20180301||
+CA|Crédit Agricole||20180115|51200000|Banques|51214000|Crédit agricole|D-2018-0057 FG|20180110|Backmarket 75 Paris        10/01  - Paiement Par Carte  - |0|250,00|||20180301||
+CA|Crédit Agricole||20180115|51200000|Banques|51214000|Crédit agricole|D-2018-0031 FG|20180104|La Poste Courrier  - Prelevmnt  - Fac N49250663     200012842818 Clt0  - 001947354 Rum  Cou5406755  - Fr93cou111341  - Cou5406755  - |0|17,08|||20180301||
+CA|Crédit Agricole||20180115|40100000|Fournisseurs|401OVH|OVH|D-2018-0054 FG|20180101|Ovh Sas  - Prelevmnt  - Payment Order 82992814  - Fr90zzz460983  - Mb28628-Ovh-Fr-1  - |8,93|0|N||20180301||
+CA|Crédit Agricole||20180115|40100000|Fournisseurs|401AREA|area|D-2018-0021 Conseil|20180106|Area  - Prelevmnt  - A.R.E.A./contrat 030284642/17122251  - 78/??rep250030284642  - Fr47zzz128465  - ??rep250030284642  - |265,05|0|Z||20180301||
+CA|Crédit Agricole||20180115|40100000|Fournisseurs|401DIVER|FOURNISSEUR DIVERS|D-2018-0057 FG|20180110|Backmarket 75 Paris        10/01  - Paiement Par Carte  - |250,00|0|DX||20180301||
+CA|Crédit Agricole||20180115|61600000|Primes d'assurances|61610000|Assurance multirisque| ||Aviva Assurances  - Prelevmnt  - Prlv Aviva Assurance Nicomak 009013  - 15012018  - Fr63zzz205389  - Vaaiv3063880  - |118,25|0|||20180301||
+CA|Crédit Agricole||20180115|40100000|Fournisseurs|401LAP|La Poste Groupe|D-2018-0031 FG|20180104|La Poste Courrier  - Prelevmnt  - Fac N49250663     200012842818 Clt0  - 001947354 Rum  Cou5406755  - Fr93cou111341  - Cou5406755  - |17,08|0|G||20180301||
+CA|Crédit Agricole||20180115|51200000|Banques|51214000|Crédit agricole|D-2018-0054 FG|20180101|Ovh Sas  - Prelevmnt  - Payment Order 82992814  - Fr90zzz460983  - Mb28628-Ovh-Fr-1  - |0|8,93|||20180301||
+CA|Crédit Agricole||20180115|51200000|Banques|51214000|Crédit agricole|2018-002 Web|20180103|Capac - Hvw 3402 48  - Virement En Votre Faveur  - 2018-002 - 3402           48  -   |600,00|0|||20180301||
+CA|Crédit Agricole||20180116|43100000|Sécurité sociale|43100000|Sécurité sociale| ||Urssaf Rhone Alpes  - Prelevmnt  - Ur 827000002132309213    Oct 177948  - 46501000150118  - Fr55zzz143065  - 143065512511577-----2000001875433  - |6183,00|0|||20180301||
+CA|Crédit Agricole||20180116|43100000|Sécurité sociale|43100000|Sécurité sociale| ||Urssaf Rhone Alpes  - Prelevmnt  - Ur 827000002132309213    Dec 177948  - 46501000150118  - Fr55zzz143065  - 143065512511577-----2000001875433  - |6683,00|0|||20180301||
+CA|Crédit Agricole||20180116|41100000|Clients|411ESA|ESA|2017-275 |20171218|Agence Spatiale Europeenne 22000  - Virement En Votre Faveur  - 2017-274-08.01.18,2017-275-08.01.18 - 2200001804  -   |0|7800,00|2017 2018 A||20180301||
+CA|Crédit Agricole||20180116|51200000|Banques|51214000|Crédit agricole| ||Urssaf Rhone Alpes  - Prelevmnt  - Ur 827000002132309213    Dec 177948  - 46501000150118  - Fr55zzz143065  - 143065512511577-----2000001875433  - |0|6683,00|||20180301||
+CA|Crédit Agricole||20180116|51200000|Banques|51214000|Crédit agricole| ||Urssaf Rhone Alpes  - Prelevmnt  - Ur 827000002132309213    Nov 177948  - 46501000150118  - Fr55zzz143065  - 143065512511577-----2000001875433  - |0|5732,00|||20180301||
+CA|Crédit Agricole||20180116|51200000|Banques|51214000|Crédit agricole| ||Urssaf Rhone Alpes  - Prelevmnt  - Ur 827000002132309213    Oct 177948  - 46501000150118  - Fr55zzz143065  - 143065512511577-----2000001875433  - |0|6183,00|||20180301||
+CA|Crédit Agricole||20180116|51200000|Banques|51214000|Crédit agricole|2017-275 |20171218|Agence Spatiale Europeenne 22000  - Virement En Votre Faveur  - 2017-274-08.01.18,2017-275-08.01.18 - 2200001804  -   |7800,00|0|||20180301||
+CA|Crédit Agricole||20180116|43100000|Sécurité sociale|43100000|Sécurité sociale| ||Urssaf Rhone Alpes  - Prelevmnt  - Ur 827000002132309213    Nov 177948  - 46501000150118  - Fr55zzz143065  - 143065512511577-----2000001875433  - |5732,00|0|||20180301||
+CA|Crédit Agricole||20180118|40100000|Fournisseurs|401ADOBE|Adobe|D-2018-0055 Conseil|20180125|Adobe Ps Creative Cl 044-2 18/01  - Paiement Par Carte|17,99|0|R||20180301||
+CA|Crédit Agricole||20180118|41100000|Clients|411ISG|ISG école de management|2017-259 FI|20171213|Asso.Iseg Lyon Instit Sup Europe  - Virement En Votre Faveur  - Nicomark - 259|0|2500,80|||20180301||
+CA|Crédit Agricole||20180118|51200000|Banques|51214000|Crédit agricole|D-2018-0055 Conseil|20180125|Adobe Ps Creative Cl 044-2 18/01  - Paiement Par Carte|0|17,99|||20180301||
+CA|Crédit Agricole||20180118|51200000|Banques|51214000|Crédit agricole|D-2018-0033 FG|20180119|Mgp*mangopay Paris 17/01  - Paiement Par Carte|0|150,00|||20180301||
+CA|Crédit Agricole||20180118|40100000|Fournisseurs|4011ET1I|1&1 INTERNET SARL|D-2018-0029 Web|20180113|1et1 Internet Sarl  - Prelevmnt  - Num-Cl. K26583296/ Fact. 2025100084 - 59 - Fr70zzz614312 - 0070000100418|65,94|0|R||20180301||
+CA|Crédit Agricole||20180118|51200000|Banques|51214000|Crédit agricole|2017-279 Web|20171219|Santepublique-Volksgezond 250020  - Virement En Votre Faveur  - 2017-279 - 250020000036362018|100,00|0|||20180301||
+CA|Crédit Agricole||20180118|51200000|Banques|51214000|Crédit agricole|2017-259 FI|20171213|Asso.Iseg Lyon Instit Sup Europe  - Virement En Votre Faveur  - Nicomark - 259|2500,80|0|||20180301||
+CA|Crédit Agricole||20180118|40100000|Fournisseurs|401CDISC|CDISCOUNT|D-2018-0058 FG|20180117|Cdiscount Borde2509019/ 17/01  - Paiement Par Carte|744,97|0|A||20180301||
+CA|Crédit Agricole||20180118|40100000|Fournisseurs|401MAIM|Maimouna Leye|D-2018-0033 FG|20180119|Mgp*mangopay Paris 17/01  - Paiement Par Carte|150,00|0|A||20180301||
+CA|Crédit Agricole||20180118|51200000|Banques|51214000|Crédit agricole|D-2018-0029 Web|20180113|1et1 Internet Sarl  - Prelevmnt  - Num-Cl. K26583296/ Fact. 2025100084 - 59 - Fr70zzz614312 - 0070000100418|0|65,94|||20180301||
+CA|Crédit Agricole||20180118|41100000|Clients|411SPFS|SPF Santé publique Sécurité de la Chaîne alimentaire et Environnement|2017-279 Web|20171219|Santepublique-Volksgezond 250020  - Virement En Votre Faveur  - 2017-279 - 250020000036362018|0|100,00|||20180301||
+AC|Journal des achats||20180115|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-0028 FG|20180115|D-2018-0028 : Area pontcharra crolles|2,42|0|B||20180301||
+AC|Journal des achats||20180115|40100000|Fournisseurs|401AREA|area|D-2018-0028 FG|20180115|D-2018-0028 : Area pontcharra crolles|0|2,90|Y||20180301||
+CA|Crédit Agricole||20180118|51200000|Banques|51214000|Crédit agricole|D-2018-0058 FG|20180117|Cdiscount Borde2509019/ 17/01  - Paiement Par Carte|0|744,97|||20180301||
+AC|Journal des achats||20180115|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0028 FG|20180115|D-2018-0028 : Area pontcharra crolles|0,48|0|N||20180301||
+AC|Journal des achats||20180103|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0036 FG|20180103|D-2018-0036 : Reservation salle club experts birdoffice 180e|30,00|0|||20180301||
+AC|Journal des achats||20180103|61300000|Locations|61330000|Location immobilière ponctuelle (pour formation ou réunion)|D-2018-0036 FG|20180103|D-2018-0036 : Reservation salle club experts birdoffice 180e|150,00|0|||20180301||
+AC|Journal des achats||20180119|40100000|Fournisseurs|401MAIM|Maimouna Leye|D-2018-0033 FG|20180119|D-2018-0033 : Recherche de leads 150e|0|150,00|A||20180301||
+AC|Journal des achats||20180104|40100000|Fournisseurs|401LAP|La Poste Groupe|D-2018-0031 FG|20180104|D-2018-0031 : frais affranchissement la poste 17,08|0|17,08|G||20180301||
+AC|Journal des achats||20180119|62200000|Rémunérations d'intermédiaires et honoraires|62265000|Autres honoraires|D-2018-0033 FG|20180119|D-2018-0033 : Recherche de leads 150e|150,00|0|||20180301||
+AC|Journal des achats||20180119|40100000|Fournisseurs|401FEL|Felix Luttiau-Salmon|D-2018-0032 FG|20180119|D-2018-0032 : Recherche de leads 150e|0|150,00|B||20180301||
+CA|Crédit Agricole||20180119|41100000|Clients|411BPCEI|BPCE IT|2017-268 FC|20171215|Bpce It Bp019769  - Virement En Votre Faveur  - 2017-268 - Bp019769|0|171,43|||20180301||
+CA|Crédit Agricole||20180119|51200000|Banques|51214000|Crédit agricole|2017-268 FC|20171215|Bpce It Bp019769  - Virement En Votre Faveur  - 2017-268 - Bp019769|171,43|0|||20180301||
+AC|Journal des achats||20180119|62200000|Rémunérations d'intermédiaires et honoraires|62265000|Autres honoraires|D-2018-0032 FG|20180119|D-2018-0032 : Recherche de leads 150e|150,00|0|C||20180301||
+CA|Crédit Agricole||20180119|40100000|Fournisseurs|401FEL|Felix Luttiau-Salmon|D-2018-0032 FG|20180119|Mgp*mangopay Paris 18/01  - Paiement Par Carte|150,00|0|B||20180301||
+CA|Crédit Agricole||20180119|40100000|Fournisseurs|401AREA|area|D-2016-673 FG|20160824|Area Autoroute Bron 18/01  - Paiement Par Carte|2,90|0|AA||20180301||
+CA|Crédit Agricole||20180119|51200000|Banques|51214000|Crédit agricole|D-2018-0032 FG|20180119|Mgp*mangopay Paris 18/01  - Paiement Par Carte|0|150,00|||20180301||
+CA|Crédit Agricole||20180119|51200000|Banques|51214000|Crédit agricole|D-2016-673 FG|20160824|Area Autoroute Bron 18/01  - Paiement Par Carte|0|2,90|||20180301||
+AC|Journal des achats||20180103|40100000|Fournisseurs|401BIR|Bird Office|D-2018-0036 FG|20180103|D-2018-0036 : Reservation salle club experts birdoffice 180e|0|180,00|2017 2018 D||20180301||
+AC|Journal des achats||20180113|40100000|Fournisseurs|4011ET1I|1&1 INTERNET SARL|D-2018-0029 Web|20180113|D-2018-0029 : Renouvellement Noms de domaine 1&1 65,94e|0|65,94|R||20180301||
+AC|Journal des achats||20180113|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0029 Web|20180113|D-2018-0029 : Renouvellement Noms de domaine 1&1 65,94e|10,99|0|P||20180301||
+AC|Journal des achats||20180111|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0030 Conseil|20180111|D-2018-0030 : Julie Preciat prestation de decembre|560,00|0|V||20180301||
+AC|Journal des achats||20180111|40100000|Fournisseurs|401JUL|Julie Preciat|D-2018-0030 Conseil|20180111|D-2018-0030 : Julie Preciat prestation de decembre|0|3360,00|K||20180301||
+AC|Journal des achats||20180104|62600000|Frais postaux et de télécommunications|62610000|Frais d'affranchissements|D-2018-0031 FG|20180104|D-2018-0031 : frais affranchissement la poste 17,08|17,08|0|E||20180301||
+AC|Journal des achats||20180113|62600000|Frais postaux et de télécommunications|62680000|1&1 hébergement|D-2018-0029 Web|20180113|D-2018-0029 : Renouvellement Noms de domaine 1&1 65,94e|54,95|0|A||20180301||
+AC|Journal des achats||20180111|60400000|Achats d'études et prestations de services|60410100|Sous-traitance conseil|D-2018-0030 Conseil|20180111|D-2018-0030 : Julie Preciat prestation de decembre|2800,00|0|B||20180301||
+VE|Journal des ventes||20180122|70600000|Prestations de services|70600310|Outils formation continue|2018-014 FC|20180122|2018-014 : Cycle supérieur de management 2017-Journée de regroupement|0|4290,00|||20180301||
+VE|Journal des ventes||20180122|41100000|Clients|411INTEP|INTEPF|2018-014 FC|20180122|2018-014 : Cycle supérieur de management 2017-Journée de regroupement|4290,00|0|||20180301||
+VE|Journal des ventes||20180122|70600000|Prestations de services|70600310|Outils formation continue|2018-013 FC|20180122|2018-013 : Cycle sup-facture-séminaire inaugural|0|6200,00|||20180301||
+VE|Journal des ventes||20180122|41100000|Clients|411INTEP|INTEPF|2018-012 FC|20180122|2018-012 : Cycle supérieur de management 2017-séminaire de clôture|4382,05|0|||20180301||
+VE|Journal des ventes||20180122|70600000|Prestations de services|70600310|Outils formation continue|2018-012 FC|20180122|2018-012 : Cycle supérieur de management 2017-séminaire de clôture|0|4382,05|||20180301||
+VE|Journal des ventes||20180122|70600000|Prestations de services|70600310|Outils formation continue|2018-011 FC|20180122|2018-011 : Formation nouvelles pratiques managériales service petite enfance|0|1275,00|||20180301||
+VE|Journal des ventes||20180122|41100000|Clients|411TRAP|Mairie de Trappes en Yvelines|2018-011 FC|20180122|2018-011 : Formation nouvelles pratiques managériales service petite enfance|1275,00|0|||20180301||
+AC|Journal des achats||20180105|60600000|Achats non stockés|60627000|Carburant|D-2018-0040 FG|20180105|D-2018-0040 : Carburant|54,67|0|||20180301||
+VE|Journal des ventes||20180122|41100000|Clients|411INTEP|INTEPF|2018-013 FC|20180122|2018-013 : Cycle sup-facture-séminaire inaugural|6200,00|0|||20180301||
+VE|Journal des ventes||20180122|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-010 Conseil|20180122|2018-010 : AO chef de service - coaching|0|1275,00|||20180301||
+CA|Crédit Agricole||20180122|51200000|Banques|51214000|Crédit agricole| ||Cpte Sce Pros Pf N_1802200041435  - Cotisation|0|39,05|||20180301||
+CAL|Crédit Agricole||20180122|51200000|Banques|512|Banques| ||Virement Emis  - Web Nicomak Treso Interne  - Treso Interne - 22/01/2018|0|13507,00|||20180301||
+CA|Crédit Agricole||20180122|58100000|Virement de fonds|58100000|Virement de fonds| ||Virement En Votre Faveur  - Treso Interne Nicomak  - Treso Interne|0|13507,00|||20180301||
+CA|Crédit Agricole||20180122|62700000|Services bancaires et assimilés|627|Services bancaires et assimilés| ||Cpte Sce Pros Pf N_1802200041435  - Cotisation|39,05|0|||20180301||
+CAL|Crédit Agricole||20180122|58100000|Virement de fonds|58100000|Virement de fonds| ||Virement Emis  - Web Nicomak Treso Interne  - Treso Interne - 22/01/2018|13507,00|0|||20180301||
+AC|Journal des achats||20180105|40100000|Fournisseurs|401INT|intermarche chapareillan|D-2018-0040 FG|20180105|D-2018-0040 : Carburant|0|65,60|||20180301||
+CA|Crédit Agricole||20180122|51200000|Banques|51214000|Crédit agricole| ||Virement En Votre Faveur  - Treso Interne Nicomak  - Treso Interne|13507,00|0|||20180301||
+VE|Journal des ventes||20180122|41100000|Clients|411HOP|Hopital Lucien Hussel / Centre Hospitalier (CH) - Vienne|2018-010 Conseil|20180122|2018-010 : AO chef de service - coaching|1275,00|0|||20180301||
+AC|Journal des achats||20180105|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0040 FG|20180105|D-2018-0040 : Carburant|10,93|0|||20180301||
+AC|Journal des achats||20180123|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|AF-2018-001 FG|20180123|AF-2018-001 : Annule depense D-2017-1048 saisie 2 fois|0|48,25|||20180301||
+CA|Crédit Agricole||20180123|58100000|Virement de fonds|58100000|Virement de fonds| ||Nicomak 032018022474317110000001  - Virement En Votre Faveur  - Treso Interne - 032018022474317110000001|0|5000,00|||20180301||
+AC|Journal des achats||20180123|61500000|Entretien et réparations|61560000|Maintenance|AF-2018-001 FG|20180123|AF-2018-001 : Annule depense D-2017-1048 saisie 2 fois|0|241,35|||20180301||
+AC|Journal des achats||20180123|40100000|Fournisseurs|401CES|CES Point S centre d'équipement savoyard|AF-2018-001 FG|20180123|AF-2018-001 : Annule depense D-2017-1048 saisie 2 fois|289,60|0|2017,2018, A||20180301||
+CA|Crédit Agricole||20180123|51200000|Banques|51214000|Crédit agricole| ||Nicomak 032018022474317110000001  - Virement En Votre Faveur  - Treso Interne - 032018022474317110000001|5000,00|0|||20180301||
+CA|Crédit Agricole|8|20180124|51200000|Banques|51214000|Crédit agricole|D-2018-0059 FG|20180122|Msft * Msbill. 22/01  - Paiement Par Carte|0|8,80|||20180301||
+CA|Crédit Agricole|8|20180124|40100000|Fournisseurs|401MIC|Microsoft|D-2018-0059 FG|20180122|Msft * Msbill. 22/01  - Paiement Par Carte|8,80|0|G||20180301||
+CA|Crédit Agricole||20180125|51200000|Banques|51214000|Crédit agricole|2017-264 FI|20171214|Esc Dijon - Bourgogne Bsb2018 01  - Virement En Votre Faveur  - Bsb2018 01 24|844,61|0|||20180301||
+CA|Crédit Agricole||20180125|44500000|Etat - Taxes sur le chiffre d'affaires|4455|Taxes sur le chiffre d'affaires à décaisser| ||Dgfip  - Prelevmnt  - Tva-012018-3310ca3 - Fr46zzz005002 - 512511577dgfip20150cluoaig9nassb|27237,00|0|||20180301||
+AC|Journal des achats||20180104|61300000|Locations|61320000|Locations Bureaux Savoie|D-2018-0042 FG|20180104|D-2018-0042 : Loyer 1er trimestre|3000,00|0|||20180301||
+AC|Journal des achats||20180104|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0042 FG|20180104|D-2018-0042 : Loyer 1er trimestre|600,00|0|||20180301||
+CA|Crédit Agricole||20180125|40100000|Fournisseurs|401BOXTA|BOXTALE|D-2018-0056 FG|20180124|Paypal (europe) S.A.R.L. Et Cie., S  - Prelevmnt  - 1002449686125 Paypal - Lu96zzz0000000000000000058 - 4ajj224myykr2|13,78|0|A||20180301||
+CA|Crédit Agricole||20180125|51200000|Banques|51214000|Crédit agricole|D-2018-0056 FG|20180124|Paypal (europe) S.A.R.L. Et Cie., S  - Prelevmnt  - 1002449686125 Paypal - Lu96zzz0000000000000000058 - 4ajj224myykr2|0|13,78|||20180301||
+CA|Crédit Agricole||20180125|41100000|Clients|411ESCD|ESC Djon|2017-264 FI|20171214|Esc Dijon - Bourgogne Bsb2018 01  - Virement En Votre Faveur  - Bsb2018 01 24|0|844,61|||20180301||
+CA|Crédit Agricole||20180125|51200000|Banques|51214000|Crédit agricole| ||Dgfip  - Prelevmnt  - Tva-012018-3310ca3 - Fr46zzz005002 - 512511577dgfip20150cluoaig9nassb|0|27237,00|||20180301||
+CA|Crédit Agricole||20180125|41100000|Clients|411VIN|Vinci Construction|2017-252 FC|20171206|Vinci Construction Grands Projet  - Virement En Votre Faveur  - Vir Vinci Construction Grands Proje - Ts - F03263713|0|1300,00|||20180301||
+AC|Journal des achats||20180104|40100000|Fournisseurs|401BONIF|BONIFACE PIERRE|D-2018-0042 FG|20180104|D-2018-0042 : Loyer 1er trimestre|0|3600,00|||20180301||
+CA|Crédit Agricole||20180125|51200000|Banques|51214000|Crédit agricole|2017-252 FC|20171206|Vinci Construction Grands Projet  - Virement En Votre Faveur  - Vir Vinci Construction Grands Proje - Ts - F03263713|1300,00|0|||20180301||
+VE|Journal des ventes||20180126|70600000|Prestations de services|70600100|PS Formation initiale 19.6%|2018-015 FI|20180126|2018-015 : Reconfiguration d'Ethimak|0|1800,00|||20180301||
+VE|Journal des ventes||20180126|44500000|Etat - Taxes sur le chiffre d'affaires|44571200|TVA Collectée à 20%|2018-015 FI|20180126|2018-015 : Reconfiguration d'Ethimak|0|360,00|||20180301||
+VE|Journal des ventes||20180126|41100000|Clients|411EMLY|EM Lyon|2018-015 FI|20180126|2018-015 : Reconfiguration d'Ethimak|2160,00|0|||20180301||
+VE|Journal des ventes||20180126|70600000|Prestations de services|70600100|PS Formation initiale 19.6%|2018-016 FI|20180126|2018-016 : Ethimak MBA intervention du 4 janvier 2018|0|2000,00|||20180301||
+VE|Journal des ventes||20180126|41100000|Clients|411EMLY|EM Lyon|2018-016 FI|20180126|2018-016 : Ethimak MBA intervention du 4 janvier 2018|2400,00|0|||20180301||
+VE|Journal des ventes||20180126|44500000|Etat - Taxes sur le chiffre d'affaires|44571200|TVA Collectée à 20%|2018-016 FI|20180126|2018-016 : Ethimak MBA intervention du 4 janvier 2018|0|400,00|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGIL|Notes de frais Laura Gilquin|D-2018-043 FG|20180101|D-2018-043 : NDF Laura Gilquin 1/2018 (FG)|0|70,40|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-043 FG|20180101|D-2018-043 : NDF Laura Gilquin 1/2018 (FG)|12,40|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-043 FG|20180101|D-2018-043 : NDF Laura Gilquin 1/2018 (FG)|14,60|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-043 FG|20180101|D-2018-043 : NDF Laura Gilquin 1/2018 (FG)|21,70|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-043 FG|20180101|D-2018-043 : NDF Laura Gilquin 1/2018 (FG)|21,70|0|||20180301||
+VE|Journal des ventes||20180130|41100000|Clients|411VIL|Ville et communauté urbaine de Strasbourg|2018-018 FC|20180130|2018-018 : Animation formation pilote Jour 1 - école du management|1300,00|0|||20180301||
+VE|Journal des ventes||20180130|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-017 Web|20180130|2018-017 : Licences Panorama|0|200,00|||20180301||
+VE|Journal des ventes||20180130|41100000|Clients|411FAG|FAGG - AFMPS|2018-017 Web|20180130|2018-017 : Licences Panorama|200,00|0|||20180301||
+VE|Journal des ventes||20180130|70600000|Prestations de services|70600310|Outils formation continue|2018-018 FC|20180130|2018-018 : Animation formation pilote Jour 1 - école du management|0|1300,00|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFLOU|Notes de frais Alice Lousson|D-2018-045 FG|20180101|D-2018-045 : NDF Alice Lousson 1/2018 (FG)|0|167,51|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-045 FG|20180101|D-2018-045 : NDF Alice Lousson 1/2018 (FG)|1,28|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-045 FG|20180101|D-2018-045 : NDF Alice Lousson 1/2018 (FG)|1,74|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-045 FG|20180101|D-2018-045 : NDF Alice Lousson 1/2018 (FG)|17,10|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-045 FG|20180101|D-2018-045 : NDF Alice Lousson 1/2018 (FG)|79,69|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFLOU|Notes de frais Alice Lousson|D-2018-044 FI|20180101|D-2018-044 : NDF Alice Lousson 1/2018 (FI)|0|2,80|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-044 FI|20180101|D-2018-044 : NDF Alice Lousson 1/2018 (FI)|1,40|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-045 FG|20180101|D-2018-045 : NDF Alice Lousson 1/2018 (FG)|58,40|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-045 FG|20180101|D-2018-045 : NDF Alice Lousson 1/2018 (FG)|9,30|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-044 FI|20180101|D-2018-044 : NDF Alice Lousson 1/2018 (FI)|1,40|0|||20180301||
+VE|Journal des ventes||20180202|41100000|Clients|411CENT|Centre Hospitalier de Lille|2018-020 FC|20180202|2018-020 : Conférence et Ateliers sur le leadership|3200,00|0|||20180301||
+VE|Journal des ventes||20180202|70600000|Prestations de services|70600310|Outils formation continue|2018-020 FC|20180202|2018-020 : Conférence et Ateliers sur le leadership|0|3200,00|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|5,36|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|6,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|1,80|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|2,42|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|3,09|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|7,48|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|5,17|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|4,55|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|14,90|0|||20180301||
+AC|Journal des achats||20180101|60600000|Achats non stockés|60627000|Carburant|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|29,97|0|||20180301||
+AC|Journal des achats||20180101|60600000|Achats non stockés|60627000|Carburant|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|37,37|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|57,00|0|||20180301||
+AC|Journal des achats||20180101|61500000|Entretien et réparations|61561000|Maintenance matériel informatique|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|25,83|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|1,65|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|10,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|12,55|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|14,85|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|9,60|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-070 Conseil|20180101|D-2018-070 : NDF Geoffroy Murat 1/2018 (Conseil)|45,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|61,00|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat|D-2018-070 Conseil|20180101|D-2018-070 : NDF Geoffroy Murat 1/2018 (Conseil)|0|63,95|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-070 Conseil|20180101|D-2018-070 : NDF Geoffroy Murat 1/2018 (Conseil)|0,40|0|||20180301||
+VE|Journal des ventes||20180205|70600000|Prestations de services|70600400|PS Evenement Colloque 19.6%|2018-021 EV|20180205|2018-021 : Remboursement billets de train 21/12/2017|0|19,20|||20180301||
+VE|Journal des ventes||20180205|41100000|Clients|411DDTR|DDT Rhône 69|2018-021 EV|20180205|2018-021 : Remboursement billets de train 21/12/2017|23,04|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|13,90|0|||20180301||
+VE|Journal des ventes||20180205|44500000|Etat - Taxes sur le chiffre d'affaires|44571200|TVA Collectée à 20%|2018-021 EV|20180205|2018-021 : Remboursement billets de train 21/12/2017|0|3,84|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-070 Conseil|20180101|D-2018-070 : NDF Geoffroy Murat 1/2018 (Conseil)|1,66|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-070 Conseil|20180101|D-2018-070 : NDF Geoffroy Murat 1/2018 (Conseil)|4,05|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|0,48|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|0,54|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|1,00|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|0,45|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|0,31|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-070 Conseil|20180101|D-2018-070 : NDF Geoffroy Murat 1/2018 (Conseil)|12,84|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|0|314,62|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-069 FG|20180101|D-2018-069 : NDF Geoffroy Murat 1/2018 (FG)|1,25|0|||20180301||
+AC|Journal des achats||20180101|60400000|Achats d'études et prestations de services|60420000|Frais de formation|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|13,00|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|3,60|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|6,67|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|9,31|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|2,62|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|2,62|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|2,50|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|2,50|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|9,67|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|10,55|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|46,53|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|47,45|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|40,00|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|13,08|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|11,40|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|13,08|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|2,50|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|1,93|0|||20180301||
+AC|Journal des achats||20180126|60600000|Achats non stockés|60640000|Achats fournitures administatives|D-2018-0050 FG|20180126|D-2018-0050 : Cartouches ecoburotic 122,88e chq|102,40|0|||20180301||
+AC|Journal des achats||20180201|42100000|Personnel - rémunérations dues|421NFGUI|Notes de frais Laetitia Guibert|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|0|290,14|A||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|0,37|0|||20180301||
+AC|Journal des achats||20180126|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0050 FG|20180126|D-2018-0050 : Cartouches ecoburotic 122,88e chq|20,48|0|||20180301||
+AC|Journal des achats||20180126|40100000|Fournisseurs|401ECO|ecoburotic|D-2018-0050 FG|20180126|D-2018-0050 : Cartouches ecoburotic 122,88e chq|0|122,88|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFMUR|Note de frais Geoffroy Murat|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|0|591,32|||20180301||
+AC|Journal des achats||20180101|62600000|Frais postaux et de télécommunications|62610000|Frais d'affranchissements|D-2018-051 FG|20180101|D-2018-051 : NDF Pierre Boniface 1/2018 (FG)|124,80|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|0,37|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|0,50|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|1,83|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|1,90|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|1,83|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|1,33|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|0,50|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|0,50|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-049 FG|20180201|D-2018-049 : NDF Laetitia Guibert 2/2018 (FG)|55,00|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGUI|Notes de frais Laetitia Guibert|D-2018-047 FI|20180101|D-2018-047 : NDF Laetitia Guibert 1/2018 (FI)|0|23,07|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|13,24|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|13,64|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|52,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|13,02|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|12,59|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|11,78|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|12,05|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|52,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|47,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|17,10|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|17,10|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|17,10|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|25,54|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|46,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|43,60|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|11,40|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|11,40|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|1,05|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|1,21|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|1,26|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|0,93|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|0,87|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-047 FI|20180101|D-2018-047 : NDF Laetitia Guibert 1/2018 (FI)|23,07|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGUI|Notes de frais Laetitia Guibert|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|0|464,48|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|1,70|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|1,80|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|8,40|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|9,60|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|1,80|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|1,80|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|1,80|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-046 FG|20180101|D-2018-046 : NDF Laetitia Guibert 1/2018 (FG)|1,80|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-051 FG|20180101|D-2018-051 : NDF Pierre Boniface 1/2018 (FG)|6,67|0|||20180301||
+AC|Journal des achats||20180101|60600000|Achats non stockés|60627000|Carburant|D-2018-051 FG|20180101|D-2018-051 : NDF Pierre Boniface 1/2018 (FG)|33,33|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|40,91|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|45,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|55,00|0|||20180301||
+AC|Journal des achats||20180101|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|38,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|25,13|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|18,46|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|21,35|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|55,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|57,00|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFPB|Notes de frais Pierre Boniface|D-2018-051 FG|20180101|D-2018-051 : NDF Pierre Boniface 1/2018 (FG)|0|164,80|||20180301||
+AC|Journal des achats||20180205|61600000|Primes d'assurances|61610000|Assurance multirisque|D-2018-0066 Conseil|20180205|D-2018-0066 : Groupama Mutuelles Regularisation 2017|1024,27|0|||20180301||
+AC|Journal des achats||20180201|62600000|Frais postaux et de télécommunications|626|Frais postaux et de télécommunications|D-2018-067 FG|20180201|D-2018-067 : NDF Pierre Boniface 2/2018 (FG)|156,00|0|||20180301||
+AC|Journal des achats||20180201|42100000|Personnel - rémunérations dues|421NFPB|Notes de frais Pierre Boniface|D-2018-067 FG|20180201|D-2018-067 : NDF Pierre Boniface 2/2018 (FG)|0|156,00|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|58,14|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|89,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|17,10|0|||20180301||
+AC|Journal des achats||20180101|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|11,92|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|1,77|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|1,80|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|1,80|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|1,53|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|1,29|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|0,80|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|1,26|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|1,90|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|2,38|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|7,67|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|7,97|0|||20180301||
+AC|Journal des achats||20180101|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|6,15|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|4,09|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|2,60|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-068 FC|20180101|D-2018-068 : NDF Geoffroy Murat 1/2018 (FC)|3,30|0|||20180301||
+AC|Journal des achats||20180101|40100000|Fournisseurs|401GROUP|Groupama|D-2018-0065 Conseil|20180101|D-2018-0065 : Assurance Locaux|0|91,50|||20180301||
+AC|Journal des achats||20180205|40100000|Fournisseurs|401GROUP|Groupama|D-2018-0066 Conseil|20180205|D-2018-0066 : Groupama Mutuelles Regularisation 2017|0|1024,27|||20180301||
+AC|Journal des achats||20180110|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0057 FG|20180110|D-2018-0057 : Iphone via BackMarket 250e|41,70|0|||20180301||
+AC|Journal des achats||20180110|60600000|Achats non stockés|60630000|Achats de petit équipement|D-2018-0057 FG|20180110|D-2018-0057 : Iphone via BackMarket 250e|208,30|0|||20180301||
+AC|Journal des achats||20180124|40100000|Fournisseurs|401BOXTA|BOXTALE|D-2018-0056 FG|20180124|D-2018-0056 : Boxtal envoi AO 13,78|0|13,78|A||20180301||
+AC|Journal des achats||20180110|40100000|Fournisseurs|401DIVER|FOURNISSEUR DIVERS|D-2018-0057 FG|20180110|D-2018-0057 : Iphone via BackMarket 250e|0|250,00|DX||20180301||
+AC|Journal des achats||20180117|60600000|Achats non stockés|60630000|Achats de petit équipement|D-2018-0058 FG|20180117|D-2018-0058 : Ordinateur c discount 744,97e|620,81|0|||20180301||
+AC|Journal des achats||20180101|61600000|Primes d'assurances|61610000|Assurance multirisque|D-2018-0065 Conseil|20180101|D-2018-0065 : Assurance Locaux|91,50|0|||20180301||
+AC|Journal des achats||20180117|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0058 FG|20180117|D-2018-0058 : Ordinateur c discount 744,97e|124,16|0|||20180301||
+AC|Journal des achats||20180124|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0056 FG|20180124|D-2018-0056 : Boxtal envoi AO 13,78|1,90|0|||20180301||
+AC|Journal des achats||20180124|62600000|Frais postaux et de télécommunications|62610000|Frais d'affranchissements|D-2018-0056 FG|20180124|D-2018-0056 : Boxtal envoi AO 13,78|11,88|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0054 FG|20180101|D-2018-0054 : ovh voip 8,93e|1,49|0|||20180301||
+AC|Journal des achats||20180101|62600000|Frais postaux et de télécommunications|62660000|OVH hébergement|D-2018-0054 FG|20180101|D-2018-0054 : ovh voip 8,93e|7,44|0|||20180301||
+AC|Journal des achats||20180101|40100000|Fournisseurs|401OVH|OVH|D-2018-0054 FG|20180101|D-2018-0054 : ovh voip 8,93e|0|8,93|N||20180301||
+AC|Journal des achats||20180125|60600000|Achats non stockés|60640000|Achats fournitures administatives|D-2018-0055 Conseil|20180125|D-2018-0055 : adobe 17,99e|14,99|0|||20180301||
+AC|Journal des achats||20180125|40100000|Fournisseurs|401ADOBE|Adobe|D-2018-0055 Conseil|20180125|D-2018-0055 : adobe 17,99e|0|17,99|R||20180301||
+AC|Journal des achats||20180125|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0055 Conseil|20180125|D-2018-0055 : adobe 17,99e|3,00|0|||20180301||
+AC|Journal des achats||20180122|60600000|Achats non stockés|60640000|Achats fournitures administatives|D-2018-0059 FG|20180122|D-2018-0059 : Microsoft abonnement|8,80|0|||20180301||
+AC|Journal des achats||20180117|40100000|Fournisseurs|401CDISC|CDISCOUNT|D-2018-0058 FG|20180117|D-2018-0058 : Ordinateur c discount 744,97e|0|744,97|A||20180301||
+AC|Journal des achats||20180126|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0063 Conseil|20180126|D-2018-0063 : Boxtal Envoi AO croix rouge|2,30|0|||20180301||
+AC|Journal des achats||20180130|40100000|Fournisseurs|401ZEN|zendesk|D-2018-0062 Web|20180130|D-2018-0062 : Abonnement annuel|0|361,02|||20180301||
+AC|Journal des achats||20180126|40100000|Fournisseurs|401BOXTA|BOXTALE|D-2018-0063 Conseil|20180126|D-2018-0063 : Boxtal Envoi AO croix rouge|0|13,78|||20180301||
+AC|Journal des achats||20180126|62600000|Frais postaux et de télécommunications|62610000|Frais d'affranchissements|D-2018-0064 FG|20180126|D-2018-0064 : Boxtal envoi recommande 14,96e|12,46|0|||20180301||
+AC|Journal des achats||20180126|40100000|Fournisseurs|401BOXTA|BOXTALE|D-2018-0064 FG|20180126|D-2018-0064 : Boxtal envoi recommande 14,96e|0|14,96|||20180301||
+AC|Journal des achats||20180126|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0064 FG|20180126|D-2018-0064 : Boxtal envoi recommande 14,96e|2,50|0|||20180301||
+AC|Journal des achats||20180130|60600000|Achats non stockés|60640000|Achats fournitures administatives|D-2018-0062 Web|20180130|D-2018-0062 : Abonnement annuel|361,02|0|||20180301||
+AC|Journal des achats||20180126|62600000|Frais postaux et de télécommunications|62610000|Frais d'affranchissements|D-2018-0063 Conseil|20180126|D-2018-0063 : Boxtal Envoi AO croix rouge|11,48|0|||20180301||
+AC|Journal des achats||20180108|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0060 FG|20180108|D-2018-0060 : Cotisation annuelle santé au travail|86,78|0|||20180301||
+AC|Journal des achats||20180123|40100000|Fournisseurs|401DIVER|FOURNISSEUR DIVERS|D-2018-0061 FG|20180123|D-2018-0061 : Leads sur Manageo|0|300,14|||20180301||
+AC|Journal des achats||20180122|40100000|Fournisseurs|401MIC|Microsoft|D-2018-0059 FG|20180122|D-2018-0059 : Microsoft abonnement|0|8,80|G||20180301||
+AC|Journal des achats||20180108|40100000|Fournisseurs|401SSTS|Service de Santé au Travail en Savoie|D-2018-0060 FG|20180108|D-2018-0060 : Cotisation annuelle santé au travail|0|520,66|||20180301||
+AC|Journal des achats||20180108|64800000|Autres charges de personnel|64811000|Autres charges de personnel|D-2018-0060 FG|20180108|D-2018-0060 : Cotisation annuelle santé au travail|433,88|0|||20180301||
+AC|Journal des achats||20180123|60600000|Achats non stockés|60640000|Achats fournitures administatives|D-2018-0061 FG|20180123|D-2018-0061 : Leads sur Manageo|250,12|0|||20180301||
+AC|Journal des achats||20180123|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0061 FG|20180123|D-2018-0061 : Leads sur Manageo|50,02|0|||20180301||
+VE|Journal des ventes||20180206|41100000|Clients|411ESCD|ESC Djon|2018-023 FC|20180206|2018-023 : Cours Ethique et RSE 2017 - Dijon|3378,24|0|||20180301||
+VE|Journal des ventes||20180206|70600000|Prestations de services|70600310|Outils formation continue|2018-024 FC|20180206|2018-024 : Cours Ethique et RSE 2017 - Lyon|0|1200,00|||20180301||
+VE|Journal des ventes||20180206|70600000|Prestations de services|70600310|Outils formation continue|2018-023 FC|20180206|2018-023 : Cours Ethique et RSE 2017 - Dijon|0|3378,24|||20180301||
+VE|Journal des ventes||20180206|70600000|Prestations de services|70600310|Outils formation continue|2018-022 FC|20180206|2018-022 : Formation "Acquérir les fondamentaux de la RSE"|0|1200,00|||20180301||
+VE|Journal des ventes||20180206|41100000|Clients|411ESCD|ESC Djon|2018-024 FC|20180206|2018-024 : Cours Ethique et RSE 2017 - Lyon|1200,00|0|||20180301||
+VE|Journal des ventes||20180206|41100000|Clients|411AREVA|Areva Mines|2018-022 FC|20180206|2018-022 : Formation "Acquérir les fondamentaux de la RSE"|1200,00|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-072 FC|20180201|D-2018-072 : NDF Myriam Boniface 2/2018 (FC)|6,75|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-073 Conseil|20180201|D-2018-073 : NDF Myriam Boniface 2/2018 (Conseil)|19,20|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-073 Conseil|20180201|D-2018-073 : NDF Myriam Boniface 2/2018 (Conseil)|5,75|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-073 Conseil|20180201|D-2018-073 : NDF Myriam Boniface 2/2018 (Conseil)|4,83|0|||20180301||
+AC|Journal des achats||20180201|42100000|Personnel - rémunérations dues|421NFBON|Note de frais Myriam Boniface|D-2018-072 FC|20180201|D-2018-072 : NDF Myriam Boniface 2/2018 (FC)|0|75,60|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-072 FC|20180201|D-2018-072 : NDF Myriam Boniface 2/2018 (FC)|1,26|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-072 FC|20180201|D-2018-072 : NDF Myriam Boniface 2/2018 (FC)|3,60|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-072 FC|20180201|D-2018-072 : NDF Myriam Boniface 2/2018 (FC)|1,98|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-072 FC|20180201|D-2018-072 : NDF Myriam Boniface 2/2018 (FC)|1,35|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-073 Conseil|20180201|D-2018-073 : NDF Myriam Boniface 2/2018 (Conseil)|2,42|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-073 Conseil|20180201|D-2018-073 : NDF Myriam Boniface 2/2018 (Conseil)|1,15|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-074 FI|20180201|D-2018-074 : NDF Myriam Boniface 2/2018 (FI)|5,22|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-074 FI|20180201|D-2018-074 : NDF Myriam Boniface 2/2018 (FI)|0,41|0|||20180301||
+AC|Journal des achats||20180201|42100000|Personnel - rémunérations dues|421NFBON|Note de frais Myriam Boniface|D-2018-074 FI|20180201|D-2018-074 : NDF Myriam Boniface 2/2018 (FI)|0|39,14|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-074 FI|20180201|D-2018-074 : NDF Myriam Boniface 2/2018 (FI)|7,39|0|||20180301||
+AC|Journal des achats||20180201|60600000|Achats non stockés|60627000|Carburant|D-2018-074 FI|20180201|D-2018-074 : NDF Myriam Boniface 2/2018 (FI)|26,12|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-073 Conseil|20180201|D-2018-073 : NDF Myriam Boniface 2/2018 (Conseil)|0,48|0|||20180301||
+AC|Journal des achats||20180201|42100000|Personnel - rémunérations dues|421NFBON|Note de frais Myriam Boniface|D-2018-073 Conseil|20180201|D-2018-073 : NDF Myriam Boniface 2/2018 (Conseil)|0|34,80|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-072 FC|20180201|D-2018-072 : NDF Myriam Boniface 2/2018 (FC)|15,74|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-073 Conseil|20180201|D-2018-073 : NDF Myriam Boniface 2/2018 (Conseil)|0,97|0|||20180301||
+AC|Journal des achats||20180201|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|13,55|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|12,27|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|7,97|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|15,17|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62570000|Réceptions|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|21,36|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-072 FC|20180201|D-2018-072 : NDF Myriam Boniface 2/2018 (FC)|19,02|0|||20180301||
+AC|Journal des achats||20180201|60600000|Achats non stockés|60627000|Carburant|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|39,82|0|||20180301||
+AC|Journal des achats||20180201|60600000|Achats non stockés|60640000|Achats fournitures administatives|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|7,90|0|||20180301||
+AC|Journal des achats||20180201|60600000|Achats non stockés|60627000|Carburant|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|13,95|0|||20180301||
+AC|Journal des achats||20180201|42100000|Personnel - rémunérations dues|421NFBON|Note de frais Myriam Boniface|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|0|144,11|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|3,03|0|||20180301||
+AC|Journal des achats||20180201|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-072 FC|20180201|D-2018-072 : NDF Myriam Boniface 2/2018 (FC)|25,90|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|1,23|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|1,35|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|2,14|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|1,58|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-071 FG|20180201|D-2018-071 : NDF Myriam Boniface 2/2018 (FG)|2,79|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGIN|Note de frais Céline Gindre|D-2018-076 FG|20180101|D-2018-076 : NDF Céline Gindre 1/2018 (FG)|0|30,77|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|9,50|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-076 FG|20180101|D-2018-076 : NDF Céline Gindre 1/2018 (FG)|13,55|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-076 FG|20180101|D-2018-076 : NDF Céline Gindre 1/2018 (FG)|0,83|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-076 FG|20180101|D-2018-076 : NDF Céline Gindre 1/2018 (FG)|1,35|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|9,50|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|7,68|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|6,30|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-076 FG|20180101|D-2018-076 : NDF Céline Gindre 1/2018 (FG)|15,04|0|||20180301||
+AC|Journal des achats||20180101|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|9,50|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|9,50|0|||20180301||
+AC|Journal des achats||20180101|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|9,50|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-075 Conseil|20180101|D-2018-075 : NDF Céline Gindre 1/2018 (Conseil)|13,64|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-075 Conseil|20180101|D-2018-075 : NDF Céline Gindre 1/2018 (Conseil)|11,62|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-075 Conseil|20180101|D-2018-075 : NDF Céline Gindre 1/2018 (Conseil)|55,00|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-075 Conseil|20180101|D-2018-075 : NDF Céline Gindre 1/2018 (Conseil)|55,00|0|||20180301||
+AC|Journal des achats||20180101|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|4,83|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-075 Conseil|20180101|D-2018-075 : NDF Céline Gindre 1/2018 (Conseil)|10,95|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-075 Conseil|20180101|D-2018-075 : NDF Céline Gindre 1/2018 (Conseil)|4,73|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-075 Conseil|20180101|D-2018-075 : NDF Céline Gindre 1/2018 (Conseil)|0,47|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-075 Conseil|20180101|D-2018-075 : NDF Céline Gindre 1/2018 (Conseil)|0,95|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-075 Conseil|20180101|D-2018-075 : NDF Céline Gindre 1/2018 (Conseil)|1,03|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-075 Conseil|20180101|D-2018-075 : NDF Céline Gindre 1/2018 (Conseil)|1,36|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGIN|Note de frais Céline Gindre|D-2018-075 Conseil|20180101|D-2018-075 : NDF Céline Gindre 1/2018 (Conseil)|0|154,75|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|9,50|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|0,97|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|0,97|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|1,90|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|1,90|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|0,48|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|0,42|0|||20180301||
+AC|Journal des achats||20180101|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|4,83|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGIN|Note de frais Céline Gindre|D-2018-078 FG|20180101|D-2018-078 : NDF Céline Gindre 1/2018 (FG)|0|389,87|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-078 FG|20180101|D-2018-078 : NDF Céline Gindre 1/2018 (FG)|389,87|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|1,90|0|||20180301||
+AC|Journal des achats||20180101|42100000|Personnel - rémunérations dues|421NFGIN|Note de frais Céline Gindre|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|0|107,80|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|2,10|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|2,42|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62510000|Voyages et déplacements|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|2,10|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|2,10|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|1,90|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|1,90|0|||20180301||
+AC|Journal des achats||20180101|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|1,90|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|2,10|0|||20180301||
+AC|Journal des achats||20180101|62500000|Déplacements, missions et réceptions|62515000|Autoroutes|D-2018-077 FC|20180101|D-2018-077 : NDF Céline Gindre 1/2018 (FC)|2,10|0|||20180301||
+VE|Journal des ventes||20180212|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-026 Conseil|20180212|2018-026 : Devoir de vigilance 3|0|12600,00|||20180301||
+VE|Journal des ventes||20180212|41100000|Clients|411BON|Bonduelle|2018-026 Conseil|20180212|2018-026 : Devoir de vigilance 3|12600,00|0|||20180301||
+VE|Journal des ventes||20180216|44500000|Etat - Taxes sur le chiffre d'affaires|44571200|TVA Collectée à 20%|2018-029 Conseil|20180216|2018-029 : AO - Accompagnement RSE avec Patte Blanche|0|15400,00|||20180301||
+VE|Journal des ventes||20180216|41100000|Clients|411CRO|Croix Rouge|2018-029 Conseil|20180216|2018-029 : AO - Accompagnement RSE avec Patte Blanche|92400,00|0|||20180301||
+VE|Journal des ventes||20180216|41100000|Clients|411CRO|Croix Rouge|2018-027 Conseil|20180216|2018-027 : AO - Accompagnement RSE avec Patte Blanche|92400,00|0|||20180301||
+VE|Journal des ventes||20180216|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-030 Conseil|20180216|2018-030 : AO - Accompagnement RSE avec Patte Blanche|0|77000,00|||20180301||
+VE|Journal des ventes||20180216|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-029 Conseil|20180216|2018-029 : AO - Accompagnement RSE avec Patte Blanche|0|77000,00|||20180301||
+VE|Journal des ventes||20180216|41100000|Clients|411CRO|Croix Rouge|2018-028 Conseil|20180216|2018-028 : AO - Accompagnement RSE avec Patte Blanche|92400,00|0|||20180301||
+VE|Journal des ventes||20180216|44500000|Etat - Taxes sur le chiffre d'affaires|44571200|TVA Collectée à 20%|2018-030 Conseil|20180216|2018-030 : AO - Accompagnement RSE avec Patte Blanche|0|15400,00|||20180301||
+VE|Journal des ventes||20180216|44500000|Etat - Taxes sur le chiffre d'affaires|44571200|TVA Collectée à 20%|2018-028 Conseil|20180216|2018-028 : AO - Accompagnement RSE avec Patte Blanche|0|15400,00|||20180301||
+VE|Journal des ventes||20180216|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-028 Conseil|20180216|2018-028 : AO - Accompagnement RSE avec Patte Blanche|0|77000,00|||20180301||
+VE|Journal des ventes||20180216|44500000|Etat - Taxes sur le chiffre d'affaires|44571200|TVA Collectée à 20%|2018-027 Conseil|20180216|2018-027 : AO - Accompagnement RSE avec Patte Blanche|0|15400,00|||20180301||
+VE|Journal des ventes||20180216|41100000|Clients|411CRO|Croix Rouge|2018-030 Conseil|20180216|2018-030 : AO - Accompagnement RSE avec Patte Blanche|92400,00|0|||20180301||
+VE|Journal des ventes||20180216|70600000|Prestations de services|70600200|PS Conseil 19.6%|2018-027 Conseil|20180216|2018-027 : AO - Accompagnement RSE avec Patte Blanche|0|77000,00|||20180301||
+CA|Crédit Agricole||20180219|51200000|Banques|51214000|Crédit agricole|RDC-2018-001 |20180220|remise de cheque|100,00|0|||20180301||
+CA|Crédit Agricole||20180219|42100000|Personnel - rémunérations dues|421NFGIL|Notes de frais Laura Gilquin|RDC-2018-001 |20180220|Laura donne des sous à Nicomak|0|100,00|A||20180301||
+OD|Journal des opérations diverses||20180220|42100000|Personnel - rémunérations dues|421GILQ|Salaire Gilquin|||Laura Gilquin|50,00|0|||20180301||
+OD|Journal des opérations diverses||20180220|42100000|Personnel - rémunérations dues|421NFGIL|Notes de frais Laura Gilquin|||Remboursement NDF en trop|20,00|0|B||20180301||
+CA|Crédit Agricole||20180220|51200000|Banques|51214000|Crédit agricole|RDC-2018-004 |20180220|test remise cheque|20,00|0|||20180301||
+OD|Journal des opérations diverses||20180220|42100000|Personnel - rémunérations dues|421GILQ|Salaire Gilquin|||Laura Gilquin|100,00|0|||20180301||
+OD|Journal des opérations diverses||20180220|42100000|Personnel - rémunérations dues|421NFGIL|Notes de frais Laura Gilquin|||Laura donne des sous à Nicomak|100,00|0|A||20180301||
+OD|Journal des opérations diverses||20180220|42100000|Personnel - rémunérations dues|421GILQ|Salaire Gilquin|||Laura Gilquin|100,00|0|||20180301||
+CA|Crédit Agricole||20180220|42100000|Personnel - rémunérations dues|421NFGIL|Notes de frais Laura Gilquin|RDC-2018-004 |20180220|Remboursement NDF en trop|0|20,00|B||20180301||
+CA|Crédit Agricole||20180225|42100000|Personnel - rémunérations dues|421NFGUI|Notes de frais Laetitia Guibert| FG||Note de frais Laetitia|290,14|0|A||20180301||
+CA|Crédit Agricole||20180225|51200000|Banques|51214000|Crédit agricole| FG||Note de frais Laetitia|0|290,14|||20180301||
+AC|Journal des achats|3|20180226|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-0080 Conseil|20180226|D-2018-0080 : test numero ecriture|20,00|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-079 Conseil|20180201|D-2018-079 : NDF Laura Gilquin 02/2018 (Conseil)|4,00|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-079 Conseil|20180201|D-2018-079 : NDF Laura Gilquin 02/2018 (Conseil)|2,00|0|||20180301||
+AC|Journal des achats||20180201|44500000|Etat - Taxes sur le chiffre d'affaires|44566000|TVA sur achats|D-2018-079 Conseil|20180201|D-2018-079 : NDF Laura Gilquin 02/2018 (Conseil)|2,00|0|||20180301||
+AC|Journal des achats||20180201|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-079 Conseil|20180201|D-2018-079 : NDF Laura Gilquin 02/2018 (Conseil)|10,00|0|||20180301||
+AC|Journal des achats||20180201|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-079 Conseil|20180201|D-2018-079 : NDF Laura Gilquin 02/2018 (Conseil)|10,00|0|||20180301||
+AC|Journal des achats||20180201|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-079 Conseil|20180201|D-2018-079 : NDF Laura Gilquin 02/2018 (Conseil)|30,00|0|||20180301||
+AC|Journal des achats||20180201|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-079 Conseil|20180201|D-2018-079 : NDF Laura Gilquin 02/2018 (Conseil)|20,00|0|||20180301||
+AC|Journal des achats||20180201|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-079 Conseil|20180201|D-2018-079 : NDF Laura Gilquin 02/2018 (Conseil)|12,00|0|||20180301||
+AC|Journal des achats||20180201|42100000|Personnel - rémunérations dues|421NFGIL|Notes de frais Laura Gilquin|D-2018-079 Conseil|20180201|D-2018-079 : NDF Laura Gilquin 02/2018 (Conseil)|0|90,00|||20180301||
+AC|Journal des achats|2|20180226|62600000|Frais postaux et de télécommunications|62682000|1&1 Cloud|D-2018-0080 Conseil|20180226|D-2018-0080 : test numero ecriture|100,00|0|||20180301||

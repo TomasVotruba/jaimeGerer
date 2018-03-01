@@ -93,6 +93,7 @@ class RemiseChequeController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$repoRemiseCheque = $em->getRepository('AppBundle:Compta\RemiseCheque');
 		$repoFactures = $em->getRepository('AppBundle:CRM\DocumentPrix');
+		$numService = $this->get('appbundle.num_service');
 
 		//remises de cheque
 		$arr_all_remises_cheques = $repoRemiseCheque->findForCompany($this->getUser()->getCompany());
@@ -161,12 +162,15 @@ class RemiseChequeController extends Controller
 				$cheque = $data->getCheques()[$i];
 
 				if( $form_cheque['autre']->getData() ){
+					$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+
 					$od = new OperationDiverse();
 					$od->setDate(new \DateTime(date('Y-m-d')));
 					$od->setLibelle($form_cheque['libelle']->getData());
 					$od->setCodeJournal('OD');
 					$od->setCompteComptable($form_cheque['compteComptable']->getData());
 					$od->setDebit($form_cheque['montant']->getData());
+					$od->setNumEcriture($numEcriture);
 					$em->persist($od);
 
 					$od = new OperationDiverse();
@@ -175,7 +179,11 @@ class RemiseChequeController extends Controller
 					$od->setCodeJournal('OD');
 					$od->setCompteComptable($form_cheque['compteComptableTiers']->getData());
 					$od->setCredit($form_cheque['montant']->getData());
+					$od->setNumEcriture($numEcriture);
 					$em->persist($od);
+
+					$numEcriture++;
+					$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 					$cheque->setEmetteur($form_cheque['emetteur']->getData());
 

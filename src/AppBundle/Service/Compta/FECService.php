@@ -151,7 +151,12 @@ class FECService extends ContainerAware {
                      'num' => str_pad($shortNum, 8, '0')
                  ));
 
+                if(!$compteComptable){
+                    dump($shortNum);
+                }
+
             }
+
             $string.= $compteComptable->getNom();
             $string.=$this->separator;
 
@@ -191,7 +196,10 @@ class FECService extends ContainerAware {
                 être rempli par une valeur conventionnelle défi nie par l’entreprise. Celle-ci sera précisée
                 dans le descriptif 
             */
-            $string.= $ligne->getPiece().' '.$ligne->getAnalytique();
+            $string.= $ligne->getPiece();
+            if($ligne->getCodeJournal() != 'OD'){
+                $string.=' '.$ligne->getAnalytique();
+            }
             $string.=$this->separator;  
 
             /*

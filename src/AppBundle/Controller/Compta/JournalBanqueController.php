@@ -27,6 +27,7 @@ class JournalBanqueController extends Controller
 	{
 		/*creation du dropdown pour choisir le compte bancaire*/
 		$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\CompteBancaire');
+
 		$arr_comptesBancaires = $repo->findByCompany($this->getUser()->getCompany());
 
 		$activationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
@@ -97,9 +98,13 @@ class JournalBanqueController extends Controller
 	public function journalBanqueAjouterAction($type, Rapprochement $rapprochementBancaire){
 
 		$em = $this->getDoctrine()->getManager();
+		$numService = $this->get('appbundle.num_service');
+
 		$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
 		$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
 		$lettrageService = $this->get('appbundle.compta_lettrage_service');
+
+		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
 		try{
 			switch($type){
@@ -115,6 +120,7 @@ class JournalBanqueController extends Controller
 					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 					//debit au compte xxxxxx (selon le compte rattaché à l'affectation)
@@ -127,6 +133,7 @@ class JournalBanqueController extends Controller
 					$ligne->setCompteComptable($rapprochementBancaire->getAffectationDiverse()->getCompteComptable());
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 					break;
@@ -142,6 +149,7 @@ class JournalBanqueController extends Controller
 					$ligne->setCompteComptable($rapprochementBancaire->getAffectationDiverse()->getCompteComptable());
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 
@@ -155,6 +163,7 @@ class JournalBanqueController extends Controller
 					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 					break;
@@ -171,6 +180,7 @@ class JournalBanqueController extends Controller
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 					$ligne->setModePaiement($rapprochementBancaire->getDepense()->getModePaiement());
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 					//debit au compte 401xxxx (compte du fournisseur)
@@ -186,6 +196,7 @@ class JournalBanqueController extends Controller
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 					$ligne->setModePaiement($rapprochementBancaire->getDepense()->getModePaiement());
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 					$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
@@ -211,6 +222,7 @@ class JournalBanqueController extends Controller
 					$ligne->setLettrage($lettrage);
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 					//debit au compte 512xxxx (selon banque)
@@ -223,6 +235,7 @@ class JournalBanqueController extends Controller
 					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 					$ligneJournalVente = $journalVenteRepo->findOneBy(array(
@@ -248,6 +261,7 @@ class JournalBanqueController extends Controller
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setLettrage($ligneJournalAchats->getLettrage());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 					//debit au compte 512xxxx (selon banque)
@@ -260,6 +274,7 @@ class JournalBanqueController extends Controller
 					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 					$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
@@ -282,6 +297,7 @@ class JournalBanqueController extends Controller
 					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 					//debit au compte 411xxxx (compte du client)
@@ -296,6 +312,7 @@ class JournalBanqueController extends Controller
 					$ligne->setLettrage($lettrage);
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 					$ligneJournalVente = $journalVenteRepo->findOneBy(array(
@@ -339,6 +356,7 @@ class JournalBanqueController extends Controller
 								$ligne->setLettrage($lettrage);
 								$ligne->setNom('Avoir '.$piece->getAvoir()->getNum());
 								$ligne->setAvoir($piece->getAvoir());
+								$ligne->setNumEcriture($numEcriture);
 
 								$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
 									'avoir' => $piece->getAvoir(),
@@ -358,6 +376,7 @@ class JournalBanqueController extends Controller
 							}
 							$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 							$ligne->setModePaiement('CHEQUE');
+							$ligne->setNumEcriture($numEcriture);
 							$em->persist($ligne);
 						}
 					}
@@ -373,6 +392,7 @@ class JournalBanqueController extends Controller
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 					$ligne->setModePaiement('CHEQUE');
+					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
 					break;
@@ -390,6 +410,7 @@ class JournalBanqueController extends Controller
 						$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 						$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 						$ligne->setModePaiement($depense->getModePaiement());
+						$ligne->setNumEcriture($numEcriture);
 						$em->persist($ligne);
 
 						//debit au compte 401xxxx (compte du fournisseur)
@@ -405,6 +426,7 @@ class JournalBanqueController extends Controller
 						$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 						$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 						$ligne->setModePaiement($depense->getModePaiement());
+						$ligne->setNumEcriture($numEcriture);
 						$em->persist($ligne);
 
 						$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
@@ -417,6 +439,9 @@ class JournalBanqueController extends Controller
 					break;
 				}
 				$em->flush();
+
+				$numEcriture++;
+				$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 		} catch (\Exception $e){
 			throw $e;

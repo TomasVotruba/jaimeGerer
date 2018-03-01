@@ -84,9 +84,13 @@ class CompteAttenteController extends Controller
 	 */
 	public function compteAttenteCorrigerAction($id, $codeJournal){
 
+		$numService = $this->get('appbundle.num_service');
+
 		//creation du formulaire
 		$od =  new OperationDiverse();
 		$form = $this->createForm(new OperationDiverseType($this->getUser()->getCompany()), $od);
+
+		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
 		$request = $this->getRequest();
 		$form->handleRequest($request);
@@ -146,6 +150,7 @@ class CompteAttenteController extends Controller
 				$od->setDebit(null);
 				$od->setCredit($ligne->getCredit());
 			}
+			$od->setNumEcriture($numEcriture);
 			$em->persist($od);
 
 
@@ -163,9 +168,13 @@ class CompteAttenteController extends Controller
 				$od->setDebit($ligne->getCredit());
 			}
 			$od->setCompteComptable($compteAttente);
+			$od->setNumEcriture($numEcriture);
 			$em->persist($od);
 
 			$em->flush();
+
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 			return $this->redirect(($this->generateUrl('compta_compte_attente_voir')));
 		}
