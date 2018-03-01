@@ -5,6 +5,8 @@ namespace AppBundle\Service;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 
+use AppBundle\Entity\Settings;
+
 class NumService extends ContainerAware {
 
   protected $em;
