@@ -1819,7 +1819,7 @@ class ContactController extends Controller
 				}
 
 				if($contact){
-					$arr_contacts['existant'][] = $prenom.' '.$nom.' ('.$orga.')';
+					$arr_contacts['existant'][$contact[0]->getId()] = $prenom.' '.$nom.' ('.$orga.')';
 				} else {
 					$arr_contacts['non-existant'][] = $prenom.' '.$nom.' ('.$orga.')';
 				}
@@ -1831,7 +1831,7 @@ class ContactController extends Controller
 
 				$contact = $contactRepo->findByEmailAndCompany($email, $this->getUser()->getCompany());
 				if($contact){
-					$arr_contacts['existant'][] = $prenom.' '.$nom.' ('.$email.')';
+					$arr_contacts['existant'][$contact[0]->getId()] = $prenom.' '.$nom.' ('.$email.')';
 				} else {
 					$arr_contacts['non-existant'][] = $prenom.' '.$nom.' ('.$orga.')';
 				}

@@ -72,8 +72,8 @@
 				<div class="collapse" id="collapse-contacts-existant">
 				  	<div class="well">
 				    	<ul>
-				    		{% for contact in arr_contacts['existant'] %}
-				    			<li>{{ contact }}</li>
+				    		{% for id, contact in arr_contacts['existant'] %}
+				    			<li><a href="{{ path('crm_contact_voir', {'id' : id}) }}" target="_blank">{{ contact }}</a></li>
 				    		{% endfor %}
 				    	</ul>
 				  	</div>
