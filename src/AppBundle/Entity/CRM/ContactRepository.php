@@ -57,6 +57,7 @@ class ContactRepository extends EntityRepository
 
 		return $result;
 	}
+	
     public function findByImportMauticAndCompany($status, $company){
         $result = $this->createQueryBuilder('c')
             ->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')

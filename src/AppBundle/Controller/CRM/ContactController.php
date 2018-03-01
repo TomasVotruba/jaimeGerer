@@ -1815,7 +1815,7 @@ class ContactController extends Controller
 				));
 
 				if(!$contact){
-					$contact = $contactRepo->findByEmail($email);
+					$contact = $contactRepo->findByEmailAndCompany($email, $this->getUser()->getCompany());
 				}
 
 				if($contact){
@@ -1828,7 +1828,14 @@ class ContactController extends Controller
 				if( !in_array($orga, $arr_comptes['non-existant']) ){
 					$arr_comptes['non-existant'][] = $orga;
 				}
-				$arr_contacts['non-existant'][] = $prenom.' '.$nom.' ('.$orga.')';
+
+				$contact = $contactRepo->findByEmailAndCompany($email, $this->getUser()->getCompany());
+				if($contact){
+					$arr_contacts['existant'][] = $prenom.' '.$nom.' ('.$email.')';
+				} else {
+					$arr_contacts['non-existant'][] = $prenom.' '.$nom.' ('.$orga.')';
+				}
+
 			}
 		}
 
@@ -1895,6 +1902,11 @@ class ContactController extends Controller
 					'nom' => $nom
 				));
 
+				if(!$contact){
+					$contact = $contactRepo->findByEmailAndCompany($email, $this->getUser()->getCompany());
+				}
+
+
 				if($contact){
 					if($type == "contact" && $existant == "non-existant"){
 						$objPHPExcel->getActiveSheet()->removeRow($i, 1);
@@ -1909,7 +1921,9 @@ class ContactController extends Controller
 				if($type == "compte" && $existant == "existant"){
 					$objPHPExcel->getActiveSheet()->removeRow($i, 1);
 				}
-				if($type == "contact" && $existant == "existant"){
+
+				$contact = $contactRepo->findByEmailAndCompany($email, $this->getUser()->getCompany());
+				if($contact && $type == "contact" && $existant == "existant"){
 					$objPHPExcel->getActiveSheet()->removeRow($i, 1);
 				}
 
@@ -1924,9 +1938,6 @@ class ContactController extends Controller
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
 		$objWriter->save('php://output');
 		exit();
-
-
-
 
 	}
 
