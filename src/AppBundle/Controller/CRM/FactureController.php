@@ -45,21 +45,15 @@ class FactureController extends Controller
 	 */
 	public function factureListeAction(DocumentPrix $DevisParent=NULL)
 	{
-		$settingsRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
-		$numSettings = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'NUMERO_FACTURE', 'company'=>$this->getUser()->getCompany()));
-		$currentNum = $numSettings->getValeur() - 1;
-		$prefixe = date('Y').'-';
-		if($currentNum < 10){
-			$prefixe.='00';
-		} else if ($currentNum < 100){
-			$prefixe.='0';
-		}
-		$lastNum = $prefixe.$currentNum;
+		$numService = $this->get('appbundle.num_service');
+		$lastNumEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+		
 		$ajax_url = is_null($DevisParent) ? $this->generateUrl('crm_facture_liste_ajax') : $this->generateUrl('crm_factures_devis_liste_ajax', array('id' => $DevisParent->getId()));
+		
 		$titre_page = is_null($DevisParent) ? 'Factures' : 'Factures liées au devis n° : '. $DevisParent->getNum();
-		//~ var_dump($ajax_url);exit;
+		
 		return $this->render('crm/facture/crm_facture_liste.html.twig', array(
-				'lastNum' => $lastNum,
+				'lastNumEcriture' => $lastNumEcriture-1,
 				'ajax_url' =>$ajax_url,
 				'titre_page' =>$titre_page
 		));
@@ -124,7 +118,6 @@ class FactureController extends Controller
 				$DevisParent,
 				null,
 				$dateRange
-
 		);
 
 		for($i=0; $i<count($list); $i++){
@@ -149,6 +142,10 @@ class FactureController extends Controller
 			}
 			
 			$list[$i]['bon_commande'] = $bonsCommande;
+
+			foreach($facture->getJournalVentes() as $ligneVente){
+				$list[$i]['num_ecriture'] = $ligneVente->getNumEcriture();
+			}
 		}
 
 		$response = new JsonResponse();
@@ -174,28 +171,26 @@ class FactureController extends Controller
 	 */
 	public function factureVoirAction(DocumentPrix $facture)
 	{
-		$settingsRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
-		$numSettings = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'NUMERO_FACTURE', 'company'=>$this->getUser()->getCompany()));
-		$currentNum = $numSettings->getValeur() - 1;
-		$prefixe = date('Y').'-';
-		if($currentNum < 10){
-			$prefixe.='00';
-		} else if ($currentNum < 100){
-			$prefixe.='0';
-		}
-		$lastNum = $prefixe.$currentNum;
-
+		$numService = $this->get('appbundle.num_service');
+		$lastNumEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+		
 		$priseContactsRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\PriseContact');
 		$listPriseContacts = $priseContactsRepository->findByDocumentPrix($facture);
 
 		$relancesRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Relance');
 		$listRelances = $relancesRepository->findByFacture($facture);
 
+		$numEcriture = null;
+		foreach($facture->getJournalVentes() as $ligneVente){
+			$numEcriture = $ligneVente->getNumEcriture();
+		}
+
 		return $this->render('crm/facture/crm_facture_voir.html.twig', array(
 				'facture' => $facture,
-				'lastNum' => $lastNum,
+				'lastNumEcriture' => $lastNumEcriture-1,
 				'listPriseContacts' => $listPriseContacts,
-				'listRelances' => $listRelances
+				'listRelances' => $listRelances,
+				'numEcriture' => $numEcriture
 		));
 	}
 
@@ -500,12 +495,12 @@ class FactureController extends Controller
 
 			$em = $this->getDoctrine()->getManager();
 
-				//supprimer les lignes du journal de vente
-				$journalVentesRepo = $em->getRepository('AppBundle:Compta\JournalVente');
-				$arr_lignes = $journalVentesRepo->findByFacture($facture);
-				foreach($arr_lignes as $ligne){
-					$em->remove($ligne);
-				}
+			//supprimer les lignes du journal de vente
+			$journalVentesRepo = $em->getRepository('AppBundle:Compta\JournalVente');
+			$arr_lignes = $journalVentesRepo->findByFacture($facture);
+			foreach($arr_lignes as $ligne){
+				$em->remove($ligne);
+			}
 
 			$em->remove($facture);
 
@@ -514,8 +509,12 @@ class FactureController extends Controller
 			$numSettings->setValeur($numSettings->getValeur() - 1);
 			$em->persist($numSettings);
 
-
 			$em->flush();
+
+			$numService = $this->get('appbundle.num_service');
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+			$numEcriture--;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 			return $this->redirect($this->generateUrl(
 					'crm_facture_liste'

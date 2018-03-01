@@ -15,7 +15,7 @@
 		    		<span class="glyphicon glyphicon-pencil"></span> Modifier
 		    	</a>
 	
-		    	<a href="{{ path('compta_avoir_supprimer', {'id' : avoir.id}) }}"  class="btn btn-danger">
+		    	<a href="{{ path('compta_avoir_supprimer', {'id' : avoir.id}) }}" class="btn {% if numEcriture != lastNumEcriture %} btn-default not-active {% else %} btn-danger {% endif %}">
 			    	<span class="glyphicon glyphicon-trash"></span> Supprimer
 			    </a>
 			   

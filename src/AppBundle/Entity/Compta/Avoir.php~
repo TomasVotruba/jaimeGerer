@@ -121,6 +121,12 @@ class Avoir
      */
     private $lignes;
 
+
+    /**
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="avoir", cascade={"remove"}, orphanRemoval=true)
+    */
+    private $journalVentes;
+
     /**
      * Get id
      *
@@ -582,5 +588,38 @@ class Avoir
     public function getLignes()
     {
         return $this->lignes;
+    }
+
+    /**
+     * Add journalAchats
+     *
+     * @param \AppBundle\Entity\Compta\JournalAchat $journalAchats
+     * @return Avoir
+     */
+    public function addJournalAchat(\AppBundle\Entity\Compta\JournalAchat $journalAchats)
+    {
+        $this->journalAchats[] = $journalAchats;
+
+        return $this;
+    }
+
+    /**
+     * Remove journalAchats
+     *
+     * @param \AppBundle\Entity\Compta\JournalAchat $journalAchats
+     */
+    public function removeJournalAchat(\AppBundle\Entity\Compta\JournalAchat $journalAchats)
+    {
+        $this->journalAchats->removeElement($journalAchats);
+    }
+
+    /**
+     * Get journalAchats
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getJournalAchats()
+    {
+        return $this->journalAchats;
     }
 }

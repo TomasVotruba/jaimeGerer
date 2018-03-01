@@ -194,9 +194,14 @@
                             var s =
 									"<p>" +
 										"<a href=" + voirUrl + " class=\"btn btn-xs btn-info\" data-toggle=\"tooltip\" title=\"Voir\"><span class=\"glyphicon glyphicon-eye-open\"></span></a> " +
-										"<a href=" + editerUrl + "  class=\"btn btn-xs btn-warning\" data-toggle=\"tooltip\" title=\"Modifier\"><span class=\"glyphicon glyphicon-pencil\"></span></a> " +
-										"<a href=" + supprimerUrl + " class=\"btn btn-xs btn-danger\" data-toggle=\"tooltip\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a>" +
-									"</p>";
+										"<a href=" + editerUrl + "  class=\"btn btn-xs btn-warning\" data-toggle=\"tooltip\" title=\"Modifier\"><span class=\"glyphicon glyphicon-pencil\"></span></a> ";
+
+                            if(row['num_ecriture'] == "{{ lastNumEcriture }}"){
+                                s+="<a href=" + supprimerUrl + " class=\"btn btn-xs btn-danger\" data-toggle=\"tooltip\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a>"
+                            } else {
+                                s+="<a href=\"#\" class=\"btn btn-xs btn-default not-active\"><span class=\"glyphicon glyphicon-trash\"></span>";
+                            }
+							s+="</p>";
                             return s;
                         },
                         "targets": 6

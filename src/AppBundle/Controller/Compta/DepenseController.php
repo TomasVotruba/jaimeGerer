@@ -32,7 +32,12 @@ class DepenseController extends Controller
 	 */
 	public function depenseListeAction()
 	{
-		return $this->render('compta/depense/compta_depense_liste.html.twig');
+		$numService = $this->get('appbundle.num_service');
+		$lastNumEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+
+		return $this->render('compta/depense/compta_depense_liste.html.twig', array(
+			'lastNumEcriture' => $lastNumEcriture-1,
+		));
 	}
 
 	/**
@@ -80,6 +85,10 @@ class DepenseController extends Controller
 			if(!in_array($depense->getId(), $arr_id)){
 				$arr_depenses[] = $arr_f;
 				$arr_id[] = $depense->getId();
+			}
+
+			foreach($depense->getJournalAchats() as $ligneAchat){
+				$list[$i]['num_ecriture'] = $ligneAchat->getNumEcriture();
 			}
 		}
 
@@ -643,9 +652,19 @@ class DepenseController extends Controller
 		$opportuniteSousTraitanceRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\OpportuniteSousTraitance');
 		$arr_sousTraitances = $opportuniteSousTraitanceRepo->findHavingDepense($depense);
 
+		$numService = $this->get('appbundle.num_service');
+		$lastNumEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+		
+		$numEcriture = null;
+		foreach($depense->getJournalAchats() as $ligneAchat){
+			$numEcriture = $ligneAchat->getNumEcriture();
+		}
+
 		return $this->render('compta/depense/compta_depense_voir.html.twig', array(
 			'depense' => $depense,
-			'arr_sousTraitances' => $arr_sousTraitances
+			'arr_sousTraitances' => $arr_sousTraitances,
+			'numEcriture' => $numEcriture,
+			'lastNumEcriture' => $lastNumEcriture-1
 		));
 	}
 
@@ -884,7 +903,18 @@ class DepenseController extends Controller
 
 			$em = $this->getDoctrine()->getManager();
 			$em->remove($depense);
+		
+			$settingsRepository = $em->getRepository('AppBundle:Settings');
+			$numSettings = $settingsRepository->findOneBy(array('module' => 'COMPTA', 'parametre' => 'NUMERO_DEPENSE', 'company'=>$this->getUser()->getCompany()));
+			$numSettings->setValeur($numSettings->getValeur() - 1);
+			$em->persist($numSettings);
+
 			$em->flush();
+
+			$numService = $this->get('appbundle.num_service');
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+			$numEcriture--;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 			return $this->redirect($this->generateUrl(
 					'compta_depense_liste'

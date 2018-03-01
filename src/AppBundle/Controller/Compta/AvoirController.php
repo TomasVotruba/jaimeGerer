@@ -21,26 +21,12 @@ class AvoirController extends Controller
 	 */
 	public function avoirListeAction($type)
 	{
-		$settingsRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
-		if($type == "CLIENT"){
-				$prefixe = 'A-';
-				$settingsNum = $settingsRepository->findOneBy(array('module' => 'COMPTA', 'parametre' => 'NUMERO_AVOIR', 'company'=>$this->getUser()->getCompany()));
-		} else {
-			$prefixe = 'AF-';
-			$settingsNum = $settingsRepository->findOneBy(array('module' => 'COMPTA', 'parametre' => 'NUMERO_AVOIR_FOURNISSEUR', 'company'=>$this->getUser()->getCompany()));
-		}
-		$currentNum = $settingsNum->getValeur() - 1;
-		$prefixe.= date('Y').'-';
-		if($currentNum < 10){
-			$prefixe.='00';
-		} else if ($currentNum < 100){
-			$prefixe.='0';
-		}
-		$lastNum = $prefixe.$currentNum;
+		$numService = $this->get('appbundle.num_service');
+		$lastNumEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
 		return $this->render('compta/avoir/compta_avoir_liste.html.twig', array(
 			'type' => $type,
-			'lastNum' => $lastNum
+			'lastNumEcriture' => $lastNumEcriture-1,
 		));
 	}
 
@@ -82,8 +68,15 @@ class AvoirController extends Controller
 			$totaux = $avoir->getTotaux();
 			$list[$i]['totaux'] = $totaux;
 
-		}
+			foreach($avoir->getJournalVentes() as $ligneVente){
+				$list[$i]['num_ecriture'] = $ligneVente->getNumEcriture();
+			}
 
+			foreach($avoir->getJournalAchats() as $ligneAchat){
+				$list[$i]['num_ecriture'] = $ligneAchat->getNumEcriture();
+			}
+
+		}
 
 		$response = new JsonResponse();
 		$response->setData(array(
@@ -104,9 +97,23 @@ class AvoirController extends Controller
 	 */
 	public function avoirVoirAction(Avoir $avoir)
 	{
+		$numService = $this->get('appbundle.num_service');
+		$lastNumEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+
+		$numEcriture = null;
+		foreach($avoir->getJournalVentes() as $ligneVente){
+			$numEcriture = $ligneVente->getNumEcriture();
+		}
+
+		foreach($avoir->getJournalAchats() as $ligneAchat){
+			$numEcriture = $ligneAchat->getNumEcriture();
+		}
+
 		return $this->render('compta/avoir/compta_avoir_voir.html.twig', array(
-				'avoir' => $avoir
-				));
+			'avoir' => $avoir,
+			'numEcriture' => $numEcriture,
+			'lastNumEcriture' => $lastNumEcriture-1
+		));
 	}
 
 
@@ -259,6 +266,11 @@ class AvoirController extends Controller
 
 			$em->remove($avoir);
 			$em->flush();
+
+			$numService = $this->get('appbundle.num_service');
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+			$numEcriture--;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 			return $this->redirect($this->generateUrl(
 				'compta_avoir_liste', array(

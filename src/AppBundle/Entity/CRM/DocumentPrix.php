@@ -259,6 +259,11 @@ class DocumentPrix
   */
   private $bonsCommande;
 
+  /**
+   * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="facture", cascade={"remove"}, orphanRemoval=true)
+   */
+  private $journalVentes;
+
     /**
      * Get id
      *
@@ -1454,5 +1459,38 @@ class DocumentPrix
             return null;
         }
         return $this->bonsCommande;
+    }
+
+    /**
+     * Add journalVentes
+     *
+     * @param \AppBundle\Entity\Compta\JournalVente $journalVentes
+     * @return DocumentPrix
+     */
+    public function addJournalVente(\AppBundle\Entity\Compta\JournalVente $journalVentes)
+    {
+        $this->journalVentes[] = $journalVentes;
+
+        return $this;
+    }
+
+    /**
+     * Remove journalVentes
+     *
+     * @param \AppBundle\Entity\Compta\JournalVente $journalVentes
+     */
+    public function removeJournalVente(\AppBundle\Entity\Compta\JournalVente $journalVentes)
+    {
+        $this->journalVentes->removeElement($journalVentes);
+    }
+
+    /**
+     * Get journalVentes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getJournalVentes()
+    {
+        return $this->journalVentes;
     }
 }

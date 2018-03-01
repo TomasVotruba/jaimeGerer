@@ -35,7 +35,7 @@
                     Dupliquer
                 </a>
 
-                <a href="{{ path('crm_facture_supprimer', {'id' : facture.id }) }}" class="btn {% if facture.num != lastNum %} btn-default not-active {% else %} btn-danger {% endif %}">
+                <a href="{{ path('crm_facture_supprimer', {'id' : facture.id }) }}" class="btn {% if numEcriture != lastNumEcriture %} btn-default not-active {% else %} btn-danger {% endif %}">
                     <span class="glyphicon glyphicon-trash"></span>
                     Supprimer
                 </a>
