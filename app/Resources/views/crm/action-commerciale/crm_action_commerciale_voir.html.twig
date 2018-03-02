@@ -50,7 +50,7 @@
 	    							<span class="glyphicon glyphicon-eye-open"></span> Voir la facture
 	    						</a>
 	    					{% elseif facture|length > 1 %}
-	    						<a href="{{ path('crm_factures_devis_liste', {'id' : devis.id }) }}"  class="btn btn-primary">
+	    						<a href="{{ path('crm_factures_devis_liste', {'id' : opportunite.devis.id }) }}"  class="btn btn-primary">
 	    							<span class="glyphicon glyphicon-eye-open"></span> Voir les factures
 	    						</a>
 	    					{% endif %}
@@ -75,6 +75,14 @@
 		    
 	    </div>
     </div>
+
+    {% if opportunite.totalBonsCommande != opportunite.montant %}
+    	 <div class="row">
+	    	<div class="col-md-12">
+	    		<div class="alert alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> Le montant total de l'action commerciale ne correspond pas au montant des bons de commande associés.</div>
+	    	</div>
+	    </div>
+    {% endif %}
 
      <div class="row" id="opportunite_details">
 	    	<div class="col-md-12">

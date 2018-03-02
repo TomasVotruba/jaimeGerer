@@ -866,4 +866,12 @@ class Opportunite
     {
         return $this->bonsCommande;
     }
+
+    public function getTotalBonsCommande(){
+      $total = 0;
+      foreach($this->bonsCommande as $bc){
+        $total+= $bc->getMontant();
+      }
+      return $total;
+    }
 }
