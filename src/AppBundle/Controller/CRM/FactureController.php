@@ -319,7 +319,7 @@ class FactureController extends Controller
 				}
 
 				//ecrire dans le journal de vente
-				$journalVenteService->journalVentesAjouterFactureAction($facture);
+				$journalVenteService->journalVentesAjouterFactureAction(null, $facture);
 			}
 
 			return $this->redirect($this->generateUrl(
