@@ -1247,7 +1247,7 @@ class FactureController extends Controller
 		foreach($arr_factures as $facture){
 			//ecrire dans le journal de vente
 			$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
-			$result = $journalVenteService->journalVentesAjouterFactureAction($facture);
+			$result = $journalVenteService->journalVentesAjouterFactureAction(null, $facture);
 
 		}
 

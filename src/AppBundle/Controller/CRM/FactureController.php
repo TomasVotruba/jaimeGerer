@@ -375,7 +375,7 @@ class FactureController extends Controller
 			$em->flush();
 
 			//ecrire dans le journal de vente
-			$journalVenteService->journalVentesAjouterFactureAction($facture);
+			$journalVenteService->journalVentesAjouterFactureAction(null, $facture);
 
 			return $this->redirect($this->generateUrl(
 				'crm_facture_voir', 
@@ -457,14 +457,16 @@ class FactureController extends Controller
 
 			if($activationCompta){
 				//supprimer les lignes du journal de vente
+				$numEcriture = null;
 				$journalVentesRepo = $em->getRepository('AppBundle:Compta\JournalVente');
 				$arr_lignes = $journalVentesRepo->findByFacture($facture);
 				foreach($arr_lignes as $ligne){
+					$numEcriture = $ligne->getNumEcriture();
 					$em->remove($ligne);
 				}
 				//ecrire dans le journal de vente
 				$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
-				$result = $journalVenteService->journalVentesAjouterFactureAction($facture);
+				$result = $journalVenteService->journalVentesAjouterFactureAction($numEcriture, $facture);
 			}
 
 			$em->flush();
@@ -773,7 +775,7 @@ class FactureController extends Controller
 		if($activationCompta){
 			//ecrire dans le journal de vente
 			$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
-			$result = $journalVenteService->journalVentesAjouterFactureAction($newFacture);
+			$result = $journalVenteService->journalVentesAjouterFactureAction(null, $newFacture);
 		}
 
 		$em->flush();

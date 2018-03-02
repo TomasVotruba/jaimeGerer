@@ -846,7 +846,7 @@ class ActionCommercialeController extends Controller
 
 					//ecrire dans le journal de vente
 					$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
-					$journalVenteService->journalVentesAjouterFactureAction($facture);
+					$journalVenteService->journalVentesAjouterFactureAction(null, $facture);
 				}
 
 				return $this->redirect($this->generateUrl(

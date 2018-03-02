@@ -105,9 +105,9 @@ class JournalVentesController extends Controller
 	}
 
 	/**
-	 * @Route("/compta/journal-ventes/ajouter/facture/{id}", name="compta_journal_ventes_ajouter_facture")
+	 * @Route("/compta/journal-ventes/ajouter/facture/{numEcriture}/{id}", name="compta_journal_ventes_ajouter_facture")
 	 */
-	public function journalVentesAjouterFactureAction(DocumentPrix $facture){
+	public function journalVentesAjouterFactureAction($numEcriture = null, DocumentPrix $facture){
 
 		$em = $this->getDoctrine()->getManager();
 		$numService = $this->get('appbundle.num_service');
@@ -118,7 +118,9 @@ class JournalVentesController extends Controller
 			'company' => $this->getUser()->getCompany()
 		));
 
-		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+		if(!$numEcriture){
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+		}
 
 		$totaux = $facture->getTotaux();
 
@@ -412,7 +414,7 @@ class JournalVentesController extends Controller
 	// 		}
 
 	// 		//ecrire dans le journal des ventes
-	// 		$journalVentesService->journalVentesAjouterFactureAction($facture);
+	// 		$journalVentesService->journalVentesAjouterFactureAction(null, $facture);
 
 	// 	}
 
