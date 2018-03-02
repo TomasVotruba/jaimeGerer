@@ -1778,6 +1778,7 @@ class ContactController extends Controller
 			'all' => array(),
 			'homonymes' => array(),
 		);
+		$numHomonymes = 0;
 
 
 		//start the loop at 2 to skip the header row
@@ -1792,10 +1793,8 @@ class ContactController extends Controller
 				break;
 			}
 
-			$arr_homonymes = $contactRepo->findBy(array(
-				'prenom' => $prenom,
-				'nom' => $nom
-			));
+			$arr_homonymes = $contactRepo->findByNameAndCompany($prenom, $nom, $this->getUser()->getCompany());
+			$numHomonymes+= count($arr_homonymes);
 
 			$arr_contacts['homonymes'][$prenom.' '.$nom.' ('.$orga.')'] = $arr_homonymes;
 
@@ -1853,7 +1852,8 @@ class ContactController extends Controller
 
 		return $this->render('crm/contact/crm_contact_valider_fichier_import_resultat.html.twig', array(
 			'arr_comptes' => $arr_comptes,
-			'arr_contacts' => $arr_contacts
+			'arr_contacts' => $arr_contacts,
+			'numHomonymes' => $numHomonymes
 		));
 	}
 

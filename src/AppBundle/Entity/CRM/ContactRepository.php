@@ -58,6 +58,23 @@ class ContactRepository extends EntityRepository
 		return $result;
 	}
 	
+	public function findByNameAndCompany($prenom, $nom, $company){
+		$result = $this->createQueryBuilder('c')
+		->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
+		->where('co.company = :company')
+		->andWhere('c.prenom = :prenom')
+		->andWhere('c.nom = :nom')
+        ->andWhere('c.isOnlyProspect = :isOnlyProspect')
+        ->setParameter('isOnlyProspect', false)
+		->setParameter('company', $company)
+		->setParameter('prenom', $prenom)
+		->setParameter('nom', $nom)
+		->getQuery()
+		->getResult();
+
+		return $result;
+	}
+
     public function findByImportMauticAndCompany($status, $company){
         $result = $this->createQueryBuilder('c')
             ->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
