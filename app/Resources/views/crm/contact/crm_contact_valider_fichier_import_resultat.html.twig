@@ -95,6 +95,27 @@
 				</div>
 			{% endif %}
 
+			<h3>Homonymes</h3>
+			{% if arr_contacts['homonymes']|length > 0 %}
+				<a role="button" data-toggle="collapse" href="#collapse-contacts-homonymes" aria-expanded="false" aria-controls="collapseExample" class="btn btn-info">Voir la liste</a>
+				<div class="collapse" id="collapse-contacts-homonymes">
+				  	<div class="well">
+				    	<ul>
+				    		{% for nom, arr_homonymes in arr_contacts['homonymes'] if arr_homonymes|length > 0 %}
+				    			<li>
+				    				{{ nom }}
+				    				{% for homonyme in arr_homonymes %}
+				    					<ul>
+				    						<li><a href="{{ path('crm_contact_voir', {'id' : homonyme.id }) }}" target="_blank">{{ homonyme.prenom }} {{ homonyme.nom }} ({{ homonyme.compte }}) </a></li>
+				    					</ul>
+				    				{% endfor %}
+				    			</li>
+				    		{% endfor %}
+				    	</ul>
+				  	</div>
+				</div>
+			{% endif %}
+
 		</div>
 	</div>
 

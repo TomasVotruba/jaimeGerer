@@ -1775,7 +1775,8 @@ class ContactController extends Controller
 			'existant' => array(),
 			'non-existant' => array(),
 			'doublons' => array(),
-			'all' => array()
+			'all' => array(),
+			'homonymes' => array(),
 		);
 
 
@@ -1790,6 +1791,13 @@ class ContactController extends Controller
 			if($nom == null && $orga == null){
 				break;
 			}
+
+			$arr_homonymes = $contactRepo->findBy(array(
+				'prenom' => $prenom,
+				'nom' => $nom
+			));
+
+			$arr_contacts['homonymes'][$prenom.' '.$nom.' ('.$orga.')'] = $arr_homonymes;
 
 			if($email){
 				if( array_key_exists($email, $arr_contacts['all']) ){
