@@ -1791,11 +1791,12 @@ class ContactController extends Controller
 				break;
 			}
 
-			if( array_key_exists($email, $arr_contacts['all']) ){
-				$arr_contacts['doublons'][] =  $prenom.' '.$nom.' ('.$orga.')';
-				continue;
-			} else {
-				$arr_contacts['all'][$email] = $prenom.' '.$nom.' ('.$orga.')';
+			if($email){
+				if( array_key_exists($email, $arr_contacts['all']) ){
+					$arr_contacts['doublons'][] =  $prenom.' '.$nom.' ('.$orga.')';
+				} else {
+					$arr_contacts['all'][$email] = $prenom.' '.$nom.' ('.$orga.')';
+				}
 			}
 
 			$compte = $compteRepo->findOneBy(array(
@@ -1814,7 +1815,7 @@ class ContactController extends Controller
 					'nom' => $nom
 				));
 
-				if(!$contact){
+				if(!$contact && $email){
 					$contact = $contactRepo->findByEmailAndCompany($email, $this->getUser()->getCompany());
 				}
 
@@ -1828,8 +1829,11 @@ class ContactController extends Controller
 				if( !in_array($orga, $arr_comptes['non-existant']) ){
 					$arr_comptes['non-existant'][] = $orga;
 				}
+				$contact = null;
+				if($email){
+					$contact = $contactRepo->findByEmailAndCompany($email, $this->getUser()->getCompany());
+				}
 
-				$contact = $contactRepo->findByEmailAndCompany($email, $this->getUser()->getCompany());
 				if($contact){
 					$arr_contacts['existant'][$contact[0]->getId()] = $prenom.' '.$nom.' ('.$email.')';
 				} else {
