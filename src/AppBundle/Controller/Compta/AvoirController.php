@@ -175,10 +175,10 @@ class AvoirController extends Controller
 
 			if($type == "CLIENT"){
 				$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
-				$journalVenteService->journalVentesAjouterAvoirAction($avoir);
+				$journalVenteService->journalVentesAjouterAvoirAction(null, $avoir);
 			} else {
 				$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
-				$journalAchatsService->journalAchatsAjouterAvoirAction($avoir);
+				$journalAchatsService->journalAchatsAjouterAvoirAction(null, $avoir);
 			}
 
 			return $this->redirect($this->generateUrl(
@@ -222,7 +222,38 @@ class AvoirController extends Controller
 			$avoir->setUserEdition($this->getUser());
 
 			$em->persist($avoir);
+			
+			$settingsActivationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
+			$activationCompta = $settingsActivationRepo->findOneBy(array(
+					'company' => $this->getUser()->getCompany(),
+					'outil' => 'COMPTA',
+			));
+
+			if($activationCompta){
+				//supprimer les lignes du journal de vente
+				$numEcriture = null;
+				if($type == "CLIENT"){
+					
+					foreach($avoir->getJournalVentes() as $ligne){
+						$numEcriture = $ligne->getNumEcriture();
+						$em->remove($ligne);
+					}
+					//ecrire dans le journal de vente
+					$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
+					$result = $journalVenteService->journalVentesAjouterAvoirAction($numEcriture, $facture);
+				} else {
+					foreach($avoir->getJournalAchats() as $ligne){
+						$numEcriture = $ligne->getNumEcriture();
+						$em->remove($ligne);
+					}
+					//ecrire dans le journal des achats
+					$journalAchatService = $this->container->get('appbundle.compta_journal_achats_controller');
+					$result = $journalAchatService->journalAchatsAjouterAvoirAction($numEcriture, $facture);
+				}
+			}
+
 			$em->flush();
+
 
 			return $this->redirect($this->generateUrl(
 					'compta_avoir_voir',

@@ -387,7 +387,7 @@ class DepenseController extends Controller
 
 				//ecrire dans le journal des achats
 				$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
-				$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+				$journalAchatsService->journalAchatsAjouterDepenseAction(null, $depense);
 				
 				if(count($depense->getSousTraitances()) > 1){
 					return $this->redirect($this->generateUrl(
@@ -623,7 +623,7 @@ class DepenseController extends Controller
 			$em->flush();
 
 			$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
-			$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+			$journalAchatsService->journalAchatsAjouterDepenseAction(null, $depense);
 
 
 			return new JsonResponse(array(
@@ -792,13 +792,15 @@ class DepenseController extends Controller
 			//supprimer les lignes du journal des achats
 			$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
 			$arr_lignes = $journalAchatsRepo->findByDepense($depense);
+			$numEcriture = null;
 			foreach($arr_lignes as $ligne){
+				$numEcriture = $ligne->getNumEcriture();
 				$em->remove($ligne);
 			}
 
 			//ecrire dans le journal des achats
 			$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
-			$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+			$journalAchatsService->journalAchatsAjouterDepenseAction($numEcriture, $depense);
 
 			$em->flush();
 
@@ -862,13 +864,15 @@ class DepenseController extends Controller
 			//supprimer les lignes du journal des achats
 			$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
 			$arr_lignes = $journalAchatsRepo->findByDepense($depense);
+			$numEcriture = null;
 			foreach($arr_lignes as $ligne){
+				$numEcriture = $ligne->getNumEcriture();
 				$em->remove($ligne);
 			}
 
 			//ecrire dans le journal des achats
 			$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
-			$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+			$journalAchatsService->journalAchatsAjouterDepenseAction($numEcriture, $depense);
 
 			$em->flush();
 
@@ -1400,7 +1404,7 @@ class DepenseController extends Controller
 
 			//ecrire dans le journal des achats
 			$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
-			$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+			$journalAchatsService->journalAchatsAjouterDepenseAction(null, $depense);
 		}
 
 		//suppression du fichier temporaire
@@ -1568,7 +1572,7 @@ class DepenseController extends Controller
 
 // 			//ecrire dans le journal des achats
 // 			$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
-// 			$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+// 			$journalAchatsService->journalAchatsAjouterDepenseAction(null, $depense);
 
 // 		}
 
@@ -1605,7 +1609,7 @@ class DepenseController extends Controller
 // 			}
 
 // 			//ecrire dans le journal des achats
-// 			$journalAchatsService->journalAchatsAjouterAvoirAction($avoir);
+// 			$journalAchatsService->journalAchatsAjouterAvoirAction(null, $avoir);
 
 // 		}
 

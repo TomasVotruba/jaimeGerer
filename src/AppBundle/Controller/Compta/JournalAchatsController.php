@@ -81,9 +81,9 @@ class JournalAchatsController extends Controller
 	}
 
 	/**
-	 * @Route("/compta/journal-achats/ajouter/depense/{id}/{lettrage}", name="compta_journal_achats_ajouter_depense")
+	 * @Route("/compta/journal-achats/ajouter/depense/{numEcriture}/{id}", name="compta_journal_achats_ajouter_depense")
 	 */
-	public function journalAchatsAjouterDepenseAction(Depense $depense, $lettrage = null){
+	public function journalAchatsAjouterDepenseAction($numEcriture = null, Depense $depense){
 
 		$em = $this->getDoctrine()->getManager();
 		$numService = $this->get('appbundle.num_service');
@@ -96,7 +96,11 @@ class JournalAchatsController extends Controller
 			'company' => $this->getUser()->getCompany()
 		));
 
-		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+		$newNumEcriture = false;
+		if(!$numEcriture){
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+			$newNumEcriture = true;
+		}
 
 		//credit au compte 401-nom du fournisseur (ou 421NDFxxx si c'est une note de frais) du total TTC
 		$ligne = new JournalAchat();
@@ -192,8 +196,10 @@ class JournalAchatsController extends Controller
 		$em->persist($depense);
 		$em->flush();
 
-		$numEcriture++;
-		$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+		if($newNumEcriture){
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+		}
 
 		$response = new Response();
 		$response->setStatusCode(200);
@@ -202,9 +208,9 @@ class JournalAchatsController extends Controller
 	}
 
 	/**
-	 * @Route("/compta/journal-achats/ajouter/avoir/{id}", name="compta_journal_achats_ajouter_avoir")
+	 * @Route("/compta/journal-achats/ajouter/avoir/{numEcriture}/{id}", name="compta_journal_achats_ajouter_avoir")
 	 */
-	public function journalAchatsAjouterAvoirAction(Avoir $avoir){
+	public function journalAchatsAjouterAvoirAction($numEcriture = null, Avoir $avoir){
 		//AVOIR FOURNISSEUR
 
 		$em = $this->getDoctrine()->getManager();
@@ -212,7 +218,11 @@ class JournalAchatsController extends Controller
 
 		$totaux = $avoir->getTotaux();
 
-		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+		$newNumEcriture = false;
+		if(!$numEcriture){
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+			$newNumEcriture = true;
+		}
 
 		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
 		$compteAttente = $ccRepository->findOneBy(array(
@@ -274,9 +284,11 @@ class JournalAchatsController extends Controller
 
 		$em->flush();
 
-		$numEcriture++;
-		$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
-
+		if($newNumEcriture){
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+		}
+		
 		$response = new Response();
 		$response->setStatusCode(200);
 		return $response;

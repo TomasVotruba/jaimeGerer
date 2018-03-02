@@ -118,8 +118,10 @@ class JournalVentesController extends Controller
 			'company' => $this->getUser()->getCompany()
 		));
 
+		$newNumEcriture = false;
 		if(!$numEcriture){
 			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+			$newNumEcriture = true;
 		}
 
 		$totaux = $facture->getTotaux();
@@ -200,8 +202,10 @@ class JournalVentesController extends Controller
 
 		$em->flush();
 
-		$numEcriture++;
-		$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+		if($newNumEcriture){
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+		}
 
 		$response = new Response();
 		$response->setStatusCode(200);
@@ -210,9 +214,9 @@ class JournalVentesController extends Controller
 	}
 
 	/**
-	 * @Route("/compta/journal-ventes/ajouter/avoir/{id}", name="compta_journal_ventes_ajouter_avoir")
+	 * @Route("/compta/journal-ventes/ajouter/avoir/{numEcriture}/{id}", name="compta_journal_ventes_ajouter_avoir")
 	 */
-	public function journalVentesAjouterAvoirAction(Avoir $avoir){
+	public function journalVentesAjouterAvoirAction($numEcriture = null, Avoir $avoir){
 		//AVOIR CLIENT
 
 		$em = $this->getDoctrine()->getManager();
@@ -224,7 +228,10 @@ class JournalVentesController extends Controller
 				'company' => $this->getUser()->getCompany()
 		));
 
-		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+		if(!$numEcriture){
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+			$newNumEcriture = true;
+		}
 
 		$tva = $avoir->getFacture()->getTaxePercent()*100;
 		$tva.='%';
@@ -292,9 +299,11 @@ class JournalVentesController extends Controller
 
 		$em->flush();
 
-		$numEcriture++;
-		$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
-		
+		if($newNumEcriture){
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+		}
+
 		$response = new Response();
 		$response->setStatusCode(200);
 		return $response;
@@ -432,7 +441,7 @@ class JournalVentesController extends Controller
 	// 		}
 
 	// 		//ecrire dans le journal des ventes
-	// 		$journalVentesService->journalVentesAjouterAvoirAction($avoir);
+	// 		$journalVentesService->journalVentesAjouterAvoirAction(null, $avoir);
 
 	// 	}
 
