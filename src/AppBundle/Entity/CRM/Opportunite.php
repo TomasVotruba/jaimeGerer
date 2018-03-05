@@ -868,10 +868,14 @@ class Opportunite
     }
 
     public function getTotalBonsCommande(){
-      $total = 0;
-      foreach($this->bonsCommande as $bc){
-        $total+= $bc->getMontant();
-      }
-      return $total;
+        $total = 0;
+        foreach($this->bonsCommande as $bc){
+            $total+= $bc->getMontant();
+        }
+        return $total;
+    }
+
+    public function getMontantInt(){
+        return intval($this->montant*100);
     }
 }
