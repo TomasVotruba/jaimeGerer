@@ -582,47 +582,47 @@ class ComptaController extends Controller
 
 	}
 
-	/**
-	 * @Route("/compta/set-num-ecriture", name="compta_set_num_ecriture")
-	 */
-	public function setNumEcriture(){
+	// /**
+	//  * @Route("/compta/set-num-ecriture", name="compta_set_num_ecriture")
+	//  */
+	// public function setNumEcriture(){
 
-		$em = $this->getDoctrine()->getManager();
-		$fecService = $this->get('appbundle.compta_fec_service');
-		$numService = $this->get('appbundle.num_service');
+	// 	$em = $this->getDoctrine()->getManager();
+	// 	$fecService = $this->get('appbundle.compta_fec_service');
+	// 	$numService = $this->get('appbundle.num_service');
 
-		$numEcriture = 0;
-		$arr_piecesNum = array();
+	// 	$numEcriture = 0;
+	// 	$arr_piecesNum = array();
 
-		$arr_lignes = $fecService->getFECData($this->getUser()->getCompany(), '2018');
-		foreach($arr_lignes as $ligne){
+	// 	$arr_lignes = $fecService->getFECData($this->getUser()->getCompany(), '2018');
+	// 	foreach($arr_lignes as $ligne){
 			
-				if($ligne->getCodeJournal() == 'VE' || $ligne->getCodeJournal() == 'AC'){
-					$pieceStr = $ligne->getCodeJournal().$ligne->getPiece();
-				} else {
-					$pieceStr = $ligne->getCodeJournal().$ligne->getLibelle().$ligne->getDate()->format('Ymd').$ligne->getMontant();
-				}
+	// 			if($ligne->getCodeJournal() == 'VE' || $ligne->getCodeJournal() == 'AC'){
+	// 				$pieceStr = $ligne->getCodeJournal().$ligne->getPiece();
+	// 			} else {
+	// 				$pieceStr = $ligne->getCodeJournal().$ligne->getLibelle().$ligne->getDate()->format('Ymd').$ligne->getMontant();
+	// 			}
 				
 			
-				if(!array_key_exists($pieceStr, $arr_piecesNum)){
-					$numEcriture++;
-					$arr_piecesNum[$pieceStr] = $numEcriture;
-					$num = $numEcriture;
-				} else{
-					$num = $arr_piecesNum[$pieceStr];
-				}
+	// 			if(!array_key_exists($pieceStr, $arr_piecesNum)){
+	// 				$numEcriture++;
+	// 				$arr_piecesNum[$pieceStr] = $numEcriture;
+	// 				$num = $numEcriture;
+	// 			} else{
+	// 				$num = $arr_piecesNum[$pieceStr];
+	// 			}
 
-				$ligne->setNumEcriture($num);
-				$em->persist($ligne);
-		}
+	// 			$ligne->setNumEcriture($num);
+	// 			$em->persist($ligne);
+	// 	}
 
-		$em->flush();
+	// 	$em->flush();
 
-		$numEcriture++;
-		$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+	// 	$numEcriture++;
+	// 	$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
-		return new Response();
-	}
+	// 	return new Response();
+	// }
 
 
 }
