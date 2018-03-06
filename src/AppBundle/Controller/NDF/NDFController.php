@@ -374,7 +374,7 @@ class NDFController extends Controller
 				$ndf->addDepense($depense);
 
 				//ecrire dans le journal des achats
-				$journalAchatsService->journalAchatsAjouterDepenseAction($depense, $lettrage);
+				$journalAchatsService->journalAchatsAjouterDepenseAction(null, $depense);
 			}
 
 			$numService->updateDepenseNum($ndf->getUser()->getCompany(), $currentNum);
@@ -518,7 +518,7 @@ class NDFController extends Controller
 				}
 
 				//ecrire dans le journal des achats
-				$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+				$journalAchatsService->journalAchatsAjouterDepenseAction(null, $depense);
 			}
 
 			$em->persist($ndf);
@@ -962,7 +962,7 @@ class NDFController extends Controller
 
 	// 			//ecrire dans le journal des achats
 	// 			$journalAchatsService = $this->container->get('appbundle.compta_journal_achats_controller');
-	// 			$journalAchatsService->journalAchatsAjouterDepenseAction($depense);
+	// 			$journalAchatsService->journalAchatsAjouterDepenseAction(null, $depense);
 	// 		}
 
 	// 		return $this->redirect($this->generateUrl(
