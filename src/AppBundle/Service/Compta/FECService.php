@@ -152,7 +152,7 @@ class FECService extends ContainerAware {
                  ));
 
                 if(!$compteComptable){
-                    dump($shortNum);
+                    var_dump($shortNum);
                 }
 
             }
@@ -307,7 +307,10 @@ class FECService extends ContainerAware {
 
     function orderByDateCreation($a, $b){
         if ($a->getDateCreation() == $b->getDateCreation()) {
-            return 0;
+            if($a->getPieceId() == $a->getPieceId()){
+                return 0;
+            }
+            return ($a->getPieceId() < $b->getPieceId()) ? -1 : 1;
         }
         return ($a->getDateCreation() < $b->getDateCreation()) ? -1 : 1;
     }

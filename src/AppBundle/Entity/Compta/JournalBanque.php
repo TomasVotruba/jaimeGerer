@@ -444,6 +444,26 @@ class JournalBanque
       return $num;
     }
 
+    public function getPieceId(){
+      $id = '';
+      foreach($this->mouvementBancaire->getRapprochements() as $rapprochement){
+        if($rapprochement->getRemiseCheque() ){
+          $num = $rapprochement->getRemiseCheque()->getId();
+        } else if ($rapprochement->getFacture()){
+          $num = $rapprochement->getFacture()->getId();
+        } else if ($rapprochement->getDepense()){
+          $num = $rapprochement->getDepense()->getId();
+        } else if ($rapprochement->getAvoir()){
+          $num = $rapprochement->getAvoir()->getNum();
+        } else if ($rapprochement->getAffectationDiverse()){
+        //  $num = $rapprochement->getAffectationDiverse()->__toString();
+        } else if ($rapprochement->getNoteFrais()){
+        //  $num = $rapprochement->getNoteFrais()->__toString();
+        }
+      }
+      return $id;
+    }
+
      public function getDatePiece(){
       $date = null;
       foreach($this->mouvementBancaire->getRapprochements() as $rapprochement){
@@ -532,5 +552,12 @@ class JournalBanque
     public function getNumEcriture()
     {
         return $this->numEcriture;
+    }
+
+    public function getMontant(){
+        if($this->debit != null & $this->debit != 0){
+            return $this->debit;
+        }
+        return $this->credit;
     }
 }

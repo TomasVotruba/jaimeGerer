@@ -333,6 +333,17 @@ class OperationDiverse
       return null;
     }
 
+    public function getPieceId(){
+      if($this->depense){
+        return $this->depense->getId();
+      } else if($this->avoir) {
+        return $this->avoir->getId();
+      } else if($this->facture){
+        return $this->facture->getId();
+      }
+      return null;
+    }
+
      public function getDatePiece(){
       if($this->depense){
         return $this->depense->getDate();
@@ -388,5 +399,12 @@ class OperationDiverse
     public function getNumEcriture()
     {
         return $this->numEcriture;
+    }
+
+    public function getMontant(){
+        if($this->debit != null & $this->debit != 0){
+            return $this->debit;
+        }
+        return $this->credit;
     }
 }

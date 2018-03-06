@@ -333,6 +333,15 @@ class JournalAchat
       return null;
     }
 
+    public function getPieceId(){
+      if($this->depense){
+        return $this->depense->getId();
+      } else if($this->avoir) {
+        return $this->avoir->getId();
+      }
+      return null;
+    }
+
     public function getDatePiece(){
       if($this->depense){
         return $this->depense->getDate();

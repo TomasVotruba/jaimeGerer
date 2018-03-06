@@ -278,6 +278,15 @@ class JournalVente
       return null;
     }
 
+    public function getPieceId(){
+      if($this->facture){
+        return $this->facture->getId();
+      } else if($this->avoir) {
+        return $this->avoir->getId();
+      }
+      return null;
+    }
+
     public function getDatePiece(){
       if($this->facture){
         return $this->facture->getDateCreation();
