@@ -76,7 +76,7 @@
 	    </div>
     </div>
 
-    {% if opportunite.totalBonsCommande != opportunite.montantInt %}
+    {% if opportunite.totalBonsCommande != opportunite.montantInt  && opportunite.isWon %}
     	 <div class="row">
 	    	<div class="col-md-12">
 	    		<div class="alert alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> Le montant total de l'action commerciale ne correspond pas au montant des bons de commande associés.</div>
