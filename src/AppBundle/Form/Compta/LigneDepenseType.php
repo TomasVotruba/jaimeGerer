@@ -52,11 +52,11 @@ class LigneDepenseType extends AbstractType
             		'query_builder' => function (EntityRepository $er) {
             			return $er->createQueryBuilder('c')
             			->where('c.company = :company')
-            			->andWhere('c.num LIKE :num OR c.num LIKE :compteAttente OR c.num LIKE :ordi')
+            			->andWhere('c.num LIKE :num OR c.num LIKE :compteAttente OR c.num LIKE :immo'
             			->setParameter('company', $this->companyId)
             			->setParameter('num', '6%')
             			->setParameter('compteAttente', '471')
-                        ->setParameter('ordi', '21831000')
+                        ->setParameter('immo', '2')
             			->orderBy('c.nom');
             		},
             		'required' => false,

@@ -71,90 +71,90 @@ class DepenseType extends AbstractType
              		'required' => true,
              		'label' => 'Date de la dépense'
              ))
-					->add('libelle', 'text', array(
-						'required' => true,
-						'label' => 'Libellé'
-					))
-					->add('numFournisseur', 'text', array(
-						'required' => false,
-						'label' => 'Numéro de facture fournisseur'
-					))
-					->add('modePaiement', 'choice', array(
-						'required' => true,
-						'label' => 'Mode de paiement',
-						'attr' => array('class' => 'select-mode-paiement'),
-						'choices'  => array(
-								'Espèce' => 'Espèce',
-								'Chèque' => 'Chèque',
-								'Virement' => 'Virement',
-								'Paypal' => 'Paypal',
-								'CB' => 'CB',
-								'Prélèvement' => 'Prélèvement'
-						),
-					))
-					->add('conditionReglement','choice', array(
-						'required' => true,
-						'label' => 'Condition de règlement',
-						'attr' => array('class' => 'select-condition-reglement'),
-						'choices'  => array(
-							'reception' => 'A réception',
-							'30' => '30 jours',
-							'30finMois' => '30 jours fin de mois',
-							'45' => '45 jours',
-							'45finMois' => '30 jours fin de mois',
-							'60' => '60 jours',
-							'60finMois' => '60 jours fin de mois'
-						),
-					))
-					->add('numCheque', 'text', array(
-						'required' => false,
-						'label' => 'Numéro du chèque',
-						'attr' => array('class' => 'input-num-cheque'),
-					))
-					->add('lignes', 'collection', array(
-		             		'type' => new LigneDepenseType($this->companyId),
-		             		'allow_add' => true,
-		             		'allow_delete' => true,
-		             		'by_reference' => false,
-		             		'label_attr' => array('class' => 'hidden')
-		             ))
-					->add('taxe', 'number', array(
-						'required' => false,
-						'precision' => 2,
-						//'label_attr' => array('class' => 'hidden'),
-						'attr' => array('class' => 'depense-taxe'),
-						'read_only' => true,
-						'label' => 'TVA'
-					))
-					->add('totalHT', 'number', array(
-						'required' => false,
-						'label' => 'Total HT',
-						'precision' => 2,
-						'mapped' => false,
-						'read_only' => true,
-						'attr' => array('class' => 'depense-total-ht')
-					))
-					->add('totalTTC', 'number', array(
-						'required' => false,
-						'label' => 'Total TTC',
-						'precision' => 2,
-						'mapped' => false,
-						'read_only' => true,
-						'attr' => array('class' => 'depense-total-ttc')
-					))
-					->add('opportuniteSousTraitances', 'entity', array(
-						 'class'=> 'AppBundle\Entity\CRM\opportuniteSousTraitance',
-						 'required' => false,
-						 'label' => 'Sous-traitance',
-						 'property' => 'NomEtMontant',
-						 'choices' => $this->arr_opportuniteSousTraitances,
-						 'multiple' => true,
-						 'expanded' => false,
-						 'attr' => array('class' => 'select-sous-traitances'),
-						 'mapped' => false,
-						 'data' => $this->depenseSousTraitances
+			->add('libelle', 'text', array(
+				'required' => true,
+				'label' => 'Libellé'
+			))
+			->add('numFournisseur', 'text', array(
+				'required' => false,
+				'label' => 'Numéro de facture fournisseur'
+			))
+			->add('modePaiement', 'choice', array(
+				'required' => true,
+				'label' => 'Mode de paiement',
+				'attr' => array('class' => 'select-mode-paiement'),
+				'choices'  => array(
+						'Espèce' => 'Espèce',
+						'Chèque' => 'Chèque',
+						'Virement' => 'Virement',
+						'Paypal' => 'Paypal',
+						'CB' => 'CB',
+						'Prélèvement' => 'Prélèvement'
+				),
+			))
+			->add('conditionReglement','choice', array(
+				'required' => true,
+				'label' => 'Condition de règlement',
+				'attr' => array('class' => 'select-condition-reglement'),
+				'choices'  => array(
+					'reception' => 'A réception',
+					'30' => '30 jours',
+					'30finMois' => '30 jours fin de mois',
+					'45' => '45 jours',
+					'45finMois' => '30 jours fin de mois',
+					'60' => '60 jours',
+					'60finMois' => '60 jours fin de mois'
+				),
+			))
+			->add('numCheque', 'text', array(
+				'required' => false,
+				'label' => 'Numéro du chèque',
+				'attr' => array('class' => 'input-num-cheque'),
+			))
+			->add('lignes', 'collection', array(
+             		'type' => new LigneDepenseType($this->companyId),
+             		'allow_add' => true,
+             		'allow_delete' => true,
+             		'by_reference' => false,
+             		'label_attr' => array('class' => 'hidden')
+             ))
+			->add('taxe', 'number', array(
+				'required' => false,
+				'precision' => 2,
+				//'label_attr' => array('class' => 'hidden'),
+				'attr' => array('class' => 'depense-taxe'),
+				'read_only' => true,
+				'label' => 'TVA'
+			))
+			->add('totalHT', 'number', array(
+				'required' => false,
+				'label' => 'Total HT',
+				'precision' => 2,
+				'mapped' => false,
+				'read_only' => true,
+				'attr' => array('class' => 'depense-total-ht')
+			))
+			->add('totalTTC', 'number', array(
+				'required' => false,
+				'label' => 'Total TTC',
+				'precision' => 2,
+				'mapped' => false,
+				'read_only' => true,
+				'attr' => array('class' => 'depense-total-ttc')
+			))
+			->add('opportuniteSousTraitances', 'entity', array(
+				 'class'=> 'AppBundle\Entity\CRM\opportuniteSousTraitance',
+				 'required' => false,
+				 'label' => 'Sous-traitance',
+				 'property' => 'NomEtMontant',
+				 'choices' => $this->arr_opportuniteSousTraitances,
+				 'multiple' => true,
+				 'expanded' => false,
+				 'attr' => array('class' => 'select-sous-traitances'),
+				 'mapped' => false,
+				 'data' => $this->depenseSousTraitances
 
-					))
+			))
         ;
 
 		$builder->get('compte')
