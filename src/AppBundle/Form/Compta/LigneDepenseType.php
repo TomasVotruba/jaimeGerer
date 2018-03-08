@@ -56,7 +56,7 @@ class LigneDepenseType extends AbstractType
             			->setParameter('company', $this->companyId)
             			->setParameter('num', '6%')
             			->setParameter('compteAttente', '471')
-                        ->setParameter('immo', '2')
+                        ->setParameter('immo', '2%')
             			->orderBy('c.nom');
             		},
             		'required' => false,
