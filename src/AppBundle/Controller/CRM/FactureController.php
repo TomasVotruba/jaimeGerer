@@ -29,6 +29,7 @@ use AppBundle\Form\Compta\CompteComptableType;
 use PHPExcel_IOFactory;
 use PHPExcel_Shared_Date;
 use PHPExcel_Style_Fill;
+use PHPExcel;
 
 class FactureController extends Controller
 {
@@ -963,6 +964,81 @@ class FactureController extends Controller
 		return $this->render('crm/facture/crm_facture_export_evoliz.html.twig', array(
 			'form' => $form->createView(),
 		));
+	}
+
+	/**
+	 * @Route("/crm/facture/export", name="crm_facture_export")
+	 */
+	public function factureExportAction()
+	{
+		
+			
+			$em = $this->getDoctrine()->getManager();
+			$repository = $em->getRepository('AppBundle:CRM\DocumentPrix');
+			$arr_factures = $repository->findForCompany($this->getUser()->getCompany(), 'FACTURE', null, array('start' => new \DateTime('2017-01-01'), 'end' => new \DateTime('2017-12-31') ));
+		
+	
+			$objPHPExcel = new PHPExcel();
+			$objPHPExcel->getActiveSheet()->setTitle('factures');
+
+			// header row
+			$arr_header = array(
+				'Numero',
+				'Date',
+				'Client',
+				'Analytique',
+				'Montant',
+				'Objet',
+			);
+			$row = 1;
+			$col = 'A';
+			foreach($arr_header as $header){
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $header);
+				$col++;
+			}
+			
+			foreach($arr_factures as $facture){
+
+				$col = 'A';
+				$row++;
+
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $facture->getNum());
+				$col++;
+
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $facture->getDateCreation()->format('d/m/Y'));
+				$col++;
+
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $facture->getCompte()->getNom());
+				$col++;
+
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $facture->getAnalytique()->getValeur());
+				$col++;
+
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $facture->getTotalTTC());
+				$col++;
+
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $facture->getObjet());
+				$col++;
+
+			}
+
+
+			//set column width
+			foreach(range('A','H') as $col) {
+	    		$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
+			}
+
+			$response = new Response();
+
+			$response->headers->set('Content-Type', 'application/vnd.ms-excel');
+			$response->headers->set('Content-Disposition', 'attachment;filename="factures.xlsx"');
+			$response->headers->set('Cache-Control', 'max-age=0');
+			$response->sendHeaders();
+			$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+			$objWriter->save('php://output');
+			exit();
+
+
 	}
 
 }
