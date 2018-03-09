@@ -830,6 +830,7 @@ class ActionCommercialeController extends Controller
 					if($compte->getClient() == false || $compte->getCompteComptableClient() == null){
 
 						try {
+							$compteComptableService = $this->get('appbundle.compta_compte_comptable_service');
 							$compteComptable = $compteComptableService->createCompteComptableClient($compte);
 						} catch(\Exception $e){
 							return $this->redirect($this->generateUrl(
