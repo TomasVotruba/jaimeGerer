@@ -8,15 +8,23 @@
 
 {% block body %}
 <div class="row full-height-minus-userbar">
-		<div class="col-md-1"></div>
-		<div class="col-md-10 wrap-content wrap-content-ndf">
-	     <div class="titre titre-ndf">
-					<h1>J'aime les notes de frais</h1>
-			 </div>
+	<div class="col-md-1"></div>
+	<div class="col-md-10 wrap-content wrap-content-ndf">
 
-	    	{% block content %}
-	    	{% endblock %}
-	  </div>
-		<div class="col-md-1"></div>
+	    <div class="titre titre-ndf">
+			<h1>J'aime les notes de frais</h1>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				{% include 'ndf/ndf_submenu.html.twig' %}
+			</div>
+		</div>
+
+	    {% block content %}
+	    {% endblock %}
+	
+	</div>
+	<div class="col-md-1"></div>
 </div>
 {% endblock %}

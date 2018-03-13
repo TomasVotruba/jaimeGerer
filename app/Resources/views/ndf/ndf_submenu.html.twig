@@ -1,8 +1,5 @@
 {% block submenu %}
 	<ul class="nav nav-tabs">
-	{# 	<li {% if app.request.pathInfo == "/ndf/recu/upload"  %} class="active" {% endif %}>
-        	<a href="{{ path('ndf_recu_upload') }}" >Uploader mes reçus</a>
-      	</li> #}
 		<li {% if app.request.pathInfo == "/ndf/recu/liste"  %} class="active" {% endif %}>
         	<a href="{{ path('ndf_recus_liste') }}" >Mes reçus</a>
       	</li>
