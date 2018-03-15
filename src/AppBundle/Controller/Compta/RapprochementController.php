@@ -328,6 +328,7 @@ class RapprochementController extends Controller
         $facture->setEtat('RAPPROCHE');
         $em->persist($facture);
         break;
+
       case 'ACCOMPTE' :
         $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Accompte');
         $accompte = $repo->find($piece);
@@ -335,6 +336,7 @@ class RapprochementController extends Controller
         $piece = $accompte;
         $s_piece = $accompte->__toString();
         break;
+
       case 'AVOIR-FOURNISSEUR' :
         $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
         $avoir = $repo->find($piece);
@@ -348,6 +350,7 @@ class RapprochementController extends Controller
         $piece = $avoir;
         $s_piece = $avoir->__toString();
         break;
+
       case 'AVOIR-CLIENT' :
         $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
         $avoir = $repo->find($piece);
@@ -361,6 +364,7 @@ class RapprochementController extends Controller
         $piece = $avoir;
         $s_piece = $avoir->__toString();
         break;
+
       case 'REMISE-CHEQUES' :
         $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\RemiseCheque');
         $remiseCheque = $repo->find($piece);
@@ -368,6 +372,7 @@ class RapprochementController extends Controller
         $piece = $remiseCheque;
         $s_piece = $remiseCheque->__toString();
         break;
+
       case 'AFFECTATION-DIVERSE-VENTE' :
         $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\AffectationDiverse');
         $affectationDiverse = $repo->find($piece);
@@ -375,6 +380,7 @@ class RapprochementController extends Controller
         $piece = $affectationDiverse;
         $s_piece = $affectationDiverse->__toString();
         break;
+
       case 'AFFECTATION-DIVERSE-ACHAT' :
         $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\AffectationDiverse');
         $affectationDiverse = $repo->find($piece);
@@ -382,6 +388,7 @@ class RapprochementController extends Controller
         $piece = $affectationDiverse;
         $s_piece = $affectationDiverse->__toString();
         break;
+        
       case 'NOTE-FRAIS' :
         $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:NDF\NoteFrais');
         $noteFrais = $repo->find($piece);
@@ -605,12 +612,12 @@ class RapprochementController extends Controller
         }
 
         //notes de frais
-        // $arr_all_note_frais = $noteFraisRepo->findForCompany($this->getUser()->getCompany());
-        // foreach($arr_all_note_frais as $ndf){
-        //   if($ndf->getEtat() == 'VALIDE'){
-        //     $arr_pieces['NOTES-FRAIS'][] = $ndf;
-        //   }
-        // }
+        $arr_all_note_frais = $noteFraisRepo->findForCompany($this->getUser()->getCompany());
+        foreach($arr_all_note_frais as $ndf){
+          if($ndf->getEtat() == 'VALIDE'){
+            $arr_pieces['NOTES-FRAIS'][] = $ndf;
+          }
+        }
 
         // //avoirs fournisseurs
         // $arr_all_avoirs_fournisseurs = $avoirRepo->findForCompany('FOURNISSEUR', $this->getUser()->getCompany());
@@ -730,11 +737,16 @@ class RapprochementController extends Controller
                   //   $rapprochement->setAffectationDiverse($piece);
                   //   break;
 
-                  // case 'NOTES-FRAIS' :
-                  //   $repo = $em->getRepository('AppBundle:NDF\NoteFrais');
-                  //   $piece = $repo->find($id);
-                  //   $rapprochement->setNoteFrais($piece);
-                  //   break;
+                  case 'NOTES-FRAIS' :
+                    $repo = $em->getRepository('AppBundle:NDF\NoteFrais');
+                    $piece = $repo->find($id);
+                    $rapprochement->setNoteFrais($piece);
+                    $piece->setEtat('RAPPROCHE');
+                    $em->persist($piece);
+                    if( !in_array($piece->getCompteComptable()->getId(), $arr_cc) ){
+                       $arr_cc[] = $piece->getCompteComptable()->getId(); 
+                    }
+                    break;
                 }
 
                 $arr_pieces[] = array($type => $piece);

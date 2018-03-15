@@ -815,6 +815,8 @@ class ActionCommercialeController extends Controller
 				));
 				if(!$activationCompta){
 					$facture->setCompta(false);
+				} else{
+					$facture->setCompta(false);
 				}
 
 				$em->persist($facture);

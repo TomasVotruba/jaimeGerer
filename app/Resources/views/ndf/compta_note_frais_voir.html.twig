@@ -142,7 +142,7 @@
 					<tbody>
 					{% for depense in noteFrais.depenses %}
 						<tr>
-							<td colspan="5"><strong>{{ depense.analytique }}</strong></td>
+							<td colspan="5"><strong>{{ depense.analytique }} - {{ depense.totalHT }} € HT - {{ depense.totalTTC }} € TTC</strong></td>
 						</tr>
 
 				    	{% for ligne in depense.lignes %}

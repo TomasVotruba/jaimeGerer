@@ -466,20 +466,24 @@ class JournalBanqueController extends Controller
 		$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
 		$journalAchatRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
 		$lettrageService = $this->get('appbundle.compta_lettrage_service');
+		$numService = $this->get('appbundle.num_service');
 
 		$arr_annees = array();
-		
+
+		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
 		$analytique = '';
 		$modePaiement = '';
 		foreach($arr_pieces as $arr_piece){
 			foreach($arr_piece as $type => $piece){
-				$analytique.= $piece->getTotalTTC();
-				$analytique.= '€ ';
-				$analytique.= $piece->getAnalytique()->getValeur();
-				$analytique.= ', ';
-
+				
 				if($type == "DEPENSES"){
+
+					$analytique.= $piece->getTotalTTC();
+					$analytique.= '€ ';
+					$analytique.= $piece->getAnalytique()->getValeur();
+					$analytique.= ', ';
+
 					$modePaiement.= $piece->getTotalTTC();
 					$modePaiement.= '€ ';
 					$modePaiement.= $piece->getModePaiement();
@@ -491,13 +495,46 @@ class JournalBanqueController extends Controller
 				}
 
 				if($type == "FACTURES"){
+
+					$analytique.= $piece->getTotalTTC();
+					$analytique.= '€ ';
+					$analytique.= $piece->getAnalytique()->getValeur();
+					$analytique.= ', ';
+
 					if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
 						$arr_annees[] = $piece->getDateCreation()->format('Y');
 					}
 				}
+
+				if($type == "NOTES-FRAIS"){
+
+					if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
+						$arr_annees[] = $piece->getDateCreation()->format('Y');
+					}
+
+					$arr_analytiques = array();
+					foreach($piece->getDepenses() as $depense){
+						if( array_key_exists($depense->getAnalytique(), $arr_analytiques) ){
+							$arr_analytiques[$depense->getAnalytique()]+= $depense->getTotalTTC();
+						} else {
+							$arr_analytiques[$depense->getAnalytique()]= $depense->getTotalTTC();
+						}
+					}
+
+				}
 		
 			}
 
+		}
+
+		if($type == "NOTES-FRAIS"){
+			foreach($arr_analytiques as $analytiqueNDF => $montant){
+				$analytique.= $montant;
+				$analytique.= '€ ';
+				$analytique.= $analytiqueNDF;
+				$analytique.= ', ';
+
+			}
 		}
 
 		foreach($arr_mouvements as $mouvement){
@@ -536,6 +573,7 @@ class JournalBanqueController extends Controller
 						$ligne->setLettrage($lettrage);
 						$ligne->setNom($mouvementBancaire->getLibelle());
 						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setNumEcriture($numEcriture);
 						$em->persist($ligne);
 
 						//debit au compte 512xxxx (selon banque)
@@ -549,6 +587,7 @@ class JournalBanqueController extends Controller
 						$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
 						$ligne->setNom($mouvementBancaire->getLibelle());
 						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setNumEcriture($numEcriture);
 						$em->persist($ligne);
 					}
 
@@ -591,6 +630,7 @@ class JournalBanqueController extends Controller
 						$ligne->setNom($mouvementBancaire->getLibelle());
 						$ligne->setDate($mouvementBancaire->getDate());
 						$ligne->setModePaiement($modePaiement);
+						$ligne->setNumEcriture($numEcriture);
 						$em->persist($ligne);
 
 						//debit au compte 401xxxx (compte du fournisseur)
@@ -606,6 +646,7 @@ class JournalBanqueController extends Controller
 						$ligne->setNom($mouvementBancaire->getLibelle());
 						$ligne->setDate($mouvementBancaire->getDate());
 						$ligne->setModePaiement($modePaiement);
+						$ligne->setNumEcriture($numEcriture);
 						$em->persist($ligne);
 					}
 
@@ -622,8 +663,72 @@ class JournalBanqueController extends Controller
 
 					break;
 
+				case 'NOTES-FRAIS':
+		
+					$prefixe = '';
+					if(count($arr_annees) > 1){
+						foreach($arr_annees as $annee){
+							$prefixe.= $annee;
+							$prefixe.=' ';
+						}
+					}
+					$lettre = $lettrageService->findNextNum($piece->getCompteComptable());	
+					$lettrage = $prefixe.$lettre;
+
+					foreach($arr_mouvements as $mouvementBancaire){
+			
+						//credit au compte  512xxxx (selon banque)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit(null);
+						$ligne->setCredit(-$mouvementBancaire->getMontant());
+						$ligne->setAnalytique(null);
+						$ligne->setStringAnalytique($analytique);
+						$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setModePaiement(null);
+						$ligne->setNumEcriture($numEcriture);
+						$em->persist($ligne);
+
+						//debit au compte 421xxxx (compte NDF du salarié)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit(-$mouvementBancaire->getMontant());
+						$ligne->setCredit(null);
+						$ligne->setAnalytique(null);
+						$ligne->setStringAnalytique($analytique);
+						$ligne->setCompteComptable($piece->getCompteComptable());
+						$ligne->setLettrage($lettrage);
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setModePaiement($modePaiement);
+						$ligne->setNumEcriture($numEcriture);
+						$em->persist($ligne);
+					}
+
+					foreach($arr_pieces as $arr_piece){
+						foreach($arr_piece as $type => $piece){
+							foreach($piece->getDepenses() as $depense){
+								$ligneJournalAchats = $journalAchatRepo->findOneBy(array(
+									'depense' => $depense,
+									'compteComptable' => $piece->getCompteComptable()
+								));
+								$ligneJournalAchats->setLettrage($lettrage);
+								$em->persist($ligneJournalAchats);
+							}
+						}
+					}
+
+					break;
+
 			}
 			$em->flush();
+
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 		} catch (\Exception $e){
 			throw $e;
@@ -639,64 +744,64 @@ class JournalBanqueController extends Controller
 	}
 
 
-	/**
-	 * @Route("/compta/journal-banque/reinitialiser", name="compta_journal_banque_reinitialiser")
-	 */
-	public function journalBanqueReinitialiser(){
+	// /**
+	//  * @Route("/compta/journal-banque/reinitialiser", name="compta_journal_banque_reinitialiser")
+	//  */
+	// public function journalBanqueReinitialiser(){
 
-		$em = $this->getDoctrine()->getManager();
-		$journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
-		$rapprochementRepo = $em->getRepository('AppBundle:Compta\Rapprochement');
-		$compteBancaireRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\CompteBancaire');
-		$journalBanqueService = $this->container->get('appbundle.compta_journal_banque_controller');
+	// 	$em = $this->getDoctrine()->getManager();
+	// 	$journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
+	// 	$rapprochementRepo = $em->getRepository('AppBundle:Compta\Rapprochement');
+	// 	$compteBancaireRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\CompteBancaire');
+	// 	$journalBanqueService = $this->container->get('appbundle.compta_journal_banque_controller');
 
-		$arr_comptesBancaires = $compteBancaireRepo->findByCompany($this->getUser()->getCompany());
-		foreach($arr_comptesBancaires as $compteBancaire){
-			$arr_journal = $journalBanqueRepo->findJournalEntier($this->getUser()->getCompany(), $compteBancaire);
-			foreach($arr_journal as $ligne){
-				$em->remove($ligne);
-			}
-		}
-		$em->flush();
+	// 	$arr_comptesBancaires = $compteBancaireRepo->findByCompany($this->getUser()->getCompany());
+	// 	foreach($arr_comptesBancaires as $compteBancaire){
+	// 		$arr_journal = $journalBanqueRepo->findJournalEntier($this->getUser()->getCompany(), $compteBancaire);
+	// 		foreach($arr_journal as $ligne){
+	// 			$em->remove($ligne);
+	// 		}
+	// 	}
+	// 	$em->flush();
 
-		$arr_rapprochements = $rapprochementRepo->findForCompany($this->getUser()->getCompany());
-		foreach($arr_rapprochements as $rapprochement){
+	// 	$arr_rapprochements = $rapprochementRepo->findForCompany($this->getUser()->getCompany());
+	// 	foreach($arr_rapprochements as $rapprochement){
 
-			$type = "";
-			if($rapprochement->getFacture()){
-				$type = "FACTURE";
-			} else if($rapprochement->getDepense()){
-				$type = "DEPENSE";
-			} else if($rapprochement->getAvoir()){
-				if($rapprochement->getAvoir()->getType() == 'CLIENT'){
-					$type = "AVOIR-CLIENT";
-				} else {
-					$type = "AVOIR-FOURNISSEUR";
-				}
-			} else if($rapprochement->getAccompte()){
-				$type = "ACCOMPTE";
-			} else if($rapprochement->getRemiseCheque()){
-				$type = "REMISE-CHEQUES";
-			} else if($rapprochement->getAffectationDiverse()){
-				if($rapprochement->getAffectationDiverse()->getType() == 'VENTE'){
-					$type = "AFFECTATION-DIVERSE-VENTE";
-				} else {
-					$type = "AFFECTATION-DIVERSE-ACHAT";
-				}
-			} else if($rapprochement->getNoteFrais()){
-				$type = "NOTE-FRAIS";
-			}
+	// 		$type = "";
+	// 		if($rapprochement->getFacture()){
+	// 			$type = "FACTURE";
+	// 		} else if($rapprochement->getDepense()){
+	// 			$type = "DEPENSE";
+	// 		} else if($rapprochement->getAvoir()){
+	// 			if($rapprochement->getAvoir()->getType() == 'CLIENT'){
+	// 				$type = "AVOIR-CLIENT";
+	// 			} else {
+	// 				$type = "AVOIR-FOURNISSEUR";
+	// 			}
+	// 		} else if($rapprochement->getAccompte()){
+	// 			$type = "ACCOMPTE";
+	// 		} else if($rapprochement->getRemiseCheque()){
+	// 			$type = "REMISE-CHEQUES";
+	// 		} else if($rapprochement->getAffectationDiverse()){
+	// 			if($rapprochement->getAffectationDiverse()->getType() == 'VENTE'){
+	// 				$type = "AFFECTATION-DIVERSE-VENTE";
+	// 			} else {
+	// 				$type = "AFFECTATION-DIVERSE-ACHAT";
+	// 			}
+	// 		} else if($rapprochement->getNoteFrais()){
+	// 			$type = "NOTE-FRAIS";
+	// 		}
 
-			if($type != ""){
-				//ecrire dans le journal de banque
-				$journalBanqueService->journalBanqueAjouterAction($type, $rapprochement);
-			}
+	// 		if($type != ""){
+	// 			//ecrire dans le journal de banque
+	// 			$journalBanqueService->journalBanqueAjouterAction($type, $rapprochement);
+	// 		}
 
-		}
+	// 	}
 
-		return new Response;
+	// 	return new Response;
 
-	}
+	// }
 
 	/**
 	 * @Route("/compta/journal-banque/exporter/{id}/{year}",

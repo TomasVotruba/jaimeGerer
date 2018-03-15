@@ -34,8 +34,14 @@
                     {% elseif rapprochement.affectationDiverse is not null %}
                         {{ ligneJournal.piece }}
                         {{ ligneJournal.libelle }}
+                    {% elseif rapprochement.noteFrais is not null %}
+                         <a href="{{ path('ndf_voir', {'id' : rapprochement.noteFrais.id} ) }}">{{ ligneJournal.libelle }}</a>
+                    {% else %}
+                        {{ ligneJournal.libelle }}
                     {% endif %}
+                    <br />
                 {% endfor %}
+
                 &nbsp;</td>
             <td>
                 {% for rapprochement in ligneJournal.mouvementBancaire.rapprochements %}
