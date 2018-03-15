@@ -65,7 +65,7 @@ class JournalVenteRepository extends EntityRepository
 		return $result;
 	}
 
-	public function findCompteAttenteACorriger($compteComptable, $company){
+	public function findCompteAttenteACorriger($compteComptable, $company, $year = null){
 
 		$queryBuilder  = $this->_em->createQueryBuilder();
 
@@ -74,6 +74,10 @@ class JournalVenteRepository extends EntityRepository
 			->from('AppBundle\Entity\Compta\OperationDiverse', 'od')
 			->where('j.facture = od.facture')
 			->orWhere('j.avoir = od.avoir');
+
+		if($year){
+			$subQueryBuilder->andWhere('od.date >= :startDate and od.date <= :endDate');
+		}
 
 		$query = $this->createQueryBuilder('j')
 		->leftJoin('AppBundle\Entity\CRM\DocumentPrix', 'f', 'WITH', 'j.facture = f.id')
@@ -85,6 +89,14 @@ class JournalVenteRepository extends EntityRepository
 		->andWhere('j.compteComptable = :compteComptable')
 		->setParameter('company', $company)
 		->setParameter('compteComptable', $compteComptable);
+
+		if($year){
+			$query
+			->andWhere('(f.dateCreation >= :startDate and f.dateCreation <= :endDate) or (a.dateCreation >= :startDate and a.dateCreation <= :endDate)')
+			->setParameter('startDate', $year.'-01-01')
+			->setParameter('endDate', $year.'-12-31');
+		}
+
 
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
 

@@ -1,0 +1,83 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>{{ compteAttente }}</h1>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			{% include 'compta/star_compta/compta_star_compta_submenu.html.twig' %}
+		</div>
+	</div>
+
+	<div class="row spacer-top">
+		<div class="col-md-3">
+			{{ form_start(form) }}
+			{{ form_row(form.years) }}
+			{{ form_end(form) }}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table wrapper-ajax" id="table_compte_attente">
+			</table>
+			<p class="center" id="loader">
+				<img src="{{ asset('images/assets/dog_loader.gif') }}" alt="Chargement en cours" /><br />
+				<i>Chargement en cours...</i>
+			</p>
+		</div>
+	</div>
+
+	
+
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+
+		$(document).ready( function () {
+
+			loadTable();
+
+			$(".year-select").change(function(){
+				loadTable();
+			});
+
+			function loadTable(){
+
+				$("#loader").removeClass("hidden");
+				$(".wrapper-ajax").html("");
+
+				var year = $(".year-select").val();
+
+				$.ajax({
+					type: "POST",
+					url: Routing.generate('compta_compte_attente_voir', { 'year' : year} ),
+					success: function(data) {
+
+						$("#loader").addClass("hidden");
+						$(".wrapper-ajax").html(data);
+
+						
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						$("#loader").addClass("hidden");
+						console.log(jqXHR.status);
+						console.log(textStatus);
+						console.log(errorThrown);
+					},
+				});
+			}
+
+
+		});
+
+	</script>
+{% endblock %}

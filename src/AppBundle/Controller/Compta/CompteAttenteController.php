@@ -16,29 +16,73 @@ use AppBundle\Form\Compta\OperationDiverseType;
 class CompteAttenteController extends Controller
 {
 	/**
-	 * @Route("/compta/compte-attente/voir", name="compta_compte_attente_voir")
+	 * @Route("/compta/compte-attente", name="compta_compte_attente_index")
 	 */
-	public function compteAttenteVoirAction(){
+	public function compteAttenteIndexAction(){
 
 		//recuperation du compte 471
 		$em = $this->getDoctrine()->getManager();
 		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
 		$compteAttente = $ccRepository->findOneBy(array(
-				'num' => '471',
-				'company' => $this->getUser()->getCompany()
+			'num' => '471',
+			'company' => $this->getUser()->getCompany()
+		));
+
+		$activationRepo = $em->getRepository('AppBundle:SettingsActivationOutil');
+		$activation = $activationRepo->findOneBy(array(
+			'company' => $this->getUser()->getCompany(),
+			'outil' => 'COMPTA'
+		));
+		$yearActivation = $activation->getDate()->format('Y');
+
+		$currentYear = date('Y');
+		$arr_years = array();
+		for($i = $yearActivation ; $i<=$currentYear; $i++){
+				$arr_years[$i] = $i;
+		}
+
+		$formBuilder = $this->createFormBuilder();
+		$formBuilder->add('years', 'choice', array(
+			'required' => true,
+			'label' => 'Année',
+			'choices' => $arr_years,
+			'attr' => array('class' => 'year-select'),
+			'data' => $currentYear
+		));
+
+		return $this->render('compta/compte_attente/compta_compte_attente_index.html.twig', array(
+			'compteAttente' => $compteAttente,
+			'form' => $formBuilder->getForm()->createView()
+		));
+	}
+
+	/**
+	 * @Route("/compta/compte-attente/voir/{year}",
+	 *   name="compta_compte_attente_voir",
+	 *   options={"expose"=true}
+	 * )
+	 */
+	public function compteAttenteVoirAction($year)
+	{
+		//recuperation du compte 471
+		$em = $this->getDoctrine()->getManager();
+		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
+		$compteAttente = $ccRepository->findOneBy(array(
+			'num' => '471',
+			'company' => $this->getUser()->getCompany()
 		));
 
 		//lignes du journal de ventes pour le compte 471
 		$repoJournalVente = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalVente');
-		$arr_journal_vente = $repoJournalVente->findCompteAttenteACorriger($compteAttente, $this->getUser()->getCompany());
+		$arr_journal_vente = $repoJournalVente->findCompteAttenteACorriger($compteAttente, $this->getUser()->getCompany(), $year);
 
 		//lignes du journal d'achats pour le compte 471
 		$repoJournalAchat = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalAchat');
-		$arr_journal_achat = $repoJournalAchat->findCompteAttenteACorriger($compteAttente, $this->getUser()->getCompany());
+		$arr_journal_achat = $repoJournalAchat->findCompteAttenteACorriger($compteAttente, $this->getUser()->getCompany(), $year);
 
 		//lignes du journal de banque pour le compte 471
 		$repoJournalBanque = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalBanque');
-		$arr_journal_banque = $repoJournalBanque->findByCompteForCompany($compteAttente, $this->getUser()->getCompany());
+		$arr_journal_banque = $repoJournalBanque->findByCompteForCompany($compteAttente, $this->getUser()->getCompany(), $year.'-01-01', $year.'-12-31');
 
 		// //lignes des opérations diverses
 		// $repoOperationDiverse = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\OperationDiverse');
@@ -71,12 +115,13 @@ class CompteAttenteController extends Controller
 		}
 
 		return $this->render('compta/compte_attente/compta_compte_attente_voir.html.twig', array(
-				'compteAttente' => $compteAttente,
-				'arr_lignes' => $arr_lignes,
-				'total_debit' => $total_debit,
-				'total_credit' => $total_credit,
-				'arr_lignes_inverses' => $arr_lignes_inverses
+			'compteAttente' => $compteAttente,
+			'arr_lignes' => $arr_lignes,
+			'total_debit' => $total_debit,
+			'total_credit' => $total_credit,
+			'arr_lignes_inverses' => $arr_lignes_inverses,
 		));
+
 	}
 
 	/**

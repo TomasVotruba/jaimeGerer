@@ -1,7 +1,7 @@
 {% block submenu %}
     <ul class="nav nav-tabs">
-      <li {% if app.request.pathInfo == "/compta/compte-attente/voir"  %} class="active" {% endif %}>
-        <a href="{{ path('compta_compte_attente_voir') }}" >Compte d'attente</a>
+      <li {% if app.request.pathInfo == "/compta/compte-attente"  %} class="active" {% endif %}>
+        <a href="{{ path('compta_compte_attente_index') }}" >Compte d'attente</a>
       </li>
       <li {% if app.request.pathInfo == "/compta/journal-od"  %} class="active" {% endif %}>
         <a href="{{ path('compta_journal_od_index') }}" >Journal des OD</a>

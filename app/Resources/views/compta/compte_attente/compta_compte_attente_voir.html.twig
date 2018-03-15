@@ -1,112 +1,80 @@
-{% extends 'compta/compta_layout.html.twig' %}
+<thead>
+    <tr>
+        <th>Date</th>
+        <th>Libellé</th>
+        <th>Débit</th>
+        <th>Crédit</th>
+        <th>Actions</th>
+    </tr>
+</thead>
+<tbody>
+	{% for ligne in arr_lignes %}
+		<tr>
+			<td>
+				 {% if ligne.codeJournal == "VE" %}
+				 	{% if ligne.facture is not null %}
+				 		{{ ligne.facture.dateCreation|date('d/m/Y') }}
+				 	{% elseif ligne.avoir is not null %}
+				 		{{ ligne.avoir.dateCreation|date('d/m/Y') }}
+				 	{% endif %}
+				 {% elseif ligne.codeJournal == "AC" %}
+				 	{% if ligne.depense is not null %}
+				 		{{ ligne.depense.date|date('d/m/Y') }}
+				 	{% elseif ligne.avoir is not null %}
+				 		{{ ligne.avoir.dateCreation|date('d/m/Y') }}
+				 	{% endif %}
+				 {% else %}
+				 	{{ ligne.date|date('d/m/Y') }}
+				 {% endif %}
+			</td>
+			<td>
+				{% if ligne.codeJournal == "VE" %}
+				 	{% if ligne.facture is not null %}
+				 		<a href="{{ path('compta_facture_voir', {'id' : ligne.facture.id } ) }}">	Facture {{ ligne.facture.num }} : {{ ligne.facture.objet }} </a>
+				 	{% elseif ligne.avoir is not null %}
+				 		<a href="{{ path('compta_avoir_voir', {'id' : ligne.avoir.id } ) }}">Avoir {{ ligne.avoir.num }} : {{ ligne.avoir.objet }}</a>
+				 	{% endif %}
+				 {% elseif ligne.codeJournal == "AC" %}
+				 	{% if ligne.depense is not null %}
+				 		<a href="{{ path('compta_depense_voir', {'id' : ligne.depense.id } ) }}">Dépense {{ ligne.depense.num }} : {{ ligne.depense.compte.nom }} {{ ligne.depense.libelle }}</a>
+				 	{% elseif ligne.avoir is not null %}
+		 				<a href="{{ path('compta_avoir_voir', {'id' : ligne.avoir.id } ) }}">Avoir {{ ligne.avoir.num }} : {{ ligne.avoir.objet }}</a>
+				 	{% endif %}
+				 {% elseif ligne.codeJournal == "OD" %}
+				 	{{ ligne.libelle }}
+				 {% else %}
+				 	{{ ligne.nom }}
+				 {% endif %}
+				 <br />
+				 {% if arr_lignes_inverses[ligne.id] is defined %}
+				 	{% for inverse in arr_lignes_inverses[ligne.id] %}
+				 		{% if inverse.credit != 0 %}
+							<i>Crédit : {{ inverse.credit }} € au compte {{ inverse.compteComptable.num }}</i><br />
+						{% else %}
+							<i>Débit : {{ inverse.debit }} € au compte {{ inverse.compteComptable.num }}</i>
+						{% endif %}
+					{% endfor %}
+				 {% endif %}
+			</td>
+			<td class="align-right">{{ ligne.debit|number_format(2,',',' ')  }}</td>
+			<td class="align-right">{{ ligne.credit|number_format(2,',',' ')  }}</td>
+			<td>{{ ligne.codeJournal }}</td>
+			<td>
+				<a href="{{ path('compta_compte-comptable_corriger', {
+				'id' : ligne.id,
+				'codeJournal' : ligne.codeJournal,
+				'redirectRoute' : 'compta_compte_attente_voir'}) }}"
+				class="btn btn-xs btn-info" data-toggle="modal" data-target="#modal">
+					Corriger
+				</a>
+			</td>
+		</tr>
+	{% endfor %}
+	<tr>
+		<td colspan="2"></td>
+		<td class="align-right"><strong>{{ total_debit|number_format(2,',',' ') }}</strong></td>
+		<td class="align-right"><strong>{{ total_credit|number_format(2,',',' ')  }}</strong></td>
+		<td colspan="2"></td>
+	</tr>
+</tbody>
 
-{% block content %}
-
-	<div class="row">
-		<div class="col-md-12">
-			<h1>{{ compteAttente }}</h1>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-12">
-			{% include 'compta/star_compta/compta_star_compta_submenu.html.twig' %}
-		</div>
-	</div>
-
-	<div class="row well">
-		<div class="col-md-12 center">
-			<h3>Filtres</h3>
-		</div>
-		<div class="col-md-3">
-			<p><strong>Date</strong></p>
-			<input id="dateRange" name="dateRange" class="filtre" />
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-12">
-			<table class="table table-striped">
-				<thead>
-					<th>Date</th>
-					<th>Libellé</th>
-					<th>Débit</th>
-					<th>Crédit</th>
-					<th>Journal</th>
-					<th>Actions</th>
-				</thead>
-				<tbody>
-				{% for ligne in arr_lignes %}
-					<tr>
-						<td>
-							 {% if ligne.codeJournal == "VE" %}
-							 	{% if ligne.facture is not null %}
-							 		{{ ligne.facture.dateCreation|date('d/m/Y') }}
-							 	{% elseif ligne.avoir is not null %}
-							 		{{ ligne.avoir.dateCreation|date('d/m/Y') }}
-							 	{% endif %}
-							 {% elseif ligne.codeJournal == "AC" %}
-							 	{% if ligne.depense is not null %}
-							 		{{ ligne.depense.date|date('d/m/Y') }}
-							 	{% elseif ligne.avoir is not null %}
-							 		{{ ligne.avoir.dateCreation|date('d/m/Y') }}
-							 	{% endif %}
-							 {% else %}
-							 	{{ ligne.date|date('d/m/Y') }}
-							 {% endif %}
-						</td>
-						<td>
-							{% if ligne.codeJournal == "VE" %}
-							 	{% if ligne.facture is not null %}
-							 		<a href="{{ path('compta_facture_voir', {'id' : ligne.facture.id } ) }}">	Facture {{ ligne.facture.num }} : {{ ligne.facture.objet }} </a>
-							 	{% elseif ligne.avoir is not null %}
-							 		<a href="{{ path('compta_avoir_voir', {'id' : ligne.avoir.id } ) }}">Avoir {{ ligne.avoir.num }} : {{ ligne.avoir.objet }}</a>
-							 	{% endif %}
-							 {% elseif ligne.codeJournal == "AC" %}
-							 	{% if ligne.depense is not null %}
-							 		<a href="{{ path('compta_depense_voir', {'id' : ligne.depense.id } ) }}">Dépense {{ ligne.depense.num }} : {{ ligne.depense.compte.nom }} {{ ligne.depense.libelle }}</a>
-							 	{% elseif ligne.avoir is not null %}
-					 				<a href="{{ path('compta_avoir_voir', {'id' : ligne.avoir.id } ) }}">Avoir {{ ligne.avoir.num }} : {{ ligne.avoir.objet }}</a>
-							 	{% endif %}
-							 {% elseif ligne.codeJournal == "OD" %}
-							 	{{ ligne.libelle }}
-							 {% else %}
-							 	{{ ligne.nom }}
-							 {% endif %}
-							 <br />
-							 {% if arr_lignes_inverses[ligne.id] is defined %}
-							 	{% for inverse in arr_lignes_inverses[ligne.id] %}
-							 		{% if inverse.credit != 0 %}
-										<i>Crédit : {{ inverse.credit }} € au compte {{ inverse.compteComptable.num }}</i><br />
-									{% else %}
-										<i>Débit : {{ inverse.debit }} € au compte {{ inverse.compteComptable.num }}</i>
-									{% endif %}
-								{% endfor %}
-							 {% endif %}
-						</td>
-						<td class="align-right">{{ ligne.debit|number_format(2,',',' ')  }}</td>
-						<td class="align-right">{{ ligne.credit|number_format(2,',',' ')  }}</td>
-						<td>{{ ligne.codeJournal }}</td>
-						<td>
-							<a href="{{ path('compta_compte-comptable_corriger', {
-							'id' : ligne.id,
-							'codeJournal' : ligne.codeJournal,
-							'redirectRoute' : 'compta_compte_attente_voir'}) }}"
-							class="btn btn-xs btn-info" data-toggle="modal" data-target="#modal">
-								Corriger
-							</a>
-						</td>
-					</tr>
-				{% endfor %}
-				<tr>
-					<td colspan="2"></td>
-					<td class="align-right"><strong>{{ total_debit|number_format(2,',',' ') }}</strong></td>
-					<td class="align-right"><strong>{{ total_credit|number_format(2,',',' ')  }}</strong></td>
-					<td colspan="2"></td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-
-{% endblock %}
