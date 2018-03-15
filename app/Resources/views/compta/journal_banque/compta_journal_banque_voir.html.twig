@@ -17,10 +17,14 @@
     {% for ligneJournal in arr_journalBanque %}
         {% set current_id = ligneJournal.mouvementBancaire.id %}
         <tr{% if old_id != current_id %} class="thick-border" {% endif %}>
-            <td>&nbsp;{{ ligneJournal.codeJournal }}</td>
-            <td>&nbsp;{{ ligneJournal.date|date('j/m/Y') }}</td>
-            <td>&nbsp;{{ ligneJournal.compteComptable.num|truncate(3, false, '') }}</td>
-            <td>&nbsp;{{ ligneJournal.compteComptable.num }}</td>
+            <td>{{ ligneJournal.codeJournal }}</td>
+            <td>{{ ligneJournal.date|date('j/m/Y') }}</td>
+            <td>{{ ligneJournal.compteComptable.num|truncate(3, false, '') }}</td>
+            <td>
+                <a href="{{ path('compta_compte_voir', {'id' : ligneJournal.compteComptable.id }) }}" target="_blank">
+                    {{ ligneJournal.compteComptable.num }}
+                </a>
+            </td>
             <td>
                 {% for rapprochement in ligneJournal.mouvementBancaire.rapprochements %}
                     {% if rapprochement.remiseCheque is not null %}
@@ -58,10 +62,15 @@
                     {% elseif rapprochement.accompte is not null %}
                         {{ rapprochement.accompte.devis.compte }}
                     {% elseif rapprochement.remiseCheque is not null %}
-
+                        {{ rapprochement.remiseCheque.emetteurs }}
                     {% elseif rapprochement.affectationDiverse is not null %}
                         -
+                    {% elseif rapprochement.noteFrais is not null %}
+                         {{ rapprochement.noteFrais.user }}
+                    {% else %}
+                        -
                     {% endif %}
+                    <br />
                 {% endfor %}
                 &nbsp;</td>
             <td class="align-left">&nbsp;{{ ligneJournal.debit|number_format(2,',',' ') }}</td>

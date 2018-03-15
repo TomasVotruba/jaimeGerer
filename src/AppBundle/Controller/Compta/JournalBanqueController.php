@@ -472,6 +472,7 @@ class JournalBanqueController extends Controller
 
 		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
+		$arr_analytiques = array();
 		$analytique = '';
 		$modePaiement = '';
 		foreach($arr_pieces as $arr_piece){
@@ -512,12 +513,11 @@ class JournalBanqueController extends Controller
 						$arr_annees[] = $piece->getDateCreation()->format('Y');
 					}
 
-					$arr_analytiques = array();
 					foreach($piece->getDepenses() as $depense){
-						if( array_key_exists($depense->getAnalytique(), $arr_analytiques) ){
-							$arr_analytiques[$depense->getAnalytique()]+= $depense->getTotalTTC();
+						if( array_key_exists($depense->getAnalytique()->getValeur(), $arr_analytiques) ){
+							$arr_analytiques[$depense->getAnalytique()->getValeur()]+= $depense->getTotalTTC();
 						} else {
-							$arr_analytiques[$depense->getAnalytique()]= $depense->getTotalTTC();
+							$arr_analytiques[$depense->getAnalytique()->getValeur()]= $depense->getTotalTTC();
 						}
 					}
 

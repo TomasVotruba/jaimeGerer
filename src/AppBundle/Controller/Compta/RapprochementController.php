@@ -388,7 +388,7 @@ class RapprochementController extends Controller
         $piece = $affectationDiverse;
         $s_piece = $affectationDiverse->__toString();
         break;
-        
+
       case 'NOTE-FRAIS' :
         $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:NDF\NoteFrais');
         $noteFrais = $repo->find($piece);
@@ -749,7 +749,10 @@ class RapprochementController extends Controller
                     break;
                 }
 
-                $arr_pieces[] = array($type => $piece);
+                if( !array_key_exists($piece->getId(), $arr_pieces) ){
+                    $arr_pieces[$piece->getId()] = array($type => $piece);
+                }
+               
                 $em->persist($rapprochement);
             }
         }

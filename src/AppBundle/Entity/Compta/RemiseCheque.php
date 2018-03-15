@@ -355,4 +355,13 @@ class RemiseCheque
     {
         return $this->userEdition;
     }
+
+    public function getEmetteurs(){
+        $str = "";
+        foreach($this->cheques as $cheque){
+            $str.=$cheque->getEmetteur();
+            $str.=' ';
+        }
+        return $str;
+    }
 }
