@@ -98,8 +98,8 @@
 		</td>
 		<td class="actions">
 			{% if mouvement.rapprochements|length == 0 %}
-				<a href="{{ path('compta_mouvement_bancaire_scinder', {'id' : mouvement.id}) }}" class="btn btn-xs btn-primary" title="Scinder" data-toggle="modal" data-target="#modal-lg"><span class="glyphicon glyphicon-resize-full"></span></a>
-				<a href="{{ path('compta_mouvement_bancaire_fusionner', {'id' : mouvement.id}) }}" class="btn btn-xs btn-primary" title="Fusionner" data-toggle="modal" data-target="#modal-lg"><span class="glyphicon glyphicon-resize-small"></span></a>
+				{# <a href="{{ path('compta_mouvement_bancaire_scinder', {'id' : mouvement.id}) }}" class="btn btn-xs btn-primary" title="Scinder" data-toggle="modal" data-target="#modal-lg"><span class="glyphicon glyphicon-resize-full"></span></a>
+				<a href="{{ path('compta_mouvement_bancaire_fusionner', {'id' : mouvement.id}) }}" class="btn btn-xs btn-primary" title="Fusionner" data-toggle="modal" data-target="#modal-lg"><span class="glyphicon glyphicon-resize-small"></span></a> #}
 			{% else %}
 				<a href="#" class="btn btn-xs btn-warning btn-unlock" title="Dévérouiller le rapprochement"><span class="glyphicon glyphicon-lock"></span></a>
 			{% endif %}
