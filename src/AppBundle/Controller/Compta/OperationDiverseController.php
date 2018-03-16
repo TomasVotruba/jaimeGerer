@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use AppBundle\Entity\Compta\OperationDiverse;
 use AppBundle\Form\Compta\OperationDiverseType;
+use AppBundle\Form\Compta\OperationDiverseCreationType;
 
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -90,6 +91,44 @@ class OperationDiverseController extends Controller
 		return $this->render('compta/operation_diverse/compta_journal_od_voir.html.twig', array(
 			'arr_journalOD' => $arr_journalOD,
 			'arr_totaux' => $arr_totaux
+		));
+	}
+
+	/**
+	 * @Route("/compta/od/ajouter",
+	 *   name="compta_od_ajouter",
+	 *   options={"expose"=true}
+	 * )
+	 */
+	public function ajouterAction()
+	{
+		$em = $this->getDoctrine()->getManager();
+		
+
+		$od = new OperationDiverse();
+		$od->setCodeJournal('OD');
+		$form = $this->createForm(
+			new OperationDiverseCreationType(
+				$this->getUser()->getCompany()->getId()
+			),
+			$od
+		);
+
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			
+			$em->persist($od);
+			$em->flush();
+
+			return $this->redirect($this->generateUrl(
+					'compta_journal_od_index'
+			));
+		}
+
+		return $this->render('compta/operation_diverse/compta_od_ajouter.html.twig', array(
+			'form' => $form->createView(),
 		));
 	}
 

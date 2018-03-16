@@ -469,16 +469,34 @@ class JournalBanqueController extends Controller
 		$numService = $this->get('appbundle.num_service');
 
 		$arr_annees = array();
+		$arr_types = array();
 
 		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
+		//on créé une chaine de caractère qui décrit les postes analytiques par montant
 		$arr_analytiques = array();
 		$analytique = '';
+
+		//on créé une chaine de caractère qui décrit les modes de paiement par montantc
 		$modePaiement = '';
+
+
 		foreach($arr_pieces as $arr_piece){
 			foreach($arr_piece as $type => $piece){
+
+				$montant= $piece->getTotalTTC();
+				if($montant < 0){
+					$montant = -$montant;
+				}
+				if( array_key_exists($type, $arr_types) ){
+					
+					$arr_types[$type]+= $montant;
+				} else {
+					$arr_types[$type] = $montant;
+				}
 				
 				if($type == "DEPENSES"){
+
 
 					$analytique.= $piece->getTotalTTC();
 					$analytique.= '€ ';
@@ -522,6 +540,31 @@ class JournalBanqueController extends Controller
 					}
 
 				}
+
+				if($type == "AVOIRS-FOURNISSEUR"){
+
+					$analytique.= $piece->getTotalTTC();
+					$analytique.= '€ ';
+					$analytique.= $piece->getDepense()->getAnalytique()->getValeur();
+					$analytique.= ', ';
+
+					if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
+						$arr_annees[] = $piece->getDateCreation()->format('Y');
+						dump($piece->getDateCreation()->format('Y'));
+					}
+				}
+
+				if($type == "AVOIRS-CLIENT"){
+
+					$analytique.= $piece->getTotalTTC();
+					$analytique.= '€ ';
+					$analytique.= $piece->getFacture()->getAnalytique()->getValeur();
+					$analytique.= ', ';
+
+					if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
+						$arr_annees[] = $piece->getDateCreation()->format('Y');
+					}
+				}
 		
 			}
 
@@ -537,13 +580,22 @@ class JournalBanqueController extends Controller
 			}
 		}
 
+		//on cherche les différentes années des mouvements, pour le lettrage (par exemple 2017-2018 A)
 		foreach($arr_mouvements as $mouvement){
 			if(!in_array($mouvement->getDate()->format('Y'), $arr_annees)){
 				$arr_annees[] = $mouvement->getDate()->format('Y');
 			}
 		}
 
-		sort($arr_annees);
+		//si on a plusieurs types de pièces (par exemple depense+avoir), on utilise celle qui a le plus gros montant
+		$maxs = array_keys($arr_types, max($arr_types));
+		$type = $maxs[0];
+		foreach($arr_pieces as $arr_piece){
+			if( array_key_exists( $type, $arr_piece ) ){
+				$piece = $arr_piece[$type];
+			}
+		}
+
 
 		try{
 			switch($type){
@@ -589,17 +641,6 @@ class JournalBanqueController extends Controller
 						$ligne->setDate($mouvementBancaire->getDate());
 						$ligne->setNumEcriture($numEcriture);
 						$em->persist($ligne);
-					}
-
-					foreach($arr_pieces as $arr_piece){
-						foreach($arr_piece as $type => $piece){
-							$ligneJournalVente = $journalVenteRepo->findOneBy(array(
-								'facture' => $piece,
-								'compteComptable' => $piece->getCompte()->getCompteComptableClient()
-							));
-							$ligneJournalVente->setLettrage($lettrage);
-							$em->persist($ligneJournalVente);
-						}
 					}
 
 					break;
@@ -649,18 +690,7 @@ class JournalBanqueController extends Controller
 						$ligne->setNumEcriture($numEcriture);
 						$em->persist($ligne);
 					}
-
-					foreach($arr_pieces as $arr_piece){
-						foreach($arr_piece as $type => $piece){
-							$ligneJournalAchat = $journalAchatRepo->findOneBy(array(
-								'depense' => $piece,
-								'compteComptable' => $piece->getCompte()->getCompteComptableFournisseur()
-							));
-							$ligneJournalAchat->setLettrage($lettrage);
-							$em->persist($ligneJournalAchat);
-						}
-					}
-
+	
 					break;
 
 				case 'NOTES-FRAIS':
@@ -709,8 +739,125 @@ class JournalBanqueController extends Controller
 						$em->persist($ligne);
 					}
 
-					foreach($arr_pieces as $arr_piece){
-						foreach($arr_piece as $type => $piece){
+					break;
+
+				case 'AVOIRS-FOURNISSEUR':
+
+					$prefixe = '';
+					if(count($arr_annees) > 1){
+						foreach($arr_annees as $annee){
+							$prefixe.= $annee;
+							$prefixe.=' ';
+						}
+					}
+					$lettre = $lettrageService->findNextNum($piece->getDepense()->getCompte()->getCompteComptableFournisseur());	
+					$lettrage = $prefixe.$lettre;
+
+					dump($prefixe);
+					dump($lettre);
+
+					foreach($arr_mouvements as $mouvementBancaire){
+						//credit au compte  401xxxx (compte du fournisseur)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit(null);
+						$ligne->setCredit($mouvementBancaire->getMontant());
+						$ligne->setAnalytique(null);
+						$ligne->setStringAnalytique($analytique);
+						$ligne->setCompteComptable($piece->getDepense()->getCompte()->getCompteComptableFournisseur());
+						$ligne->setLettrage($lettrage);
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setNumEcriture($numEcriture);
+						$em->persist($ligne);
+
+						//debit au compte 512xxxx (selon banque)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit($mouvementBancaire->getMontant());
+						$ligne->setCredit(null);
+						$ligne->setAnalytique($piece->getDepense()->getAnalytique());
+						$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setNumEcriture($numEcriture);
+						$em->persist($ligne);
+
+					}
+
+					break;
+
+				case 'AVOIRS-CLIENT':
+
+					$prefixe = '';
+					if(count($arr_annees) > 1){
+						foreach($arr_annees as $annee){
+							$prefixe.= $annee;
+							$prefixe.=' ';
+						}
+					}
+					$lettre = $lettrageService->findNextNum($piece->getFacture()->getCompte()->getCompteComptableClient());	
+					$lettrage = $prefixe.$lettre;
+
+					//credit au compte  512xxxxx (selon banque)
+					$ligne = new JournalBanque();
+					$ligne->setMouvementBancaire($mouvementBancaire);
+					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+					$ligne->setDebit(null);
+					$ligne->setCredit($mouvementBancaire->getMontant());
+					$ligne->setAnalytique(null);
+					$ligne->setStringAnalytique($analytique);
+					$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+					$ligne->setNom($mouvementBancaire->getLibelle());
+					$ligne->setDate($mouvementBancaire->getDate());
+					$ligne->setNumEcriture($numEcriture);
+					$em->persist($ligne);
+
+					//debit au compte 411xxxx (compte du client)
+					$ligne = new JournalBanque();
+					$ligne->setMouvementBancaire($mouvementBancaire);
+					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+					$ligne->setDebit($piece->getTotalTTC());
+					$ligne->setCredit(null);
+					$ligne->setAnalytique($piece->getFacture()->getAnalytique());
+					$ligne->setCompteComptable($piece->getFacture()->getCompte()->getCompteComptableClient());
+					$ligne->setLettrage($lettrage);
+					$ligne->setNom($mouvementBancaire->getLibelle());
+					$ligne->setDate($mouvementBancaire->getDate());
+					$ligne->setNumEcriture($numEcriture);
+					$em->persist($ligne);
+
+					break;
+
+			}
+
+			foreach($arr_pieces as $arr_piece){
+				foreach($arr_piece as $type => $piece){
+
+
+					switch($type){
+
+						case 'FACTURES':
+							$ligneJournalVente = $journalVenteRepo->findOneBy(array(
+								'facture' => $piece,
+								'compteComptable' => $piece->getCompte()->getCompteComptableClient()
+							));
+							$ligneJournalVente->setLettrage($lettrage);
+							$em->persist($ligneJournalVente);
+							break;
+
+						case 'DEPENSES':
+							$ligneJournalAchat = $journalAchatRepo->findOneBy(array(
+								'depense' => $piece,
+								'compteComptable' => $piece->getCompte()->getCompteComptableFournisseur()
+							));
+							$ligneJournalAchat->setLettrage($lettrage);
+							$em->persist($ligneJournalAchat);
+							break;
+
+						case 'NOTES-FRAIS':
 							foreach($piece->getDepenses() as $depense){
 								$ligneJournalAchats = $journalAchatRepo->findOneBy(array(
 									'depense' => $depense,
@@ -719,12 +866,31 @@ class JournalBanqueController extends Controller
 								$ligneJournalAchats->setLettrage($lettrage);
 								$em->persist($ligneJournalAchats);
 							}
-						}
+							break;
+
+						case 'AVOIRS-FOURNISSEUR':
+							$ligneJournalAchats = $journalAchatRepo->findOneBy(array(
+								'avoir' => $piece,
+								'compteComptable' => $piece->getDepense()->getCompte()->getCompteComptableFournisseur()
+							));
+							$ligneJournalAchats->setLettrage($lettrage);
+							$em->persist($ligneJournalAchats);
+							break;
+
+						case 'AVOIRS-CLIENT':
+							$ligneJournalVente = $journalVenteRepo->findOneBy(array(
+								'avoir' => $piece,
+								'compteComptable' => $piece->getFacture()->getCompte()->getCompteComptableClient()
+							));
+							$ligneJournalVente->setLettrage($lettrage);
+							$em->persist($ligneJournalVente);
+							break;
+
 					}
 
-					break;
-
+				}
 			}
+			
 			$em->flush();
 
 			$numEcriture++;

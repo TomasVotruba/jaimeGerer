@@ -59,12 +59,16 @@ class LettrageService extends ContainerAware {
 
   		arsort($arr_max); //Trie un tableau en ordre inverse et conserve l'association des index
   		$maxLettrage = reset($arr_max); // replace le pointeur de tableau array au premier élément et retourne la valeur du premier élément
+
+        //on ne garde que les lettres (pour enlever les 2017-2018)
+        $maxLettrage = preg_replace('/[0-9]+/', '', $maxLettrage);
   		
   		if($maxLettrage === 0 or $maxLettrage === null or $maxLettrage === ""){
   			$maxLettrage = 'A';
   		} else {
   			$maxLettrage++;
   		}
+
   		return $maxLettrage;
   	}
 

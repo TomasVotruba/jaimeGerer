@@ -237,7 +237,7 @@ class JournalAchatsController extends Controller
 			));
 		}
 
-		//debit au compte 411-nom du client
+		//debit au compte 401-nom du fournisseur
 		$ligne = new JournalAchat();
 		$ligne->setAvoir($avoir);
 		$ligne->setCodeJournal('AC');

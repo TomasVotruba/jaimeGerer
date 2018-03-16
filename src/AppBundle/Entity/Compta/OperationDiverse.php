@@ -81,6 +81,12 @@ class OperationDiverse
     private $depense;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\NDF\NoteFrais", cascade={ "persist"})
+     * @ORM\JoinColumn(nullable=true, unique=false)
+     */
+    private $noteFrais;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="lettrage", type="string", length=100, nullable=true)
@@ -406,5 +412,28 @@ class OperationDiverse
             return $this->debit;
         }
         return $this->credit;
+    }
+
+    /**
+     * Set noteFrais
+     *
+     * @param \AppBundle\Entity\NDF\NoteFrais $noteFrais
+     * @return OperationDiverse
+     */
+    public function setNoteFrais(\AppBundle\Entity\NDF\NoteFrais $noteFrais = null)
+    {
+        $this->noteFrais = $noteFrais;
+
+        return $this;
+    }
+
+    /**
+     * Get noteFrais
+     *
+     * @return \AppBundle\Entity\NDF\NoteFrais 
+     */
+    public function getNoteFrais()
+    {
+        return $this->noteFrais;
     }
 }

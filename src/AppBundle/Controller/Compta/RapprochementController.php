@@ -269,7 +269,7 @@ class RapprochementController extends Controller
         }
         if($rapprochement->getNoteFrais()){
             $ndf = $rapprochement->getNoteFrais();
-            $ndf->setEtat("ENREGISTRE");
+            $ndf->setEtat("VALIDE");
             $em->persist($ndf);
         }
 
@@ -427,107 +427,107 @@ class RapprochementController extends Controller
     ));
   }
 
-  /**
-   * @Route("/compta/mouvement-bancaire/scinder/{id}", name="compta_mouvement_bancaire_scinder")
-   */
-  public function mouvementBancaireScinderAction(MouvementBancaire $mouvementBancaire)
-  {
-    $formBuilder = $this->createFormBuilder();
-    $formBuilder->add('mouvements', 'collection', array(
-          'type' => new MouvementBancaireType($mouvementBancaire),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'label_attr' => array('class' => 'hidden')
-             ));
-    $form = $formBuilder->getForm();
+  // /**
+  //  * @Route("/compta/mouvement-bancaire/scinder/{id}", name="compta_mouvement_bancaire_scinder")
+  //  */
+  // public function mouvementBancaireScinderAction(MouvementBancaire $mouvementBancaire)
+  // {
+  //   $formBuilder = $this->createFormBuilder();
+  //   $formBuilder->add('mouvements', 'collection', array(
+  //         'type' => new MouvementBancaireType($mouvementBancaire),
+  //               'allow_add' => true,
+  //               'allow_delete' => true,
+  //               'by_reference' => false,
+  //               'label_attr' => array('class' => 'hidden')
+  //            ));
+  //   $form = $formBuilder->getForm();
 
-    $request = $this->getRequest();
-    $form->handleRequest($request);
+  //   $request = $this->getRequest();
+  //   $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-      $em = $this->getDoctrine()->getManager();
-      $arr_mouvements = $form->get('mouvements')->getData();
+  //   if ($form->isSubmitted() && $form->isValid()) {
+  //     $em = $this->getDoctrine()->getManager();
+  //     $arr_mouvements = $form->get('mouvements')->getData();
 
-      foreach($arr_mouvements as $newMouvement){
-        $newMouvement->setCompteBancaire($mouvementBancaire->getCompteBancaire());
-        if($mouvementBancaire->getMontant() < 0){
-          $montant = $newMouvement->getMontant();
-          $montant = -$montant;
-          $newMouvement->setMontant($montant);
-        }
-        $em->persist($newMouvement);
-      }
+  //     foreach($arr_mouvements as $newMouvement){
+  //       $newMouvement->setCompteBancaire($mouvementBancaire->getCompteBancaire());
+  //       if($mouvementBancaire->getMontant() < 0){
+  //         $montant = $newMouvement->getMontant();
+  //         $montant = -$montant;
+  //         $newMouvement->setMontant($montant);
+  //       }
+  //       $em->persist($newMouvement);
+  //     }
 
-      $em->remove($mouvementBancaire);
-      $em->flush();
+  //     $em->remove($mouvementBancaire);
+  //     $em->flush();
 
-      return $this->redirect($this->generateUrl('compta_rapprochement_index'));
-    }
+  //     return $this->redirect($this->generateUrl('compta_rapprochement_index'));
+  //   }
 
-    return $this->render('compta/mouvement_bancaire/compta_mouvement_bancaire_scinder_modal.html.twig', array(
-      'mouvement' => $mouvementBancaire,
-      'form' => $form->createView(),
-    ));
-  }
+  //   return $this->render('compta/mouvement_bancaire/compta_mouvement_bancaire_scinder_modal.html.twig', array(
+  //     'mouvement' => $mouvementBancaire,
+  //     'form' => $form->createView(),
+  //   ));
+  // }
 
-  /**
-   * @Route("/compta/mouvement-bancaire/fusionner/{id}", name="compta_mouvement_bancaire_fusionner")
-   */
-  public function mouvementBancaireFusionnerAction(MouvementBancaire $mouvementBancaire)
-  {
-    $em = $this->getDoctrine()->getManager();
-    $mouvementsRepo = $em->getRepository('AppBundle:Compta\MouvementBancaire');
+  // /**
+  //  * @Route("/compta/mouvement-bancaire/fusionner/{id}", name="compta_mouvement_bancaire_fusionner")
+  //  */
+  // public function mouvementBancaireFusionnerAction(MouvementBancaire $mouvementBancaire)
+  // {
+  //   $em = $this->getDoctrine()->getManager();
+  //   $mouvementsRepo = $em->getRepository('AppBundle:Compta\MouvementBancaire');
 
-    $arr_mouvements = $mouvementsRepo->findBy(
-        array('compteBancaire' => $mouvementBancaire->getCompteBancaire(), 'type' => null),
-        array('date' => 'DESC')
-    );
+  //   $arr_mouvements = $mouvementsRepo->findBy(
+  //       array('compteBancaire' => $mouvementBancaire->getCompteBancaire(), 'type' => null),
+  //       array('date' => 'DESC')
+  //   );
 
-    $arr_choices = array();
-    foreach($arr_mouvements as $mouvement){
-      if($mouvement->getId() != $mouvementBancaire->getId()){
-        $arr_choices[$mouvement->getId()] = $mouvement;
-      }
-    }
+  //   $arr_choices = array();
+  //   foreach($arr_mouvements as $mouvement){
+  //     if($mouvement->getId() != $mouvementBancaire->getId()){
+  //       $arr_choices[$mouvement->getId()] = $mouvement;
+  //     }
+  //   }
 
-    $formBuilder = $this->createFormBuilder();
-    $formBuilder ->add('fusion', 'choice', array(
-                'required' => true,
-                'label' => 'Fusionner avec :',
-          'multiple' => true,
-                'choices' => $arr_choices,
-          'attr' => array(
-            'size' => '12'
-          )
-             ));
-    $form = $formBuilder->getForm();
+  //   $formBuilder = $this->createFormBuilder();
+  //   $formBuilder ->add('fusion', 'choice', array(
+  //               'required' => true,
+  //               'label' => 'Fusionner avec :',
+  //         'multiple' => true,
+  //               'choices' => $arr_choices,
+  //         'attr' => array(
+  //           'size' => '12'
+  //         )
+  //            ));
+  //   $form = $formBuilder->getForm();
 
-    $request = $this->getRequest();
-    $form->handleRequest($request);
+  //   $request = $this->getRequest();
+  //   $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
+  //   if ($form->isSubmitted() && $form->isValid()) {
 
-      $arr_fusion = $form->get('fusion')->getData();
+  //     $arr_fusion = $form->get('fusion')->getData();
 
-      $newMontant = $mouvementBancaire->getMontant();
-      foreach($arr_fusion as $fusionId){
-        $fusionMouvement = $mouvementsRepo->find($fusionId);
-        $newMontant+=$fusionMouvement->getMontant();
-        $em->remove($fusionMouvement);
-      }
-      $mouvementBancaire->setMontant($newMontant);
-      $em->persist($mouvementBancaire);
-      $em->flush();
+  //     $newMontant = $mouvementBancaire->getMontant();
+  //     foreach($arr_fusion as $fusionId){
+  //       $fusionMouvement = $mouvementsRepo->find($fusionId);
+  //       $newMontant+=$fusionMouvement->getMontant();
+  //       $em->remove($fusionMouvement);
+  //     }
+  //     $mouvementBancaire->setMontant($newMontant);
+  //     $em->persist($mouvementBancaire);
+  //     $em->flush();
 
-      return $this->redirect($this->generateUrl('compta_rapprochement_index'));
-    }
+  //     return $this->redirect($this->generateUrl('compta_rapprochement_index'));
+  //   }
 
-    return $this->render('compta/mouvement_bancaire/compta_mouvement_bancaire_fusionner_modal.html.twig', array(
-        'mouvement' => $mouvementBancaire,
-        'form' => $form->createView(),
-    ));
-  }
+  //   return $this->render('compta/mouvement_bancaire/compta_mouvement_bancaire_fusionner_modal.html.twig', array(
+  //       'mouvement' => $mouvementBancaire,
+  //       'form' => $form->createView(),
+  //   ));
+  // }
 
 
   /**
@@ -619,21 +619,21 @@ class RapprochementController extends Controller
           }
         }
 
-        // //avoirs fournisseurs
-        // $arr_all_avoirs_fournisseurs = $avoirRepo->findForCompany('FOURNISSEUR', $this->getUser()->getCompany());
-        // foreach($arr_all_avoirs_fournisseurs as $avoir){
-        //   if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !in_array($avoir->getId(), $arr_avoirs_rapprochees_par_remises_cheques)){
-        //     $arr_pieces['AVOIRS-FOURNISSEUR'][] = $avoir;
-        //   }
-        // }
+        //avoirs fournisseurs
+        $arr_all_avoirs_fournisseurs = $avoirRepo->findForCompany('FOURNISSEUR', $this->getUser()->getCompany());
+        foreach($arr_all_avoirs_fournisseurs as $avoir){
+          if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !in_array($avoir->getId(), $arr_avoirs_rapprochees_par_remises_cheques)){
+            $arr_pieces['AVOIRS-FOURNISSEUR'][] = $avoir;
+          }
+        }
 
-        // //avoirs clients
-        // $arr_all_avoirs_clients = $avoirRepo->findForCompany('CLIENT', $this->getUser()->getCompany());
-        // foreach($arr_all_avoirs_clients as $avoir){
-        //   if($avoir->getTotalRapproche() < $avoir->getTotalTTC()){
-        //     $arr_pieces['AVOIRS-CLIENT'][] = $avoir;
-        //   }
-        // }
+        //avoirs clients
+        $arr_all_avoirs_clients = $avoirRepo->findForCompany('CLIENT', $this->getUser()->getCompany());
+        foreach($arr_all_avoirs_clients as $avoir){
+          if($avoir->getTotalRapproche() < $avoir->getTotalTTC()){
+            $arr_pieces['AVOIRS-CLIENT'][] = $avoir;
+          }
+        }
 
         // //affectations diverses vente
         // $arr_affectations_diverses_vente = $affectationDiverseRepo->findForCompany('VENTE', $this->getUser()->getCompany(), true);
@@ -663,11 +663,25 @@ class RapprochementController extends Controller
         $mouvementBancaireRepo = $em->getRepository('AppBundle:Compta\MouvementBancaire');
 
         $arr_mouvementsId = $this->getRequest()->request->get('mouvements');
+        if($arr_mouvementsId == null){
+            return new JsonResponse(array(
+                'message' => 'Vous n\'avez pas sélectionné de mouvement bancaire.'), 
+                419
+            );
+        }
+
         $arr_piecesId = $this->getRequest()->request->get('pieces');
+         if($arr_piecesId == null){
+            return new JsonResponse(array(
+                'message' => 'Vous n\'avez pas sélectionné de pièce à rapprocher.'), 
+                419
+            );
+        }
 
         $arr_cc = array();
         $arr_pieces = array();
         $arr_mouvements = array();
+
 
 
         foreach($arr_mouvementsId as $mouvementId){
@@ -707,17 +721,23 @@ class RapprochementController extends Controller
                     }
                     break;
                   
-                  // case 'AVOIRS-FOURNISSEUR' :
-                  //   $repo = $em->getRepository('AppBundle:Compta\Avoir');
-                  //   $piece = $repo->find($id);
-                  //   $rapprochement->setAvoir($piece);
-                  //   break;
+                  case 'AVOIRS-FOURNISSEUR' :
+                    $repo = $em->getRepository('AppBundle:Compta\Avoir');
+                    $piece = $repo->find($id);
+                    $rapprochement->setAvoir($piece);
+                    if( !in_array($piece->getDepense()->getCompte()->getCompteComptableFournisseur()->getId(), $arr_cc) ){
+                       $arr_cc[] = $piece->getDepense()->getCompte()->getCompteComptableFournisseur()->getId(); 
+                    }
+                    break;
                   
-                  // case 'AVOIRS-CLIENT' :
-                  //   $repo = $em->getRepository('AppBundle:Compta\Avoir');
-                  //   $piece = $repo->find($id);
-                  //   $rapprochement->setAvoir($piece);
-                  //   break;
+                  case 'AVOIRS-CLIENT' :
+                    $repo = $em->getRepository('AppBundle:Compta\Avoir');
+                    $piece = $repo->find($id);
+                    $rapprochement->setAvoir($piece);
+                    if( !in_array($piece->getFacture()->getCompte()->getCompteComptableClient()->getId(), $arr_cc) ){
+                       $arr_cc[] = $piece->getFacture()->getCompte()->getCompteComptableClient()->getId(); 
+                    }
+                    break;
                  
                   // case 'REMISES-CHEQUES' :
                   //   $repo = $em->getRepository('AppBundle:Compta\RemiseCheque');
@@ -771,7 +791,10 @@ class RapprochementController extends Controller
             $em->flush();
 
         } catch(\Exception $e){
-            throw $e;
+            return new JsonResponse(array(
+                'message' => $e->getMessage()), 
+                419
+            );
         }
             
         return new JsonResponse();

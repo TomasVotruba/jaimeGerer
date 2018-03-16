@@ -81,6 +81,12 @@ class OperationDiverse
     private $depense;
 
     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\NDF\NoteFrais", cascade={ "persist"})
+     * @ORM\JoinColumn(nullable=true, unique=false)
+     */
+    private $noteFrais;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="lettrage", type="string", length=100, nullable=true)
@@ -90,7 +96,7 @@ class OperationDiverse
     /**
      * @var string
      *
-     * @ORM\Column(name="num_ecriture", type="string", length=50, nullable=false)
+     * @ORM\Column(name="num_ecriture", type="string", length=50, nullable=true)
      */
     private $numEcriture;
 
@@ -333,6 +339,17 @@ class OperationDiverse
       return null;
     }
 
+    public function getPieceId(){
+      if($this->depense){
+        return $this->depense->getId();
+      } else if($this->avoir) {
+        return $this->avoir->getId();
+      } else if($this->facture){
+        return $this->facture->getId();
+      }
+      return null;
+    }
+
      public function getDatePiece(){
       if($this->depense){
         return $this->depense->getDate();
@@ -365,5 +382,35 @@ class OperationDiverse
     public function getLettrage()
     {
         return $this->lettrage;
+    }
+
+    /**
+     * Set numEcriture
+     *
+     * @param string $numEcriture
+     * @return OperationDiverse
+     */
+    public function setNumEcriture($numEcriture)
+    {
+        $this->numEcriture = $numEcriture;
+
+        return $this;
+    }
+
+    /**
+     * Get numEcriture
+     *
+     * @return string 
+     */
+    public function getNumEcriture()
+    {
+        return $this->numEcriture;
+    }
+
+    public function getMontant(){
+        if($this->debit != null & $this->debit != 0){
+            return $this->debit;
+        }
+        return $this->credit;
     }
 }

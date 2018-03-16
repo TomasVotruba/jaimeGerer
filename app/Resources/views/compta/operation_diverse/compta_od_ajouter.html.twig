@@ -1,0 +1,37 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Ajouter une opération diverse</h1>
+    </div>
+  </div>
+
+
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.date) }}
+        </div>
+
+        <div class="col-md-6">
+            {{ form_row(form.libelle) }}
+        </div>
+    </div>
+     <div class="row">
+        <div class="col-md-12">
+            {{ form_row(form.compteComptable) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.debit) }}
+        </div>
+
+        <div class="col-md-6">
+            {{ form_row(form.credit) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}
