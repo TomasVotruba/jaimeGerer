@@ -119,9 +119,15 @@ class JournalBanque
     /**
      * @var string
      *
-     * @ORM\Column(name="num_ecriture", type="string", length=50, nullable=false)
+     * @ORM\Column(name="num_ecriture", type="string", length=50, nullable=true)
      */
     private $numEcriture;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\AffectationDiverse", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true, unique=false)
+     */
+    private $affectationDiverse;
 
 
     /**
@@ -444,6 +450,26 @@ class JournalBanque
       return $num;
     }
 
+    public function getPieceId(){
+      $id = '';
+      foreach($this->mouvementBancaire->getRapprochements() as $rapprochement){
+        if($rapprochement->getRemiseCheque() ){
+          $num = $rapprochement->getRemiseCheque()->getId();
+        } else if ($rapprochement->getFacture()){
+          $num = $rapprochement->getFacture()->getId();
+        } else if ($rapprochement->getDepense()){
+          $num = $rapprochement->getDepense()->getId();
+        } else if ($rapprochement->getAvoir()){
+          $num = $rapprochement->getAvoir()->getNum();
+        } else if ($rapprochement->getAffectationDiverse()){
+        //  $num = $rapprochement->getAffectationDiverse()->__toString();
+        } else if ($rapprochement->getNoteFrais()){
+        //  $num = $rapprochement->getNoteFrais()->__toString();
+        }
+      }
+      return $id;
+    }
+
      public function getDatePiece(){
       $date = null;
       foreach($this->mouvementBancaire->getRapprochements() as $rapprochement){
@@ -509,5 +535,35 @@ class JournalBanque
     public function getStringAnalytique()
     {
         return $this->stringAnalytique;
+    }
+
+    /**
+     * Set numEcriture
+     *
+     * @param string $numEcriture
+     * @return JournalBanque
+     */
+    public function setNumEcriture($numEcriture)
+    {
+        $this->numEcriture = $numEcriture;
+
+        return $this;
+    }
+
+    /**
+     * Get numEcriture
+     *
+     * @return string 
+     */
+    public function getNumEcriture()
+    {
+        return $this->numEcriture;
+    }
+
+    public function getMontant(){
+        if($this->debit != null & $this->debit != 0){
+            return $this->debit;
+        }
+        return $this->credit;
     }
 }

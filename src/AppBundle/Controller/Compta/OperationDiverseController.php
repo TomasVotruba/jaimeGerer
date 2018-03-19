@@ -103,7 +103,7 @@ class OperationDiverseController extends Controller
 	public function ajouterAction()
 	{
 		$em = $this->getDoctrine()->getManager();
-		
+		$numService = $this->get('appbundle.num_service');
 
 		$od = new OperationDiverse();
 		$od->setCodeJournal('OD');
@@ -119,8 +119,14 @@ class OperationDiverseController extends Controller
 
 		if ($form->isSubmitted() && $form->isValid()) {
 			
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+			$od->setNumEcriture($numEcriture);
+
 			$em->persist($od);
 			$em->flush();
+
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 			return $this->redirect($this->generateUrl(
 					'compta_journal_od_index'

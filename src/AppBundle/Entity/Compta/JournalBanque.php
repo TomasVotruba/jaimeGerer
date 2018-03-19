@@ -436,9 +436,9 @@ class JournalBanque
         } else if ($rapprochement->getAvoir()){
           $num = $rapprochement->getAvoir()->getNum();
         } else if ($rapprochement->getAffectationDiverse()){
-        //  $num = $rapprochement->getAffectationDiverse()->__toString();
+          $num = $rapprochement->getAffectationDiverse()->__toString();
         } else if ($rapprochement->getNoteFrais()){
-        //  $num = $rapprochement->getNoteFrais()->__toString();
+          $num = $rapprochement->getNoteFrais()->__toString();
         }
       }
       return $num;
@@ -456,32 +456,32 @@ class JournalBanque
         } else if ($rapprochement->getAvoir()){
           $num = $rapprochement->getAvoir()->getNum();
         } else if ($rapprochement->getAffectationDiverse()){
-        //  $num = $rapprochement->getAffectationDiverse()->__toString();
+          $num = $rapprochement->getAffectationDiverse()->__toString();
         } else if ($rapprochement->getNoteFrais()){
-        //  $num = $rapprochement->getNoteFrais()->__toString();
+          $num = $rapprochement->getNoteFrais()->__toString();
         }
       }
       return $id;
     }
 
-     public function getDatePiece(){
-      $date = null;
-      foreach($this->mouvementBancaire->getRapprochements() as $rapprochement){
-        if($rapprochement->getRemiseCheque() ){
-          $date = $rapprochement->getRemiseCheque()->getDate();
-        } else if ($rapprochement->getFacture()){
-          $date = $rapprochement->getFacture()->getDateCreation();
-        } else if ($rapprochement->getDepense()){
-          $date = $rapprochement->getDepense()->getDate();
-        } else if ($rapprochement->getAvoir()){
-          $date = $rapprochement->getAvoir()->getDateCreation();
-        } else if ($rapprochement->getAffectationDiverse()){
-        //  $num = $rapprochement->getAffectationDiverse()->__toString();
-        } else if ($rapprochement->getNoteFrais()){
-        //  $num = $rapprochement->getNoteFrais()->__toString();
+    public function getDatePiece(){
+        $date = null;
+        foreach($this->mouvementBancaire->getRapprochements() as $rapprochement){
+            if($rapprochement->getRemiseCheque() ){
+                $date = $rapprochement->getRemiseCheque()->getDate();
+            } else if ($rapprochement->getFacture()){
+                $date = $rapprochement->getFacture()->getDateCreation();
+            } else if ($rapprochement->getDepense()){
+                $date = $rapprochement->getDepense()->getDate();
+            } else if ($rapprochement->getAvoir()){
+                $date = $rapprochement->getAvoir()->getDateCreation();
+            } else if ($rapprochement->getAffectationDiverse()){
+                $date = $rapprochement->getDate();
+            } else if ($rapprochement->getNoteFrais()){
+                $date = $rapprochement->getNoteFrais()->getDateCreation();
+            }
         }
-      }
-      return $date;
+        return $date;
     }
 
 
@@ -560,4 +560,5 @@ class JournalBanque
         }
         return $this->credit;
     }
+    
 }

@@ -34,6 +34,9 @@
 			<input type="checkbox" name="filtre_pieces" value="AVOIRS-FOURNISSEUR" id="filtre-piece-avoirs-fournisseurs" class="filtre" checked /> 
 			<label for="filtre-piece-avoirs-fournisseurs">Avoirs fournisseurs</label><br />
 
+			<input type="checkbox" name="filtre_pieces" value="AFFECTATIONS-DIVERSES-VENTE" id="filtre-piece-affectations-diverses-vente" class="filtre" checked /> 
+			<label for="filtre-piece-affectations-diverses-vente">Affecations diverses vente</label><br />
+
 		</div>
 		<div class="col-md-3">
 			<p><strong>Montant des mouvements bancaires</strong></p>
@@ -90,17 +93,17 @@
 				   	 	<div class="panel-heading" role="tab" id="heading-{{ type }}">
 				      		<h4 class="panel-title">
 				        		<a role="button" data-toggle="collapse" href="#{{ type }}" aria-expanded="true" aria-controls="{{ type }}">
-										{% if type == "NOTES-FRAIS" %}
-											Note de frais
-										{% elseif type =="REMISES-CHEQUES" %}
-											Remises de chèques
-										{% elseif type == "AVOIRS-CLIENT" %}
-											Avoirs clients
-										{% elseif type == "AVOIRS-FOURNISSEUR" %}
-											Avoirs fournisseurs
-										{% else %}
-											{{ type|capitalize  }}
-										{% endif %}
+									{% if type == "NOTES-FRAIS" %}
+										Note de frais
+									{% elseif type =="REMISES-CHEQUES" %}
+										Remises de chèques
+									{% elseif type == "AVOIRS-CLIENT" %}
+										Avoirs clients
+									{% elseif type == "AVOIRS-FOURNISSEUR" %}
+										Avoirs fournisseurs
+									{% else %}
+										{{ type|capitalize  }}
+									{% endif %}
 				        		</a>
 				      		</h4>
 				    	</div>
@@ -114,39 +117,53 @@
 							        		<td class="col-md-2">
 												<input type="checkbox" name="pieces" id="{{ id }}" value="{% if piece.totalTTC is defined %} {{ piece.totalTTC }} {% endif %}" data-type="{{ type }}" />
 											</td>
-											<td class="col-md-2 num">
-												{% if type == 'NOTES-FRAIS' %}
-													{{ piece.month }}/{{ piece.year }}
-												{% elseif type == "AFFECTATIONS-DIVERSES-VENTE" or type =="AFFECTATIONS-DIVERSES-ACHAT" %}
-							        				{{ piece.nom }}
-							        			{% else %}
-													{% if piece.num is defined %} {{ piece.num }} {% endif %}
-												{% endif %}
-											</td>
-											<td class="col-md-2 align-right montant"> 
-												{% if type == 'AVOIRS-CLIENT' or type == "DEPENSES" or type == "NOTES-FRAIS"  %}
-													<span class="red">{{ (0-piece.totalTTC)|number_format(2, ',', ' ') }} €</span>
-												{% elseif type == "AFFECTATIONS-DIVERSES-VENTE" or type =="AFFECTATIONS-DIVERSES-ACHAT" %}
-							        				<input type="text" />
-							        			{% else %}
-													<span class="green">{{ piece.totalTTC|number_format(2, ',', ' ') }} €</span>
-												{% endif %}
-											</td>
-											<td class="col-md-6 libelle">
-												<label for="{{ id }}">
-												{% if type == 'AVOIRS-FOURNISSEUR' %}
-													{{ piece.depense.compte }}
-												{% elseif type == 'AVOIRS-CLIENT' %}
-													{{ piece.facture.compte }}
-												{% elseif type == 'NOTES-FRAIS' %}
-													{{ piece.user }}
-												{% else %}
-													{% if piece.compte is defined %} {{ piece.compte }} {% endif %}
-												{% endif %}
-												</label>
-											</td>
+								        	{% 	if type == "AFFECTATIONS-DIVERSES-VENTE" or type =="AFFECTATIONS-DIVERSES-ACHAT" %}
+								        		<td>
+								        			<label for="{{ id }}">{{ piece.nom }}</label>
+								        		</td>
+								        	{% else %}
+				        						<td class="col-md-2 num">
+				        							{% if type == 'NOTES-FRAIS' %}
+				        								{{ piece.month }}/{{ piece.year }}
+				        		        			{% else %}
+				        								{% if piece.num is defined %} {{ piece.num }} {% endif %}
+				        							{% endif %}
+				        						</td>
+				        						<td class="col-md-2 align-right montant"> 
+				        							{% if type == 'AVOIRS-CLIENT' or type == "DEPENSES" or type == "NOTES-FRAIS"  %}
+				        								<span class="red">{{ (0-piece.totalTTC)|number_format(2, ',', ' ') }} €</span>
+				        								<span class="green">{{ piece.totalTTC|number_format(2, ',', ' ') }} €</span>
+				        							{% endif %}
+				        						</td>
+				        						<td class="col-md-6 libelle">
+				        							<label for="{{ id }}">
+				        							{% if type == 'AVOIRS-FOURNISSEUR' %}
+				        								{{ piece.depense.compte }}
+				        							{% elseif type == 'AVOIRS-CLIENT' %}
+				        								{{ piece.facture.compte }}
+				        							{% elseif type == 'NOTES-FRAIS' %}
+				        								{{ piece.user }}
+				        							{% else %}
+				        								{% if piece.compte is defined %} {{ piece.compte }} {% endif %}
+				        							{% endif %}
+				        							</label>
+				        						</td>
+								        	{% endif %}
 										</tr>
 									{% endfor %}
+									{% if type == "AFFECTATIONS-DIVERSES-VENTE" %}
+										<tr id="row-nouvelle-affectation-diverse-vente">
+											<td colspan="4">
+												<a href="{{ path('compta_affectation_diverse_ajouter_modal', {'type' : 'VENTE'}) }}"  data-toggle="modal" data-target="#modal">Nouvelle affectation diverse</a>
+											</td>
+										</tr>
+									{% elseif type == "AFFECTATIONS-DIVERSES-ACHAT" %}
+										<tr id="row-nouvelle-affectation-diverse-achat">
+											<td colspan="4">
+												<a href="{{ path('compta_affectation_diverse_ajouter_modal', {'type' : 'ACHAT'}) }}"  data-toggle="modal" data-target="#modal">Nouvelle affectation diverse</a>
+											</td>
+										</tr>
+									{% endif %}
 									</tbody>
 								</table>
 				      		</div>
@@ -316,6 +333,30 @@
 				$('.searchable tr').filter(function () {
 					return rex.test($(this).find('.libelle, .montant, .num').text().replace(/\s/g, ''));
 				}).show();
+			});
+
+			$(document).on("submit", '#form-add-affectation_diverse', function(e) {
+
+				var type = $('#affectation-diverse-type').text();
+
+				e.preventDefault();
+				$.ajax({
+			        type: "POST",
+			        url: Routing.generate('compta_affectation_diverse_ajouter_modal', {'type' : type} ),
+			        data: $(this).serialize(), // serializes the form's elements.
+			        success: function(data)
+			        {
+			        	var newTr = "<tr id='row-AFFECTATIONS-DIVERSES-"+type+"_"+data.id+"'>"
+			        	newTr+="<td class='col-md-2'><input type='checkbox' name='pieces' id="+data.id+" data-type='AFFECTATIONS-DIVERSES-"+type+"' /></td>";
+			        	newTr+="<td class='col-md-2 num'>"+data.nom+"</td>";
+						// newTr+="<td class='col-md-2 align-right montant'><div class='input-group'><input type='text' class='form-control' placeholder='Montant' aria-describedby='basic-addon2'><span class='input-group-addon' id='basic-addon2'>€</span></div></td>";
+
+			        	newTr+="</tr>";
+				        $(newTr).insertBefore('#row-nouvelle-affectation-diverse-vente');
+			
+				        $('#modal').modal('hide');
+			        }
+			    });
 			});
 
 		});

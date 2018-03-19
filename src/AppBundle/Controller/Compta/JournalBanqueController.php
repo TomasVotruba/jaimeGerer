@@ -550,7 +550,6 @@ class JournalBanqueController extends Controller
 
 					if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
 						$arr_annees[] = $piece->getDateCreation()->format('Y');
-						dump($piece->getDateCreation()->format('Y'));
 					}
 				}
 
@@ -752,9 +751,6 @@ class JournalBanqueController extends Controller
 					}
 					$lettre = $lettrageService->findNextNum($piece->getDepense()->getCompte()->getCompteComptableFournisseur());	
 					$lettrage = $prefixe.$lettre;
-
-					dump($prefixe);
-					dump($lettre);
 
 					foreach($arr_mouvements as $mouvementBancaire){
 						//credit au compte  401xxxx (compte du fournisseur)

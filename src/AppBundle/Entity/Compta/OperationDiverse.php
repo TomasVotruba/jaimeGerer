@@ -335,6 +335,8 @@ class OperationDiverse
         return $this->avoir->getNum();
       } else if($this->facture){
         return $this->facture->getNum();
+      } else {
+        return $this->getLibelle();
       }
       return null;
     }
@@ -357,6 +359,8 @@ class OperationDiverse
         return $this->avoir->getDateCreation();
       } else if($this->facture){
         return $this->facture->getDate();
+      } else {
+        return $this->getDate();
       }
       return null;
     }
