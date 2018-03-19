@@ -573,7 +573,7 @@ class RapprochementController extends Controller
             'AFFECTATIONS-DIVERSES-ACHAT' => array(),
         );
 
-        remises de cheque
+       // remises de cheque
         $arr_all_remises_cheques = $remiseChequeRepo->findForCompany($this->getUser()->getCompany());
         $arr_factures_rapprochees_par_remises_cheques = array();
         $arr_avoirs_rapprochees_par_remises_cheques = array();
