@@ -52,47 +52,44 @@
 			{% endif %}
 		</td>
 		<td class="piece">
-			{% if mouvement.type is not null %}
-				{% for rapprochement in mouvement.rapprochements %}
+			{% for rapprochement in mouvement.rapprochements %}
+				{% if rapprochement.depense is not null %}
 					
-					{% if rapprochement.depense is not null %}
-						
-						<div><a href="{{  path("compta_depense_voir_modal", {'id' : rapprochement.depense.id }) }}" data-toggle="modal" data-target="#modal">{{ rapprochement.depense }}</a></div>
-						<div class="hidden">{{ rapprochement.depense.id }}</div>
+					<div><a href="{{  path("compta_depense_voir_modal", {'id' : rapprochement.depense.id }) }}" data-toggle="modal" data-target="#modal">{{ rapprochement.depense }}</a></div>
+					<div class="hidden">{{ rapprochement.depense.id }}</div>
 
-					{% elseif rapprochement.facture is not null %}
-						
-						<div><a href="{{  path("compta_facture_voir", {'id' : rapprochement.facture.id }) }}" data-toggle="modal" data-target="#modal">{{ rapprochement.facture.num }}</a> : {{ rapprochement.facture.totalTTC }} € TTC</div>
-						<div class="hidden">{{ rapprochement.facture.id }}</div>
+				{% elseif rapprochement.facture is not null %}
+					
+					<div><a href="{{  path("compta_facture_voir", {'id' : rapprochement.facture.id }) }}" data-toggle="modal" data-target="#modal">{{ rapprochement.facture.num }}</a> : {{ rapprochement.facture.totalTTC }} € TTC</div>
+					<div class="hidden">{{ rapprochement.facture.id }}</div>
 
-					{% elseif rapprochement.accompte is not null %}
-						
-						<div>{{ rapprochement.accompte }}</div>
-						<div class="hidden">{{ rapprochement.accompte.id }}</div>
+				{% elseif rapprochement.accompte is not null %}
+					
+					<div>{{ rapprochement.accompte }}</div>
+					<div class="hidden">{{ rapprochement.accompte.id }}</div>
 
-					{% elseif rapprochement.avoir is not null %}
+				{% elseif rapprochement.avoir is not null %}
 
-						<div>{{ rapprochement.avoir }}</div>
-						<div class="hidden">{{ rapprochement.avoir.id }}</div>
+					<div>{{ rapprochement.avoir }}</div>
+					<div class="hidden">{{ rapprochement.avoir.id }}</div>
 
-					{% elseif rapprochement.remiseCheque is not null %}
+				{% elseif rapprochement.remiseCheque is not null %}
 
-						<div>REMISE {{ rapprochement.remiseCheque }}</div>
-						<div class="hidden">{{ rapprochement.remiseCheque.id }}</div>
+					<div>REMISE {{ rapprochement.remiseCheque }}</div>
+					<div class="hidden">{{ rapprochement.remiseCheque.id }}</div>
 
-					{% elseif rapprochement.noteFrais is not null %}
+				{% elseif rapprochement.noteFrais is not null %}
 
-						<div>{{ rapprochement.noteFrais }}</div>
-						<div class="hidden">{{ rapprochement.noteFrais.id }}</div>
+					<div>{{ rapprochement.noteFrais }}</div>
+					<div class="hidden">{{ rapprochement.noteFrais.id }}</div>
 
-					{% elseif rapprochement.affectationDiverse is not null %}
+				{% elseif rapprochement.affectationDiverse is not null %}
 
-						<div>{{ rapprochement.affectationDiverse }}</div>
-						<div class="hidden">{{ rapprochement.affectationDiverse.id }}</div>
+					<div>{{ rapprochement.affectationDiverse }}</div>
+					<div class="hidden">{{ rapprochement.affectationDiverse.id }}</div>
 
-					{% endif %}
-				{% endfor %}
-			{% endif %}
+				{% endif %}
+			{% endfor %}
 		</td>
 		<td class="center validation">
 			{% if mouvement.rapprochements|length > 0 %}
