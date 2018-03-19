@@ -706,6 +706,8 @@ class RapprochementController extends Controller
                     if( !in_array($piece->getCompte()->getCompteComptableFournisseur()->getId(), $arr_cc) ){
                        $arr_cc[] = $piece->getCompte()->getCompteComptableFournisseur()->getId(); 
                     }
+                    $mouvementBancaire->setType('DEPENSE');
+                    $em->persist($mouvementBancaire);
                     break;
                   
                   case 'FACTURES' :
@@ -717,6 +719,8 @@ class RapprochementController extends Controller
                     if( !in_array($piece->getCompte()->getCompteComptableClient()->getId(), $arr_cc) ){
                        $arr_cc[] = $piece->getCompte()->getCompteComptableClient()->getId(); 
                     }
+                    $mouvementBancaire->setType('FACTURE');
+                    $em->persist($mouvementBancaire);
                     break;
                   
                   case 'AVOIRS-FOURNISSEUR' :
@@ -726,6 +730,8 @@ class RapprochementController extends Controller
                     if( !in_array($piece->getDepense()->getCompte()->getCompteComptableFournisseur()->getId(), $arr_cc) ){
                        $arr_cc[] = $piece->getDepense()->getCompte()->getCompteComptableFournisseur()->getId(); 
                     }
+                    $mouvementBancaire->setType('AVOIR-FOURNISSEUR');
+                    $em->persist($mouvementBancaire);
                     break;
                   
                   case 'AVOIRS-CLIENT' :
@@ -735,6 +741,8 @@ class RapprochementController extends Controller
                     if( !in_array($piece->getFacture()->getCompte()->getCompteComptableClient()->getId(), $arr_cc) ){
                        $arr_cc[] = $piece->getFacture()->getCompte()->getCompteComptableClient()->getId(); 
                     }
+                    $mouvementBancaire->setType('AVOIR-CLIENT');
+                    $em->persist($mouvementBancaire);
                     break;
                  
                   // case 'REMISES-CHEQUES' :
@@ -750,6 +758,8 @@ class RapprochementController extends Controller
                     if( !in_array($piece->getCompteComptable()->getId(), $arr_cc) ){
                        $arr_cc[] = $piece->getCompteComptable()->getId(); 
                     }
+                    $mouvementBancaire->setType('AFFECTATION-DIVERSE-VENTE');
+                    $em->persist($mouvementBancaire);
                     break;
 
                 case 'AFFECTATIONS-DIVERSES-ACHAT' :
@@ -759,6 +769,8 @@ class RapprochementController extends Controller
                     if( !in_array($piece->getCompteComptable()->getId(), $arr_cc) ){
                        $arr_cc[] = $piece->getCompteComptable()->getId(); 
                     }
+                    $mouvementBancaire->setType('AFFECTATION-DIVERSE-ACHAT');
+                    $em->persist($mouvementBancaire);
                     break;
 
                   case 'NOTES-FRAIS' :
@@ -770,6 +782,9 @@ class RapprochementController extends Controller
                     if( !in_array($piece->getCompteComptable()->getId(), $arr_cc) ){
                        $arr_cc[] = $piece->getCompteComptable()->getId(); 
                     }
+                    $mouvementBancaire->setType('NOTE-FRAIS');
+                    $em->persist($mouvementBancaire);
+
                     break;
                 }
 

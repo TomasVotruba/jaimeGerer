@@ -50,13 +50,13 @@ class JournalVente
     private $modePaiement;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", cascade={ "persist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", cascade={ "persist"}, inversedBy="journalVentes")
      * @ORM\JoinColumn(nullable=true, unique=false)
      */
     private $facture;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\Avoir", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\Avoir", cascade={"persist"}, inversedBy="journalVentes")
      * @ORM\JoinColumn(nullable=true, unique=false)
      */
     private $avoir;

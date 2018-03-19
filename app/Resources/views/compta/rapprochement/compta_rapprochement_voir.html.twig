@@ -54,27 +54,42 @@
 		<td class="piece">
 			{% if mouvement.type is not null %}
 				{% for rapprochement in mouvement.rapprochements %}
-					{% if  mouvement.type == 'DEPENSE' %}
+					
+					{% if rapprochement.depense is not null %}
+						
 						<div><a href="{{  path("compta_depense_voir_modal", {'id' : rapprochement.depense.id }) }}" data-toggle="modal" data-target="#modal">{{ rapprochement.depense }}</a></div>
 						<div class="hidden">{{ rapprochement.depense.id }}</div>
-					{% elseif mouvement.type == 'FACTURE' %}
+
+					{% elseif rapprochement.facture is not null %}
+						
 						<div><a href="{{  path("compta_facture_voir", {'id' : rapprochement.facture.id }) }}" data-toggle="modal" data-target="#modal">{{ rapprochement.facture.num }}</a> : {{ rapprochement.facture.totalTTC }} € TTC</div>
 						<div class="hidden">{{ rapprochement.facture.id }}</div>
-					{% elseif mouvement.type == 'ACCOMPTE' %}
+
+					{% elseif rapprochement.accompte is not null %}
+						
 						<div>{{ rapprochement.accompte }}</div>
 						<div class="hidden">{{ rapprochement.accompte.id }}</div>
-					{% elseif (mouvement.type == 'AVOIR-FOURNISSEUR') or (mouvement.type == 'AVOIR-CLIENT') %}
+
+					{% elseif rapprochement.avoir is not null %}
+
 						<div>{{ rapprochement.avoir }}</div>
 						<div class="hidden">{{ rapprochement.avoir.id }}</div>
-					{% elseif (mouvement.type == 'REMISE-CHEQUES') %}
+
+					{% elseif rapprochement.remiseCheque is not null %}
+
 						<div>REMISE {{ rapprochement.remiseCheque }}</div>
 						<div class="hidden">{{ rapprochement.remiseCheque.id }}</div>
-					{% elseif (mouvement.type == 'NOTE-FRAIS') %}
+
+					{% elseif rapprochement.noteFrais is not null %}
+
 						<div>{{ rapprochement.noteFrais }}</div>
 						<div class="hidden">{{ rapprochement.noteFrais.id }}</div>
-					{% elseif (mouvement.type == 'AFFECTATION-DIVERSE-ACHAT') or  (mouvement.type == 'AFFECTATION-DIVERSE-VENTE') %}
+
+					{% elseif rapprochement.affectationDiverse is not null %}
+
 						<div>{{ rapprochement.affectationDiverse }}</div>
 						<div class="hidden">{{ rapprochement.affectationDiverse.id }}</div>
+
 					{% endif %}
 				{% endfor %}
 			{% endif %}
