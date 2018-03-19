@@ -135,6 +135,7 @@
 				        						<td class="col-md-2 align-right montant"> 
 				        							{% if type == 'AVOIRS-CLIENT' or type == "DEPENSES" or type == "NOTES-FRAIS"  %}
 				        								<span class="red">{{ (0-piece.totalTTC)|number_format(2, ',', ' ') }} €</span>
+				        							{% else %}
 				        								<span class="green">{{ piece.totalTTC|number_format(2, ',', ' ') }} €</span>
 				        							{% endif %}
 				        						</td>
