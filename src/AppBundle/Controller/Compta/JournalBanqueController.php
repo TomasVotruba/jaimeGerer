@@ -484,87 +484,88 @@ class JournalBanqueController extends Controller
 		foreach($arr_pieces as $arr_piece){
 			foreach($arr_piece as $type => $piece){
 
-				$montant= $piece->getTotalTTC();
-				if($montant < 0){
-					$montant = -$montant;
-				}
-				if( array_key_exists($type, $arr_types) ){
+				if($type != 'AFFECTATIONS-DIVERSES-VENTE' && $type != 'AFFECTATIONS-DIVERSES-ACHAT'){
+					$montant= $piece->getTotalTTC();
+					if($montant < 0){
+						$montant = -$montant;
+					}
+					if( array_key_exists($type, $arr_types) ){
+						$arr_types[$type]+= $montant;
+					} else {
+						$arr_types[$type] = $montant;
+					}
 					
-					$arr_types[$type]+= $montant;
-				} else {
-					$arr_types[$type] = $montant;
-				}
-				
-				if($type == "DEPENSES"){
+					if($type == "DEPENSES"){
 
 
-					$analytique.= $piece->getTotalTTC();
-					$analytique.= '€ ';
-					$analytique.= $piece->getAnalytique()->getValeur();
-					$analytique.= ', ';
+						$analytique.= $piece->getTotalTTC();
+						$analytique.= '€ ';
+						$analytique.= $piece->getAnalytique()->getValeur();
+						$analytique.= ', ';
 
-					$modePaiement.= $piece->getTotalTTC();
-					$modePaiement.= '€ ';
-					$modePaiement.= $piece->getModePaiement();
-					$modePaiement.= ', ';
+						$modePaiement.= $piece->getTotalTTC();
+						$modePaiement.= '€ ';
+						$modePaiement.= $piece->getModePaiement();
+						$modePaiement.= ', ';
 
-					if(!in_array($piece->getDate()->format('Y'), $arr_annees)){
-						$arr_annees[] = $piece->getDate()->format('Y');
-					}
-				}
-
-				if($type == "FACTURES"){
-
-					$analytique.= $piece->getTotalTTC();
-					$analytique.= '€ ';
-					$analytique.= $piece->getAnalytique()->getValeur();
-					$analytique.= ', ';
-
-					if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
-						$arr_annees[] = $piece->getDateCreation()->format('Y');
-					}
-				}
-
-				if($type == "NOTES-FRAIS"){
-
-					if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
-						$arr_annees[] = $piece->getDateCreation()->format('Y');
-					}
-
-					foreach($piece->getDepenses() as $depense){
-						if( array_key_exists($depense->getAnalytique()->getValeur(), $arr_analytiques) ){
-							$arr_analytiques[$depense->getAnalytique()->getValeur()]+= $depense->getTotalTTC();
-						} else {
-							$arr_analytiques[$depense->getAnalytique()->getValeur()]= $depense->getTotalTTC();
+						if(!in_array($piece->getDate()->format('Y'), $arr_annees)){
+							$arr_annees[] = $piece->getDate()->format('Y');
 						}
 					}
 
-				}
+					if($type == "FACTURES"){
 
-				if($type == "AVOIRS-FOURNISSEUR"){
+						$analytique.= $piece->getTotalTTC();
+						$analytique.= '€ ';
+						$analytique.= $piece->getAnalytique()->getValeur();
+						$analytique.= ', ';
 
-					$analytique.= $piece->getTotalTTC();
-					$analytique.= '€ ';
-					$analytique.= $piece->getDepense()->getAnalytique()->getValeur();
-					$analytique.= ', ';
+						if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
+							$arr_annees[] = $piece->getDateCreation()->format('Y');
+						}
+					}
 
-					if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
-						$arr_annees[] = $piece->getDateCreation()->format('Y');
+					if($type == "NOTES-FRAIS"){
+
+						if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
+							$arr_annees[] = $piece->getDateCreation()->format('Y');
+						}
+
+						foreach($piece->getDepenses() as $depense){
+							if( array_key_exists($depense->getAnalytique()->getValeur(), $arr_analytiques) ){
+								$arr_analytiques[$depense->getAnalytique()->getValeur()]+= $depense->getTotalTTC();
+							} else {
+								$arr_analytiques[$depense->getAnalytique()->getValeur()]= $depense->getTotalTTC();
+							}
+						}
+
+					}
+
+					if($type == "AVOIRS-FOURNISSEUR"){
+
+						$analytique.= $piece->getTotalTTC();
+						$analytique.= '€ ';
+						$analytique.= $piece->getDepense()->getAnalytique()->getValeur();
+						$analytique.= ', ';
+
+						if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
+							$arr_annees[] = $piece->getDateCreation()->format('Y');
+						}
+					}
+
+					if($type == "AVOIRS-CLIENT"){
+
+						$analytique.= $piece->getTotalTTC();
+						$analytique.= '€ ';
+						$analytique.= $piece->getFacture()->getAnalytique()->getValeur();
+						$analytique.= ', ';
+
+						if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
+							$arr_annees[] = $piece->getDateCreation()->format('Y');
+						}
 					}
 				}
 
-				if($type == "AVOIRS-CLIENT"){
-
-					$analytique.= $piece->getTotalTTC();
-					$analytique.= '€ ';
-					$analytique.= $piece->getFacture()->getAnalytique()->getValeur();
-					$analytique.= ', ';
-
-					if(!in_array($piece->getDateCreation()->format('Y'), $arr_annees)){
-						$arr_annees[] = $piece->getDateCreation()->format('Y');
-					}
-				}
-		
 			}
 
 		}
@@ -586,12 +587,14 @@ class JournalBanqueController extends Controller
 			}
 		}
 
-		//si on a plusieurs types de pièces (par exemple depense+avoir), on utilise celle qui a le plus gros montant
-		$maxs = array_keys($arr_types, max($arr_types));
-		$type = $maxs[0];
-		foreach($arr_pieces as $arr_piece){
-			if( array_key_exists( $type, $arr_piece ) ){
-				$piece = $arr_piece[$type];
+		if($type != 'AFFECTATIONS-DIVERSES-VENTE' && $type != 'AFFECTATIONS-DIVERSES-ACHAT'){
+			//si on a plusieurs types de pièces (par exemple depense+avoir), on utilise celle qui a le plus gros montant
+			$maxs = array_keys($arr_types, max($arr_types));
+			$type = $maxs[0];
+			foreach($arr_pieces as $arr_piece){
+				if( array_key_exists( $type, $arr_piece ) ){
+					$piece = $arr_piece[$type];
+				}
 			}
 		}
 
@@ -797,41 +800,103 @@ class JournalBanqueController extends Controller
 					$lettre = $lettrageService->findNextNum($piece->getFacture()->getCompte()->getCompteComptableClient());	
 					$lettrage = $prefixe.$lettre;
 
-					//credit au compte  512xxxxx (selon banque)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($mouvementBancaire);
-					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
-					$ligne->setDebit(null);
-					$ligne->setCredit($mouvementBancaire->getMontant());
-					$ligne->setAnalytique(null);
-					$ligne->setStringAnalytique($analytique);
-					$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
-					$ligne->setNom($mouvementBancaire->getLibelle());
-					$ligne->setDate($mouvementBancaire->getDate());
-					$ligne->setNumEcriture($numEcriture);
-					$em->persist($ligne);
+					foreach($arr_mouvements as $mouvementBancaire){
 
-					//debit au compte 411xxxx (compte du client)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($mouvementBancaire);
-					$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
-					$ligne->setDebit($piece->getTotalTTC());
-					$ligne->setCredit(null);
-					$ligne->setAnalytique($piece->getFacture()->getAnalytique());
-					$ligne->setCompteComptable($piece->getFacture()->getCompte()->getCompteComptableClient());
-					$ligne->setLettrage($lettrage);
-					$ligne->setNom($mouvementBancaire->getLibelle());
-					$ligne->setDate($mouvementBancaire->getDate());
-					$ligne->setNumEcriture($numEcriture);
-					$em->persist($ligne);
+						//credit au compte  512xxxxx (selon banque)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit(null);
+						$ligne->setCredit($mouvementBancaire->getMontant());
+						$ligne->setAnalytique(null);
+						$ligne->setStringAnalytique($analytique);
+						$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setNumEcriture($numEcriture);
+						$em->persist($ligne);
 
+						//debit au compte 411xxxx (compte du client)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit($mouvementBancaire->getMontant());
+						$ligne->setCredit(null);
+						$ligne->setAnalytique($piece->getFacture()->getAnalytique());
+						$ligne->setCompteComptable($piece->getFacture()->getCompte()->getCompteComptableClient());
+						$ligne->setLettrage($lettrage);
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setNumEcriture($numEcriture);
+						$em->persist($ligne);
+					}
 					break;
 
+				case 'AFFECTATIONS-DIVERSES-VENTE':
+
+					foreach($arr_mouvements as $mouvementBancaire){
+						//credit au compte xxxxxx (selon le compte rattaché à l'affectation)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit(null);
+						$ligne->setCredit($mouvementBancaire->getMontant());
+						$ligne->setAnalytique(null);
+						$ligne->setCompteComptable($piece->getCompteComptable());
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setNumEcriture($numEcriture);
+						$em->persist($ligne);
+
+						//debit au compte 512xxxx (selon banque)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit($mouvementBancaire->getMontant());
+						$ligne->setCredit(null);
+						$ligne->setAnalytique(null);
+						$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setNumEcriture($numEcriture);
+						$em->persist($ligne);
+					}
+					break;
+
+				case 'AFFECTATIONS-DIVERSES-ACHAT':
+
+					foreach($arr_mouvements as $mouvementBancaire){
+						//credit au compte 512xxxx (selon banque)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit(null);
+						$ligne->setCredit(-($mouvementBancaire->getMontant()));
+						$ligne->setAnalytique(null);
+						$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setNumEcriture($numEcriture);
+						$em->persist($ligne);
+
+						//debit au compte xxxxxx (selon le compte rattaché à l'affectation)
+						$ligne = new JournalBanque();
+						$ligne->setMouvementBancaire($mouvementBancaire);
+						$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+						$ligne->setDebit(-($mouvementBancaire->getMontant()));
+						$ligne->setCredit(null);
+						$ligne->setAnalytique(null);
+						$ligne->setCompteComptable($piece->getCompteComptable());
+						$ligne->setNom($mouvementBancaire->getLibelle());
+						$ligne->setDate($mouvementBancaire->getDate());
+						$ligne->setNumEcriture($numEcriture);
+						$em->persist($ligne);
+					}
+					break;
 			}
 
 			foreach($arr_pieces as $arr_piece){
 				foreach($arr_piece as $type => $piece){
-
 
 					switch($type){
 

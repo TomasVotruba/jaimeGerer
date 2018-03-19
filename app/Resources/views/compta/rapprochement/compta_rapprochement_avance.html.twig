@@ -37,6 +37,9 @@
 			<input type="checkbox" name="filtre_pieces" value="AFFECTATIONS-DIVERSES-VENTE" id="filtre-piece-affectations-diverses-vente" class="filtre" checked /> 
 			<label for="filtre-piece-affectations-diverses-vente">Affecations diverses vente</label><br />
 
+			<input type="checkbox" name="filtre_pieces" value="AFFECTATIONS-DIVERSES-ACHAT" id="filtre-piece-affectations-diverses-achat" class="filtre" checked /> 
+			<label for="filtre-piece-affectations-diverses-achat">Affecations diverses achat</label><br />
+
 		</div>
 		<div class="col-md-3">
 			<p><strong>Montant des mouvements bancaires</strong></p>
@@ -380,7 +383,6 @@
 			var total = 0;
 			$('input[name="pieces"]').each(function () {
 				if(this.checked){
-
 					//on multiplie puis divise par 100 pour travailler sur des entiers et éviter le problème de précision de javascript
 					if( $(this).attr('data-type') == "DEPENSES" || $(this).attr('data-type') == "AVOIRS-CLIENT" || $(this).attr('data-type') == "NOTES-FRAIS" || $(this).attr('data-type') == "DEPENSES" ){
 						val= Number($(this).val())*100;
@@ -388,8 +390,8 @@
 					} else {
 						total+= Number($(this).val())*100;
 					}
-					
-				}
+				}	
+				
 			});
 			total = total/100;
 			$('#total-pieces').text(accounting.formatMoney(total, { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 }));
@@ -400,6 +402,16 @@
 		function checkTotaux(){
 			var totalPieces = calculTotalPieces()*100;
 			var totalMouvements = calculTotalMouvements()*100;
+
+			var ok = false;
+
+			$('input[name="pieces"]').each(function () {
+				if(this.checked){
+					if( $(this).attr('data-type') == "AFFECTATIONS-DIVERSES-VENTE" || $(this).attr('data-type') == "AFFECTATIONS-DIVERSES-ACHAT" ){
+						ok = true;
+					}
+				}
+			});
 
 			if(totalPieces > totalMouvements){
 				
@@ -420,6 +432,10 @@
 				$('.glyphicon-ok').addClass("hidden");
 
 			} else {
+				ok = true;
+			}
+
+			if(ok){
 				
 				$('#error').text('')
 							.addClass("hidden");
