@@ -1493,4 +1493,14 @@ class DocumentPrix
     {
         return $this->journalVentes;
     }
+
+    public function isLettre(){
+
+        foreach($this->journalVentes as $ligne){
+            if($ligne->getLettrage() != null){
+                return true;
+            }
+        }
+        return false;
+    }
 }

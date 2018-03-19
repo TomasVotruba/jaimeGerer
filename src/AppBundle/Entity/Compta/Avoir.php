@@ -655,4 +655,21 @@ class Avoir
     {
         return $this->journalVentes;
     }
+
+
+
+    public function isLettre(){
+        foreach($this->journalAchats as $ligne){
+            if($ligne->getLettrage() != null){
+                return true;
+            }
+        }
+        foreach($this->journalVentes as $ligne){
+            if($ligne->getLettrage() != null){
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }

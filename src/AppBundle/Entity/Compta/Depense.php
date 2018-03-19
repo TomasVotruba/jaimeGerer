@@ -924,4 +924,14 @@ class Depense
     {
         return $this->sousTraitances;
     }
+
+    public function isLettre(){
+
+        foreach($this->journalAchats as $ligne){
+            if($ligne->getLettrage() != null){
+                return true;
+            }
+        }
+        return false;
+    }
 }

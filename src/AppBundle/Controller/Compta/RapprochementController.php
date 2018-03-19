@@ -82,7 +82,7 @@ class RapprochementController extends Controller
         $arr_all_factures = $repoFactures->findForCompany($this->getUser()->getCompany(), 'FACTURE', true);
         $arr_factures = array();
         foreach($arr_all_factures as $facture){
-          if($facture->getTotalRapproche() < $facture->getTotalTTC() && $facture->getEtat() != "PAID" && !in_array($facture->getId(), $arr_factures_rapprochees_par_remises_cheques) && $facture->getTotalAvoirs() < $facture->getTotalTTC()){
+          if($facture->getTotalRapproche() < $facture->getTotalTTC() && $facture->getEtat() != "PAID" && !in_array($facture->getId(), $arr_factures_rapprochees_par_remises_cheques) && $facture->getTotalAvoirs() < $facture->getTotalTTC() && !$facture->isLettre() ){
             $arr_factures[] = $facture;
           }
         }
@@ -93,7 +93,7 @@ class RapprochementController extends Controller
         $arr_depenses = array();
         foreach($arr_all_depenses as $depense){
           if($depense->getEtat() != 'RAPPROCHE'){
-            if($depense->getTotalRapproche() < $depense->getTotalTTC()){
+            if($depense->getTotalRapproche() < $depense->getTotalTTC() && !$depense->isLettre() ){
               $arr_depenses[] = $depense;
             }
           }
@@ -124,7 +124,7 @@ class RapprochementController extends Controller
         $arr_all_avoirs_fournisseurs = $repoAvoirs->findForCompany('FOURNISSEUR', $this->getUser()->getCompany());
         $arr_avoirs_fournisseurs = array();
         foreach($arr_all_avoirs_fournisseurs as $avoir){
-          if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !in_array($avoir->getId(), $arr_avoirs_rapprochees_par_remises_cheques)){
+          if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !in_array($avoir->getId(), $arr_avoirs_rapprochees_par_remises_cheques) && !$avoir->isLettre()){
             $arr_avoirs_fournisseurs[] = $avoir;
           }
         }
@@ -133,7 +133,7 @@ class RapprochementController extends Controller
         $arr_all_avoirs_clients = $repoAvoirs->findForCompany('CLIENT', $this->getUser()->getCompany());
         $arr_avoirs_clients = array();
         foreach($arr_all_avoirs_clients as $avoir){
-          if($avoir->getTotalRapproche() < $avoir->getTotalTTC()){
+          if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !$avoir->isLettre()){
             $arr_avoirs_clients[] = $avoir;
           }
         }
@@ -596,7 +596,7 @@ class RapprochementController extends Controller
         //factures
         $arr_all_factures = $factureRepo->findForCompany($this->getUser()->getCompany(), 'FACTURE', true);
         foreach($arr_all_factures as $facture){
-          if($facture->getTotalRapproche() < $facture->getTotalTTC() && $facture->getEtat() != "PAID" && !in_array($facture->getId(), $arr_factures_rapprochees_par_remises_cheques) && $facture->getTotalAvoirs() < $facture->getTotalTTC()){
+          if($facture->getTotalRapproche() < $facture->getTotalTTC() && $facture->getEtat() != "PAID" && !in_array($facture->getId(), $arr_factures_rapprochees_par_remises_cheques) && $facture->getTotalAvoirs() < $facture->getTotalTTC() && !$facture->isLettre()){
             $arr_pieces['FACTURES'][] = $facture;
           }
         }
@@ -605,7 +605,7 @@ class RapprochementController extends Controller
         $arr_all_depenses = $depenseRepo->findForCompany($this->getUser()->getCompany());
         foreach($arr_all_depenses as $depense){
           if($depense->getEtat() != 'RAPPROCHE'){
-            if($depense->getTotalRapproche() < $depense->getTotalTTC()){
+            if($depense->getTotalRapproche() < $depense->getTotalTTC() && !$depense->isLettre()){
               $arr_pieces['DEPENSES'][] = $depense;
             }
           }
@@ -622,7 +622,7 @@ class RapprochementController extends Controller
         //avoirs fournisseurs
         $arr_all_avoirs_fournisseurs = $avoirRepo->findForCompany('FOURNISSEUR', $this->getUser()->getCompany());
         foreach($arr_all_avoirs_fournisseurs as $avoir){
-          if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !in_array($avoir->getId(), $arr_avoirs_rapprochees_par_remises_cheques)){
+          if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !in_array($avoir->getId(), $arr_avoirs_rapprochees_par_remises_cheques) && !$avoir->isLettre()){
             $arr_pieces['AVOIRS-FOURNISSEUR'][] = $avoir;
           }
         }
@@ -630,7 +630,7 @@ class RapprochementController extends Controller
         //avoirs clients
         $arr_all_avoirs_clients = $avoirRepo->findForCompany('CLIENT', $this->getUser()->getCompany());
         foreach($arr_all_avoirs_clients as $avoir){
-          if($avoir->getTotalRapproche() < $avoir->getTotalTTC()){
+          if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !$avoir->isLettre()){
             $arr_pieces['AVOIRS-CLIENT'][] = $avoir;
           }
         }
