@@ -100,6 +100,13 @@ class OperationDiverse
      */
     private $numEcriture;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="commentaire", type="string", length=255, nullable=true)
+     */
+    private $commentaire;
+
 
     /**
      * Get id
@@ -439,5 +446,28 @@ class OperationDiverse
     public function getNoteFrais()
     {
         return $this->noteFrais;
+    }
+
+    /**
+     * Set commentaire
+     *
+     * @param string $commentaire
+     * @return OperationDiverse
+     */
+    public function setCommentaire($commentaire)
+    {
+        $this->commentaire = $commentaire;
+
+        return $this;
+    }
+
+    /**
+     * Get commentaire
+     *
+     * @return string 
+     */
+    public function getCommentaire()
+    {
+        return $this->commentaire;
     }
 }

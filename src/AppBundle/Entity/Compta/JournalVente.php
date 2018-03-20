@@ -95,6 +95,13 @@ class JournalVente
     private $numEcriture;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="commentaire", type="string", length=255, nullable=true)
+     */
+    private $commentaire;
+
+    /**
      * Get id
      *
      * @return integer
@@ -353,5 +360,28 @@ class JournalVente
     public function getNumEcriture()
     {
         return $this->numEcriture;
+    }
+
+    /**
+     * Set commentaire
+     *
+     * @param string $commentaire
+     * @return JournalVente
+     */
+    public function setCommentaire($commentaire)
+    {
+        $this->commentaire = $commentaire;
+
+        return $this;
+    }
+
+    /**
+     * Get commentaire
+     *
+     * @return string 
+     */
+    public function getCommentaire()
+    {
+        return $this->commentaire;
     }
 }

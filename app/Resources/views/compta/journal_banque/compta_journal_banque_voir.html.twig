@@ -6,6 +6,7 @@
         <th>Compte auxiliaire</th>
         <th>Libellé</th>
         <th>Tiers</th>
+        <th>Commentaire</th>
         <th>Débit</th>
         <th>Crédit</th>
         <th>Analytique</th>
@@ -36,7 +37,6 @@
                     {% elseif rapprochement.avoir is not null %}
                         <a href="{{ path('compta_avoir_voir', {'id' : rapprochement.avoir.id} ) }}">{{ ligneJournal.libelle }}</a>
                     {% elseif rapprochement.affectationDiverse is not null %}
-                        {{ ligneJournal.piece }}
                         {{ ligneJournal.libelle }}
                     {% elseif rapprochement.noteFrais is not null %}
                          <a href="{{ path('ndf_voir', {'id' : rapprochement.noteFrais.id} ) }}">{{ ligneJournal.libelle }}</a>
@@ -73,6 +73,16 @@
                     <br />
                 {% endfor %}
                 &nbsp;</td>
+            <td>
+                {{ ligneJournal.commentaire }}
+                {% if ligneJournal.commentaire is null or ligneJournal.commentaire == "" %}
+                    {% for rapprochement in ligneJournal.mouvementBancaire.rapprochements %}
+                        {% if rapprochement.affectationDiverse is not null %}
+                            {{ rapprochement.affectationDiverse.nom }}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </td>
             <td class="align-left">&nbsp;{{ ligneJournal.debit|number_format(2,',',' ') }}</td>
             <td>&nbsp;{{ ligneJournal.credit|number_format(2,',',' ') }}</td>
             <td>

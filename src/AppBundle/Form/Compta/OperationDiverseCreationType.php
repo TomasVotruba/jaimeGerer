@@ -34,12 +34,17 @@ class OperationDiverseCreationType extends AbstractType
                 'required' => true,
                 'label' => 'Libellé'
             ))
-            ->add('debit')
-            ->add('credit')
-            ->add('compteComptable', 'entity', array(
+            ->add('debit', 'number', array(
+                'mapped' => false
+            ))
+            ->add('credit', 'number', array(
+                'mapped' => false
+            ))
+            ->add('compteComptableDebit', 'entity', array(
     			'required' => false,
     			'class' => 'AppBundle:Compta\CompteComptable',
     			'label' => 'Compte comptable',
+                'mapped' => false,
     			'query_builder' => function (EntityRepository $er) {
     				return $er->createQueryBuilder('c')
     				->andWhere('c.company = :company')
@@ -47,6 +52,18 @@ class OperationDiverseCreationType extends AbstractType
     				->orderBy('c.num', 'ASC');
     			}
         	))
+            ->add('compteComptableCredit', 'entity', array(
+                'required' => false,
+                'class' => 'AppBundle:Compta\CompteComptable',
+                'label' => 'Compte comptable',
+                'mapped' => false,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                    ->andWhere('c.company = :company')
+                    ->setParameter('company', $this->companyId)
+                    ->orderBy('c.num', 'ASC');
+                }
+            ))
             ->add('submit','submit', array(
                     'label' => 'Enregistrer',
                     'attr' => array('class' => 'btn btn-success')

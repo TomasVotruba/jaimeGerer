@@ -120,6 +120,7 @@ class JournalBanqueController extends Controller
 					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$ligne->setCommentaire($rapprochementBancaire->getAffectationDiverse()->getLibelle());
 					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
@@ -133,6 +134,7 @@ class JournalBanqueController extends Controller
 					$ligne->setCompteComptable($rapprochementBancaire->getAffectationDiverse()->getCompteComptable());
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
+					$ligne->setCommentaire($rapprochementBancaire->getAffectationDiverse()->getLibelle());
 					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
@@ -150,6 +152,7 @@ class JournalBanqueController extends Controller
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 					$ligne->setNumEcriture($numEcriture);
+					$ligne->setCommentaire($rapprochementBancaire->getAffectationDiverse()->getNom());
 					$em->persist($ligne);
 
 
@@ -164,6 +167,7 @@ class JournalBanqueController extends Controller
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 					$ligne->setNumEcriture($numEcriture);
+					$ligne->setCommentaire($rapprochementBancaire->getAffectationDiverse()->getNom());
 					$em->persist($ligne);
 
 					break;
@@ -413,7 +417,7 @@ class JournalBanqueController extends Controller
 						$ligne->setNumEcriture($numEcriture);
 						$em->persist($ligne);
 
-						//debit au compte 401xxxx (compte du fournisseur)
+						//debit au compte 421xxxx (compte NDF du salarié)
 						$ligne = new JournalBanque();
 						$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
 						$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
@@ -458,9 +462,82 @@ class JournalBanqueController extends Controller
 
 
 	/**
+	 * @Route("/compta/journal-banque/ajouter-plusieurs-pieces", name="compta_journal_banque_ajouter_plusieurs_pieces")
+	 */
+	public function journalBanqueAjouterPlusieursPiecesAction($arr_mouvements, $arr_pieces, $arr_montants){
+
+		$em = $this->getDoctrine()->getManager();
+		$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
+		$journalAchatRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
+		$lettrageService = $this->get('appbundle.compta_lettrage_service');
+		$numService = $this->get('appbundle.num_service');
+
+		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+
+		$arr_montantsBanque = array();
+
+		foreach($arr_mouvements as $mouvementBancaire){
+
+			if( !array_key_exists($mouvementBancaire->getCompteBancaire()->getId(), $arr_montantsBanque) ){
+				$arr_montantsBanque[$mouvementBancaire->getCompteBancaire()->getId()] = $mouvementBancaire->getMontant();
+			} else {
+				$arr_montantsBanque[$mouvementBancaire->getCompteBancaire()->getId()]+= $mouvementBancaire->getMontant();
+			}
+			
+			//écriture au compte 512xxxx (selon banque)
+			$ligne = new JournalBanque();
+			$ligne->setMouvementBancaire($mouvementBancaire);
+			$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+			$ligne->setAnalytique(null);
+			$ligne->setStringAnalytique(null); //TODO
+			$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+			$ligne->setNom($mouvementBancaire->getLibelle());
+			$ligne->setDate($mouvementBancaire->getDate());
+			$ligne->setNumEcriture($numEcriture);
+			
+			// crédit au 512 si le montant est négatif
+			if($mouvementBancaire->getMontant() < 0){
+				$ligne->setDebit(null);
+				$ligne->setCredit($mouvementBancaire->getMontant());
+			} else {
+				//debit au 512 si le montant est positif
+				$ligne->setDebit($mouvementBancaire->getMontant());
+				$ligne->setCredit(null);
+			}
+			$em->persist($ligne);
+		}
+
+
+		foreach($arr_pieces as $arr_piece){
+			foreach($arr_piece as $type => $piece){
+
+				$ligne = new JournalBanque();
+				$ligne->setMouvementBancaire(null);
+				//$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+				$ligne->setAnalytique(null);
+				$ligne->setStringAnalytique();
+				$ligne->setLettrage($lettrage);
+				
+
+				$ligne->setCompteComptable($piece->getCompte()->getCompteComptableClient());
+				
+				
+				$ligne->setNom($mouvementBancaire->getLibelle());
+				$ligne->setDate($mouvementBancaire->getDate());
+				$ligne->setNumEcriture($numEcriture);
+				$em->persist($ligne);
+
+			}
+		}
+
+
+	}
+
+
+	/**
 	 * @Route("/compta/journal-banque/ajouter-plusieurs-pieces-meme-compte", name="compta_journal_banque_ajouter_plusieurs_pieces_meme_compte")
 	 */
-	public function journalBanqueAjouterPlusieursPiecesMemeCompteAction($arr_mouvements, $arr_pieces){
+	public function journalBanqueAjouterPlusieursPiecesMemeCompteAction($arr_mouvements, $arr_pieces, $arr_montants){
 
 		$em = $this->getDoctrine()->getManager();
 		$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');

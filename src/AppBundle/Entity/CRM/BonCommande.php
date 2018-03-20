@@ -48,6 +48,12 @@ class BonCommande
     private $facture;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\DocumentPrix", mappedBy="bonCommande")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $factures;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -188,10 +194,11 @@ class BonCommande
      */
     public function getTotalFacture()
     {
-        if($this->facture){
-            return intval($this->facture->getTotalHT()*100);
+        $montant = 0;
+        foreach($this->factures as $facture){
+            $montant+= intval($this->facture->getTotalHT()*100);
         }
-        return 0;
+        return $montant;
        
     }
 
@@ -202,10 +209,51 @@ class BonCommande
      */
     public function getTotalFactureMonetaire()
     {
-        if($this->facture){
-            return $this->facture->getTotalHT();
+        $montant = 0;
+        foreach($this->factures as $facture){
+           $montant+= $this->facture->getTotalHT();
         }
-        return 0;
+        return $montant;
        
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->factures = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add factures
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $factures
+     * @return BonCommande
+     */
+    public function addFacture(\AppBundle\Entity\CRM\DocumentPrix $factures)
+    {
+        $this->factures[] = $factures;
+
+        return $this;
+    }
+
+    /**
+     * Remove factures
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $factures
+     */
+    public function removeFacture(\AppBundle\Entity\CRM\DocumentPrix $factures)
+    {
+        $this->factures->removeElement($factures);
+    }
+
+    /**
+     * Get factures
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFactures()
+    {
+        return $this->factures;
     }
 }

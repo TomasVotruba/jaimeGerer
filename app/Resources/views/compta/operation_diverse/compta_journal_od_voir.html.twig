@@ -6,6 +6,7 @@
     <th>Compte auxiliaire</th>
     <th>Piece</th>
     <th>Tiers</th>
+    <th>Commentaire</th>
     <th>Débit</th>
     <th>Crédit</th>
   </tr>
@@ -54,6 +55,7 @@
           {{ ligneJournal.facture.compte }}
         {% endif %}
       </td>
+      <td> {{ ligneJournal.commentaire }}</td>
       <td class="align-right">{{ ligneJournal.debit|number_format(2,',',' ') }}</td>
       <td class="align-right">{{ ligneJournal.credit|number_format(2,',',' ') }}</td>
     </tr>

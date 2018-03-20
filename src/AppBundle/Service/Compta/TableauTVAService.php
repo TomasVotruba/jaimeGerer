@@ -107,6 +107,7 @@ class TableauTVAService extends ContainerAware {
 						if($rapprochement->getFacture()->getAnalytique()->getNoTVA()){
 							$arr_non_soumis[$type]['entreeHT']+= $rapprochement->getFacture()->getTotalHT();
 							$arr_non_soumis[$type]['entreeTTC']+= $rapprochement->getFacture()->getTotalTTC();
+
 						} else {
 							//soumis à TVA
 							$arr_soumis[$type]['entreeTTC']+= $rapprochement->getFacture()->getTotalTTC();
@@ -123,15 +124,31 @@ class TableauTVAService extends ContainerAware {
 						}
 
 					} elseif($rapprochement->getRemiseCheque()){
+						
 						$arr_cheques = $rapprochement->getRemiseCheque()->getCheques();
 						foreach($arr_cheques as $cheque){
 							foreach($cheque->getPieces() as $piece){
 								if($piece->getFacture()){
+
+									$type = 'extra';
+									$facture = $piece->getFacture();
+									if(strtolower($facture->getPays()) == "france" || $facture->getPays() == null || $facture->getPays() == ""){
+										$type = 'france';
+									} else if($this->inUE($facture->getPays())){
+										$type = 'intra';
+									} 
+
 									$taxePercent = $piece->getFacture()->getTaxePercent()*1000;
 									//non soumis à TVA
 									if($piece->getFacture()->getAnalytique()->getNoTVA()){
 										$arr_non_soumis[$type]['entreeHT']+= $piece->getFacture()->getTotalHT();
 										$arr_non_soumis[$type]['entreeTTC']+= $piece->getFacture()->getTotalTTC();
+
+
+										if($arr_periode['mois'] == "02"){
+											dump($type);
+											dump($piece->getFacture()->getNum());
+										}
 									} else {
 										//soumis à TVA
 										$arr_soumis[$type]['entreeTTC']+= $piece->getFacture()->getTotalTTC();
@@ -159,6 +176,7 @@ class TableauTVAService extends ContainerAware {
 
 			$arr_periode['entree_soumis'] = $arr_soumis;
 			$arr_periode['entree_non_soumis'] = $arr_non_soumis;
+
 
 			//SORTIE
 			foreach($arr_soumis as $type => $arr){

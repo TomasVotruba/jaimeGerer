@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use AppBundle\Entity\User;
+use AppBundle\Entity\Settings;
 use AppBundle\Form\User\UserType;
 
 class UserController extends Controller
@@ -97,45 +98,81 @@ class UserController extends Controller
    *   name="admin_utilisateurs_ajouter"
    * )
    */
-  public function utilisateursAjouterAction()
-  {
-    $userManager = $this->get('fos_user.user_manager');
-    $user = $userManager->createUser();
+    public function utilisateursAjouterAction()
+    {
+        $userManager = $this->get('fos_user.user_manager');
+        $em = $this->getDoctrine()->getManager();
+        $settingsActivationRepo = $em->getRepository('AppBundle:SettingsActivationOutil');
+        $compteComptableService = $this->get('appbundle.compta_compte_comptable_service');
 
-    $form = $this->createForm(new UserType(), $user);
+        $user = $userManager->createUser();
 
-    $request = $this->getRequest();
+        $form = $this->createForm(new UserType(), $user);
+
+        $request = $this->getRequest();
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
 
 			$user->setCompany( $this->getUser()->getCompany() );
 
-      if($form['admin']->getData() == 'true'){
-        $user->addRole('ROLE_ADMIN');
-      }
+            if($form['admin']->getData() == 'true'){
+                $user->addRole('ROLE_ADMIN');
+            }
 
-      foreach($form['permissions']->getData() as  $role){
-          $user->addRole($role);
-      }
+            foreach($form['permissions']->getData() as  $role){
+                $user->addRole($role);
+            }
 
-      $tokenGenerator = $this->get('fos_user.util.token_generator');
-      $password = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
-      $user->setPlainPassword($password);
+            $tokenGenerator = $this->get('fos_user.util.token_generator');
+            $password = substr($tokenGenerator->generateToken(), 0, 8); // 8 chars
+            $user->setPlainPassword($password);
 
-      $userManager->updateUser($user);
+            $userManager->updateUser($user);
 
-      //envoi d'un email en interne
-      $message = $this->renderView('admin/utilisateurs/admin_utilisateurs_welcome_email.html.twig', array(
-        'user' => $user,
-        'password' => $password,
-      ));
-      $mail = \Swift_Message::newInstance()
-        ->setSubject('Bienvenue sur J\'aime gérer '.$user->getFirstName().' !')
-        ->setFrom('laura@jaime-gerer.com')
-        ->setTo($user->getEmail())
-        ->setBody($message, 'text/html');
-      $this->get('mailer')->send($mail);
+            $activationCompta = $settingsActivationRepo->findOneBy(array(
+                'company' => $this->getUser()->getCompany(),
+                'outil' => 'COMPTA',
+            ));
+
+            if($activationCompta){
+                try{
+                    $compteComptableNDF = $compteComptableService->createCompteComptableNDF($this->getUser()->getCompany(), $user);
+                    $user->setCompteComptableNoteFrais($compteComptableNDF);
+
+                    $settings = new Settings();
+                    $settings->setParametre('COMPTE_COMPTABLE_NOTE_FRAIS');
+                    $settings->setModule('COMPTA');
+                    $settings->setType('LISTE');
+                    $settings->setCompany($this->getUser()->getCompany());
+                    $settings->setCompteComptable($compteComptableNDF);
+                    $settings->setHelpText("Lesquels de ces comptes comptables concernent les notes de frais ?");
+                    $settings->setTitre("Comptes comptables de vos notes de frais");
+                    $settings->setCategorie("NOTE_FRAIS");
+                    $settings->setValeur("");
+                    $settings->setNoTVA(false);
+                    $em->persist($settings);
+                    $em->flush();
+
+                } catch(\Exception $e){
+                    throw $e;
+                }
+                
+            }
+
+            $userManager->updateUser($user);
+
+            //envoi d'un email en interne
+             $message = $this->renderView('admin/utilisateurs/admin_utilisateurs_welcome_email.html.twig', array(
+                'user' => $user,
+                'password' => $password,
+            ));
+            $mail = \Swift_Message::newInstance()
+                ->setSubject('Bienvenue sur J\'aime gérer '.$user->getFirstName().' !')
+                ->setFrom('laura@jaime-gerer.com')
+                ->setTo($user->getEmail())
+                ->setBody($message, 'text/html');
+            $this->get('mailer')->send($mail);
 
 			return $this->redirect($this->generateUrl(
 					'admin_utilisateurs_liste'

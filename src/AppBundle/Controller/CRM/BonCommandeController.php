@@ -170,5 +170,37 @@ class BonCommandeController extends Controller
 	}
 
 
+	/**
+	 * @Route("/crm/bon-commande/init",
+	 *   name="crm_bon_commande_init",
+	 *   options={"expose"=true}
+	 * )
+	 */
+	public function init(){
+
+		$em  = $this->getDoctrine()->getManager();
+		$bonCommandeRepo = $em->getRepository('AppBundle:CRM\BonCommande');
+		$factureRepo = $em->getRepository('AppBundle:CRM\DocumentPrix');
+
+
+		$all_bc = $bonCommandeRepo->findAll();
+
+		foreach($all_bc as $bc){
+			if($bc->getFacture()){
+				$facture = $bc->getFacture();
+			$facture->setBonCommande($bc);
+			$em->persist($facture);
+			}
+			
+
+		}
+
+		$em->flush();
+
+		return new Response();
+
+	}
+
+
 
 }

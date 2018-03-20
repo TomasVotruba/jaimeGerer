@@ -50,13 +50,13 @@ class JournalVente
     private $modePaiement;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", cascade={ "persist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", cascade={ "persist"}, inversedBy="journalVentes")
      * @ORM\JoinColumn(nullable=true, unique=false)
      */
     private $facture;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\Avoir", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\Avoir", cascade={"persist"}, inversedBy="journalVentes")
      * @ORM\JoinColumn(nullable=true, unique=false)
      */
     private $avoir;
@@ -90,9 +90,16 @@ class JournalVente
     /**
      * @var string
      *
-     * @ORM\Column(name="num_ecriture", type="string", length=50, nullable=false)
+     * @ORM\Column(name="num_ecriture", type="string", length=50, nullable=true)
      */
     private $numEcriture;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="commentaire", type="string", length=255)
+     */
+    private $commentaire;
 
     /**
      * Get id
@@ -278,6 +285,15 @@ class JournalVente
       return null;
     }
 
+    public function getPieceId(){
+      if($this->facture){
+        return $this->facture->getId();
+      } else if($this->avoir) {
+        return $this->avoir->getId();
+      }
+      return null;
+    }
+
     public function getDatePiece(){
       if($this->facture){
         return $this->facture->getDateCreation();
@@ -321,5 +337,28 @@ class JournalVente
         $this->libelle = $libelle;
 
         return $this;
+    }
+
+    /**
+     * Set numEcriture
+     *
+     * @param string $numEcriture
+     * @return JournalVente
+     */
+    public function setNumEcriture($numEcriture)
+    {
+        $this->numEcriture = $numEcriture;
+
+        return $this;
+    }
+
+    /**
+     * Get numEcriture
+     *
+     * @return string 
+     */
+    public function getNumEcriture()
+    {
+        return $this->numEcriture;
     }
 }

@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 use AppBundle\Entity\Compta\CompteComptable;
 use AppBundle\Entity\CRM\Compte;
+use AppBundle\Entity\Company;
+use AppBundle\Entity\User;
 
 class CompteComptableService extends ContainerAware {
 
@@ -83,6 +85,48 @@ class CompteComptableService extends ContainerAware {
         //     ));
         //     $compteComptable->setCompteTVA($compteTVA);
         // }
+        return $compteComptable;
+    }
+
+    /**
+     * @Route("/compta/compte/create-compte-comptable-ndf/{company}/{user}", 
+     *     name="create_compte_comptable_ndf", 
+     *     options={"expose"=true}
+     *  )
+     */
+    public function createCompteComptableNDF(Company $company, User $user){
+
+        $compteComptableRepo = $this->em->getRepository('AppBundle:Compta\CompteComptable');
+
+        //find array of existing nums for this company
+        $arr_nums = $compteComptableRepo->findAllNumForCompany($company);
+        $arr_existings_nums = array();
+        foreach($arr_nums as $arr){
+            $arr_existings_nums[] = $arr['num'];
+        }
+
+        $nbChars = 3;
+        $baseNum = '421';
+        $nomCompte = 'NDF'.strtoupper($user->getLastname());
+        $num = $this->_createNum($baseNum, $nomCompte, $nbChars);
+        
+        //max 8 characters (3 for baseNum, 5 for the name - ex : 411CLIEN)
+        while(in_array($num, $arr_existings_nums) && $nbChars<=5) {
+            $nbChars++;
+            $num = $this->_createNum($baseNum, $nomCompte, $nbChars);
+        }
+
+        if(in_array($num, $arr_existings_nums)){
+            throw new \Exception('Impossible de créer automatiquement un numéro pour '.$compte->getNom().'.');
+        }
+
+        $compteComptable = new CompteComptable();
+        $compteComptable->setNom($nomCompte);
+        $compteComptable->setCompany($company);
+        $compteComptable->setNum($num);
+        $this->em->persist($compteComptable);
+        $this->em->flush();
+
         return $compteComptable;
     }
 

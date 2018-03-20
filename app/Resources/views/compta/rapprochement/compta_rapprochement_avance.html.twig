@@ -124,6 +124,12 @@
 								        		<td>
 								        			<label for="{{ id }}">{{ piece.nom }}</label>
 								        		</td>
+								        		<td class='col-md-2 align-right'>
+								        			<div class='input-group'>
+								        				<input type='text' class='form-control montant' placeholder='Montant' aria-describedby='basic-addon2'>
+								        				<span class='input-group-addon' id='basic-addon2'>€</span>
+								        			</div>
+								        		</td>
 								        	{% else %}
 				        						<td class="col-md-2 num">
 				        							{% if type == 'NOTES-FRAIS' %}
@@ -248,9 +254,19 @@
 				$('#error').addClass('hidden');
 
 				var arr_pieces =  [];
+
 				$('input[name="pieces"]').each(function () {
 					if(this.checked){
-						arr_pieces.push($(this).attr('id'));
+
+						val = 0;
+						if( $(this).attr('data-type') == "AFFECTATIONS-DIVERSES-VENTE" ){
+							val = Number($(this).parent().parent().find('.montant').val());
+						} else if($(this).attr('data-type') == "AFFECTATIONS-DIVERSES-ACHAT" ){
+							val = Number($(this).parent().parent().find('.montant').val());
+						}
+
+						var piece = {'id':$(this).attr('id'), 'montant':val};
+						arr_pieces.push(piece);
 					}
 				});
 
@@ -260,6 +276,8 @@
 						arr_mouvements.push($(this).attr('id'));
 					}
 				});
+
+				console.log(arr_pieces);
 
 				$.ajax({
 					type: "POST",
@@ -351,14 +369,18 @@
 			        success: function(data)
 			        {
 			        	var newTr = "<tr id='row-AFFECTATIONS-DIVERSES-"+type+"_"+data.id+"'>"
-			        	newTr+="<td class='col-md-2'><input type='checkbox' name='pieces' id="+data.id+" data-type='AFFECTATIONS-DIVERSES-"+type+"' /></td>";
-			        	newTr+="<td class='col-md-2 num'>"+data.nom+"</td>";
-						// newTr+="<td class='col-md-2 align-right montant'><div class='input-group'><input type='text' class='form-control' placeholder='Montant' aria-describedby='basic-addon2'><span class='input-group-addon' id='basic-addon2'>€</span></div></td>";
+			        	newTr+="<td class='col-md-2'><input type='checkbox' name='pieces' id='AFFECTATIONS-DIVERSES-"+type+"_"+data.id+"' data-type='AFFECTATIONS-DIVERSES-"+type+"' /></td>";
+			        	newTr+="<td class='col-md-2 num'><label for='AFFECTATIONS-DIVERSES-"+type+"_"+data.id+"'>"+data.nom+"</label></td>";
+						newTr+="<td class='col-md-2 align-right'><div class='input-group'><input type='text' class='form-control montant' placeholder='Montant' aria-describedby='basic-addon2'><span class='input-group-addon' id='basic-addon2'>€</span></div></td>";
 
 			        	newTr+="</tr>";
 				        $(newTr).insertBefore('#row-nouvelle-affectation-diverse-vente');
 			
 				        $('#modal').modal('hide');
+
+				        $('input[name="pieces"]').change(function(){
+							checkTotaux();		
+						});
 			        }
 			    });
 			});
@@ -384,16 +406,32 @@
 			var total = 0;
 			$('input[name="pieces"]').each(function () {
 				if(this.checked){
-					//on multiplie puis divise par 100 pour travailler sur des entiers et éviter le problème de précision de javascript
-					if( $(this).attr('data-type') == "DEPENSES" || $(this).attr('data-type') == "AVOIRS-CLIENT" || $(this).attr('data-type') == "NOTES-FRAIS" || $(this).attr('data-type') == "DEPENSES" ){
+
+					if( $(this).attr('data-type') == "AFFECTATIONS-DIVERSES-VENTE" ){
+						
+						val = Number($(this).parent().parent().find('.montant').val())*100;
+						total+= val;
+
+						//on multiplie puis divise par 100 pour travailler sur des entiers et éviter le problème de précision de javascript
+					} else if($(this).attr('data-type') == "AFFECTATIONS-DIVERSES-ACHAT" ){
+						
+						val = Number($(this).parent().parent().find('.montant').val())*100;
+						total+= 0-val;
+
+					} else if( $(this).attr('data-type') == "DEPENSES" || $(this).attr('data-type') == "AVOIRS-CLIENT" || $(this).attr('data-type') == "NOTES-FRAIS" ){
+						
 						val= Number($(this).val())*100;
 						total+= 0-val;
+
 					} else {
+
 						total+= Number($(this).val())*100;
+
 					}
-				}	
+				}
+
+			});	
 				
-			});
 			total = total/100;
 			$('#total-pieces').text(accounting.formatMoney(total, { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 }));
 
@@ -401,18 +439,9 @@
 		}
 
 		function checkTotaux(){
+
 			var totalPieces = calculTotalPieces()*100;
 			var totalMouvements = calculTotalMouvements()*100;
-
-			var ok = false;
-
-			$('input[name="pieces"]').each(function () {
-				if(this.checked){
-					if( $(this).attr('data-type') == "AFFECTATIONS-DIVERSES-VENTE" || $(this).attr('data-type') == "AFFECTATIONS-DIVERSES-ACHAT" ){
-						ok = true;
-					}
-				}
-			});
 
 			if(totalPieces > totalMouvements){
 				
@@ -433,16 +462,12 @@
 				$('.glyphicon-ok').addClass("hidden");
 
 			} else {
-				ok = true;
-			}
-
-			if(ok){
-				
 				$('#error').text('')
 							.addClass("hidden");
 				$('#btn-rapprocher').attr('disabled', false);
 				$('.glyphicon-ok').removeClass("hidden");
 			}
+
 		}
 	</script>
 

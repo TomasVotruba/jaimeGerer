@@ -594,22 +594,22 @@ class RapprochementController extends Controller
         }
 
         //factures
-        $arr_all_factures = $factureRepo->findForCompany($this->getUser()->getCompany(), 'FACTURE', true);
-        foreach($arr_all_factures as $facture){
-          if($facture->getTotalRapproche() < $facture->getTotalTTC() && $facture->getEtat() != "PAID" && !in_array($facture->getId(), $arr_factures_rapprochees_par_remises_cheques) && $facture->getTotalAvoirs() < $facture->getTotalTTC() && !$facture->isLettre()){
-            $arr_pieces['FACTURES'][] = $facture;
-          }
-        }
+        // $arr_all_factures = $factureRepo->findForCompany($this->getUser()->getCompany(), 'FACTURE', true);
+        // foreach($arr_all_factures as $facture){
+        //   if($facture->getTotalRapproche() < $facture->getTotalTTC() && $facture->getEtat() != "PAID" && !in_array($facture->getId(), $arr_factures_rapprochees_par_remises_cheques) && $facture->getTotalAvoirs() < $facture->getTotalTTC() && !$facture->isLettre()){
+        //     $arr_pieces['FACTURES'][] = $facture;
+        //   }
+        // }
 
-        //depenses
-        $arr_all_depenses = $depenseRepo->findForCompany($this->getUser()->getCompany());
-        foreach($arr_all_depenses as $depense){
-          if($depense->getEtat() != 'RAPPROCHE'){
-            if($depense->getTotalRapproche() < $depense->getTotalTTC() && !$depense->isLettre()){
-              $arr_pieces['DEPENSES'][] = $depense;
-            }
-          }
-        }
+        // //depenses
+        // $arr_all_depenses = $depenseRepo->findForCompany($this->getUser()->getCompany());
+        // foreach($arr_all_depenses as $depense){
+        //   if($depense->getEtat() != 'RAPPROCHE'){
+        //     if($depense->getTotalRapproche() < $depense->getTotalTTC() && !$depense->isLettre()){
+        //       $arr_pieces['DEPENSES'][] = $depense;
+        //     }
+        //   }
+        // }
 
         //notes de frais
         $arr_all_note_frais = $noteFraisRepo->findForCompany($this->getUser()->getCompany());
@@ -619,21 +619,21 @@ class RapprochementController extends Controller
           }
         }
 
-        //avoirs fournisseurs
-        $arr_all_avoirs_fournisseurs = $avoirRepo->findForCompany('FOURNISSEUR', $this->getUser()->getCompany());
-        foreach($arr_all_avoirs_fournisseurs as $avoir){
-          if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !in_array($avoir->getId(), $arr_avoirs_rapprochees_par_remises_cheques) && !$avoir->isLettre()){
-            $arr_pieces['AVOIRS-FOURNISSEUR'][] = $avoir;
-          }
-        }
+        // //avoirs fournisseurs
+        // $arr_all_avoirs_fournisseurs = $avoirRepo->findForCompany('FOURNISSEUR', $this->getUser()->getCompany());
+        // foreach($arr_all_avoirs_fournisseurs as $avoir){
+        //   if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !in_array($avoir->getId(), $arr_avoirs_rapprochees_par_remises_cheques) && !$avoir->isLettre()){
+        //     $arr_pieces['AVOIRS-FOURNISSEUR'][] = $avoir;
+        //   }
+        // }
 
-        //avoirs clients
-        $arr_all_avoirs_clients = $avoirRepo->findForCompany('CLIENT', $this->getUser()->getCompany());
-        foreach($arr_all_avoirs_clients as $avoir){
-          if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !$avoir->isLettre()){
-            $arr_pieces['AVOIRS-CLIENT'][] = $avoir;
-          }
-        }
+        // //avoirs clients
+        // $arr_all_avoirs_clients = $avoirRepo->findForCompany('CLIENT', $this->getUser()->getCompany());
+        // foreach($arr_all_avoirs_clients as $avoir){
+        //   if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !$avoir->isLettre()){
+        //     $arr_pieces['AVOIRS-CLIENT'][] = $avoir;
+        //   }
+        // }
 
         // //affectations diverses vente
         $arr_affectations_diverses_vente = $affectationDiverseRepo->findForCompany('VENTE', $this->getUser()->getCompany(), true);
@@ -681,15 +681,24 @@ class RapprochementController extends Controller
         $arr_cc = array();
         $arr_pieces = array();
         $arr_mouvements = array();
+        $arr_montants = array();
 
         foreach($arr_mouvementsId as $mouvementId){
             $mouvementBancaire = $mouvementBancaireRepo->find($mouvementId);
             $arr_mouvements[] = $mouvementBancaire;
 
-            foreach($arr_piecesId as $pieceId){
+            foreach($arr_piecesId as $arr_piece){
+                $pieceId = $arr_piece['id'];
                 $arr_explode = explode('_', $pieceId);
                 $type = $arr_explode[0];
                 $id = $arr_explode[1];
+
+                if( !array_key_exists($piece->getId(), $arr_pieces) ){
+                    $arr_pieces[$piece->getId()] = array($type => $piece);
+                }
+                if( !array_key_exists($piece->getId(), $arr_montants) ){
+                    $arr_montants[$piece->getId()] = $arr_piece['montant'];
+                }
 
                 //creation et hydratation du rapprochement bancaire
                 $rapprochement = new Rapprochement();
@@ -787,10 +796,6 @@ class RapprochementController extends Controller
 
                     break;
                 }
-
-                if( !array_key_exists($piece->getId(), $arr_pieces) ){
-                    $arr_pieces[$piece->getId()] = array($type => $piece);
-                }
                
                 $em->persist($rapprochement);
             }
@@ -807,7 +812,7 @@ class RapprochementController extends Controller
         try {
 
             $journalBanqueService = $this->container->get('appbundle.compta_journal_banque_controller');
-            $journalBanqueService->journalBanqueAjouterPlusieursPiecesMemeCompteAction($arr_mouvements, $arr_pieces);
+            $journalBanqueService->journalBanqueAjouterPlusieursPiecesMemeCompteAction($arr_mouvements, $arr_pieces, $arr_montants);
             $em->flush();
 
         } catch(\Exception $e){

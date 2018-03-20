@@ -104,6 +104,7 @@ class OperationDiverseController extends Controller
 	{
 		$em = $this->getDoctrine()->getManager();
 		$numService = $this->get('appbundle.num_service');
+		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
 		$od = new OperationDiverse();
 		$od->setCodeJournal('OD');
@@ -119,10 +120,24 @@ class OperationDiverseController extends Controller
 
 		if ($form->isSubmitted() && $form->isValid()) {
 			
-			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+			
+			$debit = $form->get('debit')->getData();
+			$ccDebit = $form->get('compteComptableDebit')->getData();
+			$od->setDebit($debit);
+			$od->setCompteComptable($ccDebit);
+			$od->setCredit(null);
 			$od->setNumEcriture($numEcriture);
-
 			$em->persist($od);
+
+			$odInverse = clone($od);
+			$credit = $form->get('credit')->getData();
+			$ccCredit = $form->get('compteComptableCredit')->getData();
+			$odInverse->setDebit(null);
+			$odInverse->setCompteComptable($ccCredit);
+			$odInverse->setCredit($credit);
+			$odInverse->setNumEcriture($numEcriture);
+			$em->persist($odInverse);
+			
 			$em->flush();
 
 			$numEcriture++;

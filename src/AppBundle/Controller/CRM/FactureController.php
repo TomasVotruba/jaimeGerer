@@ -136,10 +136,8 @@ class FactureController extends Controller
 			}
 
 			$bonsCommande = "";
-			if($facture->getBonsCommande()){
-				foreach($facture->getBonsCommande() as $bc){
-					$bonsCommande.=$bc->getNum().'<br />';
-				}
+			if($facture->getBonCommande()){
+				$bonsCommande.=$facture->getBonCommande()->getNum().'<br />';
 			}
 			
 			$list[$i]['bon_commande'] = $bonsCommande;
@@ -247,7 +245,7 @@ class FactureController extends Controller
 			$data = $form->getData();
 			$facture->setCompte($em->getRepository('AppBundle:CRM\Compte')->findOneById($data->getCompte()));
 			$facture->setContact($em->getRepository('AppBundle:CRM\Contact')->findOneById($data->getContact()));
-			$facture->addBonsCommande($em->getRepository('AppBundle:CRM\BonCommande')->findOneById($form['bc_entity']->getData()));
+			$facture->setBonCommande($em->getRepository('AppBundle:CRM\BonCommande')->findOneById($form['bc_entity']->getData()));
 
 			$settingsRepository = $em->getRepository('AppBundle:Settings');
 			$settingsNum = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'NUMERO_FACTURE', 'company'=>$this->getUser()->getCompany()));
@@ -420,8 +418,8 @@ class FactureController extends Controller
 		if($_contact!=null){
 			$form->get('contact_name')->setData($_contact->__toString());
 		}
-		if($facture->getBonsCommande() != null){
-			$bc = $facture->getBonsCommande()[0];
+		if($facture->getBonCommande() != null){
+			$bc = $facture->getBonCommande();
 			$form->get('bc_name')->setData($bc->getNum());
 			$form->get('bc_entity')->setData($bc->getId());
 		}
@@ -436,8 +434,7 @@ class FactureController extends Controller
 			$data = $form->getData();
 			$facture->setCompte($em->getRepository('AppBundle:CRM\Compte')->findOneById($data->getCompte()));
 			$facture->setContact($em->getRepository('AppBundle:CRM\Contact')->findOneById($data->getContact()));
-			$facture->removeAllBonsCommande();
-			$facture->addBonsCommande($em->getRepository('AppBundle:CRM\BonCommande')->findOneById($form['bc_entity']->getData()));
+			$facture->setBonCommande($em->getRepository('AppBundle:CRM\BonCommande')->findOneById($form['bc_entity']->getData()));
 			$facture->setDateCreation($dateCreation);
 			$facture->setDateEdition(new \DateTime(date('Y-m-d')));
 			$facture->setUserEdition($this->getUser());
@@ -535,7 +532,7 @@ class FactureController extends Controller
 	 */
 	public function factureExporterAction(DocumentPrix $facture)
 	{
-		if( is_null($facture->getNumBCInterne() and $facture->getBonsCommande() == null) )
+		if( is_null($facture->getNumBCInterne() and $facture->getBonCommande() == null) )
 		{
 			return $this->redirect($this->generateUrl(
 					'crm_facture_voir', array('id' => $facture->getId())

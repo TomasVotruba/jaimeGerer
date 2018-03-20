@@ -100,6 +100,13 @@ class OperationDiverse
      */
     private $numEcriture;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="commentaire", type="string", length=255)
+     */
+    private $commentaire;
+
 
     /**
      * Get id
@@ -335,6 +342,8 @@ class OperationDiverse
         return $this->avoir->getNum();
       } else if($this->facture){
         return $this->facture->getNum();
+      } else {
+        return $this->getLibelle();
       }
       return null;
     }
@@ -357,6 +366,8 @@ class OperationDiverse
         return $this->avoir->getDateCreation();
       } else if($this->facture){
         return $this->facture->getDate();
+      } else {
+        return $this->getDate();
       }
       return null;
     }
@@ -412,5 +423,28 @@ class OperationDiverse
             return $this->debit;
         }
         return $this->credit;
+    }
+
+    /**
+     * Set noteFrais
+     *
+     * @param \AppBundle\Entity\NDF\NoteFrais $noteFrais
+     * @return OperationDiverse
+     */
+    public function setNoteFrais(\AppBundle\Entity\NDF\NoteFrais $noteFrais = null)
+    {
+        $this->noteFrais = $noteFrais;
+
+        return $this;
+    }
+
+    /**
+     * Get noteFrais
+     *
+     * @return \AppBundle\Entity\NDF\NoteFrais 
+     */
+    public function getNoteFrais()
+    {
+        return $this->noteFrais;
     }
 }

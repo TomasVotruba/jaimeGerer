@@ -1146,6 +1146,8 @@ class CompteComptableController extends Controller
 			$repo = $em->getRepository('AppBundle:Compta\JournalVente');
 		} else if($journal == 'AC'){
 			$repo = $em->getRepository('AppBundle:Compta\JournalAchat');
+		} else if($journal == 'OD'){
+			$repo = $em->getRepository('AppBundle:Compta\OperationDiverse');
 		}
 
 		$requestData = $this->getRequest();
@@ -1159,5 +1161,36 @@ class CompteComptableController extends Controller
 		$response->setStatusCode(200);
 		return $response;
 	}
+
+	/**
+	 * @Route("/compta/compte/commenter/{id}/{journal}", name="compta_compte_commenter")
+	 */
+	public function compteCommenterAction($id, $journal){
+		$response = new Response();
+
+		$em = $this->getDoctrine()->getManager();
+		$repo = $em->getRepository('AppBundle:Compta\JournalBanque');
+		if($journal == 'VE'){
+			$repo = $em->getRepository('AppBundle:Compta\JournalVente');
+		} else if($journal == 'AC'){
+			$repo = $em->getRepository('AppBundle:Compta\JournalAchat');
+		}  else if($journal == 'OD'){
+			$repo = $em->getRepository('AppBundle:Compta\OperationDiverse');
+		}
+
+		$requestData = $this->getRequest();
+		$valeur = $requestData->get('value');
+
+		$ligne = $repo->find($id);
+		$ligne->setCommentaire($valeur);
+		$em->persist($ligne);
+		$em->flush();
+
+		$response->setStatusCode(200);
+		return $response;
+	}
+
+
+	
 
 }

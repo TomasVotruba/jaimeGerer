@@ -252,12 +252,12 @@ class DocumentPrix
    */
   private $opportunite;
 
-  /**
-  *
-  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\BonCommande", mappedBy="facture", cascade={"persist", "remove"})
-  *
-  */
-  private $bonsCommande;
+
+   /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\BonCommande", inversedBy="factures")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $bonCommande;
 
   /**
    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="facture", cascade={"remove"}, orphanRemoval=true)
@@ -1459,5 +1459,48 @@ class DocumentPrix
             return null;
         }
         return $this->bonsCommande;
+    }
+
+    /**
+     * Add journalVentes
+     *
+     * @param \AppBundle\Entity\Compta\JournalVente $journalVentes
+     * @return DocumentPrix
+     */
+    public function addJournalVente(\AppBundle\Entity\Compta\JournalVente $journalVentes)
+    {
+        $this->journalVentes[] = $journalVentes;
+
+        return $this;
+    }
+
+    /**
+     * Remove journalVentes
+     *
+     * @param \AppBundle\Entity\Compta\JournalVente $journalVentes
+     */
+    public function removeJournalVente(\AppBundle\Entity\Compta\JournalVente $journalVentes)
+    {
+        $this->journalVentes->removeElement($journalVentes);
+    }
+
+    /**
+     * Get journalVentes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getJournalVentes()
+    {
+        return $this->journalVentes;
+    }
+
+    public function isLettre(){
+
+        foreach($this->journalVentes as $ligne){
+            if($ligne->getLettrage() != null){
+                return true;
+            }
+        }
+        return false;
     }
 }

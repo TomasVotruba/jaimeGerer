@@ -20,7 +20,27 @@
 			  	{{ ligne.libelle }}
 			 {% else %}
 			 	{{ ligne.nom }}
-			 {% endif %}
+			{% endif %}
+
+		 	<br />
+		 	<a  class="journal-commentaire"
+	            href="#"
+	            id="{{ ligne.codeJournal~ligne.id }}"
+	            data-type="text"
+	            data-pk="{{ ligne.id }}"
+	            data-url="{{ path('compta_compte_commenter', {
+	              'id' : ligne.id,
+	              'journal' : ligne.codeJournal
+	            } ) }}"
+	            data-title="Commentaire"
+	            >
+					{% if ligne.commentaire == "" or ligne.commentaire == null %}
+	                    Commenter
+	                {% else %}
+	                  <span class="journal-commentaire">{{ ligne.commentaire }}</span>
+	                {% endif %}
+			</a>
+			
 		</td>
 		<td>
 		 	{% if ligne.facture is defined and ligne.facture is not null %}

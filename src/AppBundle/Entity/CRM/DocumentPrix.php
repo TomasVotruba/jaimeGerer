@@ -252,12 +252,12 @@ class DocumentPrix
    */
   private $opportunite;
 
-  /**
-  *
-  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\BonCommande", mappedBy="facture", cascade={"persist", "remove"})
-  *
-  */
-  private $bonsCommande;
+
+   /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\BonCommande", inversedBy="factures")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $bonCommande;
 
   /**
    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="facture", cascade={"remove"}, orphanRemoval=true)
@@ -1411,55 +1411,6 @@ class DocumentPrix
         return $totalHT*$this->facturationBelgePercent;
     }
 
-    /**
-     * Add bonsCommande
-     *
-     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
-     * @return DocumentPrix
-     */
-    public function addBonsCommande(\AppBundle\Entity\CRM\BonCommande $bonsCommande)
-    {
-        $bonsCommande->setFacture($this);
-        $this->bonsCommande[] = $bonsCommande;
-
-        return $this;
-    }
-
-    /**
-     * Remove bonsCommande
-     *
-     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
-     */
-    public function removeBonsCommande(\AppBundle\Entity\CRM\BonCommande $bonsCommande)
-    {
-        $this->bonsCommande->removeElement($bonsCommande);
-    }
-
-    /**
-     * Remove bonsCommande
-     *
-     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
-     */
-    public function removeAllBonsCommande()
-    {
-        foreach($this->bonsCommande as $bc){
-            $bc->setFactureNull(null);
-            $this->bonsCommande->removeElement($bc);
-        }
-    }
-
-    /**
-     * Get bonsCommande
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getBonsCommande()
-    {
-        if(count($this->bonsCommande) == 0){
-            return null;
-        }
-        return $this->bonsCommande;
-    }
 
     /**
      * Add journalVentes
@@ -1502,5 +1453,28 @@ class DocumentPrix
             }
         }
         return false;
+    }
+
+    /**
+     * Set bonCommande
+     *
+     * @param \AppBundle\Entity\CRM\BonCommande $bonCommande
+     * @return DocumentPrix
+     */
+    public function setBonCommande(\AppBundle\Entity\CRM\BonCommande $bonCommande = null)
+    {
+        $this->bonCommande = $bonCommande;
+
+        return $this;
+    }
+
+    /**
+     * Get bonCommande
+     *
+     * @return \AppBundle\Entity\CRM\BonCommande 
+     */
+    public function getBonCommande()
+    {
+        return $this->bonCommande;
     }
 }

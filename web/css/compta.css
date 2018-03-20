@@ -480,3 +480,7 @@ th.mois, th.accurate {
 #table-grand-livre tr{
 	background-color: #FFF;
 }
+
+.journal-commentaire{
+	font-style: italic;
+}
