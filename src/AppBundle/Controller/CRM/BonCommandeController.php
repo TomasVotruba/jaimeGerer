@@ -145,12 +145,17 @@ class BonCommandeController extends Controller
 				$list[$i]['action_commerciale'] = $bc->getActionCommerciale()->getId();
 				$list[$i]['montant'] = $bc->getMontantMonetaire();
 				$list[$i]['montant_facture'] = $bc->getTotalFactureMonetaire();
-				if($bc->getFacture()){
-					$list[$i]['facture'] = $bc->getFacture()->getNum();
-					$list[$i]['facture_id'] = $bc->getFacture()->getId();
+					
+				if(count($bc->getFactures()) == 0){
+					$list[$i]['factures'] = null;
+					$list[$i]['factures_id'] = null;
 				} else {
-					$list[$i]['facture'] = null;
-					$list[$i]['facture_id'] = null;
+					$list[$i]['factures'] = array();
+					$list[$i]['factures_id'] = array();
+					foreach($bc->getFactures() as $facture ){
+						$list[$i]['factures'][] = $facture->getNum();
+						$list[$i]['factures_id'][]= $facture->getId();
+					} 
 				}
 				
 				$i++;

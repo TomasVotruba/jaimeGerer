@@ -802,7 +802,7 @@ class ActionCommercialeController extends Controller
 				$em->persist($facture);
 
 				foreach($actionCommerciale->getBonsCommande() as $bonCommande){
-					$facture->addBonsCommande($bonCommande);
+					$facture->setBonCommande($bonCommande);
 				}
 
 				$currentNum++;

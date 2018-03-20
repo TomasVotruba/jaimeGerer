@@ -82,7 +82,7 @@
                     { "data": "objet"},
                     { "data": "montant"},
                     { "data": "montant_facture"},
-                    { "data": "facture"},
+                    { "data": "factures"},
                 ],
                 "columnDefs": [
                     {
@@ -109,11 +109,16 @@
                     },
                     {
                         "render": function ( data, type, row ) {
+                            var content = "";
                             if(data){
-                                var url = Routing.generate('crm_facture_voir', {'id' : row.facture_id });
-                                return '<a target="_blank" href="'+url+'">'+data+'</a>';
+                                for(var i =0; i<data.length; i++){
+                                    var url = Routing.generate('crm_facture_voir', {'id' : row.factures_id[i] });
+                                    content+='<a target="_blank" href="'+url+'">'+data[i]+'</a>';
+                                    content+='<br />';
+                                }
                             }
-                            return "";
+  
+                            return content;
                             
                         },
                         "targets": 5
