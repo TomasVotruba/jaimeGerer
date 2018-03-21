@@ -144,11 +144,6 @@ class TableauTVAService extends ContainerAware {
 										$arr_non_soumis[$type]['entreeHT']+= $piece->getFacture()->getTotalHT();
 										$arr_non_soumis[$type]['entreeTTC']+= $piece->getFacture()->getTotalTTC();
 
-
-										if($arr_periode['mois'] == "02"){
-											dump($type);
-											dump($piece->getFacture()->getNum());
-										}
 									} else {
 										//soumis à TVA
 										$arr_soumis[$type]['entreeTTC']+= $piece->getFacture()->getTotalTTC();

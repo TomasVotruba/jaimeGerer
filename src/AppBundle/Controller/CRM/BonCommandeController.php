@@ -193,11 +193,9 @@ class BonCommandeController extends Controller
 		foreach($all_bc as $bc){
 			if($bc->getFacture()){
 				$facture = $bc->getFacture();
-			$facture->setBonCommande($bc);
-			$em->persist($facture);
+				$facture->setBonCommande($bc);
+				$em->persist($facture);
 			}
-			
-
 		}
 
 		$em->flush();
