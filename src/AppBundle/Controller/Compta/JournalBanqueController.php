@@ -120,7 +120,7 @@ class JournalBanqueController extends Controller
 					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setCommentaire($rapprochementBancaire->getAffectationDiverse()->getLibelle());
+					$ligne->setCommentaire($rapprochementBancaire->getAffectationDiverse()->getNom());
 					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
@@ -134,7 +134,7 @@ class JournalBanqueController extends Controller
 					$ligne->setCompteComptable($rapprochementBancaire->getAffectationDiverse()->getCompteComptable());
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setCommentaire($rapprochementBancaire->getAffectationDiverse()->getLibelle());
+					$ligne->setCommentaire($rapprochementBancaire->getAffectationDiverse()->getNom());
 					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
 
