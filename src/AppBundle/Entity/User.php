@@ -67,6 +67,14 @@ class User extends BaseUser
     private $file;
     private $tempFilename;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="avatar", type="string", length=255, nullable=true)
+     */
+    private $avatar;
+
+
     public function __construct()
     {
         parent::__construct();
@@ -187,5 +195,32 @@ class User extends BaseUser
     public function getSignature()
     {
         return $this->signature;
+    }
+
+    /**
+     * Set avatar
+     *
+     * @param string $avatar
+     * @return User
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    /**
+     * Get avatar
+     *
+     * @return string 
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    public function getAvatarPath(){
+        return '/web/upload/avatar/'.$this->id.'/'.$this->avatar;
     }
 }

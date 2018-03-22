@@ -67,6 +67,14 @@ class User extends BaseUser
     private $file;
     private $tempFilename;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="avatar", type="string", length=255, nullable=true)
+     */
+    private $avatar;
+
+
     public function __construct()
     {
         parent::__construct();
@@ -164,5 +172,28 @@ class User extends BaseUser
     public function getCompteComptableNoteFrais()
     {
         return $this->compteComptableNoteFrais;
+    }
+
+    /**
+     * Set signature
+     *
+     * @param string $signature
+     * @return User
+     */
+    public function setSignature($signature)
+    {
+        $this->signature = $signature;
+
+        return $this;
+    }
+
+    /**
+     * Get signature
+     *
+     * @return string 
+     */
+    public function getSignature()
+    {
+        return $this->signature;
     }
 }

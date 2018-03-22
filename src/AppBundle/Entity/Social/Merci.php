@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Merci
  *
- * @ORM\Table()
+ * @ORM\Table(name="merci")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Social\MerciRepository")
  */
 class Merci
@@ -44,7 +44,8 @@ class Merci
     /**
      * @var string
      *
-     * @ORM\Column(name="to", type="string", length=255, nullable=true)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $to;
 
@@ -62,6 +63,11 @@ class Merci
      */
     private $date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Social\TableauMerci", inversedBy="mercis")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $tableauMerci;
 
     /**
      * Get id
@@ -166,29 +172,6 @@ class Merci
     }
 
     /**
-     * Set to
-     *
-     * @param string $to
-     * @return Merci
-     */
-    public function setTo($to)
-    {
-        $this->to = $to;
-
-        return $this;
-    }
-
-    /**
-     * Get to
-     *
-     * @return string 
-     */
-    public function getTo()
-    {
-        return $this->to;
-    }
-
-    /**
      * Set fromUser
      *
      * @param \AppBundle\Entity\User $fromUser
@@ -209,5 +192,52 @@ class Merci
     public function getFromUser()
     {
         return $this->fromUser;
+    }
+
+    /**
+     * Set tableauMerci
+     *
+     * @param \AppBundle\Entity\Social\TableauMerci $tableauMerci
+     * @return Merci
+     */
+    public function setTableauMerci(\AppBundle\Entity\Social\TableauMerci $tableauMerci = null)
+    {
+        $this->tableauMerci = $tableauMerci;
+
+        return $this;
+    }
+
+    /**
+     * Get tableauMerci
+     *
+     * @return \AppBundle\Entity\Social\TableauMerci 
+     */
+    public function getTableauMerci()
+    {
+        return $this->tableauMerci;
+    }
+
+
+    /**
+     * Set to
+     *
+     * @param \AppBundle\Entity\User $to
+     * @return Merci
+     */
+    public function setTo(\AppBundle\Entity\User $to)
+    {
+        $this->to = $to;
+
+        return $this;
+    }
+
+    /**
+     * Get to
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getTo()
+    {
+        return $this->to;
     }
 }

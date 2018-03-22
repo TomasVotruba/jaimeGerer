@@ -54,7 +54,7 @@ class ContactController extends Controller
 
 				$compteId = ($list[$i]['id']);
 				$compte = $repository->find($compteId);
-				$arr_factures = $factureRepository->findBy(array('compte' => $compte));
+				$arr_factures = $factureRepository->findBy(array('compte' => $compte, 'type' => 'FACTURE'));
 
 				$year = date("Y");
 				$first =  new \DateTime($year.'-01-01');

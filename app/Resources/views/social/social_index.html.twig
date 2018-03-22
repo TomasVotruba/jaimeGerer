@@ -1,0 +1,107 @@
+{% extends 'social/social_layout.html.twig' %}
+
+{% block content %}
+
+<div class="row">
+
+	<div class="col-md-4">
+		<div class="panel panel-default">
+		  	<div class="panel-heading">
+		    	<h3 class="panel-title">Liste de courses</h3>
+		  	</div>
+		  	<div class="panel-body">
+		    	
+		  	</div>
+		</div>
+	</div>
+
+	<div class="col-md-8">
+		<div class="panel panel-default">
+		  	<div class="panel-heading">
+		    	<h3 class="panel-title">
+		    		Merci internes : 
+		    		{% if tableauMerci %}
+		    			{{ tableauMerci.numMerciInterne }} / {{ tableauMerci.objectifInterne }}
+
+		    			{% if tableauMerci.numMerciInterne >= tableauMerci.objectifInterne %}
+		    				<img src="{{ asset('images/assets/icon_champagne.svg')}}" alt="Celebrate !" class="icon"/>
+		    			{% endif %}
+		    		{% else %}
+		    			pas d'objectif 
+		    			<a  class="btn btn-xs btn-info" 
+		    				href="{{ path('compta_merci_choisir_objectifs') }}" 
+		    				data-target="#modal" 
+		    				data-toggle="modal">
+		    					Fixer les objectifs
+		    			</a>
+		    		{% endif %}
+		    	</h3>
+		  	</div>
+		  	<div class="panel-body tableau-merci">
+		    	{% for merci in tableauMerci.merciInternes %}
+		    		<div class="merci">
+			    		Le {{ merci.date|date('d/m/Y') }} 
+			    		<img src="{{ asset('/web/upload/avatar/'~merci.fromUser.id~'/'~merci.fromUser.avatar) }} " alt="{{ merci.fromUser.firstname }}" title="{{ merci.fromUser.firstname }}" />
+			    		a remercié 
+			    		<img src="{{ asset('/web/upload/avatar/'~merci.to.id~'/'~merci.to.avatar) }} " alt="{{ merci.to.firstname }}" />
+			    		pour {{ merci.text }}
+			    	</div>
+			    	<hr />
+		    	{% endfor %}
+		  	</div>
+		  	<div class="panel-footer">
+		  		<a class="btn btn-success" 
+		  			href="{{ path('compta_merci_ajouter', {'type' : 'interne'} ) }}"
+		  			data-target="#modal" 
+		    		data-toggle="modal">
+		    		Dire merci
+		    	</a>
+		  	</div>
+		</div>
+
+		<div class="panel panel-default">
+		  	<div class="panel-heading">
+		    	<h3 class="panel-title">
+		    		Merci externes : 
+		    		{% if tableauMerci %}
+		    			{{ tableauMerci.numMerciExterne }} / {{ tableauMerci.objectifExterne }}
+		    		{% else %}
+		    			pas d'objectif <a class="btn btn-xs btn-info">Fixer les objectifs</a>
+		    		{% endif %}
+
+		    		{% if tableauMerci.numMerciExterne >= tableauMerci.objectifExterne %}
+		    			<img src="{{ asset('images/assets/icon_champagne.svg')}}" alt="Celebrate !" class="icon"/>
+		    		{% endif %}
+
+		    	</h3>
+		  	</div>
+		  	<div class="panel-body tableau-merci">
+		    	{% for merci in tableauMerci.merciExternes %}
+		    		<div class="merci">
+			    		Le {{ merci.date|date('d/m/Y') }} 
+			    		<img src="{{ asset('/web/upload/avatar/'~merci.to.id~'/'~merci.to.avatar) }} " alt="{{ merci.to.firstname }}" />
+			    		a été remercié par
+			    		{{ merci.fromText }}
+			    		pour {{ merci.text }}
+			    	</div>
+		    	{% endfor %}
+		  	</div>
+		  	<div class="panel-footer">
+		  		<a class="btn btn-success" 
+		  			href="{{ path('compta_merci_ajouter', {'type' : 'externe'} ) }}"
+		  			data-target="#modal" 
+		    		data-toggle="modal">
+		    		On m'a dit merci
+		    	</a>
+		  	</div>
+		</div>
+	</div>
+</div>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}

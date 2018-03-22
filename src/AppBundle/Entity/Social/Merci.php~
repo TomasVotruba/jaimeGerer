@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Merci
  *
- * @ORM\Table()
+ * @ORM\Table(name="merci")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Social\MerciRepository")
  */
 class Merci
@@ -44,7 +44,8 @@ class Merci
     /**
      * @var string
      *
-     * @ORM\Column(name="to", type="string", length=255, nullable=true)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $to;
 
@@ -62,6 +63,11 @@ class Merci
      */
     private $date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Social\TableauMerci", inversedBy="mercis")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $tableauMerci;
 
     /**
      * Get id
@@ -163,5 +169,70 @@ class Merci
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Set fromUser
+     *
+     * @param \AppBundle\Entity\User $fromUser
+     * @return Merci
+     */
+    public function setFromUser(\AppBundle\Entity\User $fromUser = null)
+    {
+        $this->fromUser = $fromUser;
+
+        return $this;
+    }
+
+    /**
+     * Get fromUser
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getFromUser()
+    {
+        return $this->fromUser;
+    }
+
+    /**
+     * Set tableauMerci
+     *
+     * @param \AppBundle\Entity\Social\TableauMerci $tableauMerci
+     * @return Merci
+     */
+    public function setTableauMerci(\AppBundle\Entity\Social\TableauMerci $tableauMerci = null)
+    {
+        $this->tableauMerci = $tableauMerci;
+
+        return $this;
+    }
+
+    /**
+     * Get tableauMerci
+     *
+     * @return \AppBundle\Entity\Social\TableauMerci 
+     */
+    public function getTableauMerci()
+    {
+        return $this->tableauMerci;
+    }
+
+    public function __toString(){
+
+        $string = 'Le '.$this->date->format('d/m:Y');
+
+        if(strtolower($this->type) == 'interne'){
+            $string.= $this->fromUser->getFirstname();
+            $string.=' a remercié ';    
+            $string.= $this->to->getFirstname();
+        } else {
+            $string.= $this->to->getFirstname();
+            $string.=' a été remercié par ';  
+            $string.= $this->fromText;  
+            
+        }
+
+        $string.= ' pour '.$this->text;
+        return $string;
     }
 }

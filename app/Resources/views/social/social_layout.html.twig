@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/crm.css') }}" type="text/css" />
+{% endblock %}
+
+{% block body %}
+	<div class="row full-height-minus-userbar">
+		<div class="col-xs-1 aside full-height">
+	  
+	    </div>
+		<div class="col-xs-11 fit wrap-content wrap-content-commercial">
+     		<div class="titre titre-crm">
+				<h1>J'aime {{ app.user.company.nom }}</h1>
+			</div>
+	    	{% block content %}
+
+	    	{% endblock %}
+	    </div>
+	</div>
+
+{% endblock %}
+
