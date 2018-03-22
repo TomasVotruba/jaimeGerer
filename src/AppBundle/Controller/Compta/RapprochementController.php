@@ -715,6 +715,10 @@ class RapprochementController extends Controller
                     }
                     $mouvementBancaire->setType('DEPENSE');
                     $em->persist($mouvementBancaire);
+
+                    if( !array_key_exists($id, $arr_pieces) ){
+                      $arr_pieces[$id] = array($type => $piece);
+                    }
                     break;
                   
                   case 'FACTURES' :
@@ -728,6 +732,10 @@ class RapprochementController extends Controller
                     }
                     $mouvementBancaire->setType('FACTURE');
                     $em->persist($mouvementBancaire);
+
+                    if( !array_key_exists($id, $arr_pieces) ){
+                      $arr_pieces[$id] = array($type => $piece);
+                    }
                     break;
                   
                   case 'AVOIRS-FOURNISSEUR' :
@@ -739,6 +747,10 @@ class RapprochementController extends Controller
                     }
                     $mouvementBancaire->setType('AVOIR-FOURNISSEUR');
                     $em->persist($mouvementBancaire);
+
+                    if( !array_key_exists($id, $arr_pieces) ){
+                      $arr_pieces[$id] = array($type => $piece);
+                    }
                     break;
                   
                   case 'AVOIRS-CLIENT' :
@@ -750,6 +762,10 @@ class RapprochementController extends Controller
                     }
                     $mouvementBancaire->setType('AVOIR-CLIENT');
                     $em->persist($mouvementBancaire);
+
+                    if( !array_key_exists($id, $arr_pieces) ){
+                      $arr_pieces[$id] = array($type => $piece);
+                    }
                     break;
                  
                   // case 'REMISES-CHEQUES' :
@@ -767,6 +783,10 @@ class RapprochementController extends Controller
                     }
                     $mouvementBancaire->setType('AFFECTATION-DIVERSE-VENTE');
                     $em->persist($mouvementBancaire);
+
+                    if( !array_key_exists($id, $arr_pieces) ){
+                      $arr_pieces[$id] = array($type => $piece);
+                    }
                     break;
 
                 case 'AFFECTATIONS-DIVERSES-ACHAT' :
@@ -778,6 +798,10 @@ class RapprochementController extends Controller
                     }
                     $mouvementBancaire->setType('AFFECTATION-DIVERSE-ACHAT');
                     $em->persist($mouvementBancaire);
+
+                    if( !array_key_exists($id, $arr_pieces) ){
+                      $arr_pieces[$id] = array($type => $piece);
+                    }
                     break;
 
                   case 'NOTES-FRAIS' :
@@ -792,12 +816,14 @@ class RapprochementController extends Controller
                     $mouvementBancaire->setType('NOTE-FRAIS');
                     $em->persist($mouvementBancaire);
 
+                    if( !array_key_exists($id, $arr_pieces) ){
+                      $arr_pieces[$id] = array($type => $piece);
+                    }
+
                     break;
                 }
 
-                if( !array_key_exists($id, $arr_pieces) ){
-                    $arr_pieces[$id] = array($type => $piece);
-                }
+
                
                 $em->persist($rapprochement);
             }
