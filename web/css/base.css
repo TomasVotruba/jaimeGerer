@@ -958,7 +958,7 @@ ul.checklist li:before {
     overflow: auto;
 }
 
-.tableau-merci hr{
+.tableau-merci hr, .tableau-courses hr{
     margin-top: 5px;
     margin-bottom: 5px;
 }

@@ -2,15 +2,38 @@
 
 {% block content %}
 
-<div class="row">
+<div class="row" style="margin-top: 20px;">
 
 	<div class="col-md-4">
 		<div class="panel panel-default">
 		  	<div class="panel-heading">
 		    	<h3 class="panel-title">Liste de courses</h3>
 		  	</div>
-		  	<div class="panel-body">
-		    	
+		  	<div class="panel-body tableau-courses">
+		    	{% for course in arr_courses %}
+		    		<div>
+			    		<input type="checkbox" id="{{ course.id }}" name="course" />
+			    		<img src="{{ asset('/web/upload/avatar/'~course.user.id~'/'~course.user.avatar) }} " alt="{{ course.user.firstname }}" title="{{ course.user.firstname }}" />
+			    		{{ course.nom }} ({{ course.quantite }})
+			    		<hr />
+			    	</div>
+		    	{% endfor %}
+		  	</div>
+		  	<div class="panel-footer">
+		  		<div class="progress hidden">
+				  	<div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+				</div>
+		  		<a class="btn btn-success" 
+		  			href="{{ path('compta_course_ajouter') }}"
+		  			data-target="#modal" 
+		    		data-toggle="modal">
+		    		J'ai besoin de quelque chose
+		    	</a>
+		    	<a class="btn btn-success"
+		    		id="btn-acheter" 
+		  			href="#">
+		    		J'ai acheté les trucs cochés
+		    	</a>
 		  	</div>
 		</div>
 	</div>
@@ -84,6 +107,7 @@
 			    		{{ merci.fromText }}
 			    		pour {{ merci.text }}
 			    	</div>
+			    	<hr />
 		    	{% endfor %}
 		  	</div>
 		  	<div class="panel-footer">
@@ -104,4 +128,38 @@
 
 {% block javascripts %}
 	{{ parent() }}
+	<script type="text/javascript">
+		$(document).ready( function () {
+
+			$('#btn-acheter').click(function(){
+
+				$('.progress').removeClass('hidden');
+
+				var arr_courses =  [];
+				$('input[name="course"]').each(function () {
+					if(this.checked){
+						arr_courses.push($(this).attr('id'));
+					}
+				});
+
+				$.ajax({
+					type: "POST",
+					url: Routing.generate('compta_course_supprimer'),
+					data: { 'arr_courses':  arr_courses },
+					success: function(data) {
+						$('input[name="course"]').each(function () {
+							if(this.checked){
+								$(this).parent('div').hide();
+							}
+						});
+						$('.progress').addClass('hidden');
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						$('.progress').addClass('hidden');
+					},
+
+				});
+			});
+		});
+	</script>
 {% endblock %}

@@ -20,11 +20,14 @@ class SocialController extends Controller
 	{
 		$em = $this->getDoctrine()->getManager();
 		$tableauMerciRepo = $em->getRepository('AppBundle:Social\TableauMerci');
+		$courseRepo = $em->getRepository('AppBundle:Social\Course');
 
 		$tableauMerci = $tableauMerciRepo->findCurrent();
+		$arr_courses = $courseRepo->findAll();
 
 		return $this->render('social/social_index.html.twig', array(
-			'tableauMerci' => $tableauMerci
+			'tableauMerci' => $tableauMerci,
+			'arr_courses' => $arr_courses
 		));
 	}
 }
