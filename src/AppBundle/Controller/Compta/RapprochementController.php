@@ -693,11 +693,6 @@ class RapprochementController extends Controller
                 $type = $arr_explode[0];
                 $id = $arr_explode[1];
 
-                
-                if( !array_key_exists($piece->getId(), $arr_montants) ){
-                    $arr_montants[$piece->getId()] = $arr_piece['montant'];
-                }
-
                 //creation et hydratation du rapprochement bancaire
                 $rapprochement = new Rapprochement();
                 $rapprochement->setDate(new \DateTime(date('Y-m-d')));
