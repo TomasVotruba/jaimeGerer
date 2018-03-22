@@ -693,8 +693,8 @@ class RapprochementController extends Controller
                 $type = $arr_explode[0];
                 $id = $arr_explode[1];
 
-                if( !array_key_exists($piece->getId(), $arr_pieces) ){
-                    $arr_pieces[$piece->getId()] = array($type => $piece);
+                if( !array_key_exists($id, $arr_pieces) ){
+                    $arr_pieces[$id] = array($type => $piece);
                 }
                 if( !array_key_exists($piece->getId(), $arr_montants) ){
                     $arr_montants[$piece->getId()] = $arr_piece['montant'];
