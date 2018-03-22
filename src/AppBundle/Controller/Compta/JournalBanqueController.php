@@ -1035,7 +1035,6 @@ class JournalBanqueController extends Controller
 			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 		} catch (\Exception $e){
-			throw $e;
 			$response = new Response();
 			$response->setStatusCode(500);
 			return $response;
