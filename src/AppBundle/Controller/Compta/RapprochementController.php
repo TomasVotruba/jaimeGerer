@@ -635,17 +635,17 @@ class RapprochementController extends Controller
           }
         }
 
-        // //affectations diverses vente
-        $arr_affectations_diverses_vente = $affectationDiverseRepo->findForCompany('VENTE', $this->getUser()->getCompany(), true);
-        foreach($arr_affectations_diverses_vente as $affectationDiverse){
-            $arr_pieces['AFFECTATIONS-DIVERSES-VENTE'][] = $affectationDiverse;
-        }
+        // // //affectations diverses vente
+        // $arr_affectations_diverses_vente = $affectationDiverseRepo->findForCompany('VENTE', $this->getUser()->getCompany(), true);
+        // foreach($arr_affectations_diverses_vente as $affectationDiverse){
+        //     $arr_pieces['AFFECTATIONS-DIVERSES-VENTE'][] = $affectationDiverse;
+        // }
          
-        //affectations diverses  achats
-        $arr_affectations_diverses_achat = $affectationDiverseRepo->findForCompany('ACHAT', $this->getUser()->getCompany(), true);
-        foreach($arr_affectations_diverses_achat as $affectationDiverse){
-            $arr_pieces['AFFECTATIONS-DIVERSES-ACHAT'][] = $affectationDiverse;
-        }
+        // //affectations diverses  achats
+        // $arr_affectations_diverses_achat = $affectationDiverseRepo->findForCompany('ACHAT', $this->getUser()->getCompany(), true);
+        // foreach($arr_affectations_diverses_achat as $affectationDiverse){
+        //     $arr_pieces['AFFECTATIONS-DIVERSES-ACHAT'][] = $affectationDiverse;
+        // }
 
         return $this->render('compta/rapprochement/compta_rapprochement_avance.html.twig', array(
             'arr_mouvementsBancaires' => $arr_mouvementsBancaires,
