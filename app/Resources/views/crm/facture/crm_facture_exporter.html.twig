@@ -76,10 +76,8 @@
                         {% if facture.numBCInterne is not null %}
                             {{ facture.numBCInterne }}
                         {% endif %}
-                        {% if facture.bonsCommande is not null %}
-                            {% for bc in facture.bonsCommande %}
-                                {{ bc.num }}
-                            {% endfor %}
+                        {% if facture.bonCommande is not null %}
+                            {{ facture.bonCommande.num }}
                         {% endif %}
                         <br/>
                         {% if facture.numBCClient is not null %}
