@@ -381,3 +381,7 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 #action-commerciale-filter-date label{
 	font-weight: normal;
 }
+
+.ul-details-compet-com{
+	list-style: none;
+}

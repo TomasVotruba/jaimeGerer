@@ -173,6 +173,13 @@ class Opportunite
   private $bonsCommande;
 
   /**
+  * @var boolean
+  *
+  * @ORM\Column(name="prescription", type="boolean", nullable=false)
+  */
+  private $prescription = false;
+
+  /**
    * Constructor
    */
   public function __construct()
@@ -569,6 +576,7 @@ class Opportunite
       $s_proba = $this->getProbabilite()->getValeur();
       $arr_proba = explode('-', $s_proba);
 
+      $proba = 0;
       if(count($arr_proba)){
          $proba = str_replace('%', '', $arr_proba[1]);
       }
@@ -830,5 +838,51 @@ class Opportunite
         } 
 
         return false;
+    }
+
+    /**
+     * Add bonsCommande
+     *
+     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
+     * @return Opportunite
+     */
+    public function addBonsCommande(\AppBundle\Entity\CRM\BonCommande $bonsCommande)
+    {
+        $this->bonsCommande[] = $bonsCommande;
+        $bonsCommande->setActionCommerciale($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove bonsCommande
+     *
+     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
+     */
+    public function removeBonsCommande(\AppBundle\Entity\CRM\BonCommande $bonsCommande)
+    {
+        $this->bonsCommande->removeElement($bonsCommande);
+    }
+
+    /**
+     * Get bonsCommande
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBonsCommande()
+    {
+        return $this->bonsCommande;
+    }
+
+    public function getTotalBonsCommande(){
+        $total = 0;
+        foreach($this->bonsCommande as $bc){
+            $total+= $bc->getMontant();
+        }
+        return $total;
+    }
+
+    public function getMontantInt(){
+        return intval($this->montant*100);
     }
 }

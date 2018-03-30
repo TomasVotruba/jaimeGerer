@@ -384,5 +384,21 @@ class OpportuniteRepository extends EntityRepository
 
 		return $qb->getQuery()->getResult();
 	}
+
+	public function findWonBetweenDates($company, $startDate, $endDate){
+
+		$qb = $this->createQueryBuilder('o')
+		->innerJoin('o.compte', 'c')
+		->where('c.company = :company')
+		->andWhere('o.dateCreation >= :start')
+		->andWhere('o.dateCreation <= :end')
+		->andWhere('o.etat = :won')
+		->setParameter('company', $company)
+		->setParameter('start', $startDate)
+		->setParameter('end', $endDate)
+		->setParameter('won', 'WON');
+
+		return $qb->getQuery()->getResult();
+	}
 	
 }

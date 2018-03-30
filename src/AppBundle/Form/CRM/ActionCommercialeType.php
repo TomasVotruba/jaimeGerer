@@ -174,6 +174,10 @@ class ActionCommercialeType extends AbstractType
                 'label' => 'Appel d\'offre',
                 'required' => false,
             ))
+             ->add('prescription', 'checkbox', array(
+                'label' => 'Prescription',
+                'required' => false,
+            ))
             ->add('probabilite', 'entity', array(
                 'class'=>'AppBundle:Settings',
                 'property' => 'valeur',

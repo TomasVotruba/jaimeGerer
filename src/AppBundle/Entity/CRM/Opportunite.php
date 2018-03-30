@@ -173,6 +173,13 @@ class Opportunite
   private $bonsCommande;
 
   /**
+  * @var boolean
+  *
+  * @ORM\Column(name="prescription", type="boolean", nullable=false)
+  */
+  private $prescription = false;
+
+  /**
    * Constructor
    */
   public function __construct()
@@ -877,5 +884,28 @@ class Opportunite
 
     public function getMontantInt(){
         return intval($this->montant*100);
+    }
+
+    /**
+     * Set prescription
+     *
+     * @param boolean $prescription
+     * @return Opportunite
+     */
+    public function setPrescription($prescription)
+    {
+        $this->prescription = $prescription;
+
+        return $this;
+    }
+
+    /**
+     * Get prescription
+     *
+     * @return boolean 
+     */
+    public function getPrescription()
+    {
+        return $this->prescription;
     }
 }

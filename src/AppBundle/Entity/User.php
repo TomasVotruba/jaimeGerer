@@ -74,6 +74,13 @@ class User extends BaseUser
      */
     private $avatar;
 
+    /**
+  * @var boolean
+  *
+  * @ORM\Column(name="compet_com", type="boolean", nullable=true)
+  */
+  private $competCom = false;
+
 
     public function __construct()
     {
@@ -222,5 +229,28 @@ class User extends BaseUser
 
     public function getAvatarPath(){
         return '/web/upload/avatar/'.$this->id.'/'.$this->avatar;
+    }
+
+    /**
+     * Set competCom
+     *
+     * @param boolean $competCom
+     * @return User
+     */
+    public function setCompetCom($competCom)
+    {
+        $this->competCom = $competCom;
+
+        return $this;
+    }
+
+    /**
+     * Get competCom
+     *
+     * @return boolean 
+     */
+    public function getCompetCom()
+    {
+        return $this->competCom;
     }
 }
