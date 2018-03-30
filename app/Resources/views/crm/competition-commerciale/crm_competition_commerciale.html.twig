@@ -78,6 +78,9 @@
                                 <ul class="well ul-details-compet-com">
                                 {% for actionCommerciale in arr_user.gagnees %}
                                     <li>{{ actionCommerciale.compte.nom }} ({{ actionCommerciale.montant|number_format(2,',',' ') }} € )</li>
+                                    {% if loop.last == false %}
+                                        <hr />
+                                    {% endif %}
                                 {% endfor %}
                                 </ul>
                             {% endif %}
@@ -114,6 +117,9 @@
                                 <ul class="well ul-details-compet-com">
                                 {% for actionCommerciale in arr_user.prescriptions %}
                                     <li>{{ actionCommerciale.compte.nom }}</li>
+                                    {% if loop.last == false %}
+                                        <hr />
+                                    {% endif %}
                                 {% endfor %}
                                 </ul>
                             {% endif %}
