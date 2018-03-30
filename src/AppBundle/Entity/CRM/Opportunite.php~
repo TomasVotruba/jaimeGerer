@@ -180,6 +180,13 @@ class Opportunite
   private $prescription = false;
 
   /**
+   * @var \DateTime
+   *
+   * @ORM\Column(name="date_won", type="date", nullable=true)
+   */
+  private $dateWon;
+
+  /**
    * Constructor
    */
   public function __construct()
@@ -884,5 +891,28 @@ class Opportunite
 
     public function getMontantInt(){
         return intval($this->montant*100);
+    }
+
+    /**
+     * Set prescription
+     *
+     * @param boolean $prescription
+     * @return Opportunite
+     */
+    public function setPrescription($prescription)
+    {
+        $this->prescription = $prescription;
+
+        return $this;
+    }
+
+    /**
+     * Get prescription
+     *
+     * @return boolean 
+     */
+    public function getPrescription()
+    {
+        return $this->prescription;
     }
 }

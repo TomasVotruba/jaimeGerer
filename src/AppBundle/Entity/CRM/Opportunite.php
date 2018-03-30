@@ -180,6 +180,13 @@ class Opportunite
   private $prescription = false;
 
   /**
+   * @var \DateTime
+   *
+   * @ORM\Column(name="date_won", type="date", nullable=true)
+   */
+  private $dateWon;
+
+  /**
    * Constructor
    */
   public function __construct()
@@ -585,6 +592,7 @@ class Opportunite
     }
 
     public function win(){
+      $this->dateWon = new \DateTime(date('Y-m-d'));
       $this->etat = "WON";
     }
 
@@ -907,5 +915,28 @@ class Opportunite
     public function getPrescription()
     {
         return $this->prescription;
+    }
+
+    /**
+     * Set dateWon
+     *
+     * @param \DateTime $dateWon
+     * @return Opportunite
+     */
+    public function setDateWon($dateWon)
+    {
+        $this->dateWon = $dateWon;
+
+        return $this;
+    }
+
+    /**
+     * Get dateWon
+     *
+     * @return \DateTime 
+     */
+    public function getDateWon()
+    {
+        return $this->dateWon;
     }
 }

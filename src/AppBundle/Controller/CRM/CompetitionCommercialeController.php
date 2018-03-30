@@ -56,6 +56,8 @@ class CompetitionCommercialeController extends Controller
 				$competCom->getEndDate()
 			);
 
+			dump($arr_actionsCommerciales);
+
 			foreach($arr_actionsCommerciales as $actionCommerciale){
 
 				$user = $actionCommerciale->getUserGestion();
