@@ -1,0 +1,25 @@
+<div class="modal-header">
+	<a class="close" data-dismiss="modal">×</a>
+	<h3>Créer une compétition commerciale</h3>
+</div>
+<div class="modal-body">
+
+	<div class="row">
+		<div class="col-md-12">
+		{{ form_start(form, {'action' : path('crm_competition_commerciale_ajouter') }) }}
+		{{ form_end(form) }}
+		</div>
+	</div>
+
+</div>
+
+
+<script type="text/javascript">
+		$(document).ready( function () {
+
+			$(".dateInput").datepicker({
+				dateFormat: 'dd/mm/yy',
+				firstDay:1
+			});
+		});
+</script>

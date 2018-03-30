@@ -16,123 +16,137 @@
 
     <div class="row spacer-top">
 
-        <div class="col-md-4">
+        {% if competCom is null %}
+            <div class="col-md-12 alert alert-info">
+                <p> 
+                    Il n'y a pas de compétition commerciale en cours. Et si tu en créais une, {{ app.user.firstname }} ?<br />
+                    <a 
+                        href="{{ path('crm_competition_commerciale_ajouter') }}" 
+                        class="btn btn-info"
+                        data-toggle="modal"
+                        data-target="#modal">
+                            Ouiiii !
+                    </a>
+                </p>
+            </div>
+        {% else %}
+            <div class="col-md-4">
 
-            <div class="panel panel-default">
-               
-                <div class="panel-heading">
-                    <h3 class="panel-title">Nouveaux comptes privés</h3>
-                </div>
+                <div class="panel panel-default">
+                   
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Nouveaux comptes privés</h3>
+                    </div>
 
-                <div class="panel-body">
-                    {% for arr_user in arr_users %}
-                        <div id="nouveaux-comptes-{{ arr_user.user.id }}">
-                            <img src="{{ asset('/web/upload/avatar/'~arr_user.user.id~'/'~arr_user.user.avatar) }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}" /> 
-                            
-                            {{ arr_user.nouveauxComptes|length }} nouveau{{ arr_user.nouveauxComptes|length > 1?'x':'' }} compte{{ arr_user.nouveauxComptes|length > 1?'s':'' }}
+                    <div class="panel-body">
+                        {% for arr_user in arr_users %}
+                            <div id="nouveaux-comptes-{{ arr_user.user.id }}">
+                                <img src="{{ asset('/web/upload/avatar/'~arr_user.user.id~'/'~arr_user.user.avatar) }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}" /> 
+                                
+                                {{ arr_user.nouveauxComptes|length }} nouveau{{ arr_user.nouveauxComptes|length > 1?'x':'' }} compte{{ arr_user.nouveauxComptes|length > 1?'s':'' }}
 
-                            {% if arr_winners.nouveauxComptes == arr_user.user.id %}
-                                <img src="{{ asset('/web/images/assets/icon_cup.png') }} " alt="Coupe" title="WINNER !" /> 
-                            {% endif %}
-                            
-                            {% if arr_user.nouveauxComptes|length > 0 %}
-                                <ul class="well ul-details-compet-com">
-                                {% for actionCommerciale in arr_user.nouveauxComptes %}
-                                    <li>{{ actionCommerciale.compte.nom }}</li>
-                                    {% if loop.last == false %}
-                                        <hr />
-                                    {% endif %}
-                                {% endfor %}
-                                </ul>
-                            {% endif %}
-                            
-                            <hr />
-                        </div>
-                    {% endfor %}
-                </div>
+                                {% if arr_winners.nouveauxComptes == arr_user.user.id %}
+                                    <img src="{{ asset('/web/images/assets/icon_cup.png') }} " alt="Coupe" title="WINNER !" /> 
+                                {% endif %}
+                                
+                                {% if arr_user.nouveauxComptes|length > 0 %}
+                                    <ul class="well ul-details-compet-com">
+                                    {% for actionCommerciale in arr_user.nouveauxComptes %}
+                                        <li>{{ actionCommerciale.compte.nom }}</li>
+                                        {% if loop.last == false %}
+                                            <hr />
+                                        {% endif %}
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                
+                                <hr />
+                            </div>
+                        {% endfor %}
+                    </div>
 
-            </div> <!-- end panel -->
+                </div> <!-- end panel -->
 
-        </div> <!-- end col-md-4 -->
+            </div> <!-- end col-md-4 -->
 
-        <div class="col-md-4">
+            <div class="col-md-4">
 
-            <div class="panel panel-default">
-               
-                <div class="panel-heading">
-                    <h3 class="panel-title">Chiffre d'affaire (dont AO)</h3>
-                </div>
+                <div class="panel panel-default">
+                   
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Chiffre d'affaire (dont AO)</h3>
+                    </div>
 
-                <div class="panel-body">
-                    {% for arr_user in arr_users %}
-                        <div id="ca-{{ arr_user.user.id }}">
-                            <img src="{{ asset('/web/upload/avatar/'~arr_user.user.id~'/'~arr_user.user.avatar) }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}" /> 
-                            
-                            Total : {{ arr_user.CA|number_format(2,',',' ') }} € - Ratio : {{ arr_user.ratioCA|number_format(2,',',' ') }} €
+                    <div class="panel-body">
+                        {% for arr_user in arr_users %}
+                            <div id="ca-{{ arr_user.user.id }}">
+                                <img src="{{ asset('/web/upload/avatar/'~arr_user.user.id~'/'~arr_user.user.avatar) }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}" /> 
+                                
+                                Total : {{ arr_user.CA|number_format(2,',',' ') }} € - Ratio : {{ arr_user.ratioCA|number_format(2,',',' ') }} €
 
-                            {% if arr_winners.CA == arr_user.user.id %}
-                                <img src="{{ asset('/web/images/assets/icon_cup.png') }} " alt="Coupe" title="WINNER !" /> 
-                            {% endif %}
-                            
-                            {% if arr_user.gagnees|length > 0 %}
-                                <ul class="well ul-details-compet-com">
-                                {% for actionCommerciale in arr_user.gagnees %}
-                                    <li>{{ actionCommerciale.compte.nom }} ({{ actionCommerciale.montant|number_format(2,',',' ') }} € )</li>
-                                    {% if loop.last == false %}
-                                        <hr />
-                                    {% endif %}
-                                {% endfor %}
-                                </ul>
-                            {% endif %}
-                            
-                            <hr />
-                        </div>
-                    {% endfor %}
-                </div>
+                                {% if arr_winners.CA == arr_user.user.id %}
+                                    <img src="{{ asset('/web/images/assets/icon_cup.png') }} " alt="Coupe" title="WINNER !" /> 
+                                {% endif %}
+                                
+                                {% if arr_user.gagnees|length > 0 %}
+                                    <ul class="well ul-details-compet-com">
+                                    {% for actionCommerciale in arr_user.gagnees %}
+                                        <li>{{ actionCommerciale.compte.nom }} ({{ actionCommerciale.montant|number_format(2,',',' ') }} € )</li>
+                                        {% if loop.last == false %}
+                                            <hr />
+                                        {% endif %}
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                
+                                <hr />
+                            </div>
+                        {% endfor %}
+                    </div>
 
-            </div> <!-- end panel -->
+                </div> <!-- end panel -->
 
-        </div> <!-- end col-md-4 -->
+            </div> <!-- end col-md-4 -->
 
-        <div class="col-md-4">
+            <div class="col-md-4">
 
-            <div class="panel panel-default">
-               
-                <div class="panel-heading">
-                    <h3 class="panel-title">Prescriptions</h3>
-                </div>
+                <div class="panel panel-default">
+                   
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Prescriptions</h3>
+                    </div>
 
-                <div class="panel-body">
-                    {% for arr_user in arr_users %}
-                        <div id="prescriptions-{{ arr_user.user.id }}">
-                            <img src="{{ asset('/web/upload/avatar/'~arr_user.user.id~'/'~arr_user.user.avatar) }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}" /> 
-                            
-                            Total : {{ arr_user.prescriptions|length }} affaire{{ arr_user.prescriptions|length > 1?'s':'' }} sur prescription 
+                    <div class="panel-body">
+                        {% for arr_user in arr_users %}
+                            <div id="prescriptions-{{ arr_user.user.id }}">
+                                <img src="{{ asset('/web/upload/avatar/'~arr_user.user.id~'/'~arr_user.user.avatar) }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}" /> 
+                                
+                                Total : {{ arr_user.prescriptions|length }} affaire{{ arr_user.prescriptions|length > 1?'s':'' }} sur prescription 
 
-                            {% if arr_winners.prescriptions == arr_user.user.id %}
-                                <img src="{{ asset('/web/images/assets/icon_cup.png') }} " alt="Coupe" title="WINNER !" /> 
-                            {% endif %}
-                            
-                            {% if arr_user.prescriptions|length > 0 %}
-                                <ul class="well ul-details-compet-com">
-                                {% for actionCommerciale in arr_user.prescriptions %}
-                                    <li>{{ actionCommerciale.compte.nom }}</li>
-                                    {% if loop.last == false %}
-                                        <hr />
-                                    {% endif %}
-                                {% endfor %}
-                                </ul>
-                            {% endif %}
-                            
-                            <hr />
-                        </div>
-                    {% endfor %}
-                </div>
+                                {% if arr_winners.prescriptions == arr_user.user.id %}
+                                    <img src="{{ asset('/web/images/assets/icon_cup.png') }} " alt="Coupe" title="WINNER !" /> 
+                                {% endif %}
+                                
+                                {% if arr_user.prescriptions|length > 0 %}
+                                    <ul class="well ul-details-compet-com">
+                                    {% for actionCommerciale in arr_user.prescriptions %}
+                                        <li>{{ actionCommerciale.compte.nom }}</li>
+                                        {% if loop.last == false %}
+                                            <hr />
+                                        {% endif %}
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                
+                                <hr />
+                            </div>
+                        {% endfor %}
+                    </div>
 
-            </div> <!-- end panel -->
+                </div> <!-- end panel -->
 
-        </div> <!-- end col-md-4 -->
-
+            </div> <!-- end col-md-4 -->
+        {% endif %}
     </div> <!-- end row -->
 
    
