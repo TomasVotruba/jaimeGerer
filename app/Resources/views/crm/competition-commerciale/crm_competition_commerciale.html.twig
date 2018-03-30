@@ -52,7 +52,11 @@
                                 {% if arr_user.nouveauxComptes|length > 0 %}
                                     <ul class="well ul-details-compet-com">
                                     {% for actionCommerciale in arr_user.nouveauxComptes %}
-                                        <li>{{ actionCommerciale.compte.nom }}</li>
+                                        <li>{{ actionCommerciale.compte.nom }} 
+                                            <a class="btn btn-xs btn-info" href="{{ path('crm_action_commerciale_voir', {'id' : actionCommerciale.id }) }}" target="_blank">
+                                                <span class="glyphicon glyphicon-eye-open"></span>
+                                            </a> 
+                                        </li>
                                         {% if loop.last == false %}
                                             <hr />
                                         {% endif %}
@@ -91,7 +95,12 @@
                                 {% if arr_user.gagnees|length > 0 %}
                                     <ul class="well ul-details-compet-com">
                                     {% for actionCommerciale in arr_user.gagnees %}
-                                        <li>{{ actionCommerciale.compte.nom }} ({{ actionCommerciale.montant|number_format(2,',',' ') }} € )</li>
+                                        <li>
+                                            {{ actionCommerciale.compte.nom }} ({{ actionCommerciale.montant|number_format(2,',',' ') }} € )
+                                            <a class="btn btn-xs btn-info" href="{{ path('crm_action_commerciale_voir', {'id' : actionCommerciale.id }) }}" target="_blank">
+                                                <span class="glyphicon glyphicon-eye-open"></span>
+                                            </a>
+                                        </li>
                                         {% if loop.last == false %}
                                             <hr />
                                         {% endif %}
@@ -130,7 +139,12 @@
                                 {% if arr_user.prescriptions|length > 0 %}
                                     <ul class="well ul-details-compet-com">
                                     {% for actionCommerciale in arr_user.prescriptions %}
-                                        <li>{{ actionCommerciale.compte.nom }}</li>
+                                        <li>
+                                            {{ actionCommerciale.compte.nom }}
+                                            <a class="btn btn-xs btn-info" href="{{ path('crm_action_commerciale_voir', {'id' : actionCommerciale.id }) }}" target="_blank">
+                                                <span class="glyphicon glyphicon-eye-open"></span>
+                                            </a>
+                                        </li>
                                         {% if loop.last == false %}
                                             <hr />
                                         {% endif %}
