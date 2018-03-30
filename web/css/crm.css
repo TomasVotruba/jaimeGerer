@@ -389,4 +389,5 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 .ul-details-compet-com hr{
 	margin-top: 10px;
 	margin-bottom: 10px;
+	border-top: 1px solid #ddd;
 }
