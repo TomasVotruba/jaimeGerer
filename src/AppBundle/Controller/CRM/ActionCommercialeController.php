@@ -908,7 +908,13 @@ class ActionCommercialeController extends Controller
 			);
 
 			foreach($arr_actionsCommerciales as $actionCommerciale){
+
 				$user = $actionCommerciale->getUserGestion();
+
+				if(!array_key_exists($user->getId(), $arr_users)){
+					continue;
+				}
+
 				$arr_users[$user->getId()]['gagnees'][] = $actionCommerciale;
 				$arr_users[$user->getId()]['CA']+= $actionCommerciale->getMontant();
 				
