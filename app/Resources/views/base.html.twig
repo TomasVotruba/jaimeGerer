@@ -118,33 +118,37 @@
                             </a>
                         </div>
                     {% else %}
-                        <div id="menu-secondary" hidden>
-                            <div id="menu-secondary-main">
-                                <a href="{{ path('homepage') }}">
-                                    <img class="logo-visuel-top" src="{{ asset('images/assets/jaimegerer-logo-visuel.png') }}" alt="logo-jaimegerer"/>
-                                </a>
+                        {% if app.user is not null %}
+                            <div id="menu-secondary" hidden>
+                                <div id="menu-secondary-main">
+                                    <a href="{{ path('homepage') }}">
+                                        <img class="logo-visuel-top" src="{{ asset('images/assets/jaimegerer-logo-visuel.png') }}" alt="logo-jaimegerer"/>
+                                    </a>
+                                </div>
+                                <div id="menu-secondary-hover">
+                                    <a href="{{ path('crm_index') }}" class="active">
+                                        <img src="{{ asset('images/assets/commercial.png') }}" alt="CRM"/>
+                                    </a>
+                                    <a href="#" class="inactive">
+                                        <img src="{{ asset('images/assets/communication.png') }}" alt="Emailing"/>
+                                    </a>
+                                    <a href="{{ path('compta_index') }}" class="active">
+                                        <img src="{{ asset('images/assets/comptabilite.png') }}" alt="Comptabilité"/>
+                                    </a>
+                                    <a href="#" class="inactive">
+                                        <img src="{{ asset('images/assets/recrutement.png') }}" alt="Recrutement"/>
+                                    </a>
+                                    <a href="{{ path('ndf_liste') }}" class="active">
+                                        <img src="{{ asset('images/assets/ndf.png') }}" alt="Notes de frais"/>
+                                    </a>
+                                    {% if app.user.company.id == 1 %}
+                                        <a href="{{ path('social_index') }}" class="active">
+                                            <img src="{{ asset('images/assets/jaimenicomak.png') }}" alt="J\'aime {{ app.user.company.nom }}"/>
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div id="menu-secondary-hover">
-                                <a href="{{ path('crm_index') }}" class="active">
-                                    <img src="{{ asset('images/assets/commercial.png') }}" alt="CRM"/>
-                                </a>
-                                <a href="#" class="inactive">
-                                    <img src="{{ asset('images/assets/communication.png') }}" alt="Emailing"/>
-                                </a>
-                                <a href="{{ path('compta_index') }}" class="active">
-                                    <img src="{{ asset('images/assets/comptabilite.png') }}" alt="Comptabilité"/>
-                                </a>
-                                <a href="#" class="inactive">
-                                    <img src="{{ asset('images/assets/recrutement.png') }}" alt="Recrutement"/>
-                                </a>
-                                <a href="{{ path('ndf_liste') }}" class="active">
-                                    <img src="{{ asset('images/assets/ndf.png') }}" alt="Notes de frais"/>
-                                </a>
-                                <a href="{{ path('social_index') }}" class="active">
-                                    <img src="{{ asset('images/assets/commercial.png') }}" alt="J\'aime {{ app.user.company.nom }}"/>
-                                </a>
-                            </div>
-                        </div>
+                        {% endif %}    
                     {% endif %}
                 </div>
                 <div class="col-xs-7">

@@ -613,6 +613,23 @@ label input[type="checkbox"][disabled] {
     left: 27px;
 }
 
+.titre-social {
+    background: #FC5162;
+}
+
+.titre-social:before {
+    position: absolute;
+    margin: auto;
+    z-index: 1;
+    content: "";
+    width: 108px;
+    height: 100px;
+    background-image: url('../../../../web/images/assets/jaimenicomak.png');
+    background-size: cover;
+    top: -11px;
+    left: 27px;
+}
+
 .sub-menu {
     margin-bottom: 30px;
 }

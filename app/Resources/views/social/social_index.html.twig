@@ -70,7 +70,7 @@
 			    		Le {{ merci.date|date('d/m/Y') }} 
 			    		<img src="{{ asset('/web/upload/avatar/'~merci.fromUser.id~'/'~merci.fromUser.avatar) }} " alt="{{ merci.fromUser.firstname }}" title="{{ merci.fromUser.firstname }}" />
 			    		a remercié 
-			    		<img src="{{ asset('/web/upload/avatar/'~merci.to.id~'/'~merci.to.avatar) }} " alt="{{ merci.to.firstname }}" />
+			    		<img src="{{ asset('/web/upload/avatar/'~merci.to.id~'/'~merci.to.avatar) }} " alt="{{ merci.to.firstname }}" title="{{ merci.to.firstname }}" />
 			    		pour {{ merci.text }}
 			    	</div>
 			    	<hr />
@@ -107,7 +107,7 @@
 		    	{% for merci in tableauMerci.merciExternes %}
 		    		<div class="merci">
 			    		Le {{ merci.date|date('d/m/Y') }} 
-			    		<img src="{{ asset('/web/upload/avatar/'~merci.to.id~'/'~merci.to.avatar) }} " alt="{{ merci.to.firstname }}" />
+			    		<img src="{{ asset('/web/upload/avatar/'~merci.to.id~'/'~merci.to.avatar) }} " alt="{{ merci.to.firstname }}" title="{{ merci.to.firstname }}" />
 			    		a été remercié par
 			    		{{ merci.fromText }}
 			    		pour {{ merci.text }}
