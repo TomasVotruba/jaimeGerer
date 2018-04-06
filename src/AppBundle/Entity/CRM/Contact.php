@@ -256,7 +256,7 @@ class Contact
      * Set id
      *
      * @param int $id
-     * @return Compte
+     * @return Contact
      */
     public function setId($id)
     {

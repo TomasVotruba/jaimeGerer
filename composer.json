@@ -10,7 +10,7 @@
 	},
 	"require" : {
 	  "php" : ">=5.3.3",
-	  "symfony/symfony" : "2.6.*",
+	  "symfony/symfony" : "2.8",
 	  "doctrine/orm" : "~2.2,>=2.2.3,<2.5",
 	  "doctrine/dbal" : "<2.5",
 	  "doctrine/doctrine-bundle" : "~1.2",
@@ -24,16 +24,16 @@
 	  "misd/phone-number-bundle" : "dev-master",
 	  "shtumi/useful-bundle" : "dev-master",
 	  "friendsofsymfony/user-bundle" : "1.3.x-dev",
-	  "sonata-project/core-bundle" : "~2.2",
-	  "sonata-project/admin-bundle" : "~2.2",
-	  "sonata-project/user-bundle" : "2.2.4",
-	  "sonata-project/doctrine-orm-admin-bundle" : "~2.1",
-	  "sonata-project/easy-extends-bundle" : "2.1.7",
-	  "sonata-project/intl-bundle" : "dev-master",
-	  "lexik/form-filter-bundle" : "3.0.8",
+	  "sonata-project/core-bundle" : ">2.0",
+	  "sonata-project/admin-bundle" : "3.x.dev",
+	  "sonata-project/user-bundle" : "~3.3",
+	  "sonata-project/doctrine-orm-admin-bundle" : ">2.3.0",
+	  "sonata-project/easy-extends-bundle" : ">2.1.7",
+	  "sonata-project/intl-bundle" : "2.3.2",
+	  "lexik/form-filter-bundle" : "~5.0",
 	  "knplabs/knp-snappy-bundle" : "dev-master",
-	  "knplabs/knp-menu" : "~1.1",
-	  "knplabs/knp-menu-bundle" : "~1.1",
+	  "knplabs/knp-menu" : "2.3.0",
+	  "knplabs/knp-menu-bundle" : "2.2.1",
 	  "stfalcon/tinymce-bundle" : "1.1",
 	  "phpoffice/phpexcel" : "1.8.1",
 	  "liuggio/ExcelBundle" : "dev-master",
@@ -46,11 +46,16 @@
 	  "rcousens/amcharts-bundle" : "dev-master@dev",
 	  "sensio/buzz-bundle": "dev-master",
 	  "snowcap/im-bundle": "~1.0",
-		"cmen/google-charts-bundle": "^2.1",
-		"mautic/api-library": "^2.6"
+	  "cmen/google-charts-bundle": "^2.1",
+	  "mautic/api-library": "^2.6",
+	  "symfony/phpunit-bridge": "^4.0",
+	  "nelmio/api-doc-bundle": "^2.4",
+	  "friendsofsymfony/rest-bundle": "~2.0"
 	},
 	"require-dev" : {
-		"sensio/generator-bundle" : "~2.3"
+		"sensio/generator-bundle" : "~2.3",
+		"doctrine/doctrine-fixtures-bundle": "2.4.1",
+		"liip/functional-test-bundle": "~1.9.5"
 	},
 	"scripts" : {
 		"post-install-cmd" : [

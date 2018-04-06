@@ -18,7 +18,7 @@ class DefaultController extends Controller
     /**
      * @Route("/", name="homepage")
      */
-    public function indexAction()
+    public function index()
     {
     	if($this->getUser() != null){
 

@@ -83,7 +83,7 @@ class Settings
      *
      * @ORM\Column(name="noTVA", type="boolean")
      */
-    private $noTVA;
+    private $noTVA = false;
     
     /**
      * @var string

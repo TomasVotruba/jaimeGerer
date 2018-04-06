@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Form\CallbackTransformer;
 
 use AppBundle\Entity\CRM\Compte;
 use AppBundle\Entity\CRM\Contact;
@@ -98,7 +99,7 @@ class ContactController extends Controller
 	/**
 	 * @Route("/crm/contact/voir/{id}", name="crm_contact_voir", options={"expose"=true})
 	 */
-	public function contactVoirAction(Contact $contact)
+	public function contactVoir(Contact $contact)
 	{
 		$opportuniteRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Opportunite');
 		$docPrixRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
@@ -771,944 +772,14 @@ class ContactController extends Controller
 		return $response;
 	}
 
-	/**
-	 * @Route("/crm/contact/importer/mapping", name="crm_contact_importer_mapping", options={"expose"=true})
-	 */
-	public function contactImporterMappingAction()
-	{
-		$request = $this->getRequest();
-		$session = $request->getSession();
-		$files = $session->get('import_contacts_filename');
-
-		$output = array();
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
-		$headers = array();
-		$contactData = array();
-		$enteteFichierImport = array();
-		foreach( $files as $k=>$v )
-		{
-			// charger PHPEXCEL de choisir le reader adéquat
-			$objReader = PHPExcel_IOFactory::createReaderForFile($path.'/'.$v['nouveau_nom']);
-			// chargement du fichier xls/xlsx ou csv
-			$objPHPExcel = $objReader->load($path.'/'.$v['nouveau_nom']);
-
-
-			$sheetData = $objPHPExcel->getActiveSheet()->toArray(false,true,true,true);
-			// changer de delimiter au cas ou le csv n'est pas conforme
-			if( get_class($objReader) == 'PHPExcel_Reader_CSV' && !$sheetData[1]['B'] )
-			{
-				$objReader->setDelimiter(';');
-				$objPHPExcel = $objReader->load($path.'/'.$v['nouveau_nom']);
-				$sheetData = $objPHPExcel->getActiveSheet()->toArray(false,true,true,true);
-			}
-			// chargement du header
-			$enteteFichierImport[$k] = $sheetData[1];
-			$headers[$k] = array_filter($sheetData[1]);
-			// suppression du header et passage des informations à $contactData
-			unset($sheetData[1]);
-			$contactData[$k] = $sheetData;
-			// construction du header
-			$col = 'A';
-			foreach($headers[$k] as $key => $value){
-				$s =  $value.' (col '.$col.')';
-				$headers[$k][$key] = $s;
-				$col++;
-			}
-
-		}
-
-		$session->set('enteteFichierImport', $enteteFichierImport);
-		$form_mapping = $this->createForm(new ContactImporterMappingType($headers, $files));
-		$form_mapping->handleRequest($request);
-		if ($form_mapping->isSubmitted() && $form_mapping->isValid()) {
-
-			$em = $this->getDoctrine()->getManager();
-			$champs = $em->getClassMetadata('AppBundle:CRM\Contact')->getFieldNames();
-
-			$repositoryCompte = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Compte');
-			$repositoryContact = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
-			$repositoryReseau = $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
-
-			$data = $form_mapping->getData();
-
-			$arr_mapping = array();
-			$fields = array();
-
-			foreach( $data as $k=>$v )
-			{
-				$champ = substr($k, 0, -1);
-				$index = substr($k, -1);
-				$fields[$index][$champ] = $v;
-			}
-			$session->set('champs_mapping', $fields);
-
-			$arr_err_contact = array();
-			$arr_err_email = array();
-			$arr_err_comptes = array();
-			$arr_err_reseaux = array();
-			$arr_err_serviceInteret = array();
-			$arr_err_secteurActivite = array();
-			$arr_err_themeInteret = array();
-            $arr_err_origine = array();
-			$data_err = array();
-			$pattern = '/[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})/i';
-
-			foreach( $contactData as $k=>$v )
-			{
-				foreach( $v as $key=>$value )
-				{
-					$err = false;
-					preg_match($pattern,$value[$fields[$k]['email']],$matches);
-					if( count($matches) <= 0 )
-					{
-                        if($value[$fields[$k]['email']]){
-                            $value['err'] = 'L\'adresse '.$value[$fields[$k]['email']].' est incorrecte pour le contact '.$value[$fields[$k]['prenom']].' '.$value[$fields[$k]['nom']];
-                        }
-                        else{
-//                            $value['err'] = 'L\'adresse mail est absente pour le contact '.$value[$fields[$k]['prenom']].' '.$value[$fields[$k]['nom']];
-                            if(!$value[$fields[$k]['telephoneFixe']]){
-
-                                if(!$telPort = $value[$fields[$k]['telephonePortable']]){
-
-                                    $value['err'] = 'Vous n\'avez entré ni mail, ni numéro de télephone pour le contact '.$value[$fields[$k]['prenom']].' '.$value[$fields[$k]['nom']];
-
-                                }
-
-                            }
-
-                        }
-
-						$arr_err_email[$k][] = $value;
-						$err = true;
-
-					}
-					if( isset($matches[0]) )
-					{
-						$emailContact = $repositoryContact->findByEmailAndCompany($matches[0],$this->getUser()->getCompany());
-
-						if( count($emailContact) > 0 )
-						{
-							$value['err'] = 'L\'adresse mail '.$matches[0].' existe dans la crm';
-							$value[$fields[$k]['email']] = $matches[0];
-							$arr_err_contact[$k][] = $value;
-							$err = true;
-						}
-					}
-
-					$compte = $repositoryCompte->findOneBy(array(
-							'nom' => $value[$fields[$k]['compte']],
-							'company' => $this->getUser()->getCompany()
-					));
-					if( count($compte) <= 0 )
-					{
-						$value['err'] = 'Le compte '.$value[$fields[$k]['compte']].' n\'existe pas';
-						$arr_err_comptes[$k][] = $value;
-						$err = true;
-					}
-
-
-					$reseau = $repositoryReseau->findOneBy(array('module' => 'CRM', 'parametre' => 'RESEAU', 'valeur' =>$value[$fields[$k]['reseau']], 'company' => $this->getUser()->getCompany() ));
-					if( count($reseau) <= 0 )
-					{
-						$value['err'] = 'Le réseau '.$value[$fields[$k]['reseau']].' n\'existe pas';
-						$arr_err_reseaux[$k][] = $value;
-						$err = true;
-					}
-
-                    $origine = $repositoryReseau->findOneBy(array('module' => 'CRM', 'parametre' => 'ORIGINE', 'valeur' =>$value[$fields[$k]['origine']], 'company' => $this->getUser()->getCompany() ));
-                    if( count($origine) <= 0 )
-                    {
-                        $value['err'] = 'L\'origine '.$value[$fields[$k]['origine']].' n\'existe pas';
-                        $arr_err_origine[$k][] = $value;
-                        $err = true;
-                    }
-                    $serviceInteret = $repositoryReseau->findOneBy(array('module' => 'CRM', 'parametre' => 'SERVICE_INTERET', 'valeur' =>$value[$fields[$k]['serviceInteret']], 'company' => $this->getUser()->getCompany() ));
-                    if( count($serviceInteret) <= 0 )
-                    {
-                        $value['err'] = 'Le service d\'interêt '.$value[$fields[$k]['serviceInteret']].' n\'existe pas';
-                        $arr_err_serviceInteret[$k][] = $value;
-                        $err = true;
-                    }
-
-                    $secteurActivite = $repositoryReseau->findOneBy(array('module' => 'CRM', 'parametre' => 'SECTEUR', 'valeur' =>$value[$fields[$k]['secteurActivite']], 'company' => $this->getUser()->getCompany() ));
-                    if( count($secteurActivite) <= 0 )
-                    {
-                        $value['err'] = 'Le secteur d\'activite '.$value[$fields[$k]['secteurActivite']].' n\'existe pas';
-                        $arr_err_secteurActivite[$k][] = $value;
-                        $err = true;
-                    }
-
-                    $themeInteret = $repositoryReseau->findOneBy(array('module' => 'CRM', 'parametre' => 'THEME_INTERET', 'valeur' =>$value[$fields[$k]['themeInteret']], 'company' => $this->getUser()->getCompany() ));
-                    if( count($themeInteret) <= 0 )
-                    {
-                        $value['err'] = 'Le thème d\'interêt '.$value[$fields[$k]['themeInteret']].' n\'existe pas';
-                        $arr_err_themeInteret[$k][] = $value;
-                        $err = true;
-                    }
-
-					if( $err )
-					{
-						$data_err[$k][] = $value;
-						continue;
-					}
-
-					$contact = new Contact();
-					$contact->setDateCreation(new \DateTime(date('Y-m-d')));
-					$contact->setUserGestion($this->getUser());
-					$contact->setUserCreation($this->getUser());
-					$contact->setEmail($matches[0]);
-                    $contact->setOrigine($origine);
-                    $contact->addSetting($serviceInteret);
-                    $contact->addSetting($secteurActivite);
-                    $contact->addSetting($themeInteret);
-					$contact->setReseau($reseau);
-					$contact->setCompte($compte);
-
-
-					foreach( $fields[$k] as $cle=>$valeur )
-					{
 	
-						if( in_array($cle, $champs) && $cle != 'filepath' && $cle != 'email' )
-						{
-      						
-                            if($cle == "carteVoeux"){
-                            	if(strtolower($value[$valeur]) == "oui"){
-                            		$contact->setCarteVoeux(true);
-                            	} else {
-                            		$contact->setCarteVoeux(false);
-                            	}
-                            } elseif($cle == "newsletter"){
-                            	if(strtolower($value[$valeur]) == "oui"){
-                            		$contact->setNewsletter(true);
-                            	} else {
-                            		$contact->setNewsletter(false);
-                            	}
-                            } else {
-                            	$methodSet = 'set'.ucfirst($cle);
-								eval('$contact->$methodSet($value[$valeur]);');
-                            }
-						}
-						else if( $cle == 'filepath' )
-						{
-							$em->persist($contact);
-
-							if($compte->getAdresse() == null){
-								$compte->setAdresse($contact->getAdresse());
-							}
-							if($compte->getCodePostal() == null){
-								$compte->setCodePostal($contact->getCodePostal());
-							}
-							if($compte->getVille() == null){
-								$compte->setVille($contact->getVille());
-							}
-							if($compte->getRegion() == null){
-								$compte->setRegion($contact->getRegion());
-							}
-							if($compte->getPays() == null){
-								$compte->setPays($contact->getPays());
-							}
-							$em->persist($compte);
-							$em->flush();
-
-						}
-					}
-				}
-			}
-			if( count($arr_err_email) > 0 || count($arr_err_contact) > 0 || count($arr_err_comptes) > 0 || count($arr_err_reseaux) > 0 || count($arr_err_origine) > 0|| count($arr_err_serviceInteret) > 0|| count($arr_err_themeInteret) > 0 || count($arr_err_secteurActivite) > 0 )
-			{
-				$session->set('contact_erreurs', array('email' => $arr_err_email, 'contact' => $arr_err_contact, 'comptes' => $arr_err_comptes, 'reseaux' => $arr_err_reseaux, 'origine' => $arr_err_origine, 'serviceInteret' => $arr_err_serviceInteret,'secteurActivite' => $arr_err_secteurActivite, 'themeInteret' => $arr_err_themeInteret, 'data_err' => $data_err));
-
-				//creation du formulaire de validation
-				return $this->redirect($this->generateUrl('crm_importer_validation'));
-
-			}
-			else
-			{
-				echo 1;
-			}
-
-			exit;
-
-		}
-
-		return $this->render('crm/contact/crm_contact_importer_mapping.html.twig', array(
-				'form' => $form_mapping->createView(),
-				'index' => $k,
-				'formz' => $form_mapping
-		));
-
-	}
-
 	/**
-	 * @Route("/crm/contact/importer/validation", name="crm_importer_validation", options={"expose"=true})
+	 * @Route("/crm/contact/import/upload", name="crm_contact_import_upload")
 	 */
-	public function contactImporterValidationAction()
-	{
-		$request = $this->getRequest();
-		$session = $request->getSession();
-		$arr_err = $session->get('contact_erreurs');
-		$fields = $session->get('champs_mapping');
-		$formBuilder = $this->createFormBuilder();
-		$err_comptes = array();
-		$err_reseaux = array();
-		$err_contacts = array();
-		$err_origine = array();
-		$err_serviceInteret = array();
-		$err_secteurActivite = array();
-		$err_themeInteret = array();
-		$err_emails = array();
-		$repositoryReseau = $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
-		$reseau = $repositoryReseau->findBy(array('module' => 'CRM', 'parametre' => 'RESEAU', 'company' => $this->getUser()->getCompany()), array('valeur' => 'ASC') );
-		$origine = $repositoryReseau->findBy(array('module' => 'CRM', 'parametre' => 'ORIGINE', 'company' => $this->getUser()->getCompany()), array('valeur' => 'ASC') );
-		$serviceInteret = $repositoryReseau->findBy(array('module' => 'CRM', 'parametre' => 'SERVICE_INTERET', 'company' => $this->getUser()->getCompany()), array('valeur' => 'ASC') );
-		$secteurActivite = $repositoryReseau->findBy(array('module' => 'CRM', 'parametre' => 'SECTEUR', 'company' => $this->getUser()->getCompany()), array('valeur' => 'ASC') );
-        $themeInteret = $repositoryReseau->findBy(array('module' => 'CRM', 'parametre' => 'THEME_INTERET', 'company' => $this->getUser()->getCompany()), array('valeur' => 'ASC') );
-
-
-        foreach( $arr_err as $entite=>$erreurs )
-		{
-			$key = 0;
-			foreach( $erreurs as $indexFile=>$file )
-			{
-				switch ($entite) {
-                    case 'contact' :
-                        foreach ($file as $k => $v) {
-                            $err_contacts[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['email']]));
-                            $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
-                                'required' => true,
-                                'mapped' => false,
-                                'expanded' => true,
-                                'choices' => array(
-                                    'cancel' => 'Ignorer le contact',
-                                    'new' => 'Modifier l\'adresse e-mail',
-                                ),
-                                'data' => 'cancel',
-
-                            ))
-                                ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'text', array(
-                                    'required' => true,
-                                    'mapped' => false,
-                                    'label' => 'E-mail',
-                                ));
-                            $key++;
-                        }
-                        break;
-                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    case 'origine' :
-                        foreach ($file as $k => $v) {
-                            if (!in_array(strtolower(trim($v[$fields[$indexFile]['origine']])), $err_origine)) {
-                                $err_origine[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['origine']]));
-                                $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
-                                    'required' => true,
-                                    'mapped' => false,
-                                    'expanded' => true,
-                                    'choices' => array(
-                                        'new' => 'Créer une nouvelle origine dans la CRM',
-                                        'existing' => 'Utiliser une origine existant dans la CRM',
-                                        //~ 'cancel' => 'Exporter le contact dans un fichier pour vérification',
-                                    ),
-                                    'data' => 'new',
-                                ))
-                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'choice', array(
-                                        'choices' => $origine,
-                                        'label' => 'origine',
-                                        'required' => true
-                                    ));
-                            }
-                            $key++;
-                        }
-                        break;
-                    case 'serviceInteret' :
-                        foreach ($file as $k => $v) {
-                            if (!in_array(strtolower(trim($v[$fields[$indexFile]['serviceInteret']])), $err_serviceInteret)) {
-                                $err_serviceInteret[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['serviceInteret']]));
-                                $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
-                                    'required' => true,
-                                    'mapped' => false,
-                                    'expanded' => true,
-                                    'choices' => array(
-                                        'new' => 'Créer un nouveau service d\'interêt dans la CRM',
-                                        'existing' => 'Utiliser un réseau existant dans la CRM',
-                                        //~ 'cancel' => 'Exporter le contact dans un fichier pour vérification',
-                                    ),
-                                    'data' => 'new',
-                                ))
-                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'choice', array(
-                                        'choices' => $serviceInteret,
-                                        'label' => 'Service d\'interêt',
-                                        'required' => true
-                                    ));
-                            }
-                            $key++;
-                        }
-                        break;
-                    case 'secteurActivite' :
-                        foreach ($file as $k => $v) {
-                            if (!in_array(strtolower(trim($v[$fields[$indexFile]['secteurActivite']])), $err_secteurActivite)) {
-                                $err_secteurActivite[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['secteurActivite']]));
-                                $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
-                                    'required' => true,
-                                    'mapped' => false,
-                                    'expanded' => true,
-                                    'choices' => array(
-                                        'new' => 'Créer un nouveau secteur d\'activite dans la CRM',
-                                        'existing' => 'Utiliser un secteur d\'activite existant dans la CRM',
-                                        //~ 'cancel' => 'Exporter le contact dans un fichier pour vérification',
-                                    ),
-                                    'data' => 'new',
-                                ))
-                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'choice', array(
-                                        'choices' => $secteurActivite,
-                                        'label' => 'Secteur d\'activite',
-                                        'required' => true
-                                    ));
-                            }
-                            $key++;
-                        }
-                        break;
-                    case 'themeInteret' :
-                        foreach ($file as $k => $v) {
-                            if (!in_array(strtolower(trim($v[$fields[$indexFile]['themeInteret']])), $err_themeInteret)) {
-                                $err_themeInteret[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['themeInteret']]));
-                                $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
-                                    'required' => true,
-                                    'mapped' => false,
-                                    'expanded' => true,
-                                    'choices' => array(
-                                        'new' => 'Créer un nouveau thème d\'interêt dans la CRM',
-                                        'existing' => 'Utiliser un thème d\'interêt existant dans la CRM',
-                                    ),
-                                    'data' => 'new',
-                                ))
-                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'choice', array(
-                                        'choices' => $themeInteret,
-                                        'label' => 'Theme d\'interet',
-                                        'required' => true
-                                    ));
-                            }
-                            $key++;
-                        }
-                        break;
-
-
-                    case 'comptes' :
-                        foreach ($file as $k => $v) {
-                            //~ $CeCompte = $fields[$erreurs]['compte'];
-                            if (!in_array(strtolower(trim($v[$fields[$indexFile]['compte']])), $err_comptes)) {
-                                $err_comptes[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['compte']]));
-                                $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
-                                    'required' => true,
-                                    'mapped' => false,
-                                    'expanded' => true,
-                                    'choices' => array(
-                                        'new' => 'Créer un nouveau compte dans la CRM',
-                                        'existing' => 'Utiliser un compte existant dans la CRM',
-                                        //~ 'cancel' => 'Exporter le contact dans un fichier pour vérification',
-                                    ),
-                                    'data' => 'new',
-
-                                ))
-                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'text', array(
-                                        'required' => false,
-                                        'mapped' => false,
-                                        'label' => "Compte",
-                                        'attr' => array('class' => 'typeahead-compte'),
-                                    ))
-                                    ->add($entite . '-' . $indexFile . '-' . $key . '-compte', 'hidden', array(
-                                        'required' => false,
-                                        'attr' => array('class' => 'entity-compte'),
-                                    ))
-                                    ->add($entite . '-' . $indexFile . '-' . $key . '-label', 'hidden', array(
-                                        'required' => false,
-                                        'attr' => array('class' => 'entity-compte'),
-                                        'data' => $key,
-                                    ));
-                            }
-                            $key++;
-                        }
-                        break;
-                    case 'reseaux' :
-                        foreach ($file as $k => $v) {
-                            if (!in_array(strtolower(trim($v[$fields[$indexFile]['reseau']])), $err_reseaux)) {
-                                $err_reseaux[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['reseau']]));
-                                $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
-                                    'required' => true,
-                                    'mapped' => false,
-                                    'expanded' => true,
-                                    'choices' => array(
-                                        'new' => 'Créer un nouveau réseau dans la CRM',
-                                        'existing' => 'Utiliser un réseau existant dans la CRM',
-                                        //~ 'cancel' => 'Exporter le contact dans un fichier pour vérification',
-                                    ),
-                                    'data' => 'new',
-                                ))
-                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'choice', array(
-                                        'choices' => $reseau,
-                                        'label' => 'Réseau',
-                                        'required' => true
-                                    ));
-                            }
-                            $key++;
-                        }
-                        break;
-					case 'email' :
-						foreach( $file as $k=>$v )
-						{
-							if(array_key_exists('err', $v)){
-
-	                            if(substr($v["err"],0, 4) === "Vous"){
-
-	                                $err_emails[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['email']]));
-
-	                                $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
-	                                    'required' => true,
-	                                    'mapped' => false,
-	                                    'expanded' => true,
-	                                    'choices' => array(
-	                                        'cancel' => 'Ignorer le contact',
-	                                        'new2' => 'Modifier l\'adresse e-mail / téléphone',
-	                                    ),
-	                                    'data' => 'cancel',
-
-	                                ))
-	                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'text', array(
-	                                        'required' => false,
-	                                        'mapped' => false,
-	                                        'label' => 'E-mail',
-	                                    ))
-	                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name2', 'text', array(
-	                                        'required' => false,
-	                                        'mapped' => false,
-	                                        'label' => 'Téléphone fixe',
-	                                    ));
-	                                $key++;
-	                            } else {
-	                                $err_emails[$entite . '-' . $indexFile . '-' . $key] = strtolower(trim($v[$fields[$indexFile]['email']]));
-
-	                                $formBuilder->add($entite . '-' . $indexFile . '-' . $key . '-radio', 'choice', array(
-	                                    'required' => true,
-	                                    'mapped' => false,
-	                                    'expanded' => true,
-	                                    'choices' => array(
-	                                        'cancel' => 'Ignorer le contact',
-	                                        'new' => 'Modifier l\'adresse e-mail',
-	                                    ),
-	                                    'data' => 'cancel',
-
-	                                ))
-	                                    ->add($entite . '-' . $indexFile . '-' . $key . '-name', 'text', array(
-	                                        'required' => true,
-	                                        'mapped' => false,
-	                                        'label' => 'E-mail',
-	                                    ));
-	                                $key++;
-	                            }
-	                        }
-						}
-						break;
-				}
-				$key++;
-			}
-		}
-		$formBuilder->add('submit','submit', array(
-				'label' => 'Suite',
-				'attr' => array('class' => 'btn btn-success')
-		));
-
-		$form = $formBuilder->getForm();
-		$form->handleRequest($request);
-		if ($form->isSubmitted() && $form->isValid()) {
-
-			$data = $form->getData();
-			$ligneExport = array();
-			$ContactAjoute = array();
-			$ContactIgnore = array();
-
-			$em = $this->getDoctrine()->getManager();
-
-			$champs = $em->getClassMetadata('AppBundle:CRM\Contact')->getFieldNames();
-			$repositoryCompte = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Compte');
-			$repositoryContact = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
-
-			$settingsRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
-
-			$settingsReseauModele = $settingsRepo->findOneBy(array(
-				'module' => 'CRM',
-				'parametre' => 'RESEAU',
-				'company' => null
-			));
-            $settingsOrigineModele = $settingsRepo->findOneBy(array(
-                'module' => 'CRM',
-                'parametre' => 'ORIGINE',
-                'company' => null
-            ));
-            $settingsServiceInteretModele = $settingsRepo->findOneBy(array(
-                'module' => 'CRM',
-                'parametre' => 'SERVICE_INTERET',
-                'company' => null
-            ));
-            $settingsSecteurActiviteModele = $settingsRepo->findOneBy(array(
-                'module' => 'CRM',
-                'parametre' => 'SECTEUR',
-                'company' => null
-            ));
-            $settingsThemeInteretModele = $settingsRepo->findOneBy(array(
-                'module' => 'CRM',
-                'parametre' => 'THEME_INTERET',
-                'company' => null
-            ));
-
-            $origineAdded = array();
-            $serviceInteretAdded = array();
-            $secteurActiviteAdded =array();
-            $themeInteretAdded = array();
-
-			$compteAdded = array();
-			$reseauAdded = array();
-
-
-			foreach( $arr_err['data_err'] as $k=>$v )
-			{
-				foreach( $v as $index=>$enr )
-				{
-					$save = true;
-					if( in_array(strtolower(trim($enr[$fields[$k]['email']])), $err_contacts) )
-					{
-						$contactKey = array_search(strtolower(trim($enr[$fields[$k]['email']])), $err_contacts);
-						if( $form[$contactKey.'-radio']->getData() == 'cancel' )
-						{
-							$save = false;
-							$ligneExport[$k][] = serialize($enr);
-						}
-						else if( $form[$contactKey.'-radio']->getData() == 'new' )
-						{
-							$enr[$fields[$k]['email']] = $form[$contactKey.'-name']->getData();
-						}
-
-					}
-					else if( in_array(strtolower(trim($enr[$fields[$k]['email']])), $err_emails) )
-					{
-						$emailKey = array_search(strtolower(trim($enr[$fields[$k]['email']])), $err_emails);
-						if( $form[$emailKey.'-radio']->getData() == 'cancel' )
-						{
-							$save = false;
-							$ligneExport[$k][] = serialize($enr);
-						}
-
-						else if( $form[$emailKey.'-radio']->getData() == 'new' )
-						{
-							$enr[$fields[$k]['email']] = $form[$emailKey.'-name']->getData();
-						}
-						else if( $form[$emailKey.'-radio']->getData() == 'new2' )
-                        {
-                            $enr[$fields[$k]['email']] = $form[$emailKey.'-name']->getData();
-                            $enr[$fields[$k]['telephoneFixe']] = $form[$emailKey.'-name2']->getData();
-                        }
-						unset($err_emails[$emailKey]);
-					}
-					if( in_array(strtolower(trim($enr[$fields[$k]['compte']])), $err_comptes) )
-					{
-						$compteKey = array_search(strtolower(trim($enr[$fields[$k]['compte']])), $err_comptes);
-						if( $form[$compteKey.'-radio']->getData() == 'new' && !in_array(strtolower($enr[$fields[$k]['compte']]), $compteAdded) )
-						{
-							$compte = new Compte();
-							$compte->setDateCreation(new \DateTime(date('Y-m-d')));
-							$compte->setUserCreation($this->getUser());
-							$compte->setUserGestion($this->getUser());
-							$compte->setNom($enr[$fields[$k]['compte']]);
-							$compte->setCompany($this->getUser()->getCompany());
-							$em->persist($compte);
-							$em->flush();
-							$compteAdded[] = strtolower($enr[$fields[$k]['compte']]);
-						}
-						else if( $form[$compteKey.'-radio']->getData() == 'existing' )
-						{
-							$compte = $repositoryCompte->findOneBy(array(
-								'nom' => $form[$compteKey.'-name']->getData(),
-								'company' => $this->getUser()->getCompany()
-								)
-							);
-							$enr[$fields[$k]['compte']] = $compte->getNom();
-						}
-					}
-					if( in_array(strtolower(trim($enr[$fields[$k]['reseau']])), $err_reseaux) ) {
-                        $reseauKey = array_search(strtolower(trim($enr[$fields[$k]['reseau']])), $err_reseaux);
-                        if ($form[$reseauKey . '-radio']->getData() == 'new' && !in_array(strtolower($enr[$fields[$k]['reseau']]), $reseauAdded)) {
-                            $reseau = new Settings();
-                            $reseau->setParametre('RESEAU');
-                            $reseau->setModule('CRM');
-                            $reseau->setType('LISTE');
-                            $reseau->setHelpText($settingsReseauModele->getHelpText());
-                            $reseau->setCategorie($settingsReseauModele->getCategorie());
-                            $reseau->setTitre($settingsReseauModele->getTitre());
-                            $reseau->setValeur($enr[$fields[$k]['reseau']]);
-                            $reseau->setCompany($this->getUser()->getCompany());
-                            $reseau->setNoTVA(false);
-                            $em->persist($reseau);
-                            $em->flush();
-                            $reseauAdded[] = strtolower($enr[$fields[$k]['reseau']]);
-                        } else if ($form[$reseauKey . '-radio']->getData() == 'existing') {
-                            $reseau = $repositoryReseau->findOneById($form[$reseauKey . '-name']->getData());
-                            $enr[$fields[$k]['reseau']] = $reseau->getValeur();
-                        }
-                    }
-
-                    if( in_array(strtolower(trim($enr[$fields[$k]['origine']])), $err_origine) )
-                    {
-                        $origineKey = array_search(strtolower(trim($enr[$fields[$k]['origine']])), $err_origine);
-                        if( $form[$origineKey.'-radio']->getData() == 'new' && !in_array(strtolower($enr[$fields[$k]['origine']]), $origineAdded) )
-                        {
-                            $origine = new Settings();
-                            $origine->setParametre('ORIGINE');
-                            $origine->setModule('CRM');
-                            $origine->setType('LISTE');
-                            $origine->setHelpText($settingsOrigineModele->getHelpText());
-                            $origine->setCategorie($settingsOrigineModele->getCategorie());
-                            $origine->setTitre($settingsOrigineModele->getTitre());
-                            $origine->setValeur($enr[$fields[$k]['origine']]);
-                            $origine->setCompany($this->getUser()->getCompany());
-                            $origine->setNoTVA(false);
-                            $em->persist($origine);
-                            $em->flush();
-                            $origineAdded[] = strtolower($enr[$fields[$k]['origine']]);
-                        }
-                        else if( $form[$origineKey.'-radio']->getData() == 'existing' )
-                        {
-                            $origine = $repositoryReseau->findOneById($form[$origineKey.'-name']->getData());
-                            if($origine){
-                            	$enr[$fields[$k]['origine']] = $origine->getValeur();
-                            }
-                        }
-                    }
-                    if( in_array(strtolower(trim($enr[$fields[$k]['serviceInteret']])), $err_serviceInteret) )
-                    {
-                        $serviceInteretKey = array_search(strtolower(trim($enr[$fields[$k]['serviceInteret']])), $err_serviceInteret);
-                        if( $form[$serviceInteretKey.'-radio']->getData() == 'new' && !in_array(strtolower($enr[$fields[$k]['serviceInteret']]), $serviceInteretAdded) )
-                        {
-                            $serviceInteret = new Settings();
-                            $serviceInteret->setParametre('SERVICE_INTERET');
-                            $serviceInteret->setModule('CRM');
-                            $serviceInteret->setType('LISTE');
-                            $serviceInteret->setHelpText($settingsServiceInteretModele->getHelpText());
-                            $serviceInteret->setCategorie($settingsServiceInteretModele->getCategorie());
-                            $serviceInteret->setTitre($settingsServiceInteretModele->getTitre());
-                            $serviceInteret->setValeur($enr[$fields[$k]['serviceInteret']]);
-                            $serviceInteret->setCompany($this->getUser()->getCompany());
-                            $serviceInteret->setNoTVA(false);
-                            $em->persist($serviceInteret);
-                            $em->flush();
-                            $serviceInteretAdded[] = strtolower($enr[$fields[$k]['serviceInteret']]);
-                        }
-                        else if( $form[$serviceInteretKey.'-radio']->getData() == 'existing' )
-                        {
-                            $serviceInteret = $repositoryReseau->findOneById($form[$serviceInteretKey.'-name']->getData());
-                            $enr[$fields[$k]['serviceInteret']] = $serviceInteret->getValeur();
-                        }
-                    }
-                    if( in_array(strtolower(trim($enr[$fields[$k]['secteurActivite']])), $err_secteurActivite) )
-                    {
-                        $secteurActiviteKey = array_search(strtolower(trim($enr[$fields[$k]['secteurActivite']])), $err_secteurActivite);
-                        if( $form[$secteurActiviteKey.'-radio']->getData() == 'new' && !in_array(strtolower($enr[$fields[$k]['secteurActivite']]), $secteurActiviteAdded) )
-                        {
-                            $secteurActivite = new Settings();
-                            $secteurActivite->setParametre('SECTEUR');
-                            $secteurActivite->setModule('CRM');
-                            $secteurActivite->setType('LISTE');
-                            $secteurActivite->setHelpText($settingsSecteurActiviteModele->getHelpText());
-                            $secteurActivite->setCategorie($settingsSecteurActiviteModele->getCategorie());
-                            $secteurActivite->setTitre($settingsSecteurActiviteModele->getTitre());
-                            $secteurActivite->setValeur($enr[$fields[$k]['secteurActivite']]);
-                            $secteurActivite->setCompany($this->getUser()->getCompany());
-                            $secteurActivite->setNoTVA(false);
-                            $em->persist($secteurActivite);
-                            $em->flush();
-                            $secteurActiviteAdded[] = strtolower($enr[$fields[$k]['secteurActivite']]);
-                        }
-                        else if( $form[$secteurActiviteKey.'-radio']->getData() == 'existing' )
-                        {
-                            $secteurActivite = $repositoryReseau->findOneById($form[$secteurActiviteKey.'-name']->getData());
-                            $enr[$fields[$k]['secteurActivite']] = $secteurActivite->getValeur();
-                        }
-                    }
-                    if( in_array(strtolower(trim($enr[$fields[$k]['themeInteret']])), $err_themeInteret) )
-                    {
-                        $themeInteretKey = array_search(strtolower(trim($enr[$fields[$k]['themeInteret']])), $err_themeInteret);
-                        if( $form[$themeInteretKey.'-radio']->getData() == 'new' && !in_array(strtolower($enr[$fields[$k]['themeInteret']]), $themeInteretAdded) )
-                        {
-                            $themeInteret = new Settings();
-                            $themeInteret->setParametre('THEME_INTERET');
-                            $themeInteret->setModule('CRM');
-                            $themeInteret->setType('LISTE');
-                            $themeInteret->setHelpText($settingsThemeInteretModele->getHelpText());
-                            $themeInteret->setCategorie($settingsThemeInteretModele->getCategorie());
-                            $themeInteret->setTitre($settingsThemeInteretModele->getTitre());
-                            $themeInteret->setValeur($enr[$fields[$k]['themeInteret']]);
-                            $themeInteret->setCompany($this->getUser()->getCompany());
-                            $themeInteret->setNoTVA(false);
-                            $em->persist($themeInteret);
-                            $em->flush();
-                            $themeInteretAdded[] = strtolower($enr[$fields[$k]['themeInteret']]);
-                        }
-                        else if( $form[$themeInteretKey.'-radio']->getData() == 'existing' )
-                        {
-                            $themeInteret = $repositoryReseau->findOneById($form[$themeInteretKey.'-name']->getData());
-                            $enr[$fields[$k]['themeInteret']] = $themeInteret->getValeur();
-                        }
-                    }
-     
-					if( $save )
-					{
-
-						$contact = new Contact();
-						$contact->setDateCreation(new \DateTime(date('Y-m-d')));
-						$contact->setUserGestion($this->getUser());
-						$contact->setUserCreation($this->getUser());
-
-						$contact->setEmail($enr[$fields[$k]['email']]);
-                        $contact->setTelephoneFixe($enr[$fields[$k]['telephoneFixe']]);
-
-						$compte = $repositoryCompte->findOneBy(array(
-								'nom' => $enr[$fields[$k]['compte']],
-								'company' => $this->getUser()->getCompany()
-						));
-						$reseau = $repositoryReseau->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'RESEAU', 'valeur' =>$enr[$fields[$k]['reseau']]) );
-						$origine = $repositoryReseau->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'ORIGINE', 'valeur' =>$enr[$fields[$k]['origine']]) );
-						$serviceInteret = $repositoryReseau->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'SERVICE_INTERET', 'valeur' =>$enr[$fields[$k]['serviceInteret']]) );
-						$themeInteret = $repositoryReseau->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'THEME_INTERET', 'valeur' =>$enr[$fields[$k]['themeInteret']]) );
-						$secteurActivite = $repositoryReseau->findOneBy(array('company' => $this->getUser()->getCompany(), 'module' => 'CRM', 'parametre' => 'SECTEUR', 'valeur' =>$enr[$fields[$k]['secteurActivite']]) );
-
-						$contact->setReseau($reseau);
-						if($origine){
-							$contact->setOrigine($origine);
-						}
-						$contact->addSetting($serviceInteret);
-						$contact->addSetting($themeInteret);
-						$contact->addSetting($secteurActivite);
-						$contact->setCompte($compte);
-
-						foreach( $fields[$k] as $cle=>$valeur )
-						{
-	
-							if( in_array($cle, $champs) && $cle != 'filepath' && $cle != 'email' )
-							{
-								if($cle == "carteVoeux"){
-	                            	if(strtolower($enr[$valeur]) == "oui"){
-	                            		$contact->setCarteVoeux(true);
-	                            	} else {
-	                            		$contact->setCarteVoeux(false);
-	                            	}
-	                            } elseif($cle == "newsletter"){
-	                            	if(strtolower($enr[$valeur]) == "oui"){
-	                            		$contact->setNewsletter(true);
-	                            	} else {
-	                            		$contact->setNewsletter(false);
-	                            	}
-	                            } else {
-	                            	$methodSet = 'set'.ucfirst($cle);
-									eval('$contact->$methodSet($enr[$valeur]);');
-	                            }
-							}
-							else if( $cle == 'filepath' )
-							{
-
-								$em->persist($contact);
-
-								if($compte->getAdresse() == null){
-									$compte->setAdresse($contact->getAdresse());
-								}
-								if($compte->getCodePostal() == null){
-									$compte->setCodePostal($contact->getCodePostal());
-								}
-								if($compte->getVille() == null){
-									$compte->setVille($contact->getVille());
-								}
-								if($compte->getRegion() == null){
-									$compte->setRegion($contact->getRegion());
-								}
-								if($compte->getPays() == null){
-									$compte->setPays($contact->getPays());
-								}
-								$em->persist($compte);
-								$em->flush();
-							}
-						}
-					}
-				}
-			}
-
-			$filenames = $session->get('import_contacts_filename');
-			$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
-			foreach( $filenames as $k=>$v )
-			{
-				//suppression du fichier temporaire
-				unlink($path.'/'.$v['nouveau_nom']);
-			}
-			echo 1;
-			exit;
-		}
-
-		return $this->render('crm/contact/crm_contact_importer_mapping_validation.html.twig', array(
-				'arr_err_comptes' => $arr_err['comptes'],
-				'arr_err_contact' => $arr_err['contact'],
-				'arr_err_reseaux' => $arr_err['reseaux'],
-				'arr_err_email' => $arr_err['email'],
-				'arr_err_origine' => $arr_err['origine'],
-				'arr_err_serviceInteret' => $arr_err['serviceInteret'],
-				'arr_err_themeInteret' => $arr_err['themeInteret'],
-				'arr_err_secteurActivite' => $arr_err['secteurActivite'],
-				'form' => $form->createView()
-		));
-	}
-
-	/**
-	 * @Route("/crm/contact/importer/upload", name="crm_contact_importer_upload", options={"expose"=true})
-	 */
-	public function contactImporterUploadAction()
-	{
-		$request = $this->getRequest();
-		$session = $request->getSession();
-		$arr_filenames = $session->get('import_contacts_filename');
-		foreach( $request->files as $file )
-		{
-			$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-			$arr_filenames[] = array('nom_original' => $file->getClientOriginalName(),
-									 'nouveau_nom'  => $filename);
-			//~ $path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/historique_depenses';
-			$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
-			$file->move($path, $filename);
-
-		}
-		$session->set('import_contacts_filename', $arr_filenames);
-		exit;
-	}
-
-	/**
-	 * @Route("/crm/contact/importer/{initialisation}", name="crm_contact_importer")
-	 */
-	public function contactImporterAction($initialisation = false)
-	{
-		$request = $this->getRequest();
-		$session = $request->getSession();
-		$session->set('import_contacts_filename', array());
-
-		if($initialisation){
-			return $this->render('crm/contact/crm_contact_importer_initialisation.html.twig', array(
-
-			));
-		}
-
-		return $this->render('crm/contact/crm_contact_importer.html.twig', array(
-				//~ 'form' => $form->createView()
-		));
-	}
-
-	/**
-	 * @Route("/crm/contact/valider-fichier-import/upload", name="crm_valider_fichier_import_upload")
-	 */
-	public function validerFichierImportUploadAction()
+	public function importUpload()
 	{
 		$formBuilder = $this->createFormBuilder();
-	 	$formBuilder->add('file', 'file', array(
+	 	$formBuilder->add('fichier_import', 'file', array(
 					'label'	=> 'Fichier',
 					'required' => true,
 					'attr' => array('class' => 'file-upload')
@@ -1726,7 +797,7 @@ class ContactController extends Controller
 		if ($form->isSubmitted() && $form->isValid()) {
 			//recuperation des données du formulaire
 			$data = $form->getData();
-			$file = $data['file'];
+			$file = $data['fichier_import'];
 			
 			//enregistrement temporaire du fichier uploadé
 			$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-validation_import_contact-'.$file->getClientOriginalName();
@@ -1737,130 +808,82 @@ class ContactController extends Controller
 			$session->set('validation_import_contact_filename', $filename);
 
 			//creation du formulaire de mapping
-			return $this->redirect($this->generateUrl('crm_valider_fichier_import_resultat'));
+			return $this->redirect($this->generateUrl('crm_contact_import_validation'));
 		}
 
-		return $this->render('crm/contact/crm_contact_valider_fichier_import_upload.html.twig', array(
+		return $this->render('crm/contact/crm_contact_import_upload.html.twig', array(
 			'form' => $form->createView()
 		));
 	}
 
 	/**
-	 * @Route("/crm/contact/valider-fichier-import/resultat", name="crm_valider_fichier_import_resultat")
+	 * @Route("/crm/contact/import/validation", name="crm_contact_import_validation")
 	 */
-	public function validerFichierImportResultatAction()
+	public function contactImportValidation()
 	{
+
+		$contactService = $this->get('appbundle.crm_contact_service');
+		$arr_results = $contactService->checkContactImportFile($this->getUser()->getCompany());
+
+		$formBuilder = $this->createFormBuilder();
+		$formBuilder
+			->add('update', 'checkbox', array(
+				'label' => 'Mettre à jour les comptes et contacts déjà dans J\'aime le Commercial',
+				'required' => false,
+			))
+			->add('valider', 'submit', array(
+				'label' => 'Importer',
+				'attr' => array('class' => 'btn btn-success')
+			));
+		$form = $formBuilder->getForm();
+
+		return $this->render('crm/contact/crm_contact_import_validation.html.twig', array(
+			'arr_comptes' => $arr_results['comptes'],
+			'arr_contacts' => $arr_results['contacts'],
+			'numHomonymes' => $arr_results['numHomonymes'],
+			'arr_erreurs' => $arr_results['erreurs'],
+			'form' => $form->createView()
+		));
+	}
+
+
+
+	/**
+	 * @Route("/crm/contact/import/importer", name="crm_contact_import_importer")
+	 */
+	public function contactImportImporter(){
 
 		$request = $this->getRequest();
 		$session = $request->getSession();
-		$em = $this->getDoctrine()->getManager();
-		$compteRepo = $em->getRepository('AppBundle:CRM\Compte');
-		$contactRepo = $em->getRepository('AppBundle:CRM\Contact');
+		$contactService = $this->get('appbundle.crm_contact_service');
 
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
-		$filename = $session->get('validation_import_contact_filename');
+		$data = $request->request->all();
 
-		// charger PHPEXCEL de choisir le reader adéquat
-		$objReader = PHPExcel_IOFactory::createReaderForFile($path.'/'.$filename);
-		// chargement du fichier xls/xlsx ou csv
-		$objPHPExcel = $objReader->load($path.'/'.$filename);
-		$arr_data = $objPHPExcel->getActiveSheet()->toArray(false,true,true,true);
-
-		$arr_comptes = array(
-			'existant' => array(),
-			'non-existant' => array(),
-		);
-
-		$arr_contacts = array(
-			'existant' => array(),
-			'non-existant' => array(),
-			'doublons' => array(),
-			'all' => array(),
-			'homonymes' => array(),
-		);
-		$numHomonymes = 0;
-
-
-		//start the loop at 2 to skip the header row
-		for($i=2; $i<count($arr_data)+1; $i++){
-
-			$nom = trim($arr_data[$i]['A']);
-			$prenom = trim($arr_data[$i]['B']);
-			$orga = trim($arr_data[$i]['E']);
-			$email = trim($arr_data[$i]['J']);
-
-			if($nom == null && $orga == null){
-				break;
-			}
-
-			$arr_homonymes = $contactRepo->findByNameAndCompany($prenom, $nom, $this->getUser()->getCompany());
-			$numHomonymes+= count($arr_homonymes);
-
-			$arr_contacts['homonymes'][$prenom.' '.$nom.' ('.$orga.')'] = $arr_homonymes;
-
-			if($email){
-				if( array_key_exists($email, $arr_contacts['all']) ){
-					$arr_contacts['doublons'][] =  $prenom.' '.$nom.' ('.$orga.')';
-				} else {
-					$arr_contacts['all'][$email] = $prenom.' '.$nom.' ('.$orga.')';
-				}
-			}
-
-			$compte = $compteRepo->findOneBy(array(
-				'nom' => $orga,
-				'company' => $this->getUser()->getCompany()
-			));
-
-			if($compte != null){
-				if( !in_array( $orga, $arr_comptes['existant']) ){
-					$arr_comptes['existant'][] = $orga;
-				}
-				
-				$contact = $contactRepo->findBy(array(
-					'compte'=> $compte,
-					'prenom' => $prenom,
-					'nom' => $nom
-				));
-
-				if(!$contact && $email){
-					$contact = $contactRepo->findByEmailAndCompany($email, $this->getUser()->getCompany());
-				}
-
-				if($contact){
-					$arr_contacts['existant'][$contact[0]->getId()] = $prenom.' '.$nom.' ('.$orga.')';
-				} else {
-					$arr_contacts['non-existant'][] = $prenom.' '.$nom.' ('.$orga.')';
-				}
-	
-			} else {
-				if( !in_array($orga, $arr_comptes['non-existant']) ){
-					$arr_comptes['non-existant'][] = $orga;
-				}
-				$contact = null;
-				if($email){
-					$contact = $contactRepo->findByEmailAndCompany($email, $this->getUser()->getCompany());
-				}
-
-				if($contact){
-					$arr_contacts['existant'][$contact[0]->getId()] = $prenom.' '.$nom.' ('.$email.')';
-				} else {
-					$arr_contacts['non-existant'][] = $prenom.' '.$nom.' ('.$orga.')';
-				}
-
-			}
+		//recuperer la checkbox update dans le form
+		$arr_form = $data['form'];
+		$update = false;
+		if(array_key_exists('update', $arr_form)){
+			$update = true;
 		}
 
-		return $this->render('crm/contact/crm_contact_valider_fichier_import_resultat.html.twig', array(
-			'arr_comptes' => $arr_comptes,
-			'arr_contacts' => $arr_contacts,
-			'numHomonymes' => $numHomonymes
+		//importer
+		$arr_results = $contactService->importFile($this->getUser(), $update);
+
+		//supprimer fichier import
+        $path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
+		$filename = $session->get('validation_import_contact_filename');
+		unlink($path.DIRECTORY_SEPARATOR.$filename);
+
+		return $this->render('crm/contact/crm_contact_import_resultat.html.twig', array(
+			'arr_comptes' => $arr_results['comptes'],
+			'arr_contacts' => $arr_results['contacts']
 		));
 	}
 
 	/**
 	 * @Route("/crm/contact/valider-fichier-import/export/{type}/{existant}", name="crm_valider_fichier_import_export")
 	 */
-	public function validerFichierImportExportAction($type, $existant)
+	public function validerFichierImportExport($type, $existant)
 	{
 		$request = $this->getRequest();
 		$session = $request->getSession();

@@ -4,7 +4,9 @@ imports:
 framework:
     test: ~
     session:
+        handler_id:  ~
         storage_id: session.storage.mock_file
+        name: MOCKSESSID
     profiler:
         collect: false
 
@@ -14,3 +16,18 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+doctrine:
+    dbal:
+        driver: pdo_mysql
+        dbname: 'jaime_gerer_test'
+        host: 127.0.0.1
+        user: root
+        password: null
+
+security:
+    firewalls:
+        main:
+            http_basic: ~
+
+liip_functional_test: ~

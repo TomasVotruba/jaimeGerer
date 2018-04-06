@@ -137,6 +137,18 @@ class Company
     private $siren;
 
     /**
+     * Set id
+     *
+     * @param integer $id 
+     * @return Company
+     */
+    public function setId($id)
+    {
+        return $this->id = $id;
+        return $this;
+    }
+
+    /**
      * Get id
      *
      * @return integer 

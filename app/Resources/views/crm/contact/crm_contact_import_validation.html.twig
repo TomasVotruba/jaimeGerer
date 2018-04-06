@@ -1,0 +1,167 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Valider un fichier d'import de contacts</h1>	
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<h2>Organisations</h2>
+
+			<h3>A créer : {{ arr_comptes['non-existant']|length }}</h3>
+			{% if arr_comptes['non-existant']|length > 0 %}
+				<a role="button" data-toggle="collapse" href="#collapse-comptes-non-existant" aria-expanded="false" aria-controls="collapseExample" class="btn btn-info">Voir la liste</a>
+				<a href="{{ path('crm_valider_fichier_import_export', {'type' : 'compte', 'existant' : 'non-existant'}) }}" class="btn btn-info">Exporter</a>
+				<div class="collapse" id="collapse-comptes-non-existant">
+				  	<div class="well">
+				    	<ul>
+				    		{% for id, compte in arr_comptes['non-existant'] %}
+				    			<li>{{ compte }}</li>
+				    		{% endfor %}
+				    	</ul>
+				  	</div>
+				</div>
+			{% endif %}
+
+			<h3>Déjà dans J'aime le Commercial : {{ arr_comptes['existant']|length }}</h3>
+			{% if arr_comptes['existant']|length > 0 %}
+				<a role="button" data-toggle="collapse" href="#collapse-comptes-existant" aria-expanded="false" aria-controls="collapseExample" class="btn btn-info">Voir la liste</a>
+				<a href="{{ path('crm_valider_fichier_import_export', {'type' : 'compte', 'existant' : 'existant'}) }}" class="btn btn-info">Exporter</a>
+				
+				<div class="collapse" id="collapse-comptes-existant">
+				  	<div class="well">
+				    	<ul>
+				    		{% for id, compte in arr_comptes['existant'] %}
+				    			<li><a href="{{ path('crm_compte_voir', {'id' : id }) }}" target="_blank">{{ compte }}</a></li>
+				    		{% endfor %}
+				    	</ul>
+				  	</div>
+				</div>
+			{% endif %}
+
+		</div>
+
+		<div class="col-md-6">
+			<h2>Contacts</h2>
+			
+			<h3>A créer : {{ arr_contacts['non-existant']|length }}</h3>
+			{% if arr_contacts['non-existant']|length > 0 %}
+				<a role="button" data-toggle="collapse" href="#collapse-contacts-non-existant" aria-expanded="false" aria-controls="collapseExample" class="btn btn-info">Voir la liste</a>
+				<a href="{{ path('crm_valider_fichier_import_export', {'type' : 'contact', 'existant' : 'non-existant'}) }}" class="btn btn-info">Exporter</a>
+				<div class="collapse" id="collapse-contacts-non-existant">
+				  	<div class="well">
+				    	<ul>
+				    		{% for contact in arr_contacts['non-existant'] %}
+				    			<li>{{ contact }}</li>
+				    		{% endfor %}
+				    	</ul>
+				  	</div>
+				</div>
+			{% endif %}
+
+			<h3>Déjà dans J'aime le Commercial : {{ arr_contacts['existant']|length }}</h3>
+			{% if arr_contacts['existant']|length > 0 %}
+				<a role="button" data-toggle="collapse" href="#collapse-contacts-existant" aria-expanded="false" aria-controls="collapseExample" class="btn btn-info">Voir la liste</a>
+				<a href="{{ path('crm_valider_fichier_import_export', {'type' : 'contact', 'existant' : 'existant'}) }}" class="btn btn-info">Exporter</a>
+				<div class="collapse" id="collapse-contacts-existant">
+				  	<div class="well">
+				    	<ul>
+				    		{% for id, contact in arr_contacts['existant'] %}
+				    			<li><a href="{{ path('crm_contact_voir', {'id' : id}) }}" target="_blank">{{ contact }}</a></li>
+				    		{% endfor %}
+				    	</ul>
+				  	</div>
+				</div>
+			{% endif %}
+
+			<h3>Doublons dans le fichier d'import : {{ arr_contacts['doublons']|length }}</h3>
+			{% if arr_contacts['doublons']|length > 0 %}
+				<a role="button" data-toggle="collapse" href="#collapse-contacts-doublons" aria-expanded="false" aria-controls="collapseExample" class="btn btn-info">Voir la liste</a>
+				<a href="{{ path('crm_valider_fichier_import_export', {'type' : 'contact', 'existant' : 'doublons'}) }}" class="btn btn-info">Exporter</a>
+				<div class="collapse" id="collapse-contacts-doublons">
+				  	<div class="well">
+				    	<ul>
+				    		{% for contact in arr_contacts['doublons'] %}
+				    			<li>{{ contact }}</li>
+				    		{% endfor %}
+				    	</ul>
+				  	</div>
+				</div>
+			{% endif %}
+
+			<h3>Homonymes : {{ numHomonymes }}</h3>
+			{% if arr_contacts['homonymes']|length > 0 %}
+				<a role="button" data-toggle="collapse" href="#collapse-contacts-homonymes" aria-expanded="false" aria-controls="collapseExample" class="btn btn-info">Voir la liste</a>
+				<div class="collapse" id="collapse-contacts-homonymes">
+				  	<div class="well">
+				    	<ul>
+				    		{% for nom, arr_homonymes in arr_contacts['homonymes'] if arr_homonymes|length > 0 %}
+				    			<li>
+				    				{{ nom }}
+				    				{% for homonyme in arr_homonymes %}
+				    					<ul>
+				    						<li><a href="{{ path('crm_contact_voir', {'id' : homonyme.id }) }}" target="_blank">{{ homonyme.prenom }} {{ homonyme.nom }} ({{ homonyme.compte }}) </a></li>
+				    					</ul>
+				    				{% endfor %}
+				    			</li>
+				    		{% endfor %}
+				    	</ul>
+				  	</div>
+				</div>
+			{% endif %}
+
+			<h3>Erreurs : {{ arr_erreurs|length }}</h3>
+			{% if arr_erreurs|length > 0 %}
+				<a role="button" data-toggle="collapse" href="#collapse-contacts-erreurs" aria-expanded="false" aria-controls="collapseExample" class="btn btn-info">Voir la liste</a>
+				<div class="collapse" id="collapse-contacts-erreurs">
+				  	<div class="well">
+				    	<ul>
+				    		{% for erreur in arr_erreurs if arr_erreurs|length > 0 %}
+				    			<li>
+				    				{{ erreur }}
+				    			</li>
+				    		{% endfor %}
+				    	</ul>
+				  	</div>
+				</div>
+			{% endif %}
+
+		</div>
+	</div>
+
+	<div class="row spacer-top well">
+
+		{% if arr_erreurs|length > 0 %}
+			
+			<div class="col-md-12 center alert alert-danger">
+				<p>Votre fichier contient des erreurs. Veuillez les corriger avant de poursuivre l'import.</p>
+				<a class="btn" href="{{ path('crm_contact_import_upload') }}">
+	       			<span class="glyphicon glyphicon-chevron-left"></span>Retour
+	    		</a>
+			</div>
+
+		{% else %}
+		
+			{{ form_start(form, {'action' : path('crm_contact_import_importer') }) }}
+			<div class="col-md-12 center">
+				<div class="alert alert-warning">Si vous ne cochez pas cette case, les comptes et contacts déjà dans J'aime le Commercial seront ignorés.</div>
+				{{ form_row(form.update) }}
+			</div>
+			<div class="col-md-3 col-md-offset-3 align-right">
+				 <a class="btn" href="{{ path('crm_contact_import_upload') }}">
+	       			<span class="glyphicon glyphicon-chevron-left"></span>Annuler
+	    		</a>
+			</div>
+			<div class="col-md-3 align-left">
+				{{ form_row(form.valider) }}
+			</div>
+			{{ form_end(form) }}
+
+		{% endif %}
+	</div>
+
+{% endblock %}

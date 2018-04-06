@@ -1,0 +1,80 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Résultats de l'import de contacts</h1>	
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<h2>Organisations</h2>
+
+			<h3>Créées : {{ arr_comptes['created']|length }}</h3>
+			{% if arr_comptes['created']|length > 0 %}
+				<a role="button" data-toggle="collapse" href="#collapse-comptes-created" aria-expanded="false" aria-controls="collapse-comptes-created" class="btn btn-info">Voir la liste</a>
+				<div class="collapse" id="collapse-comptes-created">
+				  	<div class="well">
+				    	<ul>
+				    		{% for compte in arr_comptes['created'] %}
+				    			<li><a href="{{ path('crm_compte_voir', {'id' : compte.id }) }}" target="_blank">{{ compte }}</a></li>
+				    		{% endfor %}
+				    	</ul>
+				  	</div>
+				</div>
+			{% endif %}
+
+			<h3>Mis à jour : {{ arr_comptes['updated']|length }}</h3>
+			{% if arr_comptes['updated']|length > 0 %}
+				<a role="button" data-toggle="collapse" href="#collapse-comptes-updated" aria-expanded="false" aria-controls="collapse-comptes-updated" class="btn btn-info">Voir la liste</a>
+				<div class="collapse" id="collapse-comptes-updated">
+				  	<div class="well">
+				    	<ul>
+				    		{% for compte in arr_comptes['updated'] %}
+				    			<li><a href="{{ path('crm_compte_voir', {'id' : compte.id }) }}" target="_blank">{{ compte }}</a></li>
+				    		{% endfor %}
+				    	</ul>
+				  	</div>
+				</div>
+			{% endif %}
+		</div>
+
+		<div class="col-md-6">
+			<h2>Contacts</h2>
+			
+			<h3>Créés : {{ arr_contacts['created']|length }}</h3>
+			{% if arr_contacts['created']|length > 0 %}
+				<a role="button" data-toggle="collapse" href="#collapse-contacts-created" aria-expanded="false" aria-controls="collapse-contacts-created" class="btn btn-info">Voir la liste</a>
+				<div class="collapse" id="collapse-contacts-created">
+				  	<div class="well">
+				    	<ul>
+				    		{% for contact in arr_contacts['created'] %}
+				    			<li><a href="{{ path('crm_contact_voir', {'id' : contact.id }) }}" target="_blank">{{ contact }} ({{ contact.compte }})</a></li>
+				    		{% endfor %}
+				    	</ul>
+				  	</div>
+				</div>
+			{% endif %}
+
+			<h3>Mis à jour : {{ arr_contacts['updated']|length }}</h3>
+			{% if arr_contacts['updated']|length > 0 %}
+				<a role="button" data-toggle="collapse" href="#collapse-contacts-updated" aria-expanded="false" aria-controls="collapse-contacts-updated" class="btn btn-info">Voir la liste</a>
+				<div class="collapse" id="collapse-contacts-updated">
+				  	<div class="well">
+				    	<ul>
+				    		{% for contact in arr_contacts['updated'] %}
+				    			<li><a href="{{ path('crm_contact_voir', {'id' : contact.id }) }}" target="_blank">{{ contact }} ({{ contact.compte }})</a></li>
+				    		{% endfor %}
+				    	</ul>
+				  	</div>
+				</div>
+			{% endif %}
+
+			
+		</div>
+	</div>
+
+
+{% endblock %}

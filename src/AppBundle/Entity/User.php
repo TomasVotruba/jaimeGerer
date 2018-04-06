@@ -97,6 +97,19 @@ class User extends BaseUser
         return $this->id;
     }
 
+    
+    /**
+     * Set id
+     *
+     * @param integer $id 
+     * @return Company
+     */
+    public function setId($id)
+    {
+        return $this->id = $id;
+        return $this;
+    }
+
     public function __toString()
     {
     	return $this->getFirstname().' '.$this->getLastname();

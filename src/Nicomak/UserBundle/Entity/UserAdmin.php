@@ -11,8 +11,9 @@ class UserAdmin extends BaseAdmin
 	/**
 	 * {@inheritdoc}
 	 */
-	protected $baseRoutePattern = 'utilisateurs';
-	
+    protected $baseRoutePattern = 'utilisateurs';
+	protected $baseRouteName = 'AppBundle\Entity\SuperEntityAdmin';
+    
 	/**
         * {@inheritdoc}
         */
@@ -23,10 +24,8 @@ class UserAdmin extends BaseAdmin
         $formMapper
             ->with('company_section')
                 ->add('company')
-                // ...
             ->end()
         ;
     }
-	
 	
 }

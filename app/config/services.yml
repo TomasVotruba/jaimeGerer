@@ -16,17 +16,17 @@ services:
         class: AppBundle\Service\ReceiptBankService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [@buzz]
+        arguments: ["@buzz"]
     appbundle.activation_outils:
         class: AppBundle\Service\ActivationOutilsService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ "@doctrine.orm.entity_manager" ]
     appbundle.num_service:
         class: AppBundle\Service\NumService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ "@doctrine.orm.entity_manager" ]
     appbundle.chart_service:
         class: AppBundle\Service\ChartService
         calls:
@@ -39,22 +39,27 @@ services:
         class: AppBundle\Service\CRM\OpportuniteService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ "@doctrine.orm.entity_manager" ]
     appbundle.crm_devis_service:
         class: AppBundle\Service\CRM\DevisService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ "@doctrine.orm.entity_manager" ]
+    appbundle.crm_contact_service:
+        class: AppBundle\Service\CRM\ContactService
+        calls:
+            - [setContainer, ["@service_container"]]
+        arguments: [ "@doctrine.orm.entity_manager", "@request_stack", "%kernel.root_dir%" ]
     appbundle.crm_prospection_service:
         class: AppBundle\Service\CRM\ProspectionService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ "@doctrine.orm.entity_manager" ]
     appbundle.compta_depense_service:
         class: AppBundle\Service\Compta\DepenseService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ "@doctrine.orm.entity_manager" ]
     appbundle.compta_journal_ventes_controller:
         class: AppBundle\Controller\Compta\JournalVentesController
         calls:
@@ -75,59 +80,59 @@ services:
           class: AppBundle\Service\Compta\OperationDiverseService
           calls:
               - [setContainer, ["@service_container"]]
-          arguments: [ @doctrine.orm.entity_manager, @appbundle.compta_compte_comptable_service, @appbundle.num_service ]
+          arguments: [ "@doctrine.orm.entity_manager", "@appbundle.compta_compte_comptable_service", "@appbundle.num_service" ]
     appbundle.compta_compte_comptable_service:
         class: AppBundle\Service\Compta\CompteComptableService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager, @appbundle.utils_service ]
+        arguments: [ "@doctrine.orm.entity_manager", "@appbundle.utils_service" ]
     appbundle.compta_tableau_tresorerie_service:
         class: AppBundle\Service\Compta\TableauTresorerieService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager, @appbundle.utils_service ]
+        arguments: [ "@doctrine.orm.entity_manager", "@appbundle.utils_service" ]
     appbundle.compta_tableau_bord_service:
         class: AppBundle\Service\Compta\TableauBordService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager, @appbundle.utils_service, @phpexcel ]
+        arguments: [ "@doctrine.orm.entity_manager", "@appbundle.utils_service", "@phpexcel" ]
 
     appbundle.compta_balance_generale_service:
         class: AppBundle\Service\Compta\BalanceGeneraleService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ "@doctrine.orm.entity_manager" ]
     appbundle.compta_tableau_tva_service:
         class: AppBundle\Service\Compta\TableauTVAService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager, @appbundle.utils_service, @monolog.logger.tva_logger ]
+        arguments: [ "@doctrine.orm.entity_manager", "@appbundle.utils_service", "@monolog.logger.tva_logger" ]
     appbundle.compta_grand_livre_service:
         class: AppBundle\Service\Compta\GrandLivreService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ "@doctrine.orm.entity_manager" ]
     appbundle.prospection:
         class: AppBundle\Service\CRM\ProspectionService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ "@doctrine.orm.entity_manager" ]
     mautic:
         class: AppBundle\Service\mautic\MauticApiService
-        arguments: ["@session", %mautic_api_url%]
+        arguments: ["@session", "%mautic_api_url%"]
 
     appbundle.compta_releve_bancaire_service:
         class: AppBundle\Service\Compta\ReleveBancaireService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager, %kernel.root_dir% ]
+        arguments: [ "@doctrine.orm.entity_manager", "%kernel.root_dir%" ]
     appbundle.compta_lettrage_service:
         class: AppBundle\Service\Compta\LettrageService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ "@doctrine.orm.entity_manager" ]
     appbundle.compta_fec_service:
         class: AppBundle\Service\Compta\FECService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ @doctrine.orm.entity_manager, '%kernel.root_dir%', @appbundle.utils_service ]
+        arguments: [ "@doctrine.orm.entity_manager", '%kernel.root_dir%', "@appbundle.utils_service" ]
