@@ -86,6 +86,7 @@ class FactureControllerTest extends WebTestCase
 
         //test : création des valeurs de la facture sur la fiche facture
         $this->assertTrue($this->client->getResponse()->isRedirection());
+        $this->assertTrue($this->client->getResponse()->isRedirection());
         $crawler = $this->client->followRedirect();
 
         $this->assertContains('Conseil diversité', $crawler->filter('h2')->text());

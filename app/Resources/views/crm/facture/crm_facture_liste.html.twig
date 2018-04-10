@@ -195,7 +195,8 @@
 						// `data` option, which defaults to the column being worked with, in
 						// this case `data: 0`.
 						"render": function ( data, type, row ) {
-							return '<a target="_blank" href="{{ path('crm_facture_datatables') }}/voir/'+row['id']+'">'+data+'</a>';
+							var url = Routing.generate('crm_facture_voir', {'id' : row['id']});
+							return '<a target="_blank" href="'+url+'">'+data+'</a>';
 						},
 						"targets": 0
 					},
@@ -204,16 +205,22 @@
 						// `data` option, which defaults to the column being worked with, in
 						// this case `data: 0`.
 						"render": function ( data, type, row ) {
-							var s = "<p><a target='_blank' href=\"{{ path('crm_facture_datatables') }}/voir/"+row['id']+"\" class=\"btn btn-xs btn-info\" ​data-toggle=\"tooltip-btn-xs\" title=\"Voir\"><span class=\"glyphicon glyphicon-eye-open\"></span></a>" +" "+
-									"<a target='_blank' href=\"{{ path('crm_facture_datatables') }}/editer/"+row['id']+"\" class=\"btn btn-xs btn-warning\" ​data-toggle=\"tooltip-btn-xs\" title=\"Editer\"><span class=\"glyphicon glyphicon-pencil\"></span></a>"+" ";
+							var voirUrl = Routing.generate('crm_facture_voir', {'id' : row['id']});
+							var editerUrl = Routing.generate('crm_facture_editer', {'id' : row['id']});
+							var supprimerUrl = Routing.generate('crm_facture_supprimer', {'id' : row['id']});
+							var exporterUrl = Routing.generate('crm_facture_exporter', {'id' : row['id']});
+							var dupliquerUrl = Routing.generate('crm_facture_dupliquer', {'id' : row['id']});
+
+							var s = "<p><a target='_blank' href='"+voirUrl+"'' class=\"btn btn-xs btn-info\" ​data-toggle=\"tooltip-btn-xs\" title=\"Voir\"><span class=\"glyphicon glyphicon-eye-open\"></span></a>" +" "+
+									"<a target='_blank' href='"+editerUrl+"' class=\"btn btn-xs btn-warning\" ​data-toggle=\"tooltip-btn-xs\" title=\"Editer\"><span class=\"glyphicon glyphicon-pencil\"></span></a>"+" ";
 
 							if(row['num_ecriture'] == "{{ lastNumEcriture }}"){
-								s+="<a target='_blank' href=\"{{ path('crm_facture_datatables') }}/supprimer/"+row['id']+"\" class=\"btn btn-xs btn-danger\" ​data-toggle=\"tooltip-btn-xs\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a>";
+								s+="<a target='_blank' href='"+supprimerUrl+"' class=\"btn btn-xs btn-danger\" ​data-toggle=\"tooltip-btn-xs\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a>";
 							} else {
 								s+="<a href=\"#\" class=\"btn btn-xs btn-default not-active\"><span class=\"glyphicon glyphicon-trash\"></span>";
 							}
-							s+="</p><p><a target='_blank' href=\"{{ path('crm_facture_datatables') }}/exporter/"+row['id']+"\" class=\"btn btn-xs btn-primary\" ​data-toggle=\"tooltip-btn-xs\" title=\"Exporter\"><span class=\"glyphicon glyphicon-floppy-disk\"></span></a>"+" "+
-									"<a target='_blank' href=\"{{ path('crm_facture_datatables') }}/dupliquer/"+row['id']+"\" class=\"btn btn-xs btn-primary\" ​data-toggle=\"tooltip-btn-xs\" title=\"Dupliquer\"><span class=\"glyphicon glyphicon-duplicate\"></span></a></p>";
+							s+="</p><p><a target='_blank' href='"+exporterUrl+"' class=\"btn btn-xs btn-primary\" ​data-toggle=\"tooltip-btn-xs\" title=\"Exporter\"><span class=\"glyphicon glyphicon-floppy-disk\"></span></a>"+" "+
+									"<a target='_blank' href='"+dupliquerUrl+"' class=\"btn btn-xs btn-primary\" ​data-toggle=\"tooltip-btn-xs\" title=\"Dupliquer\"><span class=\"glyphicon glyphicon-duplicate\"></span></a></p>";
 
 							return s;
 						},
@@ -260,7 +267,8 @@
 					},
 					{
 						"render": function ( data, type, row ) {
-							return '<a target="_blank" href="{{ path('crm_compte_datatables') }}/voir/'+row['compte_id']+'">'+data+'</a>';
+							var voirUrl = Routing.generate('crm_facture_voir', {'id' : row['id']});
+							return '<a target="_blank" href="'+voirUrl+'">'+data+'</a>';
 						},
 						"targets": 3
 					},

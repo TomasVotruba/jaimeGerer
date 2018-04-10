@@ -386,7 +386,7 @@ class FactureController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/facture/editer/{id}", name="crm_facture_editer")
+	 * @Route("/crm/facture/editer/{id}", name="crm_facture_editer", options={"expose"=true})
 	 */
 	public function factureEditerAction(DocumentPrix $facture)
 	{
@@ -476,7 +476,7 @@ class FactureController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/facture/supprimer/{id}", name="crm_facture_supprimer")
+	 * @Route("/crm/facture/supprimer/{id}", name="crm_facture_supprimer", options={"expose"=true})
 	 */
 	public function factureSupprimerAction(DocumentPrix $facture)
 	{
@@ -522,7 +522,7 @@ class FactureController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/facture/exporter/{id}", name="crm_facture_exporter")
+	 * @Route("/crm/facture/exporter/{id}", name="crm_facture_exporter", options={"expose"=true})
 	 */
 	public function factureExporterAction(DocumentPrix $facture)
 	{
@@ -701,7 +701,7 @@ class FactureController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/facture/dupliquer/{id}", name="crm_facture_dupliquer")
+	 * @Route("/crm/facture/dupliquer/{id}", name="crm_facture_dupliquer", options={"expose"=true})
 	 */
 	public function factureDupliquerAction(DocumentPrix $facture)
 	{
