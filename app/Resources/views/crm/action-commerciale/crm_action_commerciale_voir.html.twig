@@ -27,7 +27,7 @@
 		   		{% if opportunite.devis %}
 
 		   			{% if opportunite.isLost == false %}
-				    	<a href="{{ path('crm_devis_envoyer', {'id' : opportunite.devis.id }) }}"  class="btn  {% if (opportunite.devis.contact is null) %} btn-default not-active {% else %} {% if opportunite.devis.contact.email is null %} btn-default not-active {% else %} btn-primary {% endif %}{% endif %}"  data-toggle="modal" data-target="#modal">
+				    	<a href="{{ path('crm_action_commerciale_envoyer', {'id' : opportunite.id }) }}"  class="btn  {% if (opportunite.contact is null) %} btn-default not-active {% else %} {% if opportunite.devis.contact.email is null %} btn-default not-active {% else %} btn-primary {% endif %}{% endif %}"  data-toggle="modal" data-target="#modal" id="btn-send-devis">
 					    	<span class="glyphicon glyphicon-send"></span> Envoyer le devis par email
 					    </a>
 				   {% endif %}
@@ -38,11 +38,11 @@
 
 		    		{% if opportunite.isWon %}
 	    		    	{% if facture is null or facture|length == 0 %}
-	    			    	<a href="{{ path('crm_action_commerciale_convertir', {'id' : opportunite.id }) }}"  class="btn btn-primary" data-toggle="modal" data-target="#modal">
+	    			    	<a href="{{ path('crm_action_commerciale_convertir', {'id' : opportunite.id }) }}"  class="btn btn-primary" data-toggle="modal" data-target="#modal" id="btn-convertir-devis">
 	    			    		<span class="glyphicon glyphicon-check"></span> Convertir en facture
 	    			    	</a>
 	    		    	{% else %}
-	    			    	<a href="{{ path('crm_devis_convertir', {'id' : opportunite.devis.id }) }}"  class="btn btn-primary" data-toggle="modal" data-target="#modal">
+	    			    	<a href="{{ path('crm_devis_convertir', {'id' : opportunite.devis.id }) }}"  class="btn btn-primary" data-toggle="modal" data-target="#modal"  id="btn-convertir-devis">
 	    			    		<span class="glyphicon glyphicon-check"></span> Ajouter une autre facture
 	    			    	</a>
 	    			    	{% if facture|length == 1 %}
@@ -103,14 +103,14 @@
 	    			<tbody>
 						<tr>
 							<td>Objet</td>
-							<td>
+							<td id="action-commerciale-objet">
 								{{ opportunite.nom }}
 
 							</td>
 						</tr>
 						<tr>
 							<td>Date</td>
-							<td>
+							<td id="action-commerciale-date">
 								{{ opportunite.date|date("d/m/Y") }}
 							</td>
 						</tr>
@@ -122,7 +122,7 @@
 	    			<tbody>
 	    				<tr>
 							<td>Gestionnaire</td>
-							<td>
+							<td id="action-commerciale-user-gestion">
 								{{ opportunite.userGestion }}
 								{% if opportunite.userGestion.enabled == false %}
 									<a tabindex="0" role="button" data-toggle="popover" data-trigger="hover" title="Utilisateur inactif" data-content="Cet utilisateur est inactif. Vous devriez changer le gestionnaire de l'opportunité.">
@@ -133,7 +133,7 @@
 						</tr>
 						<tr>
 							<td>Date de validité</td>
-							<td>
+							<td id="action-commerciale-date-validite">
 								{% if opportunite.devis %}
 									{{ opportunite.devis.dateValidite|date("d/m/Y") }}
 								{% endif %}
@@ -156,7 +156,7 @@
 	    			<tbody>
 	    				<tr>
 	    					<td>Organisation</td>
-				    		<td>
+				    		<td id="action-commerciale-compte">
 				    			<a href="{{ path('crm_compte_voir', {'id' : opportunite.compte.id }) }}">
 									{{ opportunite.compte.nom }}
 								</a>
@@ -186,7 +186,7 @@
 	    			<tbody>
 	    				<tr>
 							<td>Contact</td>
-							<td>
+							<td id="action-commerciale-contact">
 								{% if opportunite.contact %}
 									<a href="{{ path('crm_contact_voir', {'id' : opportunite.contact.id }) }}">
 										{{ opportunite.contact.prenom }} {{ opportunite.contact.nom }}
@@ -241,7 +241,7 @@
 			    		</td>
 			    		<tr>
 			    			<td>Analytique</td>
-			    			<td>
+			    			<td id="action-commerciale-analytique">
 			    			{{ opportunite.analytique }}
 			    			</td>
 			    		</tr>
@@ -263,7 +263,7 @@
 					</tr>
 					<tr>
 						<td>Secteur</td>
-						<td>
+						<td id="action-commerciale-priveOrPublic">
 							{{ opportunite.priveOrPublicToString }}
 						</td>
 					</tr>
@@ -338,12 +338,12 @@
 			    	</div>
 			    	<div class="form-group">
 			    		<span class="devis-label">Total HT</span>
-			    		<span class="devis-montant">{{ opportunite.devis.totalHT }} €</span>
+			    		<span class="devis-montant" id="total-ht">{{ opportunite.devis.totalHT }} €</span>
 			    	</div>
 					<div class="form-group">
 						<span class="devis-label">TVA en %</span>
 						{% if opportunite.devis.taxe is not null %}
-							<span class="devis-montant">
+							<span class="devis-montant" id="total-tax-percent">
 								{{ opportunite.devis.taxePercent*100 }}%
 							</span>
 						{% else %}
@@ -354,9 +354,9 @@
 					<div class="form-group">
 						<span class="devis-label">TVA en €</span>
 						{% if opportunite.devis.taxe is not null %}
-							<span class="devis-montant">
-									{{ opportunite.devis.taxe }} €
-								</span>
+							<span class="devis-montant" id="total-tax-montant">
+								{{ opportunite.devis.taxe }} €
+							</span>
 						{% else %}
 							<span class="devis-montant">&nbsp;</span>
 							<span class="devis-montant">-</span>
@@ -366,7 +366,7 @@
 			   	 		<span class="devis-label">
 			   	 			{% if opportunite.devis.taxe is not null %} Total TTC {% else %} Total prix net {% endif %}
 			   	 		</span>
-			   	 		<span class="devis-montant">{{ opportunite.devis.totalTTC }} €</span>
+			   	 		<span class="devis-montant" id="total-ttc">{{ opportunite.devis.totalTTC }} €</span>
 			   	 	</div>
 			    </div>
 			</div>
@@ -443,7 +443,7 @@
 					<h3>Bons de commande 
 					<a class="btn btn-primary btn-xs" href=" {{ path('crm_action_commerciale_gagner_bon_commande', {'id' : opportunite.id, 'edition' : true }) }} ">Modifer</a> 
 					</h3>
-					<table class="contact-view-table">
+					<table class="contact-view-table" id="table-bons-commande">
 						<tbody>
 						{% for bonCommande in opportunite.bonsCommande %}
 							<tr>
@@ -467,7 +467,7 @@
 						<a class="btn btn-primary btn-xs" href=" {{ path('crm_action_commerciale_gagner_repartition', {'id' : opportunite.id, 'edition' : true }) }} ">Modifer</a>
 					</h3> 
 
-					<table class="contact-view-table">
+					<table class="contact-view-table" id="table-repartition">
 						<tbody>
 						{% for repartition in opportunite.opportuniteRepartitions %}
 							<tr>
@@ -555,7 +555,7 @@
 	     				</tr>
 	     				<tr>
 	     					<td>Par</td>
-		    				<td>
+		    				<td id="action-commerciale-user-creation">
 								{{ opportunite.userCreation }}
 							</td>
 

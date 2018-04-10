@@ -194,6 +194,19 @@ class Opportunite
       $this->settings = new \Doctrine\Common\Collections\ArrayCollection();
   }
 
+  /**
+     * Set id
+     *
+     * @param int $id
+     * @return Contact
+     */
+    public function setId($id)
+    {
+      $this->id = $id;
+       
+      return $this;
+    }
+
 
   /**
    * Get id

@@ -81,6 +81,7 @@ class ContactService extends ContainerAware {
             if($email){
                 if( array_key_exists($email, $arr_contacts['all']) ){
                     $arr_contacts['doublons'][] =  $prenom.' '.$nom.' ('.$orga.')';
+                    continue;
                 } else {
                     $arr_contacts['all'][$email] = $prenom.' '.$nom.' ('.$orga.')';
                 }
@@ -221,6 +222,8 @@ class ContactService extends ContainerAware {
             ),
         );
 
+        $arr_contacts = array();
+
         //start the loop at 2 to skip the header row
         for($i=2; $i<count($arr_data)+1; $i++){
 
@@ -282,6 +285,15 @@ class ContactService extends ContainerAware {
                 'nom' => $orga,
                 'company' => $company
             ));
+
+             if($email){
+                if( in_array($email, $arr_contacts) ){
+                    //doublon
+                    continue;
+                } else {
+                    $arr_contacts[] = $email;
+                }
+            }
 
             if($compte == null){
 
@@ -353,18 +365,20 @@ class ContactService extends ContainerAware {
 
                 } // end if($contact == null)
 
-            } else if($update == true){
+            } else {
 
-                $compte->setAdresse($adresse);
-                $compte->setCodePostal($codePostal);
-                $compte->setVille($ville);
-                $compte->setRegion($region);
-                $compte->setPays($pays);
-                $compte->setSecteurActivite($secteurActivite);
-                $compte->setUserEdition($user);
-                $compte->setDateEdition($dateCreation);
-                $this->em->persist($compte);
-                $arr_results['comptes']['updated'][] = $compte;
+                if($update == true){
+                     $compte->setAdresse($adresse);
+                    $compte->setCodePostal($codePostal);
+                    $compte->setVille($ville);
+                    $compte->setRegion($region);
+                    $compte->setPays($pays);
+                    $compte->setSecteurActivite($secteurActivite);
+                    $compte->setUserEdition($user);
+                    $compte->setDateEdition($dateCreation);
+                    $this->em->persist($compte);
+                    $arr_results['comptes']['updated'][] = $compte;
+                }
 
                 $contact = $contactRepo->findOneBy(array(
                     'compte'=> $compte,
@@ -372,8 +386,23 @@ class ContactService extends ContainerAware {
                     'nom' => $nom
                 ));
 
-                if($contact){
+                $createContact = false;
+                $contactExists = false;
 
+                if(!$contact){
+                    $createContact = true;
+                    $contact = new Contact();
+                    $contact->setCompte($compte);
+                    $contact->setPrenom($prenom);
+                    $contact->setNom($nom);
+                } else {
+                    if($update){
+                        $createContact = true;
+                        $contactExists = true;
+                    }
+                }
+
+                if($createContact){
                     $contact->setTitre($titre);
                     $contact->setAdresse($adresse);
                     $contact->setCodePostal($codePostal);
@@ -412,14 +441,25 @@ class ContactService extends ContainerAware {
                     if($secteurActivite){
                         $contact->addSetting($secteurActivite);
                     }
-                    $contact->setUserEdition($user);
-                    $contact->setDateEdition($dateCreation);
+
+                    if($contactExists){
+                        $contact->setUserEdition($user);
+                        $contact->setDateEdition($dateCreation);
+                        $arr_results['contacts']['updated'][] = $contact;
+                    } else {
+                        $contact->setUserCreation($user);
+                        $contact->setDateCreation($dateCreation);
+                        $contact->setUserGestion($user);
+                        $arr_results['contacts']['created'][] = $contact;
+                    }
+                   
                     $this->em->persist($contact);
-                    $arr_results['contacts']['updated'][] = $contact;
-                }
+                    
+                }     
 
             } // end if($compte == null)
-           
+
+        
         } // end for($i=2; $i<count($arr_data)+1; $i++)
 
         $this->em->flush();

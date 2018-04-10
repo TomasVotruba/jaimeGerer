@@ -47,7 +47,7 @@
 	    			<tbody>
 	    				<tr>
 	    					<td>Gestionnaire de l'organisation</td> 
-				    		<td>
+				    		<td id="compte-user-gestion">
 								{{ compte.userGestion }}
 								{% if compte.userGestion.enabled == false %}
 					    			<a tabindex="0" role="button" data-toggle="popover" data-trigger="hover" title="Utilisateur inactif" data-content="Cet utilisateur est inactif. Vous devriez changer le gestionnaire du compte"><span class="glyphicon glyphicon-warning-sign red"></span></a>
@@ -55,7 +55,7 @@
 				    		</td>
 							<tr>
 								<td>Secteur d'activité</td>
-								<td>
+								<td id="compte-secteur">
 									{% if compte.secteurActivite is null %}
 										-
 									{% else %}
@@ -74,7 +74,7 @@
 	    			<tbody>
 	    				<tr>
 	    					<td>Adresse</td> 
-				    		<td>
+				    		<td id="compte-adresse">
 								{% if compte.adresse is empty %}
 						    		-
 						    	{% else %}

@@ -79,6 +79,7 @@
 			{% endif %}
 
 			<h3>Doublons dans le fichier d'import : {{ arr_contacts['doublons']|length }}</h3>
+			<p><i>Seule la première occurence sera importée.</i></p>
 			{% if arr_contacts['doublons']|length > 0 %}
 				<a role="button" data-toggle="collapse" href="#collapse-contacts-doublons" aria-expanded="false" aria-controls="collapseExample" class="btn btn-info">Voir la liste</a>
 				<a href="{{ path('crm_valider_fichier_import_export', {'type' : 'contact', 'existant' : 'doublons'}) }}" class="btn btn-info">Exporter</a>

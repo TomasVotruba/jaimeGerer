@@ -11,14 +11,14 @@
 	<div class="row">
 		 
 	    <div class="col-md-12">
-	    	<p>Etes-vous sur de vouloir supprimer le contact {{ contact.prenom }} {{ contact.nom }} ?</p>
+	    	<p id="warning-suppression">Etes-vous sur de vouloir supprimer le contact {{ contact.prenom }} {{ contact.nom }} ?</p>
 	    	{{ form_start(form) }}
  			{{ form_widget(form) }}
 	   	 	
 	   	 	 <a class="btn" href="{{ path('crm_contact_liste') }}">
        			<span class="glyphicon glyphicon-chevron-left"></span>Annuler
     		</a>
-	   	 	<input type="submit" value="Supprimer" class="btn btn-danger" />
+	   	 	<input type="submit" value="Supprimer" class="btn btn-danger" id="btn-submit-form" />
 	   	 	{{ form_end(form) }}
 	    </div>
     </div>

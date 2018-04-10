@@ -74,7 +74,7 @@
 
     <div class="row" id="facture_details">
         <div class="col-md-12">
-            <h2>{{ facture.objet }}</h2>
+            <h2 id="facture-objet">{{ facture.objet }}</h2>
         </div>
     </div>
     <div class="row">
@@ -94,13 +94,13 @@
                     </tr>
                     <tr>
                         <td>Numéro de facture</td>
-                        <td>
+                        <td id="facture-num">
                             {{ facture.num }}
                         </td>
                     </tr>
                     <tr>
                         <td>Date de validité</td>
-                        <td>
+                        <td id="facture-date-validite">
                             {{ facture.dateValidite|date("d/m/Y") }}
                         </td>
                     </tr>
@@ -112,7 +112,7 @@
                     </tr>
                     <tr>
                         <td>Analytique</td>
-                        <td>
+                        <td id="facture-analytique">
                             {{ facture.analytique }}
                         </td>
                     </tr>
@@ -124,7 +124,7 @@
                 <tbody>
                     <tr>
                         <td>Organisation</td>
-                        <td>
+                        <td id="facture-compte">
                             <a href="{{ path('crm_compte_voir', {'id' : facture.compte.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
                                 {{ facture.compte  }}
                             </a>
@@ -132,7 +132,7 @@
                     </tr>
                     <tr>
                         <td>Contact</td>
-                        <td>
+                        <td id="facture-contact">
                             {% if facture.contact == null %}
                                 -
                             {% else %}
@@ -144,7 +144,7 @@
                     </tr>
                     <tr>
                         <td>Numéro de bon de commande interne</td>
-                        <td>
+                        <td id="facture-num-bc-interne">
                             {% if facture.bonCommande is not null %}
                                     <a href="{{ path('crm_action_commerciale_voir', {'id' : facture.bonCommande.actionCommerciale.id }) }}">{{ facture.bonCommande.num }}</a>
                             {% elseif facture.numBCInterne is not null %}
@@ -154,7 +154,7 @@
                     </tr>
                     <tr>
                         <td>Numéro de bon de commande client</td>
-                        <td>
+                        <td id="facture-num-bc-client">
                             {% if facture.numBCClient is not null %}
                                 {{ facture.numBCClient  }}
                             {% else %}
@@ -164,7 +164,7 @@
                     </tr>
                     <tr>
                         <td>Numéro de devis</td>
-                        <td>
+                        <td id="facture-num-devis">
                             {% if facture.devis is not null %}
                                 <a href="{{ path('crm_devis_voir', {'id' : facture.devis.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
                                     {{ facture.devis.num  }}
@@ -304,15 +304,13 @@
                 </div>
                 <div class="form-group">
                     <span class="facture-label">Total HT</span>
-                    <span class="facture-montant">{{ facture.totalHT }}
-                        €</span>
+                    <span class="facture-montant" id="facture-total-ht">{{ facture.totalHT }} €</span>
                 </div>
                 <div id="facture-taxe-wrapper" class="form-group">
                     <span class="facture-label">TVA</span>
                     {% if facture.taxe is not null %}
-                        <span class="facture-montant">{{ facture.taxePercent*100 }}%</span>
-                        <span class="facture-montant">{{ facture.taxe }}
-                            €</span>
+                        <span class="facture-montant" id="facture-total-tax-percent">{{ facture.taxePercent*100 }}%</span>
+                        <span class="facture-montant" id="facture-total-tax-montant">{{ facture.taxe }} €</span>
                     {% else %}
                         <span class="facture-montant">&nbsp;</span>
                         <span class="facture-montant">-</span>
@@ -331,8 +329,7 @@
                         Total prix net
                     {% endif %}
                 </span>
-                <span class="facture-montant">{{ facture.totalTTC }}
-                    €</span>
+                <span class="facture-montant" id="facture-total-ttc">{{ facture.totalTTC }} €</span>
             </div>
             <hr/>
         </div>
@@ -343,7 +340,7 @@
                 <tbody>
                     <tr>
                         <td>Conditions d'utilisation</td>
-                        <td>
+                        <td id="facture-cgv">
                             {% if facture.cgv is empty %}
                                 -
                             {% else %}
@@ -361,7 +358,7 @@
                 <tbody>
                     <tr>
                         <td>Commentaire</td>
-                        <td>
+                        <td id="facture-commentaire">
                             {% if facture.description is empty %}
                                 -
                             {% else %}
@@ -380,13 +377,13 @@
                 <tbody>
                     <tr>
                         <td>Créé le</td>
-                        <td>
+                        <td id="facture-date-creation">
                             {{ facture.dateCreation|date("d/m/Y") }}
                         </td>
                     </tr>
                     <tr>
                         <td>Par</td>
-                        <td>
+                        <td id="facture-user-creation">
                             {{ facture.userCreation }}
                         </td>
 
@@ -399,7 +396,7 @@
                 <tbody>
                     <tr>
                         <td>Modifié le</td>
-                        <td>
+                        <td id="facture-date-edition">
                             {% if facture.dateEdition is empty %}
                                 Jamais
                             {% else %}
@@ -410,7 +407,7 @@
                     <tr>
                         {% if facture.userEdition is not empty %}
                             <td>Par</td>
-                            <td>
+                            <td id="facture-user-edition">
                                 {{ facture.userEdition }}
                             </td>
                         {% endif %}

@@ -816,7 +816,7 @@ class ActionCommercialeController extends Controller
 				if(!$activationCompta){
 					$facture->setCompta(false);
 				} else{
-					$facture->setCompta(false);
+					$facture->setCompta(true);
 				}
 
 				$em->persist($facture);
@@ -862,5 +862,101 @@ class ActionCommercialeController extends Controller
 					'actionCommerciale'		=> $actionCommerciale
 			));
 		}
+
+	/**
+	 * @Route("/crm/action-commerciale/envoyer/{id}", name="crm_action_commerciale_envoyer")
+	 */
+	public function actionCommercialeEnvoyerAction(Opportunite $actionCommerciale)
+	{
+		$devis = $actionCommerciale->getDevis();
+		$form = $this->createFormBuilder()->getForm();
+
+		$form->add('objet', 'text', array(
+			'required' => true,
+			'label' => 'Objet',
+			'data' => 'Devis : '.$devis->getObjet()
+		));
+
+		$form->add('message', 'textarea', array(
+				'required' => true,
+				'label' => 'Message',
+				'data' => $this->renderView('crm/devis/crm_devis_email.html.twig', array(
+					'devis' => $devis
+				)),
+				'attr' => array('class' => 'tinymce')
+		));
+
+        $form->add('addcc', 'checkbox', array(
+        		'required' => false,
+  				'label' => 'Recevoir une copie de l\'email'
+        ));
+
+		$form->add('submit', 'submit', array(
+  		  'label' => 'Envoyer',
+		  'attr' => array('class' => 'btn btn-success')
+		));
+
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$objet = $form->get('objet')->getData();
+			$message = $form->get('message')->getData();
+
+			$filename = $this->_devisCreatePDF($devis);
+			
+			try{
+				$mail = \Swift_Message::newInstance()
+					->setSubject($objet)
+					->setFrom($this->getUser()->getEmail())
+					->setTo($devis->getContact()->getEmail())
+					->setBody($message, 'text/html')
+					->attach(Swift_Attachment::fromPath($filename))
+				;
+				if( $form->get('addcc')->getData() ) $mail->addCc($this->getUser()->getEmail());
+				$this->get('mailer')->send($mail);
+				$this->get('session')->getFlashBag()->add(
+						'success',
+						'Le devis a bien été envoyé.'
+				);
+
+				unlink($filename);
+
+				$priseContact = new PriseContact();
+				$priseContact->setType('DEVIS');
+				$priseContact->setDate(new \DateTime(date('Y-m-d')));
+				$priseContact->setDescription("Envoi du devis");
+				$priseContact->setDocumentPrix($devis);
+				$priseContact->setContact($devis->getContact());
+				$priseContact->setUser($this->getUser());
+				$priseContact->setMessage($message);
+
+				if($devis->getEtat() != 'SENT'){
+					$devis->setEtat('SENT');
+				}
+
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($priseContact);
+				$em->persist($devis);
+				$em->flush();
+
+			} catch(\Exception $e){
+    			$error =  $e->getMessage();
+    			$this->get('session')->getFlashBag()->add('danger', "L'email n'a pas été envoyé pour la raison suivante : $error");
+    		}
+
+
+			return $this->redirect($this->generateUrl(
+					'crm_action_commerciale_voir',
+					array('id' => $actionCommerciale->getId())
+			));
+		}
+
+		return $this->render('crm/devis/crm_devis_envoyer.html.twig', array(
+				'form' => $form->createView(),
+				'devis' => $devis
+		));
+	}
 
 }

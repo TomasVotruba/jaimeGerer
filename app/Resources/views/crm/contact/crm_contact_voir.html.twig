@@ -69,7 +69,7 @@
 		    				<td>
 		    					Gestionnaire du contact 
 		    				</td>
-		    				<td>
+		    				<td id="contact-user-gestion">
 					    		{{ contact.userGestion }}
 					    		{% if contact.userGestion.enabled == false %}
 					    			<a tabindex="0" role="button" data-toggle="popover" data-trigger="hover" title="Utilisateur inactif" data-content="Cet utilisateur est inactif. Vous devriez changer le gestionnaire du contact."><span class="glyphicon glyphicon-warning-sign red"></span></a>
@@ -113,7 +113,7 @@
 		    				<td>
 		    					Adresse 
 		    				</td>
-		    				<td>
+		    				<td id="contact-adresse">
 		    					{% if contact.adresse is empty %}
 					    			-
 					    		{% else %}
@@ -177,7 +177,7 @@
 	    			<tbody>
 		    			<tr>
 		    				<td>Téléphone fixe</td>  
-			    			<td>
+			    			<td id="contact-tel-fixe">
 				    			{% if contact.telephoneFixe is empty %}
 						    		-
 						    	{% else %}
@@ -250,7 +250,7 @@
 	    			<tbody>
 	    				<tr>
 							<td>Secteur d'activité</td>
-							<td>
+							<td id="contact-secteur">
 								<ul>
 									{% for secteur in contact.settings if secteur.parametre == 'SECTEUR' %}
 										<li>{{ secteur.valeur }}</li>
@@ -259,7 +259,7 @@
 							</td>
 						</tr>
 				    		<td>Thèmes d'intérêt</td> 
-				    		<td>
+				    		<td id="contact-themes-interet">
 				    			<ul>
 				    			{% for theme in contact.settings if theme.parametre == 'THEME_INTERET' %}
 				    				<li>{{ theme.valeur }}</li>
@@ -269,7 +269,7 @@
 		    			</tr>
 		    			<tr>
 			    			<td>Services d'intérêt</td>  
-			    			<td>
+			    			<td id="contact-services-interet">
 				    			<ul>
 				    			{% for service in contact.settings if service.parametre == 'SERVICE_INTERET' %}
 				    				<li>{{ service.valeur }}</li>
@@ -279,7 +279,7 @@
 			    		</tr>
 			    		<tr>
 				    		<td>Newsletter</td>  
-				    		<td>
+				    		<td id="contact-newsletter">
 								{% if contact.newsletter == true %}
 						    		<span class="glyphicon glyphicon-ok"></span>
 						    	{% endif %}	    	
@@ -287,7 +287,7 @@
 						</tr>
 			    		<tr>
 				    		<td>Carte de voeux</td>  
-				    		<td>
+				    		<td id="contact-carte-voeux">
 								{% if contact.carteVoeux == true %}
 						    		<span class="glyphicon glyphicon-ok"></span>
 						    	{% endif %}	    	
@@ -301,7 +301,7 @@
 		    		<tbody>
 		    			<tr>
 				    		<td>Type de relation commerciale</td>  
-							<td>
+							<td id="contact-type">
 								<ul>
 								{% for type in contact.settings if type.parametre == 'TYPE' %}
 				    				<li>{{ type.valeur }}</li>  				
@@ -311,7 +311,7 @@
 				    	</tr>
 				    	<tr>
 				    		<td>Réseau</td>  
-				    		<td>
+				    		<td id="contact-reseau">
 				    		
 				    			{% if contact.reseau is empty %}
 						    		-
@@ -322,7 +322,7 @@
 				    	</tr>
 				    	<tr>
 				    		<td>Origine :</td>  
-				    		<td>
+				    		<td id="contact-origine">
 				    			{% for type in contact.settings if type.parametre == 'TYPE' %}
 				    			
 				    			{% endfor %}
@@ -383,7 +383,7 @@
 		    		<tbody>
 	     				<tr>
 				    		<td>Modifié le</td>  
-				    		<td>
+				    		<td id="contact-date-edition">
 				    			{% if contact.dateEdition is empty %}
 						    		Jamais
 						    	{% else %}
@@ -394,7 +394,7 @@
 			    		<tr>
 		    			{% if contact.userEdition is not empty %}
 				    		<td>Par</td>  
-		    				<td>
+		    				<td id="contact-user-edition">
 								{{ contact.userEdition }}
 							</td>
 				    	{% endif %}

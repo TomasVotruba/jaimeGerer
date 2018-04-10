@@ -8,8 +8,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use AppBundle\Entity\Company;
 use AppBundle\Entity\Settings;
+use AppBundle\Entity\SettingsActivationOutil;
 use AppBundle\Entity\CRM\Compte;
 use AppBundle\Entity\CRM\Contact;
+use AppBundle\Entity\CRM\Opportunite;
+use AppBundle\Entity\CRM\DocumentPrix;
+use AppBundle\Entity\CRM\Produit;
+use AppBundle\Entity\CRM\BonCommande;
 
 class AppFixtures extends Fixture implements ContainerAwareInterface
 {
@@ -43,6 +48,24 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $company->setCredits('9999999');
         $company->setSiren('512511577');
         $manager->persist($company);
+
+        /**********
+        * SETTINGS ACTIVATION OUTIL
+        **********/
+
+        //activation CRM pour Nicomak
+        $activationCRM = new SettingsActivationOutil();
+        $activationCRM->setCompany($company);
+        $activationCRM->setOutil('CRM');
+        $activationCRM->setDate(\DateTime::createFromFormat('Y-m-d', '2016-01-01'));
+        $manager->persist($activationCRM);
+
+        //activation compta pour Nicomak
+        // $activationCRM = new SettingsActivationOutil();
+        // $activationCRM->setCompany($company);
+        // $activationCRM->setOutil('COMPTA');
+        // $activationCRM->setDate(\DateTime::createFromFormat('Y-m-d', '2016-01-01'));
+        // $manager->persist($activationCRM);
 
         /**********
         * SETTINGS 
@@ -83,6 +106,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $typeProduitFC->setTitre('Type de produit');
         $typeProduitFC->setCategorie('GENERAL');
         $manager->persist($typeProduitFC);
+        $this->setReference('type-produit-fc', $typeProduitFC);
 
         $typeProduitConseil = new Settings();
         $typeProduitConseil->setParametre('TYPE_PRODUIT');
@@ -94,6 +118,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $typeProduitConseil->setTitre('Type de produit');
         $typeProduitConseil->setCategorie('GENERAL');
         $manager->persist($typeProduitConseil);
+        $this->setReference('type-produit-conseil', $typeProduitConseil);
 
         //2 réseaux : "BNI RezoBAO" et "Ruche qui dit oui!"
         $reseauBNI = new Settings();
@@ -129,6 +154,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $origineAppelEntrant->setTitre('Origine');
         $origineAppelEntrant->setCategorie('CONTACT');
         $manager->persist($origineAppelEntrant);
+        $this->setReference('origine-appel-entrant', $origineAppelEntrant);
 
         $origineWebResearch = new Settings();
         $origineWebResearch->setParametre('ORIGINE');
@@ -140,6 +166,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $origineWebResearch->setTitre('Origine');
         $origineWebResearch->setCategorie('CONTACT');
         $manager->persist($origineWebResearch);
+        $this->setReference('origine-web-research', $origineWebResearch);
 
         //2 thèmes d'intérêt : RSE et Diversité
         $themeRSE = new Settings();
@@ -198,6 +225,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $typeClient->setTitre('Type de contact');
         $typeClient->setCategorie('CONTACT');
         $manager->persist($typeClient);
+        $this->setReference('type-contact-client', $typeClient);
 
         $typeProspect = new Settings();
         $typeProspect->setParametre('TYPE');
@@ -209,6 +237,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $typeProspect->setTitre('Type de contact');
         $typeProspect->setCategorie('CONTACT');
         $manager->persist($typeProspect);
+        $this->setReference('type-contact-prospect', $typeProspect);
 
          //2 secteurs d'activité : "Agriculture & Pêche" et "Chimie, Pharmacie, Cosmétique & Santé"
         $secteurAgriculture = new Settings();
@@ -221,6 +250,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $secteurAgriculture->setTitre('Secteur d\'activité');
         $secteurAgriculture->setCategorie('CONTACT');
         $manager->persist($secteurAgriculture);
+        $this->setReference('secteur-agriculture', $secteurAgriculture);
 
         $secteurChimie = new Settings();
         $secteurChimie->setParametre('SECTEUR');
@@ -232,23 +262,24 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $secteurChimie->setTitre('Secteur d\'activité');
         $secteurChimie->setCategorie('CONTACT');
         $manager->persist($secteurChimie);
+        $this->setReference('secteur-chimie', $secteurChimie);
 
         //1 type condition générales de vente devis
-        $cgvFacture = new Settings();
-        $cgvFacture->setParametre('CGV_DEVIS');
-        $cgvFacture->setValeur("La signature du devis équivaut à l'acceptation de nos conditions générales de vente, disponibles sur notre site web : http://www.nicomak.eu/conditions-generales-de-vente");
-        $cgvFacture->setModule('CRM');
-        $cgvFacture->setType('TEXTE');
-        $cgvFacture->setCompany($company);
-        $cgvFacture->setHelpText('Vos conditions générales de vente apparaîssent sur votre devis.');
-        $cgvFacture->setTitre('Conditions générales de vente (devis)');
-        $cgvFacture->setCategorie('DEVIS');
-        $manager->persist($cgvFacture);
+        $cgvDevis = new Settings();
+        $cgvDevis->setParametre('CGV_DEVIS');
+        $cgvDevis->setValeur("La signature du devis équivaut à l'acceptation de nos conditions générales de vente, disponibles sur notre site web : http://www.nicomak.eu/conditions-generales-de-vente");
+        $cgvDevis->setModule('CRM');
+        $cgvDevis->setType('TEXTE');
+        $cgvDevis->setCompany($company);
+        $cgvDevis->setHelpText('Vos conditions générales de vente apparaîssent sur votre devis.');
+        $cgvDevis->setTitre('Conditions générales de vente (devis)');
+        $cgvDevis->setCategorie('DEVIS');
+        $manager->persist($cgvDevis);
 
         //1 numéro devis : 1
         $numDevis = new Settings();
         $numDevis->setParametre('NUMERO_DEVIS');
-        $numDevis->setValeur("1");
+        $numDevis->setValeur("2");
         $numDevis->setModule('CRM');
         $numDevis->setType('NUM');
         $numDevis->setCompany($company);
@@ -272,7 +303,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         //1 numéro facture : 1
         $numFacture = new Settings();
         $numFacture->setParametre('NUMERO_FACTURE');
-        $numFacture->setValeur("1");
+        $numFacture->setValeur("2");
         $numFacture->setModule('CRM');
         $numFacture->setType('NUM');
         $numFacture->setCompany($company);
@@ -305,6 +336,30 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $piedPageFacture->setCategorie('FACTURE');
         $manager->persist($piedPageFacture);
 
+        //1 image de pub facture
+        $pubFactureImage = new Settings();
+        $pubFactureImage->setParametre('PUB_FACTURE_IMAGE');
+        $pubFactureImage->setValeur("20170428050436-3-visuel-logo-divertik.png");
+        $pubFactureImage->setModule('CRM');
+        $pubFactureImage->setType('IMAGE');
+        $pubFactureImage->setCompany($company);
+        $pubFactureImage->setHelpText('Utilisez vos factures comme support publicitaire en insérant une image.');
+        $pubFactureImage->setTitre('Image de pub pour les factures');
+        $pubFactureImage->setCategorie('FACTURE');
+        $manager->persist($pubFactureImage);
+
+        //1 texte de pub facture
+        $pubFactureTexte = new Settings();
+        $pubFactureTexte->setParametre('PUB_FACTURE_TEXTE');
+        $pubFactureTexte->setValeur("80% des entreprises ont indiqué que la diversité était un axe stratégique pour leur développement. Et vous, comment vous occupez-vous de ce thème ? Nicomak peut vous aider de manière concrète avec son Outil Divertik. Contactez Myriam pour qu'elle vous en dise plus !");
+        $pubFactureTexte->setModule('CRM');
+        $pubFactureTexte->setType('TEXTE');
+        $pubFactureTexte->setCompany($company);
+        $pubFactureTexte->setHelpText('Utilisez vos factures comme support publicitaire en insérant un court texte.');
+        $pubFactureTexte->setTitre('Texte de pub sur les factures');
+        $pubFactureTexte->setCategorie('FACTURE');
+        $manager->persist($pubFactureTexte);
+
         //2 analytiques : FC et Conseil
         $analytiqueFC = new Settings();
         $analytiqueFC->setParametre('ANALYTIQUE');
@@ -316,6 +371,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $analytiqueFC->setTitre('Analytique');
         $analytiqueFC->setCategorie('FACTURE');
         $manager->persist($analytiqueFC);
+        $this->setReference('analytique-fc', $analytiqueFC);
 
         $analytiqueConseil = new Settings();
         $analytiqueConseil->setParametre('ANALYTIQUE');
@@ -327,6 +383,22 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $analytiqueConseil->setTitre('Analytique');
         $analytiqueConseil->setCategorie('FACTURE');
         $manager->persist($analytiqueConseil);
+        $this->setReference('analytique-conseil', $analytiqueConseil);
+
+        //1 probabilité action commerciale
+        $probabiliteActionCo = new Settings();
+        $probabiliteActionCo->setParametre('OPPORTUNITE_STATUT');
+        $probabiliteActionCo->setValeur("FD - 50%");
+        $probabiliteActionCo->setModule('CRM');
+        $probabiliteActionCo->setType('LISTE');
+        $probabiliteActionCo->setCompany($company);
+        $probabiliteActionCo->setHelpText('Les différents statuts que peuvent avoir vos opportunités');
+        $probabiliteActionCo->setTitre('Statut des opportunités');
+        $probabiliteActionCo->setCategorie('OPPORTUNITE');
+        $manager->persist($probabiliteActionCo);
+        $this->setReference('probabilite-action-co', $probabiliteActionCo);
+
+
 
         /**********
         * USER
@@ -401,6 +473,9 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $compteNicomak->setDescription("Super boîte");
         $compteNicomak->setUrl("hhtp://www.nicomak.eu");
         $compteNicomak->setSecteurActivite($secteurAgriculture);
+        $metadata = $manager->getClassMetadata(get_class($compteNicomak));
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
         $manager->persist($compteNicomak);
 
         $compteDemoCorp = new Compte();
@@ -417,10 +492,13 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $compteDemoCorp->setUserCreation($userLaura);
         $compteDemoCorp->setUserEdition($userMyriam);
         $compteDemoCorp->setDateCreation(\DateTime::createFromFormat('Y-m-d', '2018-02-01'));
-        $compteDemoCorp->setUserGestion($userLaura);
+        $compteDemoCorp->setUserGestion($userMyriam);
         $compteDemoCorp->setDescription("Organisation demo");
         $compteDemoCorp->setUrl("hhtp://www.democorp.com");
         $compteDemoCorp->setSecteurActivite($secteurChimie);
+        $metadata = $manager->getClassMetadata(get_class($compteDemoCorp));
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
         $manager->persist($compteDemoCorp);
 
         /**********
@@ -490,7 +568,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $contactPotiron->setRegion($compteDemoCorp->getRegion());
         $contactPotiron->setPays($compteDemoCorp->getPays());
         $contactPotiron->setTelephonePortable('0686747075');
-        $contactPotiron->setEmail2('potiron@democorp.com');
+        $contactPotiron->setEmail('potiron@democorp.com');
         $contactPotiron->setNewsletter(true);
         $contactPotiron->setCarteVoeux(true);
         $contactPotiron->setOrigine($origineWebResearch);
@@ -506,7 +584,114 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
         $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
         $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
         $manager->persist($contactPotiron);
+
+        /**********
+        * ACTION COMMERCIALE (ET DEVIS) + BON DE COMMANDE
+        **********/
+
+         //1 action commerciale à DemoCorp - Potiron Groschat
+        $actionCommerciale = new Opportunite();
+        $actionCommerciale->setId(1);
+        $actionCommerciale->setCompte($compteDemoCorp);
+        $actionCommerciale->setContact($contactPotiron);
+        $actionCommerciale->setNom('Conseil diversité');
+        $actionCommerciale->setMontant(1000);
+        $actionCommerciale->setDate(\DateTime::createFromFormat('Y-m-d', '2018-02-01'));
+        $actionCommerciale->setType('Existing Business');
+        $actionCommerciale->setProbabilite($probabiliteActionCo);
+        $actionCommerciale->setPriveOrPublic('PRIVE');
+        $actionCommerciale->setAnalytique($analytiqueConseil);
+        $actionCommerciale->setOrigine($origineAppelEntrant);
+        $actionCommerciale->setDateCreation(\DateTime::createFromFormat('Y-m-d', '2018-01-01'));
+        $actionCommerciale->setUserCreation($userLaura);
+        $actionCommerciale->setUserGestion($userLaura);
+        $metadata = $manager->getClassMetadata(get_class($actionCommerciale));
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
         
+        $devis = new DocumentPrix($company,'DEVIS');
+        $devis->setId(1);
+        $devis->setCompte($actionCommerciale->getCompte());
+        $devis->setContact($actionCommerciale->getContact());
+        $devis->setDateCreation($actionCommerciale->getDateCreation());
+        $devis->setUserCreation($actionCommerciale->getuserCreation());
+        $devis->setObjet($actionCommerciale->getNom());
+        $devis->setUserGestion($actionCommerciale->getUserGestion());
+        $devis->setAnalytique($actionCommerciale->getAnalytique());
+        $devis->setAdresse($compteDemoCorp->getAdresse());
+        $devis->setCodePostal($compteDemoCorp->getCodePostal());
+        $devis->setVille($compteDemoCorp->getVille());
+        $devis->setRegion($compteDemoCorp->getRegion());
+        $devis->setPays($compteDemoCorp->getPays());
+        $devis->setDateValidite(\DateTime::createFromFormat('Y-m-d', '2018-03-01'));
+        $devis->setCGV($cgvDevis);
+        $devis->setTaxe(200);
+        $devis->setTaxePercent(0.2);
+        $devis->setNum('2018-001');
+        $metadata = $manager->getClassMetadata(get_class($devis));
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+
+        $produit = new Produit();
+        $produit->setType($typeProduitConseil);
+        $produit->setNom('Journée de conseil');
+        $produit->setDescription('Journée de conseil dans vos locaux');
+        $produit->setTarifUnitaire(1000);
+        $produit->setQuantite(1);
+        $produit->setRemise(0);
+
+        $devis->addProduit($produit);
+        $this->setReference('devis-2018-001', $devis);
+        $manager->persist($devis);
+
+        $actionCommerciale->setDevis($devis);
+
+        $bonCommande = new BonCommande();
+        $bonCommande->setNum('2018-001');
+        $bonCommande->setMontant(10000);
+        $actionCommerciale->addBonsCommande($bonCommande);
+        $this->setReference('bon-commande-2018-001', $bonCommande);
+        $manager->persist($bonCommande);
+
+        $manager->persist($actionCommerciale);
+
+
+        /**********
+        *FACTURE
+        **********/
+        $facture = new DocumentPrix($company, 'FACTURE');
+        $facture->setId(2);
+        $facture->setCompte($compteDemoCorp);
+        $facture->setContact($contactPotiron);
+        $facture->setDateCreation(\DateTime::createFromFormat('Y-m-d', '2018-03-01'));
+        $facture->setUserCreation($devis->getuserCreation());
+        $facture->setObjet('Formation');
+        $facture->setUserGestion($userMyriam);
+        $facture->setAnalytique($analytiqueFC);
+        $facture->setAdresse($compteDemoCorp->getAdresse());
+        $facture->setCodePostal($compteDemoCorp->getCodePostal());
+        $facture->setVille($compteDemoCorp->getVille());
+        $facture->setRegion($compteDemoCorp->getRegion());
+        $facture->setPays($compteDemoCorp->getPays());
+        $facture->setDateValidite(\DateTime::createFromFormat('Y-m-d', '2018-04-01'));
+        $facture->setCGV($cgvFacture);
+        $facture->setNum('2018-001');
+        $facture->setBonCommande($bonCommande);
+        $metadata = $manager->getClassMetadata(get_class($facture));
+        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+
+        $produit = new Produit();
+        $produit->setType($typeProduitConseil);
+        $produit->setNom('Journée de formation');
+        $produit->setDescription('Journée de formation dans vos locaux');
+        $produit->setTarifUnitaire(1000);
+        $produit->setQuantite(1);
+        $produit->setRemise(0);
+
+        $facture->addProduit($produit);
+        $manager->persist($facture);
+
         $manager->flush();
     }
 }

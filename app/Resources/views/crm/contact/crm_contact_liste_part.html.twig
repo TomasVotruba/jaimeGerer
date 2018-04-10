@@ -22,7 +22,7 @@
 				<tbody>
 				{% for contact in arr_contacts %}
 					<tr>
-						<td>
+						<td class="contact-nom">
 							<a target="_blank" href="{{ path('crm_contact_voir', {'id' : contact.id}) }}">{{ contact.prenom }} {{ contact.nom }}</a>
 						</td>
 

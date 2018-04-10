@@ -255,7 +255,7 @@ class DocumentPrix
 
    /**
     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\BonCommande", inversedBy="factures")
-    * @ORM\JoinColumn(nullable=true)
+    * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
     */
     private $bonCommande;
 

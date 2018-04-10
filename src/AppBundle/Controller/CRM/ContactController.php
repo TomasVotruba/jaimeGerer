@@ -872,7 +872,7 @@ class ContactController extends Controller
 		//supprimer fichier import
         $path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
 		$filename = $session->get('validation_import_contact_filename');
-		unlink($path.DIRECTORY_SEPARATOR.$filename);
+		// unlink($path.DIRECTORY_SEPARATOR.$filename);
 
 		return $this->render('crm/contact/crm_contact_import_resultat.html.twig', array(
 			'arr_comptes' => $arr_results['comptes'],
