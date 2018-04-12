@@ -20,7 +20,7 @@
 			  {% for depense in arr_details['depenses'] %}
 			    <tr>
 						<td>{{ depense.date|date('d/m/Y') }}</td>
-						<td>{{ depense.num }}</td>
+						<td><a href="{{ path('compta_depense_voir', {'id' : depense.id}) }}" target="_blank">{{ depense.num }}</a></td>
 						<td>{{ depense.libelle }}</td>
 						<td class="align-right">{{ depense.totalHT }} €</td>
 					</tr>
