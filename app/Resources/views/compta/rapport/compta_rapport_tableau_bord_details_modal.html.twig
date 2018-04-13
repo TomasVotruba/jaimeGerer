@@ -4,8 +4,8 @@
 </div>
 
 <div class="modal-body">
-	{% if arr_details['depenses'] is defined %}
-		{% if arr_details['depenses']|length > 0 %}
+	{% if arr_details['lignes_depenses'] is defined %}
+		{% if arr_details['lignes_depenses']|length > 0 %}
 		  <h4>Dépenses</h4>
 		  <table class="table">
 				<thead>
@@ -17,12 +17,12 @@
 					</tr>
 				</thead>
 				<tbody>
-			  {% for depense in arr_details['depenses'] %}
+			  {% for ligne in arr_details['lignes_depenses'] %}
 			    <tr>
-						<td>{{ depense.date|date('d/m/Y') }}</td>
-						<td><a href="{{ path('compta_depense_voir', {'id' : depense.id}) }}" target="_blank">{{ depense.num }}</a></td>
-						<td>{{ depense.libelle }}</td>
-						<td class="align-right">{{ depense.totalHT }} €</td>
+						<td>{{ ligne.depense.date|date('d/m/Y') }}</td>
+						<td><a href="{{ path('compta_depense_voir', {'id' : ligne.depense.id}) }}" target="_blank">{{ ligne.depense.num }}</a></td>
+						<td>{{ ligne.depense.libelle }} - {{ ligne.nom }}</td>
+						<td class="align-right">{{ ligne.montant }} €</td>
 					</tr>
 			  {% endfor %}
 				</tbody>

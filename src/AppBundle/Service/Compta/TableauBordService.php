@@ -504,6 +504,7 @@ class TableauBordService extends ContainerAware {
       $arr_details[$cout] = array();
       for($i = 1; $i<=12; $i++){
         $arr_details[$cout][$i]['val'] = 0;
+        $arr_details[$cout][$i]['details'] = array('lignes_depenses');
       }
        $arr_details[$cout]['total'] = 0;
     }
@@ -531,12 +532,16 @@ class TableauBordService extends ContainerAware {
          ( $this->ccCarburant && $ligne->getCompteComptable()->getId() == $this->ccCarburant->getId() )
        ){
            $arr_details['couts_deplacements'][$month]['val']+= $ligne->getMontant();
+           $arr_details['couts_deplacements'][$month]['details']['lignes_depenses'][$ligne->getId()] = $ligne;
+
            $this->arr_totaux['accurate']['couts_marginaux'][$month]+= $ligne->getMontant();
            $arr_details['couts_deplacements']['total']+= $ligne->getMontant();
 
         } else if( $this->ccResaSalle && $ligne->getCompteComptable()->getId() == $this->ccResaSalle->getId() ){
 
            $arr_details['reservation_salles'][$month]['val']+= $ligne->getMontant();
+           $arr_details['reservation_salles'][$month]['details']['lignes_depenses'][$ligne->getId()] = $ligne;
+
            $this->arr_totaux['accurate']['couts_marginaux'][$month]+= $ligne->getMontant();
            $arr_details['reservation_salles']['total']+= $ligne->getMontant();
         }
@@ -578,6 +583,7 @@ class TableauBordService extends ContainerAware {
         $arr_details[$cout][$i]['val'] = 0;
         $arr_details[$cout][$i]['details'] = array(
           'depenses' => array(),
+          'lignes_depenses' => array(),
           'affectations_diverses' => array()
         );
         $arr_details[$cout]['total']= 0;
@@ -607,7 +613,9 @@ class TableauBordService extends ContainerAware {
             $ligne->getCompteComptable(),
             $month,
             $ligne->getMontant(),
-            $depense
+            $depense,
+            null,
+            $ligne
           );
       }
     }
@@ -667,7 +675,8 @@ class TableauBordService extends ContainerAware {
               $month,
               -$rapprochement->getMouvementBancaire()->getMontant(),
               null,
-              $rapprochement
+              $rapprochement,
+              null
             );
         }
 
@@ -806,7 +815,7 @@ class TableauBordService extends ContainerAware {
     return $arr_sous_traitances;
   }
 
-  private function repartitionCoutsExploitationParPoste($arr_details, $compteComptable, $month, $montant, $depense = null, $rapprochement = null){
+  private function repartitionCoutsExploitationParPoste($arr_details, $compteComptable, $month, $montant, $depense = null, $rapprochement = null, $ligneDepense=null){
 
 
     if( $this->utilsService->startsWith($compteComptable->getNum(), '623') ||
@@ -819,6 +828,7 @@ class TableauBordService extends ContainerAware {
 
         if($depense){
           $arr_details['communication_impression'][$month]['details']['depenses'][$depense->getId()] = $depense;
+          $arr_details['communication_impression'][$month]['details']['lignes_depenses'][$ligneDepense->getId()] = $ligneDepense;
         }
         if($rapprochement){
           $arr_details['communication_impression'][$month]['details']['affectation_diverses'][$rapprochement->getId()] = $rapprochement;
@@ -846,6 +856,7 @@ class TableauBordService extends ContainerAware {
 
          if($depense){
            $arr_details['petit_equipement_fournitures'][$month]['details']['depenses'][$depense->getId()] = $depense;
+           $arr_details['petit_equipement_fournitures'][$month]['details']['lignes_depenses'][$ligneDepense->getId()] = $ligneDepense;
          }
          if($rapprochement){
            $arr_details['petit_equipement_fournitures'][$month]['details']['affectation_diverses'][$rapprochement->getId()] = $rapprochement;
@@ -861,6 +872,7 @@ class TableauBordService extends ContainerAware {
 
          if($depense){
            $arr_details['couts_bancaires'][$month]['details']['depenses'][$depense->getId()] = $depense;
+           $arr_details['couts_bancaires'][$month]['details']['lignes_depenses'][$ligneDepense->getId()] = $ligneDepense;
          }
          if($rapprochement){
            $arr_details['couts_bancaires'][$month]['details']['affectation_diverses'][$rapprochement->getId()] = $rapprochement;
@@ -877,6 +889,7 @@ class TableauBordService extends ContainerAware {
 
          if($depense){
            $arr_details['formation_personnel'][$month]['details']['depenses'][$depense->getId()] = $depense;
+           $arr_details['formation_personnel'][$month]['details']['lignes_depenses'][$ligneDepense->getId()] = $ligneDepense;
          }
          if($rapprochement){
            $arr_details['formation_personnel'][$month]['details']['affectation_diverses'][$rapprochement->getId()] = $rapprochement;
@@ -906,6 +919,7 @@ class TableauBordService extends ContainerAware {
 
          if($depense){
            $arr_details['comptable_admin'][$month]['details']['depenses'][$depense->getId()] = $depense;
+           $arr_details['comptable_admin'][$month]['details']['lignes_depenses'][$ligneDepense->getId()] = $ligneDepense;
          }
          if($rapprochement){
            $arr_details['comptable_admin'][$month]['details']['affectation_diverses'][$rapprochement->getId()] = $rapprochement;
@@ -920,6 +934,7 @@ class TableauBordService extends ContainerAware {
 
          if($depense){
            $arr_details['dons'][$month]['details']['depenses'][$depense->getId()] = $depense;
+           $arr_details['dons'][$month]['details']['lignes_depenses'][$ligneDepense->getId()] = $ligneDepense;
          }
          if($rapprochement){
            $arr_details['dons'][$month]['details']['affectation_diverses'][$rapprochement->getId()] = $rapprochement;
@@ -1035,6 +1050,7 @@ class TableauBordService extends ContainerAware {
 
           if($depense){
             $arr_details['autres_couts'][$month]['details']['depenses'][$depense->getId()] = $depense;
+            $arr_details['autres_couts'][$month]['details']['lignes_depenses'][$ligneDepense->getId()] = $ligneDepense;
           }
           if($rapprochement){
             $arr_details['autres_couts'][$month]['details']['affectation_diverses'][$rapprochement->getId()] = $rapprochement;
