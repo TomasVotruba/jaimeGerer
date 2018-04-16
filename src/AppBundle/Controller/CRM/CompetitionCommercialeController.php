@@ -87,17 +87,17 @@ class CompetitionCommercialeController extends Controller
 					$arr_users[$userId]['ratioCA'] = $ratioCA;
 					if($ratioCA > $maxRatioCA){
 						$maxRatioCA = $arr_users[$userId]['CA'];
-						$arr_winners['CA'] = $arr_user['user']->getId();
+						$arr_winners['CA'] = $userId;
 					}
 
 					if(count($arr_users[$userId]['nouveauxComptes']) > $maxNouveauxComptes){
 						$maxNouveauxComptes = count($arr_users[$userId]['nouveauxComptes']);
-						$arr_winners['nouveauxComptes'] = $arr_user['user']->getId();
+						$arr_winners['nouveauxComptes'] = $userId;
 					}
 
 					if(count($arr_users[$userId]['prescriptions']) > $maxPrescriptions){
 						$maxPrescriptions = count($arr_users[$userId]['prescriptions']);
-						$arr_winners['prescriptions'] = $arr_user['user']->getId();
+						$arr_winners['prescriptions'] = $userId;
 					}
 
 				}
