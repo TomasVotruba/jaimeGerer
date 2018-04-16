@@ -85,8 +85,9 @@ class CompetitionCommercialeController extends Controller
 
 					$ratioCA = $arr_users[$userId]['CA']/count($arr_users[$userId]['gagnees']);
 					$arr_users[$userId]['ratioCA'] = $ratioCA;
+
 					if($ratioCA > $maxRatioCA){
-						$maxRatioCA = $arr_users[$userId]['CA'];
+						$maxRatioCA = $arr_users[$userId]['ratioCA'];
 						$arr_winners['CA'] = $userId;
 					}
 
@@ -103,6 +104,7 @@ class CompetitionCommercialeController extends Controller
 				}
 			}
 		}
+
 
 		return $this->render('crm/competition-commerciale/crm_competition_commerciale.html.twig', array(
 			'arr_winners' => $arr_winners,

@@ -40,6 +40,7 @@ class MerciType extends AbstractType
                         return $er->createQueryBuilder('u')
                         ->where('u.company = :company')
                         ->andWhere('u.enabled = :enabled')
+                        ->andWhere('u.competCom = true')
                         ->orderBy('u.firstname', 'ASC')
                         ->setParameter('company', $this->companyId)
                         ->setParameter('enabled', 1);
