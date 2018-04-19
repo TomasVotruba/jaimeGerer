@@ -24,7 +24,7 @@ class ReleveBancaireService extends ContainerAware {
   	$arr_mouvements = array();
 
   	//parsing du CSV
-	$csv = new \parseCSV();
+	$csv = new \ParseCsv\Csv();
 	$csv->delimiter = ";";
 	$csv->encoding('ISO-8859-1', 'UTF-8');
 	$csv->parse($this->path.$filename);

@@ -37,7 +37,7 @@
 	  "stfalcon/tinymce-bundle" : "1.1",
 	  "phpoffice/phpexcel" : "1.8.1",
 	  "liuggio/ExcelBundle" : "dev-master",
-	  "parsecsv/php-parsecsv" : "dev-master",
+	  "parsecsv/php-parsecsv" : "1.0",
 	  "friendsofsymfony/jsrouting-bundle" : "^1.5",
 	  "ekino/wordpress-bundle" : "1.1.0",
 	  "ddeboer/tesseract" : "1.1",
