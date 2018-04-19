@@ -43,7 +43,7 @@ class RapprochementController extends Controller
             'label' => 'Compte bancaire',
             'choices' => $arr_comptesBancaires,
             'attr' => array('class' => 'compte-select'),
-            'data' => $this->getDoctrine()->getManager()->getReference("AppBundle:Compta\CompteBancaire", $filtreReleveBancaire['id'])
+           // 'data' => $this->getDoctrine()->getManager()->getReference("AppBundle:Compta\CompteBancaire", $filtreReleveBancaire['id'])
         ));
 
         /*pour afficher le solde du compte bancaire*/

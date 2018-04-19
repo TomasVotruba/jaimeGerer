@@ -24,7 +24,7 @@ class ReleveBancaireService extends ContainerAware {
   	$arr_mouvements = array();
 
   	//parsing du CSV
-	$csv = new \parseCSV();
+	$csv = new \ParseCsv\Csv();
 	$csv->delimiter = ";";
 	$csv->encoding('ISO-8859-1', 'UTF-8');
 	$csv->parse($this->path.$filename);
@@ -48,7 +48,9 @@ class ReleveBancaireService extends ContainerAware {
 			$date = \DateTime::createFromFormat($dateFormat, $data[$colDate]);
 			$mouvement->setDate($date);
 
-			if($data[$colCredit] > 0){
+			$credit = str_replace(',','.',$data[$colCredit]);
+
+			if($credit > 0){
 				$montant = $data[$colCredit];
 				$montant = str_replace(',','.',$montant);
 				$montant = preg_replace('/\s+/u', '', $montant);
