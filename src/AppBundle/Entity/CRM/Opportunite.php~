@@ -98,6 +98,12 @@ class Opportunite
 	private $userGestion;
 
   /**
+   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+   * @ORM\JoinColumn(nullable=false)
+   */
+  private $userCompetCom;
+
+  /**
    * @var string
    *
    * @ORM\Column(name="type", type="string")
@@ -193,6 +199,19 @@ class Opportunite
   {
       $this->settings = new \Doctrine\Common\Collections\ArrayCollection();
   }
+
+  /**
+     * Set id
+     *
+     * @param int $id
+     * @return Contact
+     */
+    public function setId($id)
+    {
+      $this->id = $id;
+       
+      return $this;
+    }
 
 
   /**
@@ -592,6 +611,7 @@ class Opportunite
     }
 
     public function win(){
+      $this->dateWon = new \DateTime(date('Y-m-d'));
       $this->etat = "WON";
     }
 
@@ -914,5 +934,28 @@ class Opportunite
     public function getPrescription()
     {
         return $this->prescription;
+    }
+
+    /**
+     * Set dateWon
+     *
+     * @param \DateTime $dateWon
+     * @return Opportunite
+     */
+    public function setDateWon($dateWon)
+    {
+        $this->dateWon = $dateWon;
+
+        return $this;
+    }
+
+    /**
+     * Get dateWon
+     *
+     * @return \DateTime 
+     */
+    public function getDateWon()
+    {
+        return $this->dateWon;
     }
 }

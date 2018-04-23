@@ -19,8 +19,8 @@ class ChequeType extends AbstractType
 
 	public function __construct ( $arr_cheque_pieces = null, $companyId)
 	{
-        $this->arr_cheque_pieces = $arr_cheque_pieces;
-		$this->companyId = $companyId;
+      $this->arr_cheque_pieces = $arr_cheque_pieces;
+		  $this->companyId = $companyId;
 	}
 
     /**

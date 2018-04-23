@@ -7,7 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 use AppBundle\Entity\CRM\CompetCom;
+use AppBundle\Entity\CRM\Opportunite;
+
 use AppBundle\Form\CRM\CompetComType;
+use AppBundle\Form\CRM\ActionCommercialeUserCompetComType;
 
 
 class CompetitionCommercialeController extends Controller
@@ -58,7 +61,7 @@ class CompetitionCommercialeController extends Controller
 
 			foreach($arr_actionsCommerciales as $actionCommerciale){
 
-				$user = $actionCommerciale->getUserGestion();
+				$user = $actionCommerciale->getUserCompetCom();
 
 				if(!array_key_exists($user->getId(), $arr_users)){
 					continue;
@@ -139,6 +142,34 @@ class CompetitionCommercialeController extends Controller
 
 		return $this->render('crm/competition-commerciale/crm_competition_commerciale_ajouter.html.twig', array(
 			'form' => $form->createView()
+		));
+	}
+
+	/**
+	 * @Route("/crm/competition-commerciale/modifier-user/{id}", name="crm_competition_commerciale_modifier_user")
+	 */
+	public function competitionCommercialeModifierUser(Opportunite $actionCommerciale)
+	{
+		$em = $this->getDoctrine()->getManager();
+
+		$form = $this->createForm(
+			new ActionCommercialeUserCompetComType(),
+			$actionCommerciale
+		);
+
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$em->persist($actionCommerciale);
+			$em->flush();
+
+			return $this->redirect($this->generateUrl('crm_competition_commerciale'));
+		}
+
+		return $this->render('crm/competition-commerciale/crm_competition_commerciale_modifier_user_modal.html.twig', array(
+			'form' => $form->createView(),
+			'actionCommerciale' => $actionCommerciale
 		));
 	}	
 

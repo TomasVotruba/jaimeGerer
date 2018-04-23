@@ -56,6 +56,9 @@
                                             <a class="btn btn-xs btn-info" href="{{ path('crm_action_commerciale_voir', {'id' : actionCommerciale.id }) }}" target="_blank">
                                                 <span class="glyphicon glyphicon-eye-open"></span>
                                             </a> 
+                                            <a class="btn btn-xs btn-warning" href="{{ path('crm_competition_commerciale_modifier_user', {'id' : actionCommerciale.id }) }}" data-toggle="modal" data-target="#modal" title="Affecter à quelqu'un d'autre">
+                                                <span class="glyphicon glyphicon-user"></span>
+                                            </a>
                                         </li>
                                         {% if loop.last == false %}
                                             <hr />
@@ -100,6 +103,9 @@
                                             <a class="btn btn-xs btn-info" href="{{ path('crm_action_commerciale_voir', {'id' : actionCommerciale.id }) }}" target="_blank">
                                                 <span class="glyphicon glyphicon-eye-open"></span>
                                             </a>
+                                            <a class="btn btn-xs btn-warning" href="{{ path('crm_competition_commerciale_modifier_user', {'id' : actionCommerciale.id }) }}" data-toggle="modal" data-target="#modal" title="Affecter à quelqu'un d'autre">
+                                                <span class="glyphicon glyphicon-user"></span>
+                                            </a>
                                         </li>
                                         {% if loop.last == false %}
                                             <hr />
@@ -143,6 +149,9 @@
                                             {{ actionCommerciale.compte.nom }}
                                             <a class="btn btn-xs btn-info" href="{{ path('crm_action_commerciale_voir', {'id' : actionCommerciale.id }) }}" target="_blank">
                                                 <span class="glyphicon glyphicon-eye-open"></span>
+                                            </a>
+                                            <a class="btn btn-xs btn-warning" href="{{ path('crm_competition_commerciale_modifier_user', {'id' : actionCommerciale.id }) }}" data-toggle="modal" data-target="#modal" title="Affecter à quelqu'un d'autre">
+                                                <span class="glyphicon glyphicon-user"></span>
                                             </a>
                                         </li>
                                         {% if loop.last == false %}

@@ -98,6 +98,12 @@ class Opportunite
 	private $userGestion;
 
   /**
+   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+   * @ORM\JoinColumn(nullable=true)
+   */
+  private $userCompetCom = null;
+
+  /**
    * @var string
    *
    * @ORM\Column(name="type", type="string")
@@ -951,5 +957,28 @@ class Opportunite
     public function getDateWon()
     {
         return $this->dateWon;
+    }
+
+    /**
+     * Set userCompetCom
+     *
+     * @param \AppBundle\Entity\User $userCompetCom
+     * @return Opportunite
+     */
+    public function setUserCompetCom(\AppBundle\Entity\User $userCompetCom)
+    {
+        $this->userCompetCom = $userCompetCom;
+
+        return $this;
+    }
+
+    /**
+     * Get userCompetCom
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getUserCompetCom()
+    {
+        return $this->userCompetCom;
     }
 }

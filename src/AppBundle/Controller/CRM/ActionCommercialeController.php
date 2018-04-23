@@ -188,6 +188,7 @@ class ActionCommercialeController extends Controller
 		}
 
 		$opportunite->setUserGestion($this->getUser());
+		$opportunite->setUserCompetCom($this->getUser());
 		$form = $this->createForm(
 			new ActionCommercialeType(
 					$opportunite->getUserGestion()->getId(),
