@@ -258,9 +258,9 @@ class ActionCommercialeType extends AbstractType
                 'required' => false,
                 'label' => 'Commentaire',
                 'mapped' => false,
-                'data' => $this->devis ? $this->devis->getDescription() : null
+                'data' => $this->devis->getDescription() ? $this->devis->getDescription() : 'Les frais de déplacement, hébergement et restauration seront ajoutés en sus sur présentation de justificatifs.'
             ))
-            ;
+        ;
     }
 
     /**

@@ -128,8 +128,10 @@ class RemiseChequeController extends Controller
 		$avoirsRepo = $em->getRepository('AppBundle:Compta\Avoir');
 		$arr_avoirs = array();
 		$arr_avoirs_tmp = $avoirsRepo->findForCompany('FOURNISSEUR', $this->getUser()->getCompany());
-		foreach($arr_avoirs as $avoir){
-			$arr_avoirs['A'.$avoir->getId()] = $avoir->getNum().' - '.$avoir->getCompte().' - '.$avoir->getTotalTTC();
+		foreach($arr_avoirs_tmp as $avoir){
+			if($avoir->getTotalRapproche() < $avoir->getTotalTTC() && !in_array($avoir->getId(), $arr_avoirs_rapprochees_par_remises_cheques) && !$avoir->isLettre()){
+				$arr_avoirs['A'.$avoir->getId()] = $avoir->getNum().' - '.$avoir->getDepense()->getCompte().' - '.$avoir->getTotalTTC();
+			}
 		}
 
 
