@@ -705,7 +705,7 @@ class FactureController extends Controller
 	 */
 	public function factureDupliquerAction(DocumentPrix $facture)
 	{
-		if( is_null($facture->getNumBCInterne()) || is_null($facture->getAnalytique()) )
+		if( is_null($facture->getBonCommande()) || is_null($facture->getAnalytique()) )
 		{
 			return $this->redirect($this->generateUrl(
 					'crm_facture_voir', array('id' => $facture->getId())
