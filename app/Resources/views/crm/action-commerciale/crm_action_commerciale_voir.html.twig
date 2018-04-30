@@ -482,7 +482,7 @@
 											{% set hasSousTraitance = false %}
 											{% for sousTraitance in opportunite.opportuniteSousTraitances %}
 												{% for sousTraitanceRepartition in sousTraitance.repartitions %}
-													{% if sousTraitanceRepartition.date == repartition.date %}
+													{% if sousTraitanceRepartition.date|date('Y-m') == repartition.date|date('Y-m') %}
 														{% set hasSousTraitance = true %}
 														<li>
 															{{ sousTraitance.sousTraitant }} : {{ sousTraitanceRepartition.montantMonetaire|number_format(2, ',', ' ') }} €  
