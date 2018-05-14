@@ -63,10 +63,22 @@
 	    <div class="col-md-6">
 	    	{{ form_row(form.reseau) }}
 	  	 	{{ form_row(form.origine) }}
-	  	 	{{ form_row(form.carteVoeux) }}
-	  	 	{{ form_row(form.newsletter) }}
+	  	 	
 	    </div>
     </div>
+
+    <div class="row">
+	    <div class="col-md-6">
+			{{ form_row(form.newsletter) }}
+			{{ form_row(form.carteVoeux) }}
+	    </div>
+	    <div class="col-md-6">
+	    	{{ form_row(form.rejetNewsletter) }}
+			{{ form_row(form.rejetEmail) }}
+	    </div>
+	</div>
+
+    
 
     <div class="row">
      	<div class="col-md-12">

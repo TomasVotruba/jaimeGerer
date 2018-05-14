@@ -108,7 +108,14 @@ class ContactType extends AbstractType
         		'required' => false,
   				'label' => 'Newsletter'
         	))
-			
+            ->add('rejetNewsletter', 'checkbox', array(
+                'required' => false,
+                'label' => 'Ne pas envoyer newsletter'
+            ))
+	       ->add('rejetEmail', 'checkbox', array(
+                'required' => false,
+                'label' => 'Ne pas envoyer emailings'
+            ))
 			->add('compte_name', 'text', array(
 				'required' => true,
 				'mapped' => false,
