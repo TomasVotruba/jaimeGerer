@@ -60,11 +60,14 @@ class RapportFilterType extends AbstractType
                     'RESEAU' => 'Reseau',
                     'carteVoeux' => 'Carte de voeux',
                     'newsletter' => 'Newsletter',
+                    'rejetNewsletter' => 'Ne pas envoyer newsletter',
+                    'rejetEmail' => 'Ne pas envoyer emailings',
                     'THEME_INTERET' => 'Thèmes d\'intérêt',
                     'SERVICE_INTERET' => 'Services d\'intérêt',
                     'SECTEUR' => 'Secteur d\'activité'
                 );
                 break;
+
 			case 'prospection':
     				$arr_champs = array(
     				'prenom' => 'Prenom',

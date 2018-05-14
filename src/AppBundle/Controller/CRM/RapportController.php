@@ -186,6 +186,8 @@ class RapportController extends Controller
 						'services_interet' => 'Services d\'intérêt',
 						'carte_voeux' => 'Carte de voeux',
 						'newsletter' => 'Newsletter',
+						'rejetNewsletter' => 'Ne pas envoyer newsletter',
+						'rejetEmail' => 'Ne pas envoyer emailings',
 						'gestionnaire' =>	'Gestionnaire du contact',
 				);
 				break;
@@ -732,6 +734,18 @@ class RapportController extends Controller
 						$arr_data['newsletter'] = '<span class="glyphicon glyphicon-ok"></span>';
 					} else {
 						$arr_data['newsletter'] = "";
+					}
+
+					if($contact->getRejetNewsletter()){
+						$arr_data['rejetNewsletter'] = '<span class="glyphicon glyphicon-ok"></span>';
+					} else {
+						$arr_data['rejetNewsletter'] = "";
+					}
+
+					if($contact->getRejetEmail()){
+						$arr_data['rejetEmail'] = '<span class="glyphicon glyphicon-ok"></span>';
+					} else {
+						$arr_data['rejetEmail'] = "";
 					}
 						
 					$arr_processed_data[] = $arr_data;
