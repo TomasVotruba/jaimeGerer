@@ -167,6 +167,13 @@ class Contact
     /**
      * @var boolean
      *
+     * @ORM\Column(name="rejet_newsletter", type="boolean")
+     */
+    private $rejetNewsletter = false;
+
+    /**
+     * @var boolean
+     *
      * @ORM\Column(name="newsletter", type="boolean")
      */
     private $newsletter = false;
@@ -1035,5 +1042,28 @@ class Contact
             }
         }
         return $arr_secteurs;
+    }
+
+    /**
+     * Set rejetNewsletter
+     *
+     * @param boolean $rejetNewsletter
+     * @return Contact
+     */
+    public function setRejetNewsletter($rejetNewsletter)
+    {
+        $this->rejetNewsletter = $rejetNewsletter;
+
+        return $this;
+    }
+
+    /**
+     * Get rejetNewsletter
+     *
+     * @return boolean 
+     */
+    public function getRejetNewsletter()
+    {
+        return $this->rejetNewsletter;
     }
 }

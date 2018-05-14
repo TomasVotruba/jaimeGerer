@@ -277,26 +277,11 @@
 				    			</ul>
 			    			</td>
 			    		</tr>
-			    		<tr>
-				    		<td>Newsletter</td>  
-				    		<td id="contact-newsletter">
-								{% if contact.newsletter == true %}
-						    		<span class="glyphicon glyphicon-ok"></span>
-						    	{% endif %}	    	
-						    </td> 
-						</tr>
-			    		<tr>
-				    		<td>Carte de voeux</td>  
-				    		<td id="contact-carte-voeux">
-								{% if contact.carteVoeux == true %}
-						    		<span class="glyphicon glyphicon-ok"></span>
-						    	{% endif %}	    	
-						    </td> 
-						</tr>
+			    		
 			    	</tbody>
 			    </table>
-		    </div>
-		    <div class="col-md-6">
+			</div>
+			<div class="col-md-6">
 		    	<table class="contact-view-table">
 		    		<tbody>
 		    			<tr>
@@ -337,7 +322,67 @@
 				    </tbody>
 	    		</table>
 	    	</div>
+		</div>
+
+		 <div class="row">
+	    	<div class="col-md-12">
+	    		<hr />
+	    	</div>
+	    </div>
+
+		<div class="row">
+	    	<div class="col-md-6">
+	     		<table class="contact-view-table">
+			    	<tbody>
+    		    		<tr>
+    			    		<td>Newsletter</td>  
+    			    		<td id="contact-newsletter">
+    							{% if contact.newsletter == true %}
+    					    		<span class="glyphicon glyphicon-ok"></span>
+    					    	{% endif %}	    	
+    					    </td> 
+    					</tr>
+    		    		<tr>
+    			    		<td>Carte de voeux</td>  
+    			    		<td id="contact-carte-voeux">
+    							{% if contact.carteVoeux == true %}
+    					    		<span class="glyphicon glyphicon-ok"></span>
+    					    	{% endif %}	    	
+    					    </td> 
+    					</tr>
+			    	</tbody>
+			    </table>
+		    </div>
+		    <div class="col-md-6">
+	     		<table class="contact-view-table">
+			    	<tbody>
+			    		<tr>
+    			    		<td>Ne pas envoyer newsletter</td>  
+    			    		<td>
+    							{% if contact.rejetNewsletter == true %}
+    					    		<span class="glyphicon glyphicon-ok"></span>
+    					    	{% endif %}	    	
+    					    </td> 
+    					</tr>
+    		    		<tr>
+    			    		<td>Ne pas envoyer emailings</td>  
+    			    		<td>
+    							{% if contact.rejetEmail == true %}
+    					    		<span class="glyphicon glyphicon-ok"></span>
+    					    	{% endif %}	    	
+    					    </td> 
+    					</tr>
+			    	</tbody>
+			    </table>
+		    </div>
 	   </div>
+
+	    <div class="row">
+	    	<div class="col-md-12">
+	    		<hr />
+	    	</div>
+	    </div>
+
 	   <div class="row">
 	    	<div class="col-md-12">
 	    		<hr />

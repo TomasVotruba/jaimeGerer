@@ -188,7 +188,7 @@ class ActionCommercialeController extends Controller
 		}
 
 		$opportunite->setUserGestion($this->getUser());
-		$opportunite->setUserCompetCom($this->getUser());
+		
 		$form = $this->createForm(
 			new ActionCommercialeType(
 					$opportunite->getUserGestion()->getId(),
@@ -220,6 +220,7 @@ class ActionCommercialeController extends Controller
 			$opportunite->setContact($em->getRepository('AppBundle:CRM\Contact')->findOneById($data->getContact()));
 			$opportunite->setDateCreation(new \DateTime(date('Y-m-d')));
 			$opportunite->setUserCreation($this->getUser());
+			$opportunite->setUserCompetCom($this->getUser());
 			$opportunite->setMontant($form->get('totalHT')->getData());
 
 			$opportunite->setDevis($devis);

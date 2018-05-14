@@ -167,6 +167,13 @@ class Contact
     /**
      * @var boolean
      *
+     * @ORM\Column(name="rejet_newsletter", type="boolean")
+     */
+    private $rejetNewsletter = false;
+
+    /**
+     * @var boolean
+     *
      * @ORM\Column(name="newsletter", type="boolean")
      */
     private $newsletter = false;
@@ -232,6 +239,7 @@ class Contact
     /**
      *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\PriseContact", mappedBy="contact", cascade={"persist", "remove"}, orphanRemoval=true)
+     *  @ORM\OrderBy({"date" = "DESC"})
      *
      */
     private $priseContacts;
@@ -255,7 +263,7 @@ class Contact
      * Set id
      *
      * @param int $id
-     * @return Compte
+     * @return Contact
      */
     public function setId($id)
     {
@@ -906,11 +914,9 @@ class Contact
      */
     public function getPriseContacts()
     {
-         $criteria = Criteria::create()
-	      ->orderBy(array("date" => Criteria::DESC));
-	
-	    return $this->priseContacts->matching($criteria);
+	    return $this->priseContacts;
     }
+
 	public function getRejetEmail() {
 		return $this->rejetEmail;
 	}
@@ -1026,5 +1032,15 @@ class Contact
     public function getImportMauticStatus()
     {
         return $this->importMauticStatus;
+    }
+
+    public function getSecteursActivite(){
+        $arr_secteurs = array();
+        foreach($this->settings as $setting){
+            if( $setting->getParametre() == 'SECTEUR') {
+                $arr_secteurs[] = $setting;
+            }
+        }
+        return $arr_secteurs;
     }
 }
