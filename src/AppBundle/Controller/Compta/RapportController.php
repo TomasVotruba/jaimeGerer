@@ -125,7 +125,7 @@ class RapportController extends Controller
 						array(
 								'margin-bottom' => '10mm',
 								'margin-top' => '10mm',
-								'zoom' => 0.8, //prod only, zoom level is not the same on Windows
+								//'zoom' => 0.8, //prod only, zoom level is not the same on Windows
 								'default-header'=>false,
 						)
 				),
