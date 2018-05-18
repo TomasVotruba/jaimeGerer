@@ -775,8 +775,6 @@ class ActionCommercialeController extends Controller
 
 			if ($form->isSubmitted() && $form->isValid()) {
 
-				return 0;
-
 				$em = $this->getDoctrine()->getManager();
 				$data = $form->getData();
 				$facture = clone $devis;
