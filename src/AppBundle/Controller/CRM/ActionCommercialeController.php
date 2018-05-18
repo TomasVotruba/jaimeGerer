@@ -858,7 +858,12 @@ class ActionCommercialeController extends Controller
 						'crm_facture_voir',
 						array('id' => $facture->getId())
 				));
+			} else {
+
+
+				return 0;
 			}
+
 			return $this->render('crm/action-commerciale/crm_action_commerciale_convertir.html.twig', array(
 					'form' 		=> $form->createView(),
 					'actionCommerciale'		=> $actionCommerciale
