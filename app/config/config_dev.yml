@@ -44,8 +44,6 @@ monolog:
 assetic:
     use_controller: true
 
-#swiftmailer:
-#    delivery_address: me@example.com
 
 # KNPSnappy HtmlToPdf Configuration
 knp_snappy:
@@ -54,12 +52,6 @@ knp_snappy:
         #binary:     /usr/local/bin/wkhtmltopdf
         binary:     C:\wkhtmltopdf12\bin\wkhtmltopdf
         options: []
-
-# Swiftmailer Configuration
-#~ swiftmailer:
-    #~ transport:  gmail
-    #~ username:   gilquin.nicomak@gmail.com
-    #~ password:   S!ss!&B@tw0m@n
 
 cspoo_swiftmailer_mailgun:
     #key: "key-ebd2508e9c7346eb95c5eea86240029d"
@@ -72,15 +64,6 @@ cspoo_swiftmailer_mailgun:
 swiftmailer:
     default_mailer: gmail
     mailers:
-        gmail:
-            host: box421.bluehost.com
-            transport:  smtp
-            username:   gilquin@nicomak.eu
-            password:   N!c0m@k007!
-            delivery_address: test@nicomak.eu
-            port: 465
-            encryption: ssl
-            auth_mode: login
         mailgun:
             transport: "mailgun"
             spool:     { type: memory }
