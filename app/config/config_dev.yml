@@ -60,13 +60,6 @@ cspoo_swiftmailer_mailgun:
     #domain: "sandboxd55b4a445a5948409dc77ea13bef9d5a.mailgun.org"
     domain: "testhichem1.mdprc.com"
 
-# Swiftmailer Configuration
-swiftmailer:
-    default_mailer: gmail
-    mailers:
-        mailgun:
-            transport: "mailgun"
-            spool:     { type: memory }
 
 #    transport: "mailgun"
 #    spool:     { type: memory } # This will start sending emails on kernel.terminate event
