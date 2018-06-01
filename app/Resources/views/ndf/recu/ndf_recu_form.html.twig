@@ -76,9 +76,9 @@
 			$('.montant-tva').change(function(){
 				updateMontants();
 			});
-			$('.montant-ttc').change(function(){
-				updateMontants();
-			});
+			// $('.montant-ttc').change(function(){
+			// 	updateMontants();
+			// });
 
 			function updateMontants(){
 				var ht = $('.montant-ht').val();
@@ -94,8 +94,14 @@
 				$('.montant-ttc').val(ttc);
 
 				if(tva != 0){
-					var ttc = +ht + +tva;
-					$('.montant-ttc').val(ttc.toFixed(2));
+					if(ht != 0){
+						var ttc = +ht + +tva;
+						$('.montant-ttc').val(ttc.toFixed(2));
+					} else if (ttc != 0){
+						var ht = +ttc - +tva;
+						$('.montant-ht').val(ht.toFixed(2));
+					}
+					
 				} else {
 					$('.montant-ttc').val(ht);
 				}
