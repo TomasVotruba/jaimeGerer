@@ -212,6 +212,11 @@ class ContactRepository extends EntityRepository
 
 			if($action == 'NOT_EQUALS' || $action == 'NOT_CONTAINS'){
 				$operateur = 'NOT LIKE';
+			} 
+			 elseif ($action == 'MORE_THAN'){
+			 	$operateur = '>';
+			} elseif ($action == 'LESS_THAN'){
+			 	$operateur = '<';
 			}
 
 			$arr_valeurs = explode(',', $filter->getValeur());
@@ -390,7 +395,7 @@ class ContactRepository extends EntityRepository
 						$param = ':valeur'.$index.$i;
 
 						$val = '';
-						if($action == 'EQUALS' || $action == 'NOT_EQUALS'){
+						if($action == 'EQUALS' || $action == 'NOT_EQUALS' || $action == 'MORE_THAN' || $action == 'LESS_THAN' ){
 							$val = $arr_valeurs[$i];
 						} elseif($action == 'CONTAINS' || $action == 'NOT_CONTAINS'){
 							$val = '%'.$arr_valeurs[$i].'%';
@@ -434,8 +439,8 @@ class ContactRepository extends EntityRepository
 		$query->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
 				->andWhere('co.company = :company')
 				->setParameter('company', $company);
+
 		$result = $query->getQuery()->getResult();
-		
 
 		return $result;
 	}

@@ -64,7 +64,10 @@ class RapportFilterType extends AbstractType
                     'rejetEmail' => 'Ne pas envoyer emailings',
                     'THEME_INTERET' => 'Thèmes d\'intérêt',
                     'SERVICE_INTERET' => 'Services d\'intérêt',
-                    'SECTEUR' => 'Secteur d\'activité'
+                    'SECTEUR' => 'Secteur d\'activité',
+                    'dateCreation' => 'Date de création',
+                    'dateEdition' => 'Date de modification',
+
                 );
                 break;
 
