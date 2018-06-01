@@ -155,7 +155,9 @@ class RapportFilterType extends AbstractType
     			'IS_TRUE' => 'Est vrai',
     			'IS_FALSE' => 'Est faux',
     			'MORE_THAN' => '>',
-    			'LESS_THAN' => '<'
+                'LESS_THAN' => '<',
+                'MORE_OR_EQUALS' => '>=',
+    			'LESS_OR_EQUALS' => '<='
     	);
 
     	$arr_andor = array(

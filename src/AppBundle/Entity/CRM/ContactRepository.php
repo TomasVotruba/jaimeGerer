@@ -217,6 +217,10 @@ class ContactRepository extends EntityRepository
 			 	$operateur = '>';
 			} elseif ($action == 'LESS_THAN'){
 			 	$operateur = '<';
+			} elseif ($action == 'MORE_OR_EQUALS'){
+			 	$operateur = '>=';
+			} elseif ($action == 'LESS_OR_EQUALS'){
+			 	$operateur = '<=';
 			}
 
 			$arr_valeurs = explode(',', $filter->getValeur());
@@ -274,7 +278,7 @@ class ContactRepository extends EntityRepository
  						$param = ':valeur'.$index.$i;
 
  						$val = '';
- 						if($action == 'EQUALS' || $action == 'NOT_EQUALS'){
+ 						if($action == 'EQUALS' || $action == 'NOT_EQUALS' || $action == 'MORE_THAN' || $action == 'LESS_THAN' || $action == 'MORE_OR_EQUALS' || $action == 'LESS_OR_EQUALS'){
  							$val = $arr_valeurs[$i];
  						} elseif($action == 'CONTAINS' || $action == 'NOT_CONTAINS'){
  							$val = '%'.$arr_valeurs[$i].'%';
@@ -325,7 +329,7 @@ class ContactRepository extends EntityRepository
 	 					$param = ':valeur'.$index.$i;
 
 	 					$val = '';
-	 					if($action == 'EQUALS' || $action == 'NOT_EQUALS'){
+	 					if($action == 'EQUALS' || $action == 'NOT_EQUALS' || $action == 'MORE_THAN' || $action == 'LESS_THAN' || $action == 'MORE_OR_EQUALS' || $action == 'LESS_OR_EQUALS'){
 	 						$val = $arr_valeurs[0];
 	 					} elseif($action == 'CONTAINS' || $action == 'NOT_CONTAINS'){
 	 						$val = '%'.$arr_valeurs[0].'%';
@@ -395,7 +399,7 @@ class ContactRepository extends EntityRepository
 						$param = ':valeur'.$index.$i;
 
 						$val = '';
-						if($action == 'EQUALS' || $action == 'NOT_EQUALS' || $action == 'MORE_THAN' || $action == 'LESS_THAN' ){
+						if($action == 'EQUALS' || $action == 'NOT_EQUALS' || $action == 'MORE_THAN' || $action == 'LESS_THAN' || $action == 'MORE_OR_EQUALS' || $action == 'LESS_OR_EQUALS' ){
 							$val = $arr_valeurs[$i];
 						} elseif($action == 'CONTAINS' || $action == 'NOT_CONTAINS'){
 							$val = '%'.$arr_valeurs[$i].'%';
