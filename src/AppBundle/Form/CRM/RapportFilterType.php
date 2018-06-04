@@ -48,7 +48,7 @@ class RapportFilterType extends AbstractType
                     'compte' => 'Organisation',
                     'adresse' => 'Adresse',
                     'ville' => 'Ville',
-                    'code_postal' => 'Code postal',
+                    'codePostal' => 'Code postal',
                     'region' => 'Region',
                     'pays' => 'Pays',
                     'telephoneFixe' => 'Téléphone fixe',
