@@ -50,6 +50,11 @@
 
     <script type="text/javascript">
 
+        $("* [rel='tooltip']").tooltip({
+            html: true,
+            placement: 'top'
+        });
+
 
         $(document).ready(function() {
 
@@ -84,6 +89,22 @@
                     { "data": "montant_facture"},
                     { "data": "factures"},
                 ],
+                fnDrawCallback: function () {
+                    $( 'a', this.fnGetNodes() ).tooltip( {
+                        "delay": 0,
+                        "track": true,
+                        "fade": 250,
+                        "tooltipClass": 'btn',
+                    } );
+                },
+                fnInitComplete: function () {
+                    $( 'a', this.fnGetNodes() ).tooltip( {
+                        "delay": 0,
+                        "track": true,
+                        "fade": 250,
+                        "tooltipClass": 'btn',
+                    } );
+                },
                 "columnDefs": [
                     {
                         "render": function ( data, type, row ) {
@@ -124,23 +145,6 @@
                         "targets": 5
                     },
                 ],
-                 fnDrawCallback: function () {
-                    $( 'a', this.fnGetNodes() ).tooltip( {
-                        "delay": 0,
-                        "track": true,
-                        "fade": 250,
-                        "tooltipClass": 'btn btn-default',
-                    } );
-                },
-                fnInitComplete: function () {
-                    $( 'a', this.fnGetNodes() ).tooltip( {
-                        "delay": 0,
-                        "track": true,
-                        "fade": 250,
-                        "tooltipClass": 'btn btn-default',
-                    } );
-                },
-    
             });
 
             $('.year-select').change(function() {

@@ -167,7 +167,7 @@ class BonCommandeController extends Controller
 		$response->setData(array(
 			'draw' => intval( $requestData->get('draw') ),
 			'recordsTotal' => $repository->countForList($this->getUser()->getCompany(), $arr_search['value']),
-			'recordsFiltered' => count($list),
+			'recordsFiltered' => $repository->countForList($this->getUser()->getCompany(), $arr_search['value']),
 			'aaData' => $list,
 		));
 		return $response;
