@@ -387,11 +387,8 @@
         sentData =  JSON.stringify(sentData);
 
 
-
-
         var spanIcn = document.getElementById('spanGlyphicon');
         var divContent = document.getElementById('textContent');
-
 
         $.ajax({
             url: "{{ path('crm_change_rapport') }}",
@@ -402,7 +399,8 @@
 
                 spanIcn.classList.remove('glyphicon-remove');
                 spanIcn.classList.add('glyphicon-ok');
-                divContent.textContent("Export effectué avec succès");
+                console.log(divContent);
+                divContent.textContent = "Export effectué avec succès";
 
                 $('#modaleProspection').modal('show');
             },
@@ -410,7 +408,7 @@
 
                 spanIcn.classList.remove('glyphicon-ok');
                 spanIcn.classList.add('glyphicon-remove');
-                divContent.textContent("Une erreur s'est produite durant l'export");
+                divContent.textContent = "Une erreur s'est produite durant l'export";
 
                 $('#modaleProspection').modal('show');
 

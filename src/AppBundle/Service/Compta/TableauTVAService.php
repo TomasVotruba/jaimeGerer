@@ -105,6 +105,7 @@ class TableauTVAService extends ContainerAware {
 
 						//non soumis à TVA
 						if($rapprochement->getFacture()->getAnalytique()->getNoTVA()){
+
 							$arr_non_soumis[$type]['entreeHT']+= $rapprochement->getFacture()->getTotalHT();
 							$arr_non_soumis[$type]['entreeTTC']+= $rapprochement->getFacture()->getTotalTTC();
 
@@ -120,6 +121,10 @@ class TableauTVAService extends ContainerAware {
 								} else {
 									$arr_soumis[$type]['taxe_percent']['other']+=$rapprochement->getFacture()->getTaxe();
 								}
+							}
+
+							if( $arr_periode['mois'] == '05' && $arr_periode['annee'] == "18" ){
+								dump($rapprochement->getFacture());
 							}
 						}
 
