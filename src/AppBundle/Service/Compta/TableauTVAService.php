@@ -123,9 +123,6 @@ class TableauTVAService extends ContainerAware {
 								}
 							}
 
-							if( $arr_periode['mois'] == '05' && $arr_periode['annee'] == "18" ){
-								dump($rapprochement->getFacture());
-							}
 						}
 
 					} elseif($rapprochement->getRemiseCheque()){
