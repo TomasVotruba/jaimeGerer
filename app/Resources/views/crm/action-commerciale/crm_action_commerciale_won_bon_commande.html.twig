@@ -219,7 +219,7 @@
                 } else if (total > {{ actionCommerciale.montant}}) {
 
                     var trop = total - {{ actionCommerciale.montant }};
-                    $('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Vous avez réparti " + accounting.formatMoney(trop, {
+                    $('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> " + accounting.formatMoney(trop, {
                         symbol: "€",
                         format: "%v %s",
                         decimal: ",",

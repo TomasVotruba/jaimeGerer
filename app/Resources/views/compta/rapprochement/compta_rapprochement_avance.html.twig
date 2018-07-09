@@ -440,11 +440,14 @@
 
 		function checkTotaux(){
 
-			var totalPieces = calculTotalPieces()*100;
-			var totalMouvements = calculTotalMouvements()*100;
+			var totalPieces = (calculTotalPieces()*100).toFixed(2);
+			var totalMouvements = (calculTotalMouvements()*100).toFixed(2);
 
 			if(totalPieces > totalMouvements){
 				
+				console.log(totalPieces);
+				console.log(totalMouvements);
+
 				var diff = totalPieces - totalMouvements;
 				var error = "Pièces supérieures de "+diff/100+" €";
 				$('#error').text(error)
