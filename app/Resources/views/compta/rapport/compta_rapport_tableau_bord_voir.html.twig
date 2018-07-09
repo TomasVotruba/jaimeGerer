@@ -48,6 +48,14 @@
               </a>
             {% else %}
                 {{ total_prev|number_format(2,',',' ') }} €
+                {% if poste == "actions_commerciales" or poste == "ca_mois" %}
+                    <span class="repartition-public-prive">
+                        <br /> Privé : 
+                        <br />{{ arr_totaux['prev'][poste~'_repartition'][i]['prive']|number_format(2,',',' ') }} €
+                        <br /> Public : 
+                        <br />{{ arr_totaux['prev'][poste~'_repartition'][i]['public']|number_format(2,',',' ') }} €
+                    </span>
+                {% endif %}
             {% endif %}
           </p>
         </td>
@@ -58,35 +66,76 @@
               -
             {% else %}
               {{ total_predictif|number_format(2,',',' ') }} €
+              {% if poste == "ca_mois" %}
+                  <span class="repartition-public-prive">
+                      <br /> Privé : 
+                      <br />{{ arr_totaux['predictif'][poste~'_repartition'][i]['prive']|number_format(2,',',' ') }} €
+                      <br /> Public : 
+                      <br />{{ arr_totaux['predictif'][poste~'_repartition'][i]['public']|number_format(2,',',' ') }} €
+                  </span>
+              {% endif %}
             {% endif %}
           </td>
         {% endif %}
 
         <td class="accurate
-          {% if poste == "couts_marginaux" or poste == "couts_exploitation" or poste == "dotation_amortissements" %}
-              {{ total_prev < total_accurate ? 'red' : 'green' }}
-          {% else %}
-              {{ total_prev > total_accurate ? 'red' : 'green' }}
-          {% endif %}
-
-          " id="total-{{ poste }}-{{ i }}-accurate">
-          {{ total_accurate|number_format(2,',',' ') }} €
+            {% if poste == "couts_marginaux" or poste == "couts_exploitation" or poste == "dotation_amortissements" %}
+                {{ total_prev < total_accurate ? 'red' : 'green' }}
+            {% else %}
+                {{ total_prev > total_accurate ? 'red' : 'green' }}
+            {% endif %}
+            " id="total-{{ poste }}-{{ i }}-accurate">
+            {{ total_accurate|number_format(2,',',' ') }} €
+            {% if poste == "actions_commerciales" or poste == "ca_mois"  %}
+                <span class="repartition-public-prive">
+                    <br /> Privé : 
+                    <br />{{ arr_totaux['accurate'][poste~'_repartition'][i]['prive']|number_format(2,',',' ') }} €
+                    <br /> Public : 
+                    <br />{{ arr_totaux['accurate'][poste~'_repartition'][i]['public']|number_format(2,',',' ') }} €
+                </span>
+            {% endif %}
         </td>
       {% endfor %}
 
       <td class="prev">
         {{ arr_totaux['prev'][poste]['total']|number_format(2, ',', ' ') }} € 
+         {% if poste == "actions_commerciales" or poste == "ca_mois"  %}
+            <span class="repartition-public-prive">
+                <br /> Privé : 
+                <br />{{ arr_totaux['prev'][poste~'_repartition']['total']['prive']|number_format(2,',',' ') }} €
+                <br /> Public : 
+             <br />{{ arr_totaux['prev'][poste~'_repartition']['total']['public']|number_format(2,',',' ') }} €
+            </span>
+        {% endif %}
+       
       </td>
-      <td class="predictif">
+        <td class="predictif">
         {% if 'actions_commerciales' == poste %}
           -
         {% else %}
-          {{ arr_totaux['predictif'][poste]['total']|number_format(2, ',', ' ') }} € 
+            {{ arr_totaux['predictif'][poste]['total']|number_format(2, ',', ' ') }} € 
+            {% if poste == "ca_mois" %}
+                  <span class="repartition-public-prive">
+                      <br /> Privé : 
+                      <br />{{ arr_totaux['predictif'][poste~'_repartition']['total']['prive']|number_format(2,',',' ') }} €
+                      <br /> Public : 
+                      <br />{{ arr_totaux['predictif'][poste~'_repartition']['total']['public']|number_format(2,',',' ') }} €
+                  </span>
+              {% endif %}
         {% endif %}
-      </td>
-      <td class="accurate">
-        {{ arr_totaux['accurate'][poste]['total']|number_format(2, ',', ' ') }} €
-      </td>
+         </td>
+
+        <td class="accurate">
+            {{ arr_totaux['accurate'][poste]['total']|number_format(2, ',', ' ') }} €
+            {% if poste == "actions_commerciales" or poste == "ca_mois"  %}
+                <span class="repartition-public-prive">
+                    <br /> Privé : 
+                    <br />{{ arr_totaux['accurate'][poste~'_repartition']['total']['prive']|number_format(2,',',' ') }} €
+                    <br /> Public : 
+                 <br />{{ arr_totaux['accurate'][poste~'_repartition']['total']['public']|number_format(2,',',' ') }} €
+                </span>
+            {% endif %}
+        </td>
 
     </tr>
 
@@ -502,20 +551,25 @@
                         }),
                         success: function(data) {
 
-                          var accurateId = poste+"-"+sous_poste+"-"+mois+"-accurate";
-                          var accurateVal = {{ arr_accurate[poste][sous_poste][i]['val'] }};
-                          refreshColor(prevVal, accurateVal, accurateId, poste);
+                            var accurateId = poste+"-"+sous_poste+"-"+mois+"-accurate";
+                            var accurateVal = {{ arr_accurate[poste][sous_poste][i]['val'] }};
+                            refreshColor(prevVal, accurateVal, accurateId, poste);
 
-                          if(sous_poste == "variation_cp" || sous_poste == "ajustement_tva"){
-                            $("#"+accurateId).text(accounting.formatMoney(prevVal, { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 }))
-                          }
+                            if(sous_poste == "variation_cp" || sous_poste == "ajustement_tva"){
+                                $("#"+accurateId).text(accounting.formatMoney(prevVal, { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 }))
+                            }
 
-                          $("#total-" + poste +"-" + mois + " .value").text(accounting.formatMoney(data[poste][mois], { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 }))
+                            $("#total-" + poste +"-" + mois + " .value").text(accounting.formatMoney(data[poste][mois], { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 }))
                                                                   .removeClass("hidden");
-                          $("#total-" + poste +"-" + mois + " .loader").addClass('hidden');
-                          accurateId = "total-" + poste +"-" + mois + "-accurate";
-                          accurateVal = {{ arr_totaux['accurate'][poste][i] }};
-                          refreshColor(data[poste][mois], accurateVal, accurateId, poste);
+                            $("#total-" + poste +"-" + mois + " .loader").addClass('hidden');
+                            accurateId = "total-" + poste +"-" + mois + "-accurate";
+                            if (poste == 'actions_commerciales'){
+                                accurateVal = {{ arr_totaux['accurate'][poste][i] }};
+                            } else {
+                                accurateVal = {{ arr_totaux['accurate'][poste][i] }};
+                            }
+                         
+                            refreshColor(data[poste][mois], accurateVal, accurateId, poste);
 
                           $("#marge_brute-" + mois + " .value").text(accounting.formatMoney(data['marge_brute'][mois], { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 }))
                                                                   .removeClass("hidden");

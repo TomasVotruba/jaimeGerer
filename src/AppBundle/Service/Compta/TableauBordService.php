@@ -196,6 +196,7 @@ class TableauBordService extends ContainerAware {
     $this->arr_totaux['predictif']['actions_commerciales'] = $this->arr_totaux['prev']['actions_commerciales'];
 
     $this->arr_totaux['predictif']['ca_mois'] = $this->arr_totaux['accurate']['ca_mois'];
+    $this->arr_totaux['predictif']['ca_mois_repartition'] = $this->arr_totaux['accurate']['ca_mois_repartition'];
     // $this->arr_totaux['predictif']['ca_mois']['total'] = 0;
     //  foreach($tableauPredictif['ca_mois'] as $sous_poste => $arr){
     //   $tableauPredictif['ca_mois'][$sous_poste]['total'] = 0;
@@ -249,71 +250,80 @@ class TableauBordService extends ContainerAware {
     return $tableauPredictif;
   }
 
-  private function creerTableauPosteAnalytiquePrevisionnel($year, $company, $poste){
+    private function creerTableauPosteAnalytiquePrevisionnel($year, $company, $poste){
 
-    $settingsRepo = $this->em->getRepository('AppBundle:Settings');
-    $arr_analytiques = $settingsRepo->findBy(array(
-      'company' => $company,
-      'parametre' => 'analytique',
-      'module' => 'CRM'
-    ));
-
-    $prevRepo = $this->em->getRepository('AppBundle:Compta\PrevTableauBord');
-
-    $arr_prev = array();
-    $this->arr_totaux['prev'][$poste] = array();
-    $this->arr_totaux['prev'][$poste]['total'] = 0;
-
-    foreach($arr_analytiques as $analytique){
-      $arr_prev[$analytique->getValeur().'_prive'] = array();
-      $arr_prev[$analytique->getValeur().'_prive']['total'] = 0;
-      $arr_prev[$analytique->getValeur().'_public'] = array();
-      $arr_prev[$analytique->getValeur().'_public']['total'] = 0;
-
-      for($i = 1; $i<=12; $i++){
-        $arr_prev[$analytique->getValeur().'_prive'][$i] = 0;
-        $arr_prev[$analytique->getValeur().'_public'][$i] = 0;
-
-        if( !array_key_exists($i, $this->arr_totaux['prev'][$poste]) ){
-          $this->arr_totaux['prev'][$poste][$i] = 0;
-        }
-
-        $arr_saved = $prevRepo->findBy(array(
+        $settingsRepo = $this->em->getRepository('AppBundle:Settings');
+        $arr_analytiques = $settingsRepo->findBy(array(
           'company' => $company,
-          'poste' => $poste,
-          'annee' => $year,
-          'mois' => $i,
-          'analytique' => $analytique,
-           'priveOrPublic' => 'PRIVE'
+          'parametre' => 'analytique',
+          'module' => 'CRM'
         ));
 
-        foreach($arr_saved as $prevPrive){
-          $arr_prev[$analytique->getValeur().'_prive'][$i]+= $prevPrive->getMontantMonetaire();
-          $arr_prev[$analytique->getValeur().'_prive']['total']+= $prevPrive->getMontantMonetaire();
-          $this->arr_totaux['prev'][$poste][$i]+= $prevPrive->getMontantMonetaire();
-          $this->arr_totaux['prev'][$poste]['total']+= $prevPrive->getMontantMonetaire();
+        $prevRepo = $this->em->getRepository('AppBundle:Compta\PrevTableauBord');
+
+        $arr_prev = array();
+        $this->arr_totaux['prev'][$poste] = array();
+        $this->arr_totaux['prev'][$poste]['total'] = 0;
+        $this->arr_totaux['prev'][$poste.'_repartition'] = array();
+        $this->arr_totaux['prev'][$poste.'_repartition']['total']['public'] = 0;
+        $this->arr_totaux['prev'][$poste.'_repartition']['total']['prive'] = 0;
+
+        foreach($arr_analytiques as $analytique){
+            $arr_prev[$analytique->getValeur().'_prive'] = array();
+            $arr_prev[$analytique->getValeur().'_prive']['total'] = 0;
+            $arr_prev[$analytique->getValeur().'_public'] = array();
+            $arr_prev[$analytique->getValeur().'_public']['total'] = 0;
+
+            for($i = 1; $i<=12; $i++){
+                $arr_prev[$analytique->getValeur().'_prive'][$i] = 0;
+                $arr_prev[$analytique->getValeur().'_public'][$i] = 0;
+
+                if( !array_key_exists($i, $this->arr_totaux['prev'][$poste]) ){
+                    $this->arr_totaux['prev'][$poste][$i] = 0;
+                    $this->arr_totaux['prev'][$poste.'_repartition'][$i]['public'] = 0;
+                    $this->arr_totaux['prev'][$poste.'_repartition'][$i]['prive'] = 0;
+                }
+
+                $arr_saved = $prevRepo->findBy(array(
+                    'company' => $company,
+                    'poste' => $poste,
+                    'annee' => $year,
+                    'mois' => $i,
+                    'analytique' => $analytique,
+                    'priveOrPublic' => 'PRIVE'
+                ));
+
+                foreach($arr_saved as $prevPrive){
+                    $arr_prev[$analytique->getValeur().'_prive'][$i]+= $prevPrive->getMontantMonetaire();
+                    $arr_prev[$analytique->getValeur().'_prive']['total']+= $prevPrive->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste][$i]+= $prevPrive->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste]['total']+= $prevPrive->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste.'_repartition'][$i]['prive']+= $prevPrive->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste.'_repartition']['total']['prive']+= $prevPrive->getMontantMonetaire();
+                }
+
+                $arr_saved = $prevRepo->findBy(array(
+                    'company' => $company,
+                    'poste' => $poste,
+                    'annee' => $year,
+                    'mois' => $i,
+                    'analytique' => $analytique,
+                    'priveOrPublic' => 'PUBLIC'
+                ));
+
+                foreach($arr_saved as $prevPublic){
+                    $arr_prev[$analytique->getValeur().'_public'][$i]+= $prevPublic->getMontantMonetaire();
+                    $arr_prev[$analytique->getValeur().'_public']['total']+= $prevPublic->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste][$i]+= $prevPublic->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste]['total']+= $prevPublic->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste.'_repartition'][$i]['public']+= $prevPublic->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste.'_repartition']['total']['public']+= $prevPublic->getMontantMonetaire();
+                }
+            }
         }
 
-         $arr_saved = $prevRepo->findBy(array(
-          'company' => $company,
-          'poste' => $poste,
-          'annee' => $year,
-          'mois' => $i,
-          'analytique' => $analytique,
-          'priveOrPublic' => 'PUBLIC'
-        ));
-
-        foreach($arr_saved as $prevPublic){
-          $arr_prev[$analytique->getValeur().'_public'][$i]+= $prevPublic->getMontantMonetaire();
-          $arr_prev[$analytique->getValeur().'_public']['total']+= $prevPublic->getMontantMonetaire();
-          $this->arr_totaux['prev'][$poste][$i]+= $prevPublic->getMontantMonetaire();
-          $this->arr_totaux['prev'][$poste]['total']+= $prevPublic->getMontantMonetaire();
-        }
-      }
+        return $arr_prev;
     }
-
-    return $arr_prev;
-  }
 
   private function creerTableauCoutsPrevisionnel($year, $company, $poste){
 
@@ -388,109 +398,127 @@ class TableauBordService extends ContainerAware {
     return $arr_prev;
   }
 
-  private function creerTableauActionsCommercialesAccurate($year, $company){
+    private function creerTableauActionsCommercialesAccurate($year, $company){
 
-    $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
-    $arr_opportunite = $opportuniteRepo->findForCompanyByYear($company, $year);
+        $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
+        $arr_opportunite = $opportuniteRepo->findForCompanyByYear($company, $year);
 
-    $settingsRepo = $this->em->getRepository('AppBundle:Settings');
-    $arr_analytiques = $settingsRepo->findBy(array(
-      'company' => $company,
-      'parametre' => 'analytique',
-      'module' => 'CRM'
-    ));
+        $settingsRepo = $this->em->getRepository('AppBundle:Settings');
+        $arr_analytiques = $settingsRepo->findBy(array(
+            'company' => $company,
+            'parametre' => 'analytique',
+            'module' => 'CRM'
+        ));
 
-    $arr_details = array();
-    foreach($arr_analytiques as $analytique){
-      $arr_details[$analytique->getValeur().'_prive'] = array();
-      $arr_details[$analytique->getValeur().'_prive']['total'] = 0;
+        $arr_details = array();
+        foreach($arr_analytiques as $analytique){
+            $arr_details[$analytique->getValeur().'_prive'] = array();
+            $arr_details[$analytique->getValeur().'_prive']['total'] = 0;
 
-      $arr_details[$analytique->getValeur().'_public'] = array();
-      $arr_details[$analytique->getValeur().'_public']['total'] = 0;
-      for($i = 1; $i<=12; $i++){
-        $arr_details[$analytique->getValeur().'_prive'][$i]['val'] = 0;
-        $arr_details[$analytique->getValeur().'_public'][$i]['val'] = 0;
-      }
-    }
+            $arr_details[$analytique->getValeur().'_public'] = array();
+            $arr_details[$analytique->getValeur().'_public']['total'] = 0;
+            for($i = 1; $i<=12; $i++){
+                $arr_details[$analytique->getValeur().'_prive'][$i]['val'] = 0;
+                $arr_details[$analytique->getValeur().'_public'][$i]['val'] = 0;
+            }
+        }
 
-    $this->arr_totaux['accurate']['actions_commerciales'] = array();
-    for($i = 1; $i<=12; $i++){
-      $this->arr_totaux['accurate']['actions_commerciales'][$i] = 0;
-    }
-    $this->arr_totaux['accurate']['actions_commerciales']['total'] = 0;
+        $this->arr_totaux['accurate']['actions_commerciales'] = array();
+        $this->arr_totaux['accurate']['actions_commerciales_repartition'] = array();
+        for($i = 1; $i<=12; $i++){
+            $this->arr_totaux['accurate']['actions_commerciales'][$i] = 0;
+            $this->arr_totaux['accurate']['actions_commerciales_repartition'][$i]['public'] = 0;
+            $this->arr_totaux['accurate']['actions_commerciales_repartition'][$i]['prive'] = 0;
+        }
+        $this->arr_totaux['accurate']['actions_commerciales']['total'] = 0;
+        $this->arr_totaux['accurate']['actions_commerciales_repartition']['total']['public'] = 0;
+        $this->arr_totaux['accurate']['actions_commerciales_repartition']['total']['prive'] = 0;
 
-    foreach($arr_opportunite as $opportunite){
-      $month = $opportunite->getDate()->format('n');
-      if($opportunite->isSecteurPublic()){
-        $arr_details[$opportunite->getAnalytique()->getValeur().'_public'][$month]['val']+= $opportunite->getMontant();
-        $arr_details[$opportunite->getAnalytique()->getValeur().'_public'][$month]['details']['opportunites'][] = $opportunite;
-        $arr_details[$opportunite->getAnalytique()->getValeur().'_public']['total']+= $opportunite->getMontant();
-      } else {
-        $arr_details[$opportunite->getAnalytique()->getValeur().'_prive'][$month]['val']+= $opportunite->getMontant();
-        $arr_details[$opportunite->getAnalytique()->getValeur().'_prive'][$month]['details']['opportunites'][] = $opportunite;
-        $arr_details[$opportunite->getAnalytique()->getValeur().'_prive']['total']+= $opportunite->getMontant();
-      }
+        foreach($arr_opportunite as $opportunite){
+            $month = $opportunite->getDate()->format('n');
+            if($opportunite->isSecteurPublic()){
+                $arr_details[$opportunite->getAnalytique()->getValeur().'_public'][$month]['val']+= $opportunite->getMontant();
+                $arr_details[$opportunite->getAnalytique()->getValeur().'_public'][$month]['details']['opportunites'][] = $opportunite;
+                $arr_details[$opportunite->getAnalytique()->getValeur().'_public']['total']+= $opportunite->getMontant();
+                $this->arr_totaux['accurate']['actions_commerciales_repartition'][$month]['public']+= $opportunite->getMontant();
+                $this->arr_totaux['accurate']['actions_commerciales_repartition']['total']['public']+= $opportunite->getMontant();
+            } else {
+                $arr_details[$opportunite->getAnalytique()->getValeur().'_prive'][$month]['val']+= $opportunite->getMontant();
+                $arr_details[$opportunite->getAnalytique()->getValeur().'_prive'][$month]['details']['opportunites'][] = $opportunite;
+                $arr_details[$opportunite->getAnalytique()->getValeur().'_prive']['total']+= $opportunite->getMontant();
+                $this->arr_totaux['accurate']['actions_commerciales_repartition'][$month]['prive']+= $opportunite->getMontant();
+                $this->arr_totaux['accurate']['actions_commerciales_repartition']['total']['prive']+= $opportunite->getMontant();
+            }
       
-      $this->arr_totaux['accurate']['actions_commerciales'][$month]+= $opportunite->getMontant();
-      $this->arr_totaux['accurate']['actions_commerciales']['total']+= $opportunite->getMontant();
+            $this->arr_totaux['accurate']['actions_commerciales'][$month]+= $opportunite->getMontant();
+            $this->arr_totaux['accurate']['actions_commerciales']['total']+= $opportunite->getMontant();
       
+        }
+
+        return $arr_details;
+
     }
 
-    return $arr_details;
+    private function creerTableauCAMoisAccurate($year, $company){
 
-  }
+        $opportuniteRepartitionRepo = $this->em->getRepository('AppBundle:CRM\OpportuniteRepartition');
 
-  private function creerTableauCAMoisAccurate($year, $company){
+        $settingsRepo = $this->em->getRepository('AppBundle:Settings');
+        $arr_analytiques = $settingsRepo->findBy(array(
+          'company' => $company,
+          'parametre' => 'analytique',
+          'module' => 'CRM'
+        ));
 
-    $opportuniteRepartitionRepo = $this->em->getRepository('AppBundle:CRM\OpportuniteRepartition');
+        $arr_details = array();
+        foreach($arr_analytiques as $analytique){
+            $arr_details[$analytique->getValeur().'_public'] = array();
+            $arr_details[$analytique->getValeur().'_public']['total'] = 0;
 
-    $settingsRepo = $this->em->getRepository('AppBundle:Settings');
-    $arr_analytiques = $settingsRepo->findBy(array(
-      'company' => $company,
-      'parametre' => 'analytique',
-      'module' => 'CRM'
-    ));
+            $arr_details[$analytique->getValeur().'_prive'] = array();
+            $arr_details[$analytique->getValeur().'_prive']['total'] = 0;
+            for($i = 1; $i<=12; $i++){
+                $arr_details[$analytique->getValeur().'_public'][$i]['val'] = 0;
+                $arr_details[$analytique->getValeur().'_prive'][$i]['val'] = 0;
+            }
+            $arr_details[$analytique->getValeur().'_public']['opportunites'] = $this->creerTableauOpportunitesWonAccurate($year, $company, $analytique, 'PUBLIC');
+            $arr_details[$analytique->getValeur().'_prive']['opportunites'] = $this->creerTableauOpportunitesWonAccurate($year, $company, $analytique, 'PRIVE');
+        }
 
-    $arr_details = array();
-    foreach($arr_analytiques as $analytique){
-      $arr_details[$analytique->getValeur().'_public'] = array();
-      $arr_details[$analytique->getValeur().'_public']['total'] = 0;
+        $this->arr_totaux['accurate']['ca_mois'] = array();
+        $this->arr_totaux['accurate']['ca_mois_repartition'] = array();
+        for($i = 1; $i<=12; $i++){
+            $this->arr_totaux['accurate']['ca_mois'][$i] = 0;
+            $this->arr_totaux['accurate']['ca_mois_repartition'][$i]['public'] = 0;
+            $this->arr_totaux['accurate']['ca_mois_repartition'][$i]['prive'] = 0;
+        }
+        $this->arr_totaux['accurate']['ca_mois']['total'] = 0;
+        $this->arr_totaux['accurate']['ca_mois_repartition']['total']['public'] = 0;
+        $this->arr_totaux['accurate']['ca_mois_repartition']['total']['prive'] = 0;
 
-      $arr_details[$analytique->getValeur().'_prive'] = array();
-      $arr_details[$analytique->getValeur().'_prive']['total'] = 0;
-      for($i = 1; $i<=12; $i++){
-        $arr_details[$analytique->getValeur().'_public'][$i]['val'] = 0;
-        $arr_details[$analytique->getValeur().'_prive'][$i]['val'] = 0;
-      }
-      $arr_details[$analytique->getValeur().'_public']['opportunites'] = $this->creerTableauOpportunitesWonAccurate($year, $company, $analytique, 'PUBLIC');
-      $arr_details[$analytique->getValeur().'_prive']['opportunites'] = $this->creerTableauOpportunitesWonAccurate($year, $company, $analytique, 'PRIVE');
+        $arr_opportuniteRepartitions = $opportuniteRepartitionRepo->findForCompanyByYear($company, $year);
+        foreach($arr_opportuniteRepartitions as $opportuniteRepartition){
+            $month = $opportuniteRepartition->getDate()->format('n');
+
+            if($opportuniteRepartition->getOpportunite()->isSecteurPublic()){
+                $arr_details[$opportuniteRepartition->getOpportunite()->getAnalytique()->getValeur().'_public'][$month]['val']+= $opportuniteRepartition->getMontantMonetaire();
+                $arr_details[$opportuniteRepartition->getOpportunite()->getAnalytique()->getValeur().'_public']['total']+= $opportuniteRepartition->getMontantMonetaire();
+                $this->arr_totaux['accurate']['ca_mois_repartition'][$month]['public']+= $opportuniteRepartition->getMontantMonetaire();
+                $this->arr_totaux['accurate']['ca_mois_repartition']['total']['public']+= $opportuniteRepartition->getMontantMonetaire();
+            } else {
+                $arr_details[$opportuniteRepartition->getOpportunite()->getAnalytique()->getValeur().'_prive'][$month]['val']+= $opportuniteRepartition->getMontantMonetaire();
+                $arr_details[$opportuniteRepartition->getOpportunite()->getAnalytique()->getValeur().'_prive']['total']+= $opportuniteRepartition->getMontantMonetaire();
+                $this->arr_totaux['accurate']['ca_mois_repartition'][$month]['prive']+= $opportuniteRepartition->getMontantMonetaire();
+                $this->arr_totaux['accurate']['ca_mois_repartition']['total']['prive']+= $opportuniteRepartition->getMontantMonetaire();
+            }
+
+            $this->arr_totaux['accurate']['ca_mois'][$month]+= $opportuniteRepartition->getMontantMonetaire();
+            $this->arr_totaux['accurate']['ca_mois']['total']+= $opportuniteRepartition->getMontantMonetaire();
+        }
+
+        return $arr_details;
+
     }
-
-    $this->arr_totaux['accurate']['ca_mois'] = array();
-    for($i = 1; $i<=12; $i++){
-      $this->arr_totaux['accurate']['ca_mois'][$i] = 0;
-    }
-    $this->arr_totaux['accurate']['ca_mois']['total'] = 0;
-
-    $arr_opportuniteRepartitions = $opportuniteRepartitionRepo->findForCompanyByYear($company, $year);
-    foreach($arr_opportuniteRepartitions as $opportuniteRepartition){
-      $month = $opportuniteRepartition->getDate()->format('n');
-
-      if($opportuniteRepartition->getOpportunite()->isSecteurPublic()){
-        $arr_details[$opportuniteRepartition->getOpportunite()->getAnalytique()->getValeur().'_public'][$month]['val']+= $opportuniteRepartition->getMontantMonetaire();
-        $arr_details[$opportuniteRepartition->getOpportunite()->getAnalytique()->getValeur().'_public']['total']+= $opportuniteRepartition->getMontantMonetaire();
-      } else {
-        $arr_details[$opportuniteRepartition->getOpportunite()->getAnalytique()->getValeur().'_prive'][$month]['val']+= $opportuniteRepartition->getMontantMonetaire();
-        $arr_details[$opportuniteRepartition->getOpportunite()->getAnalytique()->getValeur().'_prive']['total']+= $opportuniteRepartition->getMontantMonetaire();
-      }
-
-      $this->arr_totaux['accurate']['ca_mois'][$month]+= $opportuniteRepartition->getMontantMonetaire();
-      $this->arr_totaux['accurate']['ca_mois']['total']+= $opportuniteRepartition->getMontantMonetaire();
-    }
-
-    return $arr_details;
-
-  }
 
   private function creerTableauCoutsMarginauxAccurate($year, $company){
 

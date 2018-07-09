@@ -477,6 +477,13 @@ th.mois, th.accurate {
 	font-size: 0.8em;
 }
 
+.tableau-bord-wrapper .repartition-public-prive{
+	color: #333333;
+	font-weight: normal;
+	font-style: italic;
+	font-size: 10px;
+}
+
 #table-grand-livre tr{
 	background-color: #FFF;
 }
