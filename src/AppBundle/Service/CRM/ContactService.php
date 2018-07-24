@@ -524,6 +524,7 @@ class ContactService extends ContainerAware {
 
             if($contact->getEmail() == "" || $contact->getEmail() == null){
                 $arr_results['ignored']++;
+                continue;
             }
 
             if($contact->getDateBounceCheck()){
@@ -531,10 +532,11 @@ class ContactService extends ContainerAware {
                 $arr_results['total']++;
                 if($interval->format('%a') < 15){
                     $arr_results['ignored']++;
-                } else {
-                    $arr_toCheck[] = $contact;
-                }
+                    continue;
+                } 
             }
+
+            $arr_toCheck[] = $contact;
         }
 
         $credits = 0;

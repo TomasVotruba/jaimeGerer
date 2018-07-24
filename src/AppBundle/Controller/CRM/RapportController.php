@@ -909,7 +909,11 @@ class RapportController extends Controller
 			}
 		}
 
-		$arr_results = $contactService->verifierBouncesBatch($arr_contacts, $this->getUser()->getCompany());
+		try{
+			$arr_results = $contactService->verifierBouncesBatch($arr_contacts, $this->getUser()->getCompany());
+		} catch(\Exception $e){
+			throw $e;
+		}
 
 		return $this->render('crm/rapport/crm_rapport_verifier_bounces_resultat.html.twig', array(
 			'rapport' => $rapport,
