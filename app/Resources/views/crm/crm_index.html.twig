@@ -2,98 +2,120 @@
 
 {% block content %}
 
-<div class="row" id="crm_index">
+	<div class="row" id="crm_index">
 
-	<div class="col-md-12 text-accueil-outil">
-		<div class="page-head">
-			<h1>{{ random(['Le commercial, c\'est génial !']) }}</h1>
-			<p class="l">Que voulez-vous faire aujourd'hui ?</p>
+		<div class="col-md-12 text-accueil-outil">
+			<div class="page-head">
+				<h1>{{ random(['Le commercial, c\'est génial !']) }}</h1>
+				<p class="l">Que voulez-vous faire aujourd'hui ?</p>
+			</div>
 		</div>
-	</div>
-	
-</div>
-
-<div class="row">
-	<div class="col-md-2"></div>
-	<div class="col-md-4">
-		<div class="center crm-homepage-block well">
-			<p>
-				<span class="glyphicon glyphicon-search xl"></span>
-			</p>
-			<p>Je cherche les coordonnées de quelqu'un</p>
-			<input type="text" placeholder="Nom" id="contact-search-input" />
-			<p class="spacer-top">
-				<a class="btn btn-info" id="contact-search-button">
-					Rechercher un contact
-				</a>
-			</p>
-		</div>
-	</div>
-	<div class="col-md-4">
-		<div class="center crm-homepage-block well">
-			<p>
-				<span class="glyphicon glyphicon-user xl"></span>
-			</p>
-			<p>J'ai rencontré une nouvelle personne</p>
-			<p>
-				<a class="btn btn-info" href="{{ path('crm_contact_ajouter') }}">
-					Ajouter un contact
-				</a>
-			</p>
-		</div>
-	</div>
-	<div class="col-md-2"></div>
-</div>
-
-<div class="row">
-	<div class="col-md-2"></div>
-	<div class="col-md-4">
-		<div class="center crm-homepage-block well">
-			<p>
-				<span class="glyphicon glyphicon-screenshot xl"></span>
-			</p>
-			<p>J'ai fait un rendez-vous commercial</p>
-			<p>
-				<a class="btn btn-info" href="{{ path('crm_action_commerciale_ajouter') }}">
-					Créer une action commerciale
-				</a>
-			</p>
-		</div>
+		
 	</div>
 
-{# 	<div class="col-md-4">
-		<div class="center crm-homepage-block well">
-			<p>
-				<span class="glyphicon glyphicon-euro xl"></span>
-			</p>
-			<p>On m'a demandé un devis</p>
-			<p>
-				<a class="btn btn-info" href="{{ path('crm_devis_ajouter') }}">
-					Créer un devis
-				</a>
-			</p>
+	<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-4">
+			<div class="center crm-homepage-block well">
+				<p>
+					<span class="glyphicon glyphicon-search xl"></span>
+				</p>
+				<p>Je cherche les coordonnées de quelqu'un</p>
+				<input type="text" placeholder="Nom" id="contact-search-input" />
+				<p class="spacer-top">
+					<a class="btn btn-info" id="contact-search-button">
+						Rechercher un contact
+					</a>
+				</p>
+			</div>
 		</div>
-	</div> #}
+		<div class="col-md-4">
+			<div class="center crm-homepage-block well">
+				<p>
+					<span class="glyphicon glyphicon-user xl"></span>
+				</p>
+				<p>J'ai rencontré une nouvelle personne</p>
+				<p>
+					<a class="btn btn-info" href="{{ path('crm_contact_ajouter') }}">
+						Ajouter un contact
+					</a>
+				</p>
+			</div>
+		</div>
+		<div class="col-md-2"></div>
+	</div>
 
-	<div class="col-md-4">
-		<div class="center crm-homepage-block well">
-			<p>
-				<span class="glyphicon glyphicon-piggy-bank xl"></span>
-			</p>
-			<p>J'ai terminé une mission</p>
-			<p>
-				<a class="btn btn-info" href="{{ path('crm_facture_ajouter') }}">
-					Créer une facture
-				</a>
-			</p>
+	<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-4">
+			<div class="center crm-homepage-block well">
+				<p>
+					<span class="glyphicon glyphicon-screenshot xl"></span>
+				</p>
+				<p>J'ai fait un rendez-vous commercial</p>
+				<p>
+					<a class="btn btn-info" href="{{ path('crm_action_commerciale_ajouter') }}">
+						Créer une action commerciale
+					</a>
+				</p>
+			</div>
+		</div>
+
+	{# 	<div class="col-md-4">
+			<div class="center crm-homepage-block well">
+				<p>
+					<span class="glyphicon glyphicon-euro xl"></span>
+				</p>
+				<p>On m'a demandé un devis</p>
+				<p>
+					<a class="btn btn-info" href="{{ path('crm_devis_ajouter') }}">
+						Créer un devis
+					</a>
+				</p>
+			</div>
+		</div> #}
+
+		<div class="col-md-4">
+			<div class="center crm-homepage-block well">
+				<p>
+					<span class="glyphicon glyphicon-piggy-bank xl"></span>
+				</p>
+				<p>J'ai terminé une mission</p>
+				<p>
+					<a class="btn btn-info" href="{{ path('crm_facture_ajouter') }}">
+						Créer une facture
+					</a>
+				</p>
+			</div>
+		</div>
+		<div class="col-md-2"></div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 center">
+			<h3>Santé de la CRM</h3>
 		</div>
 	</div>
-	<div class="col-md-2"></div>
-</div>
+	<div class="row">
+
+		<div class="col-md-4">
+			<div id="gauge_email"></div>
+		</div>
+		<div class="col-md-4">
+			<div id="gauge_tel"></div>
+		</div>
+		<div class="col-md-4">
+			<div id="gauge_bounce"></div>
+		</div>
+	</div>
+
 {% endblock %}
 
 {% block javascripts %}
 	{{ parent() }}
+	<script src="{{ asset('lib/justgage/justgage.1.0.1.min.js') }}"></script>
+	<script src="{{ asset('lib/justgage/raphael.2.1.0.min.js') }}"></script>
+
 	<script type="text/javascript">
 		$(document).ready( function () {    
 
@@ -114,6 +136,44 @@
 				window.location= url;
 			}
 
+
+			{% if nbContacts > 0  %}
+				var g1 = new JustGage({
+				    id: "gauge_email",
+				    value: {{ (nbNoEmail/nbContacts*100)|number_format(0) }},
+				    min: 0,
+				    max: 100,
+				    title: "Contacts sans email",
+				    levelColors: ["a9d60c", "f8c700", "ff0000"],
+				    levelColorsGradient: false,
+				    label: "%"
+				});
+
+				var g2 = new JustGage({
+				    id: "gauge_tel",
+				    value: {{ (nbNoTel/nbContacts*100)|number_format(0) }},
+				    min: 0,
+				    max: 100,
+				    title: "Contacts sans numéro de téléphone",
+				    levelColors: ["a9d60c", "f8c700", "ff0000"],
+				    levelColorsGradient: false,
+				    label: "%"
+				});
+
+				var g3 = new JustGage({
+				    id: "gauge_bounce",
+				    value: {{ (nbBounce/nbContacts*100)|number_format(0) }},
+				    min: 0,
+				    max: 100,
+				    title: "Taux de bounces",
+				    levelColors: ["a9d60c", "f8c700", "ff0000"],
+				    levelColorsGradient: false,
+				    label: "%"
+				});
+			{% endif %}
+
 		});
-	</script
+	</script>
+
+
 {% endblock %}

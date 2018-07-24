@@ -34,7 +34,19 @@ class ComptaController extends Controller
 			return $this->redirect($this->generateUrl('compta_activer_start'));
 		}
 
-		return $this->render('compta/compta_index.html.twig');
+		$opportuniteService = $this->get('appbundle.crm_opportunite_service');
+		$chartService = $this->get('appbundle.chart_service');
+
+		$dataChartActionsCoAnalytique = $opportuniteService->getDataChartActionsCoAnalytique($this->getUser()->getCompany(), date('Y'));		
+		$chartActionsCoAnalytique = $chartService->actionsCoAnalytique($dataChartActionsCoAnalytique);
+
+		$dataChartActionsCoRhoneAlpes = $opportuniteService->getDataChartActionsCoRhoneAlpes($this->getUser()->getCompany(), date('Y'));		
+		$chartActionsCoRhoneAlpes = $chartService->actionsCoRhoneAlpes($dataChartActionsCoRhoneAlpes);
+
+		return $this->render('compta/compta_index.html.twig', array(
+			'chartActionsCoAnalytique' => $chartActionsCoAnalytique,
+			'chartActionsCoRhoneAlpes' => $chartActionsCoRhoneAlpes
+		));
 	}
 
 	/**

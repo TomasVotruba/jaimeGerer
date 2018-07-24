@@ -559,6 +559,10 @@ label input[type="checkbox"][disabled] {
     padding: 2% 10%;
 }
 
+#crm_index .text-accueil-outil {
+    padding: 20px;
+}
+
 .text-accueil-outil {
     padding: 50px;
 }

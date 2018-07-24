@@ -26,6 +26,52 @@ class ContactRepository extends EntityRepository
 		return $result;
 	}
 
+	public function countNoEmail($company){
+		$result = $this->createQueryBuilder('c')
+		->select('COUNT(c)')
+		->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
+		->where('co.company = :company')
+		->andWhere('c.email IS NULL')
+		->andWhere('c.isOnlyProspect = :isOnlyProspect')
+		->setParameter('isOnlyProspect', false)
+		->setParameter('company', $company)
+		->getQuery()
+		->getSingleScalarResult();
+
+		return $result;
+	}
+
+	public function countNoTel($company){
+		$result = $this->createQueryBuilder('c')
+		->select('COUNT(c)')
+		->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
+		->where('co.company = :company')
+		->andWhere('c.telephoneFixe IS NULL AND c.telephonePortable IS NULL')
+		->andWhere('c.isOnlyProspect = :isOnlyProspect')
+		->setParameter('isOnlyProspect', false)
+		->setParameter('company', $company)
+		->getQuery()
+		->getSingleScalarResult();
+
+		return $result;
+	}
+
+	public function countBounce($company){
+		$result = $this->createQueryBuilder('c')
+		->select('COUNT(c)')
+		->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
+		->where('co.company = :company')
+		->andWhere('c.bounce = :bounce')
+		->andWhere('c.isOnlyProspect = :isOnlyProspect')
+		->setParameter('isOnlyProspect', false)
+		->setParameter('company', $company)
+		->setParameter('bounce', true)
+		->getQuery()
+		->getSingleScalarResult();
+
+		return $result;
+	}
+
 	public function findByCompany($company, $isOnlyProspect = null){
 		$qb = $this->createQueryBuilder('c')
 		->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')

@@ -25,31 +25,18 @@ class CRMController extends Controller
 		if($settingsActivationCRM == null){
 			return $this->redirect($this->generateUrl('crm_activer_start'));
 		}
-		 
-		//outil activé : index de la CRM
-		$compteRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Compte');
-		$nbComptes = $compteRepository->count($this->getUser()->getCompany());
-		
+
 		$contactRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
 		$nbContacts = $contactRepository->count($this->getUser()->getCompany());
-		
-		$opportuniteRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Opportunite');
-		$nbOpportunites = $opportuniteRepository->count($this->getUser()->getCompany());
-		
-		$devisRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
-		$nbDevis = $devisRepository->count($this->getUser()->getCompany(), "DEVIS");
-		$nbFactures = $devisRepository->count($this->getUser()->getCompany(), "FACTURE");
-		
-		$rapportRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Rapport');
-		$nbRapports = $rapportRepository->count($this->getUser()->getCompany());
-		
+		$nbNoEmail = $contactRepository->countNoEmail($this->getUser()->getCompany());
+		$nbNoTel = $contactRepository->countNoTel($this->getUser()->getCompany());
+		$nbBounce = $contactRepository->countBounce($this->getUser()->getCompany());
+
 		return $this->render('crm/crm_index.html.twig', array(
-			'nb_comptes' => $nbComptes,
-			'nb_contacts' => $nbContacts,
-			'nb_opportunites' => $nbOpportunites,
-			'nb_devis' => $nbDevis,
-			'nb_factures' => $nbFactures,
-			'nb_rapports' => $nbRapports,
+			'nbContacts' => $nbContacts,
+			'nbNoEmail' => $nbNoEmail,
+			'nbNoTel' => $nbNoTel,
+			'nbBounce' => $nbBounce
 		));
 	}
 

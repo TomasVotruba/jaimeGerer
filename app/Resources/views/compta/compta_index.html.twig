@@ -2,78 +2,109 @@
 
 {% block content %}
 
-<div class="row" id="compta_index">
-<div class="col-md-12 text-accueil-outil">
-		<div class="page-head">
-			<h1>{{ random(['La compta c\'est génial', 'Plongeons dans les comptes', 'L\'organisation, c\'est ça le secret', 'Aujourd\'hui on est carré']) }} {{ app.user.firstname }} !</h1>
-			<p class="l">Faites votre compta avec le sourire !</p>
-			<div class="page-index-alert-box">
-				<div class="page-index-alert-box-normal">Version</br>
-					<span>Bêta</span>
-				</div>
-				<div class="page-index-alert-box-hover">
-  				<a href="mailto:contact@jaime-gerer.com">
-				<img src="{{ asset('images/assets/fusee-trace.png') }}" alt="jaimegerer" width="50"/>
-					Donnez-nous votre avis
-				</a>
+	<div class="row" id="compta_index">
+		<div class="col-md-12 text-accueil-outil">
+			<div class="page-head">
+				<h1>{{ random(['La compta c\'est génial', 'Plongeons dans les comptes', 'L\'organisation, c\'est ça le secret', 'Aujourd\'hui on est carré']) }} {{ app.user.firstname }} !</h1>
+				<p class="l">Faites votre compta avec le sourire !</p>
+				<div class="page-index-alert-box">
+					<div class="page-index-alert-box-normal">Version</br>
+						<span>Bêta</span>
+					</div>
+					<div class="page-index-alert-box-hover">
+	  				<a href="mailto:contact@jaime-gerer.com">
+					<img src="{{ asset('images/assets/fusee-trace.png') }}" alt="jaimegerer" width="50"/>
+						Donnez-nous votre avis
+					</a>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-<div class="col-md-4">
-		<p>
-			<a href="{{ path('compta_facture_liste') }}">
-				<span class="glyphicon glyphicon-thumbs-up" style="font-size: 3em;"></span><br />
-	    	 Ventes
-			</a>
-		</p>
+		<div class="col-md-4">
+			<p>
+				<a href="{{ path('compta_facture_liste') }}">
+					<span class="glyphicon glyphicon-thumbs-up" style="font-size: 3em;"></span><br />
+		    	 Ventes
+				</a>
+			</p>
+		</div>
+
+		<div class="col-md-4">
+			<p>
+				<a href="{{ path('compta_depense_liste') }}">
+					<span class="glyphicon glyphicon-shopping-cart" style="font-size: 3em;"></span> <br />
+					Achats
+				</a>
+			</p>
+		</div>
+
+		<div class="col-md-4">
+			<p>
+				<a href="{{ path('compta_remise_cheque_liste' ) }}">
+					<span class="glyphicon glyphicon-paperclip" style="font-size: 3em;"></span> <br />
+					Remises de chèques
+				</a>
+			</p>
+		</div>
+
+		<div class="col-md-4">
+			<p>
+				 <a href="{{ path('compta_contact_liste', {'type' : 'CLIENT'} ) }}">
+					<span class="glyphicon glyphicon-user" style="font-size: 3em;"></span> <br />
+					Clients et fournisseurs
+				</a>
+			</p>
+		</div>
+
+		<div class="col-md-4">
+			<p>
+				 <a href="{{ path('compta_avoir_liste', {'type' : 'CLIENT'} ) }}">
+					<span class="glyphicon glyphicon-scissors" style="font-size: 3em;"></span><br />
+					Avoirs
+				</a>
+			</p>
+		</div>
+
+		<div class="col-md-4">
+			<p>
+				<a href="{{ path('compta_rapport_tableau_bord_index' ) }}">
+					<span class="glyphicon glyphicon-list-alt" style="font-size: 3em;"></span><br />
+					Documents comptables
+				</a>
+			</p>
+		</div>
+
 	</div>
 
-	<div class="col-md-4">
-		<p>
-			<a href="{{ path('compta_depense_liste') }}">
-				<span class="glyphicon glyphicon-shopping-cart" style="font-size: 3em;"></span> <br />
-				Achats
-			</a>
-		</p>
+	<div class="row">
+		<div class="col-md-12 center">
+			<h3>Montant des actions commerciales</h3>
+		</div>
+	</div>
+	<div class="row spacer-top">
+		<div class="col-md-1"></div>
+		<div class="col-md-4">
+			<div id="chart_actions_co_analytique"></div>
+		</div>
+		<div class="col-md-2"></div>
+		<div class="col-md-4">
+			<div id="chart_actions_co_rhone_alpes"></div>
+		</div>
 	</div>
 
-	<div class="col-md-4">
-		<p>
-			<a href="{{ path('compta_remise_cheque_liste' ) }}">
-				<span class="glyphicon glyphicon-paperclip" style="font-size: 3em;"></span> <br />
-				Remises de chèques
-			</a>
-		</p>
-	</div>
+{% endblock %}
 
-	<div class="col-md-4">
-		<p>
-			 <a href="{{ path('compta_contact_liste', {'type' : 'CLIENT'} ) }}">
-				<span class="glyphicon glyphicon-user" style="font-size: 3em;"></span> <br />
-				Clients et fournisseurs
-			</a>
-		</p>
-	</div>
 
-	<div class="col-md-4">
-		<p>
-			 <a href="{{ path('compta_avoir_liste', {'type' : 'CLIENT'} ) }}">
-				<span class="glyphicon glyphicon-scissors" style="font-size: 3em;"></span><br />
-				Avoirs
-			</a>
-		</p>
-	</div>
 
-	<div class="col-md-4">
-		<p>
-			<a href="{{ path('compta_rapport_tableau_bord_index' ) }}">
-				<span class="glyphicon glyphicon-list-alt" style="font-size: 3em;"></span><br />
-				Documents comptables
-			</a>
-		</p>
-	</div>
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-</div>
-
+    <script type="text/javascript">
+        $(document).ready(function() {
+        	/* chart : actions commerciales par analytique */
+            {{ gc_draw(chartActionsCoAnalytique, 'chart_actions_co_analytique') }}
+            {{ gc_draw(chartActionsCoRhoneAlpes, 'chart_actions_co_rhone_alpes') }}
+         });
+    </script>
 {% endblock %}
