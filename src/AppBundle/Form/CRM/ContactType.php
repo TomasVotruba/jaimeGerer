@@ -52,20 +52,20 @@ class ContactType extends AbstractType
           //  	'format' => PhoneNumberFormat::INTERNATIONAL,
             	'label' => 'Tél. portable pro'
         	))
-    			->add('telephoneAutres','text', array(
-    				'required' => false,
-    				//  	'default_region' => 'FR',
-    				//  	'format' => PhoneNumberFormat::INTERNATIONAL,
-    				'label' => 'Tél. (autre)'
-    			))
-                ->add('email', 'email', array(
-            		'required' => false,
-                	'label' => 'Email'
-            	))
-    			->add('email2', 'email', array(
-    				'required' => false,
-    				'label' => 'Email 2'
-    			))
+			->add('telephoneAutres','text', array(
+				'required' => false,
+				//  	'default_region' => 'FR',
+				//  	'format' => PhoneNumberFormat::INTERNATIONAL,
+				'label' => 'Tél. (autre)'
+			))
+            ->add('email', 'email', array(
+        		'required' => false,
+            	'label' => 'Email'
+        	))
+			->add('email2', 'email', array(
+				'required' => false,
+				'label' => 'Email 2'
+			))
             ->add('adresse', 'text', array(
         		'required' => false,
             	'label' => 'Adresse'
@@ -122,12 +122,10 @@ class ContactType extends AbstractType
 				'label' => 'Organisation',
 				'attr' => array('class' => 'typeahead-compte', 'autocomplete' => 'off' )
 			))
-
 			->add('compte', 'hidden', array(
 				'required' => true,
 				'attr' => array('class' => 'entity-compte'),
 			))
-            
 			->add('reseau', 'entity', array(
             		'class'=>'AppBundle:Settings',
             		'property' => 'valeur',
@@ -141,7 +139,7 @@ class ContactType extends AbstractType
             		'required' => false,
             		'label' => 'Réseau'
             ))
-             ->add('origine', 'entity', array(
+            ->add('origine', 'entity', array(
             		'class'=>'AppBundle:Settings',
             		'property' => 'valeur',
             		'query_builder' => function (EntityRepository $er) {
@@ -169,15 +167,18 @@ class ContactType extends AbstractType
            				->setParameter('id', $this->userGestionId);
            			},
            	))
-
            	->add('addressPicker', 'text', array(
            				'label' => 'Veuillez saisir l\'adresse ici',
            				'mapped' => false,
            				'required' => false
-           	));
+           	))
+            ->add('bounce', 'checkbox', array(
+                'required' => false,
+                'label' => 'Bounce'
+            ));
                          
-             $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
-             $builder->addEventListener(FormEvents::POST_SUBMIT, array($this, 'onPostSubmit'));
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
+            $builder->addEventListener(FormEvents::POST_SUBMIT, array($this, 'onPostSubmit'));
     }
     
     /**

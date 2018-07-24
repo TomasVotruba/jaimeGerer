@@ -47,6 +47,12 @@ class RapportType extends AbstractType
                 'label_attr' => array('class' => 'hidden'),
         ));
 
+        if($this->type == "contact"){
+            $builder ->add('emailing', 'checkbox', array(
+                'label' => 'Cette liste sert à faire un emailing',
+                'required' => false
+            ));
+        }
     }
     
     /**

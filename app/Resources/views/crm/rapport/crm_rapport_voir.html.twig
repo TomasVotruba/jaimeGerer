@@ -35,17 +35,25 @@
 	
 	<div class="row">
 		<div class="col-md-12 center">
-			<a href="{{ path('crm_rapport_editer', {'id' : rapport.id } ) }}" class="btn btn-warning" ​data-toggle="tooltip-btn-xs" title="Editer">Editer le rapport</a>
-			<button id="save" class="btn btn-success" name="save">Enregistrer le rapport</button>
+			<a href="{{ path('crm_rapport_editer', {'id' : rapport.id } ) }}" 
+				class="btn btn-warning" ​
+				data-toggle="tooltip-btn-xs" 
+				title="Editer">
+				Editer le rapport
+			</a>
+
+			{% if rapport.type == "contact" and app.user.company.zeroBounceApiKey is not empty %}
+				<a href="{{ path('crm_rapport_verifier_bounces', {'id' : rapport.id } ) }}" 
+					class="btn btn-info" ​>
+					Vérifier les bounces
+				</a>
+			{% endif %}
+
 			{% if type == "contact" %}
-			<button onclick="saveSegment()" class="btn btn-primary"  title="mautic">
-				<span id="iconUpload" class="glyphicon glyphicon-upload"></span>
-				Créer un segment sur mautic
-			</button>
-			<button id="saveProspection" onclick="saveProspection()" class="btn btn-primary {% if rapport.data == null %}disabled{% endif %}"  title="prospection">
-				<span id="iconPhone" class="glyphicon glyphicon-earphone"></span>
-				Exporter vers prospection
-			</button>
+				<button id="saveProspection" onclick="saveProspection()" class="btn btn-primary {% if rapport.data == null %}disabled{% endif %}"  title="prospection">
+					<span id="iconPhone" class="glyphicon glyphicon-earphone"></span>
+					Exporter vers prospection
+				</button>
 			{% endif %}
 			<div id="alert-save-success" class="alert alert-success hidden">  Les modifications ont bien été enregistrées.  </div>
 			<hr />
@@ -140,7 +148,7 @@
 			});
 		});
 
-		function buttonRenderer (instance, td, row, col, prop, value, cellProperties) {
+		function buttonSaveRenderer (instance, td, row, col, prop, value, cellProperties) {
        	  	var $button = $('<a class="btn btn-xs btn-success"><span class="glyphicon glyphicon-floppy-disk"></span></a>');
        	  	$(td).empty().append($button); //empty is needed because you are rendering to an existing cell
 
@@ -160,12 +168,14 @@
 			
 			return td;
         };
+
 		
-		var globalHeaders = {{ arr_headers|json_encode|raw}};
+		var globalHeaders = {{ arr_headers|json_encode|raw }};
  		globalHeaders.push('');
 		
-		var globalColumns = {{ arr_columns|json_encode|raw}};
-		globalColumns.push({data: "action", renderer: buttonRenderer, editor: false});
+		var globalColumns = {{ arr_columns|json_encode|raw }};
+		globalColumns.push({ data: "action", renderer: buttonSaveRenderer, editor: false });
+		
 		
 		var data = {{ arr_obj|json_encode|raw }};
 		
@@ -252,35 +262,6 @@
               
       	});  
 
-        $('#save').click(function() {
-
-				var cols = [], libs = [];
-
-				 for (var i = 0; i < globalColumns.length; i++) {
-					 var obj = {};
-			            if (colsToHide.indexOf(i) === -1) {
-				            obj[i] = true;
-			            } else {
-			            	obj[i] = false;
-				        }
-				        cols.push(obj); 
-				        libs.push(globalColumns[i].data);
-				 }
-            
-			   //var hotData = { data: JSON.stringify(hot.getData()), id: {{ rapport.id }}, cols: cols, libs: libs };
-			   var hotData = { data: JSON.stringify(hot.observedData), id: {{ rapport.id }}, cols: cols, libs: libs };
-			   $.ajax({
-				   url: "{{ path('crm_rapport_enregistrer') }}",
-				   method: 'POST',
-				   data: hotData,
-				   dataType : 'json',
-				   success : function(d, statut){ 
-						$("#alert-save-success").removeClass("hidden");
-					   	$("#saveProspection").removeClass("disabled");
-				  	}
-      	 		 });
-		});
-
 	
         $(":checkbox").on("change", function(e) {
         	onCheckboxChange(this);
@@ -328,56 +309,7 @@
 
 	});
 
-	{% if actionInit is not null %}
-		$(window).load(function(){
-			saveSegment();
-		});
-
-	{% endif %}
-
-
-	function saveSegment(){
-
-		{% if token == null %}
-			document.location.href = "{{ path('emailing_homepage') }}" ;
-		{% else %}
-
-			var data = {{ arr_obj|json_encode|raw }};
-			var strData = JSON.stringify(data);
-			var sentData = { name: "{{ rapport.nom }}", comment: "{{ rapport.description }}", data: strData };
-			sentData =  JSON.stringify(sentData);
-			var spanElmt = document.getElementById('iconUpload');
-
-			spanElmt.classList.remove('glyphicon-upload');
-			spanElmt.classList.add('glyphicon-refresh');
-			spanElmt.classList.add('glyphicon-refresh-animate');
-
-
-			$('#modaleMautic').modal('show');
-
-			$.ajax({
-				url: "{{ path('emailing_create_contact_segment') }}",
-				method: 'POST',
-				data: sentData,
-				dataType : 'json',
-				success : function(d, statut){
-
-					$('#modaleMautic').modal('hide');
-					spanElmt.classList.remove('glyphicon-refresh');
-					spanElmt.classList.remove('glyphicon-refresh-animate');
-					spanElmt.classList.add('glyphicon-ok');
-				},
-				error : function(){
-
-					$('#modaleMautic').modal('hide');
-					spanElmt.classList.remove('glyphicon-refresh');
-					spanElmt.classList.remove('glyphicon-refresh-animate');
-					spanElmt.classList.add('glyphicon-remove');
-				}
-			});
-		{% endif %}
-	}
-
+	
 	function saveProspection(){
 
 
@@ -416,9 +348,6 @@
         });
 
 	}
-
-
-
 
 
 	</script>

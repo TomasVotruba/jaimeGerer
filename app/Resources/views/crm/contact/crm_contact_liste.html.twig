@@ -185,6 +185,9 @@
 
 							if(row['email']){
 								s+= (br ? '<br />' : '') + row['email'];
+								if(row['bounce']){
+									s+= " <span class='label label-danger'>Bounce</span>";
+								}
 							}
 
 							return s;

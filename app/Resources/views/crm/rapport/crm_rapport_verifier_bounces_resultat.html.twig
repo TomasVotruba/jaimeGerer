@@ -1,0 +1,85 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Rapport : {{ rapport.nom }}</h1>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 center">
+
+			<h2>Nombre d'adresses email vérifiées : {{ arr_results['checked'] }}</h2>
+
+			{% if arr_results['ignored'] > 0 %}
+				<p>Email ignorés (dernière vérification récente) : {{ arr_results['ignored'] }}</p>
+			{% endif %}
+
+			{% if arr_results['total'] > 0 %}
+				<h3>Taux de bounces dans cette liste</h3>
+				<div id="gauge">
+					<!-- Gauge Chart loaded by javascript -->
+				</div>
+			{% endif %}
+			
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-bordered" style="width: 200px; margin: auto;">
+				<tbody>
+					<tr>
+						<th>
+							Bounces
+						</th>
+						<td>
+							{{ arr_results['bounce'] }}
+						</td>
+					</tr>
+					<tr>
+						<th>
+							Valides
+						</th>
+						<td>
+							{{ arr_results['valid'] }}
+						</td>
+					</tr>
+				</tbody>	
+			</table>
+		</div>
+	</div>
+
+	<div class="row spacer-top">
+		<div class="col-md-12 center">
+			<a href="{{ path('crm_rapport_voir', {'id' : rapport.id }) }}" class="btn btn-success">Retour au rapport</a>
+			<a href="{{ path('crm_rapport_voir', {'id' : 414 }) }}" class="btn btn-info" target="_blank">Rapport bounces</a>
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('lib/justgage/justgage.1.0.1.min.js') }}"></script>
+	<script src="{{ asset('lib/justgage/raphael.2.1.0.min.js') }}"></script>
+
+	<script type="text/javascript">
+		$(document).ready( function () {
+			{% if arr_results['checked'] > 0  %}
+				var g = new JustGage({
+				    id: "gauge",
+				    value: {{ arr_results['bounce']/(arr_results['checked']-arr_results['ignored'])*100|number_format(0) }},
+				    min: 0,
+				    max: 100,
+				    title: "Taux de bounces",
+				    levelColors: ["a9d60c", "f8c700", "ff0000"],
+				    levelColorsGradient: false,
+				    label: "%"
+				});
+			{% endif %}
+		});
+	</script>
+{% endblock %}

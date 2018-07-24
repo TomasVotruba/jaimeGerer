@@ -49,7 +49,7 @@ services:
         class: AppBundle\Service\CRM\ContactService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ "@doctrine.orm.entity_manager", "@request_stack", "%kernel.root_dir%" ]
+        arguments: [ "@doctrine.orm.entity_manager", "@request_stack", "%kernel.root_dir%", "@appbundle.zerobounce_api" ]
     appbundle.crm_prospection_service:
         class: AppBundle\Service\CRM\ProspectionService
         calls:
@@ -136,3 +136,8 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         arguments: [ "@doctrine.orm.entity_manager", '%kernel.root_dir%', "@appbundle.utils_service" ]
+    appbundle.zerobounce_api:
+        class: AppBundle\Service\CRM\ZeroBounceAPIService
+        calls:
+            - [setContainer, ["@service_container"]]
+        arguments: []

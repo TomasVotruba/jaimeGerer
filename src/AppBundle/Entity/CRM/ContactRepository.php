@@ -146,7 +146,7 @@ class ContactRepository extends EntityRepository
 
 	public function findForList($company, $length, $start, $orderBy, $dir, $search){
 		$qb = $this->createQueryBuilder('c')
-		->select('c.id', 'c.prenom', 'c.nom', 'co.nom as compte_nom', 'co.id as compte_id', 'c.titre', 'c.telephoneFixe', 'c.telephonePortable', 'c.email', 'c.ville', 'c.region', 'c.pays')
+		->select('c.id', 'c.prenom', 'c.nom', 'co.nom as compte_nom', 'co.id as compte_id', 'c.titre', 'c.telephoneFixe', 'c.telephonePortable', 'c.email', 'c.ville', 'c.region', 'c.pays', 'c.bounce')
 		->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
 		->where('co.company = :company')
         ->andWhere('c.isOnlyProspect = :isOnlyProspect')
@@ -189,7 +189,7 @@ class ContactRepository extends EntityRepository
 		return $qb->getQuery()->getSingleScalarResult();
 	}
 
-	public function createQueryAndGetResult($arr_filters, $company){
+	public function createQueryAndGetResult($arr_filters, $company, $emailing){
 
 		$qb  = $this->_em->createQueryBuilder();
 
@@ -443,6 +443,14 @@ class ContactRepository extends EntityRepository
 		$query->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
 				->andWhere('co.company = :company')
 				->setParameter('company', $company);
+
+		if($emailing == true){
+			$query->andWhere('c.bounce = :bounce  OR c.bounce IS NULL')
+				->andWhere('c.email IS NOT NULL')
+				->andWhere('c.rejetEmail = :rejetEmail')
+				->setParameter('bounce', false)
+				->setParameter('rejetEmail', false);
+		}
 
 		$result = $query->getQuery()->getResult();
 

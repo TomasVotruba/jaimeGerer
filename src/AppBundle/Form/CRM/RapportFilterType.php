@@ -67,6 +67,7 @@ class RapportFilterType extends AbstractType
                     'SECTEUR' => 'Secteur d\'activité',
                     'dateCreation' => 'Date de création',
                     'dateEdition' => 'Date de modification',
+                    'bounce' => 'Bounce'
 
                 );
                 break;

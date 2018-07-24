@@ -37,14 +37,26 @@
 		    </p>
 	    </div>
 	    <div class="col-md-12">
-	    		<p>
-	    			<a href="#opportunites">Actions commerciales du contact</a> - 
-	    			<a href="#devis">Anciens devis du contact</a> - 
-	    			<a href="#factures">Factures du contact</a> - 
-	    			<a href="#prises_contact">Historique des prises de contact</a>
-	    		</p>
-	    	</div>
+    		<p>
+    			<a href="#opportunites">Actions commerciales du contact</a> - 
+    			<a href="#devis">Anciens devis du contact</a> - 
+    			<a href="#factures">Factures du contact</a> - 
+    			<a href="#prises_contact">Historique des prises de contact</a>
+    		</p>
+	    </div>
+
+	    
     </div>
+
+    {% if contact.bounce %}
+    	<div class="row">
+	    	<div class="col-md-12 alert alert-danger">
+	    	 	<strong><span class="glyphicon glyphicon-warning-sign"></span> BOUNCE !</strong><br />
+	    	 	L'adresse email de ce contact ({{ contact.email }}) a été détectée comme bounce. Il est possible que l'adresse email soit mal notée, ou que le contact ait changé d'organisation. Veuillez mettre ce contact à jour. <br />
+	    	 	{% if contact.dateBounceCheck is not empty %} Date de vérification : {{ contact.dateBounceCheck|date('d/m/Y') }} {% endif %}
+	    	</div>
+	    </div>
+	{% endif %}
 
 	<div class="row">
 		<div class="col-md-12">
@@ -222,6 +234,9 @@
 						    		-
 						    	{% else %}
 						    		{{ contact.email }}
+						    		{% if contact.bounce %}
+										<span class="label label-danger">Bounce</span> 
+									{% endif %}
 						    	{% endif %}	    	
 						    </td>
 						 </tr>

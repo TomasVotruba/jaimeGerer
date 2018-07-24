@@ -60,9 +60,13 @@ class CompanyType extends AbstractType
         			'picker_options' => array('palettes' => true),
         			'empty_data' => '#FFFFFF'
         	))
-             ->add('siren', 'text', array(
+            ->add('siren', 'text', array(
                 'required' => true,
                 'label' => 'SIREN'
+            ))
+            ->add('zeroBounceApiKey', 'text', array(
+                'required' => true,
+                'label' => 'API Key ZeroBounce'
             ))
         ;
     }

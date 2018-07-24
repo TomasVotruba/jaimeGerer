@@ -89,6 +89,14 @@ class Rapport
      * @ORM\JoinColumn(nullable=true)
      */
     private $company = null;
+
+
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="emailing", type="boolean", nullable=true)
+     */
+    private $emailing = null;
     
     /**
      * Get id
@@ -332,4 +340,27 @@ class Rapport
 		return $this;
 	}
 	
+
+    /**
+     * Set emailing
+     *
+     * @param boolean $emailing
+     * @return Rapport
+     */
+    public function setEmailing($emailing)
+    {
+        $this->emailing = $emailing;
+
+        return $this;
+    }
+
+    /**
+     * Get emailing
+     *
+     * @return boolean 
+     */
+    public function getEmailing()
+    {
+        return $this->emailing;
+    }
 }

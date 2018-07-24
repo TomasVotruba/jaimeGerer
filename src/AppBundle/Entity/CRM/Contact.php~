@@ -258,6 +258,20 @@ class Contact
      */
     private $importMauticStatus = false;
 
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="bounce", type="boolean")
+     */
+    private $bounce = false;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_bounce_check", type="date")
+     */
+    private $dateBounceCheck;
+
 
     /**
      * Set id
@@ -1042,5 +1056,51 @@ class Contact
             }
         }
         return $arr_secteurs;
+    }
+
+    /**
+     * Set rejetNewsletter
+     *
+     * @param boolean $rejetNewsletter
+     * @return Contact
+     */
+    public function setRejetNewsletter($rejetNewsletter)
+    {
+        $this->rejetNewsletter = $rejetNewsletter;
+
+        return $this;
+    }
+
+    /**
+     * Get rejetNewsletter
+     *
+     * @return boolean 
+     */
+    public function getRejetNewsletter()
+    {
+        return $this->rejetNewsletter;
+    }
+
+    /**
+     * Set bounce
+     *
+     * @param boolean $bounce
+     * @return Contact
+     */
+    public function setBounce($bounce)
+    {
+        $this->bounce = $bounce;
+
+        return $this;
+    }
+
+    /**
+     * Get bounce
+     *
+     * @return boolean 
+     */
+    public function getBounce()
+    {
+        return $this->bounce;
     }
 }

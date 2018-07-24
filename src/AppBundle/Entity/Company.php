@@ -137,6 +137,13 @@ class Company
     private $siren;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="zerobounce_api_key", type="string", length=255, nullable=true)
+     */
+    private $zeroBounceApiKey;
+
+    /**
      * Set id
      *
      * @param integer $id 
@@ -606,5 +613,28 @@ class Company
     public function getSiren()
     {
         return $this->siren;
+    }
+
+    /**
+     * Set zeroBounceApiKey
+     *
+     * @param string $zeroBounceApiKey
+     * @return Company
+     */
+    public function setZeroBounceApiKey($zeroBounceApiKey)
+    {
+        $this->zeroBounceApiKey = $zeroBounceApiKey;
+
+        return $this;
+    }
+
+    /**
+     * Get zeroBounceApiKey
+     *
+     * @return string 
+     */
+    public function getZeroBounceApiKey()
+    {
+        return $this->zeroBounceApiKey;
     }
 }

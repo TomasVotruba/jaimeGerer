@@ -234,6 +234,11 @@ class ContactController extends Controller
 			$em->persist($contact);
 			$em->flush();
 
+			if( $contact->getEmail() && $contact->getCompte()->getCompany()->getZeroBounceApiKey() ){
+				$contactService = $this->get('appbundle.crm_contact_service');
+				$contactService->verifierBounce($contact);
+			}
+
 			return $this->redirect($this->generateUrl(
 					'crm_contact_voir',
 					array('id' => $contact->getId())
@@ -557,17 +562,19 @@ class ContactController extends Controller
 		$_compte = $contact->getCompte();
 		$contact->setCompte($_compte->getId());
 		$form = $this->createForm(
-				new ContactType(
-						$contact->getUserGestion()->getId(),
-						$this->getUser()->getCompany()->getId()
-				),
-				$contact
+			new ContactType(
+					$contact->getUserGestion()->getId(),
+					$this->getUser()->getCompany()->getId()
+			),
+			$contact
 		);
 
 		$form->get('compte_name')->setData($_compte->__toString());
 
 		$em = $this->getDoctrine()->getManager();
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
+
+		$oldEmail = $contact->getEmail();
 
 		$request = $this->getRequest();
 		$form->handleRequest($request);
@@ -583,6 +590,13 @@ class ContactController extends Controller
 			$em->persist($contact);
 			$em->flush();
 
+			if($contact->getEmail()){
+				if( $oldEmail != $contact->getEmail() && $contact->getCompte()->getCompany()->getZeroBounceApiKey() ){
+					$contactService = $this->get('appbundle.crm_contact_service');
+					$contactService->verifierBounce($contact);
+				}	
+			}
+			
 			return $this->redirect($this->generateUrl(
 					'crm_contact_voir',
 					array('id' => $contact->getId())
@@ -975,6 +989,8 @@ class ContactController extends Controller
 		exit();
 
 	}
+
+	
 
 
 }

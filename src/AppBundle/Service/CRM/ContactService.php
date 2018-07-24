@@ -19,12 +19,14 @@ class ContactService extends ContainerAware {
     protected $em;
     protected $requestStack;
     protected $rootDir;
+    protected $zeroBounceAPIService;
 
-    public function __construct(\Doctrine\ORM\EntityManager $em, RequestStack $requestStack, $rootDir)
+    public function __construct(\Doctrine\ORM\EntityManager $em, RequestStack $requestStack, $rootDir, $zeroBounceAPIService)
     {
         $this->em = $em;
         $this->requestStack = $requestStack;
         $this->rootDir = $rootDir;
+        $this->zeroBounceAPIService = $zeroBounceAPIService;
     }
 
    public function checkContactImportFile($company){
@@ -465,5 +467,108 @@ class ContactService extends ContainerAware {
         $this->em->flush();
         return $arr_results;
 
+    }
+
+    public function verifierBounce(Contact $contact){
+
+        $bounce = $contact->getBounce();
+    
+        if($contact->getEmail() == null || $contact->getEmail() == ''){
+            throw new \Exception('Ce contact n\'a pas d\'adresse email');
+        }
+
+        $credits = 0;
+        try{
+            $credits = $this->zeroBounceAPIService->getCreditBalance($contact->getCompte()->getCompany());
+        } catch(\Exception $e){
+            throw $e;
+        }
+
+        if($credits > 0){
+            
+            try{
+                $bounce = $this->zeroBounceAPIService->isBounce($contact);
+            } catch(\Exception $e){
+                throw $e;
+            }
+            
+            if($bounce){
+                $contact->setBounce(true);
+            } else {
+                $contact->setBounce(false);
+            }
+            $contact->setDateBounceCheck(new \DateTime(date('Y-m-d')));
+            $this->em->persist($contact);
+            $this->em->flush();
+        }
+
+        return $bounce;
+
+    }
+
+     public function verifierBouncesBatch($arr_contacts, $company){
+
+        $arr_results = array(
+            'valid' => 0,
+            'bounce' => 0,
+            'total' => 0,
+            'checked' => 0,
+            'ignored' => 0
+        );
+
+        $arr_toCheck = array();
+
+        //only check if the last check was more than 15 days ago
+        $today = new \DateTime(date('Y-m-d'));
+        foreach($arr_contacts as $contact){
+
+            if($contact->getEmail() == "" || $contact->getEmail() == null){
+                $arr_results['ignored']++;
+            }
+
+            if($contact->getDateBounceCheck()){
+                $interval = $today->diff($contact->getDateBounceCheck(), true);
+                $arr_results['total']++;
+                if($interval->format('%a') < 15){
+                    $arr_results['ignored']++;
+                } else {
+                    $arr_toCheck[] = $contact;
+                }
+            }
+        }
+
+        $credits = 0;
+        try{
+            $credits = $this->zeroBounceAPIService->getCreditBalance($company);
+        } catch(\Exception $e){
+            throw $e;
+        }
+
+        if($credits < count($arr_toCheck)){
+            throw new \Exception('Vous n\'avez pas assez de crédits sur ZeroBounce.');
+        }
+        
+        foreach($arr_toCheck as $contact){
+
+            try{
+                $bounce = $this->zeroBounceAPIService->isBounce($contact);
+            } catch(\Exception $e){
+                throw $e;
+            }
+            
+            $arr_results['checked']++;
+            if($bounce){
+                $contact->setBounce(true);
+                $arr_results['bounce']++;
+            } else {
+                $contact->setBounce(false);
+                $arr_results['valid']++;
+            }
+            $contact->setDateBounceCheck(new \DateTime(date('Y-m-d')));
+            $this->em->persist($contact);
+            $this->em->flush();
+        }
+
+        return $arr_results;
     }
 }

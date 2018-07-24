@@ -88,6 +88,7 @@ class TableauTVAService extends ContainerAware {
 				$arr_non_soumis[$type]['entreeTTC'] = 0;
 			}
 
+
 			$arr_factures = array();
 			if($settingsEntree->getValeur() == 'ENCAISSEMENTS'){
 				// ENCAISSEMENTS = au rapprochement
@@ -122,7 +123,6 @@ class TableauTVAService extends ContainerAware {
 									$arr_soumis[$type]['taxe_percent']['other']+=$rapprochement->getFacture()->getTaxe();
 								}
 							}
-
 						}
 
 					} elseif($rapprochement->getRemiseCheque()){

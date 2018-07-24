@@ -89,6 +89,14 @@ class Rapport
      * @ORM\JoinColumn(nullable=true)
      */
     private $company = null;
+
+
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="emailing", type="boolean", nullable=true)
+     */
+    private $emailing = null;
     
     /**
      * Get id
@@ -299,6 +307,7 @@ class Rapport
      */
     public function addFiltre(\AppBundle\Entity\CRM\RapportFilter $filtres)
     {
+        $filtres->setRapport($this);
         $this->filtres[] = $filtres;
 
         return $this;

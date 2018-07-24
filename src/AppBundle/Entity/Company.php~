@@ -137,6 +137,25 @@ class Company
     private $siren;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="zerobounce_api_key", type="string", length=255)
+     */
+    private $zeroBounceApiKey;
+
+    /**
+     * Set id
+     *
+     * @param integer $id 
+     * @return Company
+     */
+    public function setId($id)
+    {
+        return $this->id = $id;
+        return $this;
+    }
+
+    /**
      * Get id
      *
      * @return integer 
@@ -571,5 +590,28 @@ class Company
     {
         $this->credits -= (float)$credits;
         return $this;
+    }
+
+    /**
+     * Set siren
+     *
+     * @param string $siren
+     * @return Company
+     */
+    public function setSiren($siren)
+    {
+        $this->siren = $siren;
+
+        return $this;
+    }
+
+    /**
+     * Get siren
+     *
+     * @return string 
+     */
+    public function getSiren()
+    {
+        return $this->siren;
     }
 }
