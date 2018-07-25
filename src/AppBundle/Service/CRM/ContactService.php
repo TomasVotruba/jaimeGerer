@@ -508,6 +508,9 @@ class ContactService extends ContainerAware {
 
      public function verifierBouncesBatch($arr_contacts, $company){
 
+        ini_set('memory_limit', '2048M');
+        ini_set('max_execution_time', 3600);
+
         $arr_results = array(
             'valid' => 0,
             'bounce' => 0,
