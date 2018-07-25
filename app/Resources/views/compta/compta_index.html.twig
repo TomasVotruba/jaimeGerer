@@ -78,17 +78,17 @@
 
 	<div class="row">
 		<div class="col-md-12 center">
-			<h3>Montant des actions commerciales</h3>
+			<h3>Chiffre d'affaire {{ 'now'|date('Y') }}</h3>
 		</div>
 	</div>
 	<div class="row spacer-top">
 		<div class="col-md-1"></div>
 		<div class="col-md-4">
-			<div id="chart_actions_co_analytique"></div>
+			<div id="chart_ca_analytique"></div>
 		</div>
 		<div class="col-md-2"></div>
 		<div class="col-md-4">
-			<div id="chart_actions_co_rhone_alpes"></div>
+			<div id="chart_ca_rhone_alpes"></div>
 		</div>
 	</div>
 
@@ -101,10 +101,9 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function() {
-        	/* chart : actions commerciales par analytique */
-            {{ gc_draw(chartActionsCoAnalytique, 'chart_actions_co_analytique') }}
-            {{ gc_draw(chartActionsCoRhoneAlpes, 'chart_actions_co_rhone_alpes') }}
+        $(document).ready(function() {  
+            {{ gc_draw(chartCAAnalytique, 'chart_ca_analytique') }}
+            {{ gc_draw(chartCARhoneAlpes, 'chart_ca_rhone_alpes') }}
          });
     </script>
 {% endblock %}

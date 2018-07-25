@@ -20,16 +20,31 @@
         </div>
     </div>
 
-    <div class="row" style="margin-top: 40px; margin-bottom: 40px;">
-        <div class="col-md-6">
+    <div class="row" class="spacer-top">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
             <h3>Répartition par probabilité</h3>
             <div id="chartdiv" style="width: 600px; height: 300px; margin:auto;"></div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
             <h3>Taux de transformation {{ 'now'|date('Y') }}</h3>
             <div id="chart_taux_transformation_wrapper"></div>
         </div>
-
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <h3>Répartition par type {{ 'now'|date('Y') }}</h3>
+            <div id="chart_actions_co_analytique"></div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <h3>Répartition par lieu {{ 'now'|date('Y') }}</h3>
+            <div id="chart_actions_co_rhone_alpes"></div>
+        </div>
+         <div class="col-md-2"></div>
     </div>
 
     <div class="row">
@@ -324,8 +339,10 @@
                 table.ajax.reload();
             });
 
-            /* chart : taux de transformation */
+            /* charts */
             {{ gc_draw(chartTauxTransformation, 'chart_taux_transformation_wrapper') }}
+            {{ gc_draw(chartActionsCoAnalytique, 'chart_actions_co_analytique') }}
+            {{ gc_draw(chartActionsCoRhoneAlpes, 'chart_actions_co_rhone_alpes') }}
 
             AmCharts.ready(function() {
                 $.ajax({

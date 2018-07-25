@@ -56,8 +56,16 @@ class ActionCommercialeController extends Controller
 		$chartService = $this->get('appbundle.chart_service');
 		$chartTauxTransformation = $chartService->opportuniteTauxTransformationPieChart($dataTauxTransformation);
 
+		$dataChartActionsCoAnalytique = $opportuniteService->getDataChartActionsCoAnalytique($this->getUser()->getCompany(), date('Y'));		
+		$chartActionsCoAnalytique = $chartService->actionsCoAnalytique($dataChartActionsCoAnalytique);
+
+		$dataChartActionsCoRhoneAlpes = $opportuniteService->getDataChartActionsCoRhoneAlpes($this->getUser()->getCompany(), date('Y'));		
+		$chartActionsCoRhoneAlpes = $chartService->actionsCoRhoneAlpes($dataChartActionsCoRhoneAlpes);
+
 		return $this->render('crm/action-commerciale/crm_action_commerciale_liste.html.twig', array(
-			'chartTauxTransformation' => $chartTauxTransformation
+			'chartTauxTransformation' => $chartTauxTransformation,
+			'chartActionsCoAnalytique' => $chartActionsCoAnalytique,
+			'chartActionsCoRhoneAlpes' => $chartActionsCoRhoneAlpes
 		));
 	}	
 

@@ -366,6 +366,23 @@ class DocumentPrixRepository extends EntityRepository
 		return $result;
 	}
 
+	public function findForCompanyByYear($company, $type, $year){
+
+		$query = $this->createQueryBuilder('d')
+		->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
+		->where('c.company = :company')
+		->andWhere('d.type = :type')
+		->andWhere('d.dateCreation >= :dateDebut')
+		->andWhere('d.dateCreation <= :dateFin')
+		->setParameter('company', $company)
+		->setParameter('dateDebut', $year.'-01-01')
+		->setParameter('dateFin',  $year.'-12-31')
+		->setParameter('type', $type);
+
+		$result = $query->getQuery()->getResult();
+		return $result;
+	}
+
 	public function findForListRetard($company, $type, $length, $start, $orderBy, $dir, $search, $compta=null){
 
 		$queryBuilder  = $this->_em->createQueryBuilder();

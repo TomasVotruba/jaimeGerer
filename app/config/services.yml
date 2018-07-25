@@ -45,6 +45,11 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         arguments: [ "@doctrine.orm.entity_manager" ]
+    appbundle.crm_facture_service:
+        class: AppBundle\Service\CRM\FactureService
+        calls:
+            - [setContainer, ["@service_container"]]
+        arguments: [ "@doctrine.orm.entity_manager" ]
     appbundle.crm_contact_service:
         class: AppBundle\Service\CRM\ContactService
         calls:
