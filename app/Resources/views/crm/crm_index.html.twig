@@ -98,14 +98,23 @@
 	</div>
 	<div class="row">
 
-		<div class="col-md-4">
+		<div class="col-md-4 center">
 			<div id="gauge_email"></div>
+			{% if app.user.company.id == 1 %}
+				<a href="{{ path('crm_rapport_voir', {'id' : 416 }) }}" class="btn btn-xs btn-info">Rapport</a>
+			{% endif %}
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-4 center">
 			<div id="gauge_tel"></div>
+			{% if app.user.company.id == 1 %}
+				<a href="{{ path('crm_rapport_voir', {'id' : 415 }) }}" class="btn btn-xs btn-info">Rapport</a>
+			{% endif %}
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-4 center">
 			<div id="gauge_bounce"></div>
+			{% if app.user.company.id == 1 %}
+				<a href="{{ path('crm_rapport_voir', {'id' : 414 }) }}" class="btn btn-xs btn-info">Rapport</a>
+			{% endif %}
 		</div>
 	</div>
 

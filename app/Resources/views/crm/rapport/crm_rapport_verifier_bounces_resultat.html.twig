@@ -54,7 +54,9 @@
 	<div class="row spacer-top">
 		<div class="col-md-12 center">
 			<a href="{{ path('crm_rapport_voir', {'id' : rapport.id }) }}" class="btn btn-success">Retour au rapport</a>
-			<a href="{{ path('crm_rapport_voir', {'id' : 414 }) }}" class="btn btn-info" target="_blank">Rapport bounces</a>
+			{% if app.user.company.id == 1 %}
+				<a href="{{ path('crm_rapport_voir', {'id' : 414 }) }}" class="btn btn-info" target="_blank">Rapport bounces</a>
+			{% endif %}
 		</div>
 	</div>
 
