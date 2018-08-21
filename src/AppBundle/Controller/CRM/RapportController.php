@@ -895,6 +895,8 @@ class RapportController extends Controller
 			throw new \Exception('API Key non renseignée');
 		}
 
+		$arr_results = array();
+
 		$contactService = $this->get('appbundle.crm_contact_service');
 		$contactRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
 		$filterRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\RapportFilter');
@@ -909,15 +911,17 @@ class RapportController extends Controller
 			}
 		}
 
-		try{
-			$arr_results = $contactService->verifierBouncesBatch($arr_contacts, $this->getUser()->getCompany());
-		} catch(\Exception $e){
-			throw $e;
-		}
+		// try{
+		// 	$arr_results = $contactService->verifierBouncesBatch($arr_contacts, $this->getUser()->getCompany());
+		// } catch(\Exception $e){
+		// 	throw $e;
+		// }
+
 
 		return $this->render('crm/rapport/crm_rapport_verifier_bounces_resultat.html.twig', array(
 			'rapport' => $rapport,
-            'arr_results' => $arr_results
+            'arr_results' => $arr_results,
+            'arr_contacts' => $arr_contacts
 		));
 	}
 }

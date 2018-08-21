@@ -990,6 +990,46 @@ class ContactController extends Controller
 
 	}
 
+	/**
+	 * @Route("/crm/contact/verifier-bounce/{id}", name="crm_contact_verifier_bounce", options={"expose"=true})
+	 */
+	public function verifierBounce(Contact $contact){
+
+		$response = new JsonResponse();
+		$arr_result = array(
+			'ignored' => 0, 
+			'bounce' => 0, 
+			'valid' => 0
+		);
+
+		if( !$this->getUser()->getCompany()->getZeroBounceApiKey() ){
+			return $response;
+		}
+
+		//only check if the last check was more than 15 days ago
+		$today = new \DateTime(date('Y-m-d'));
+		if($contact->getDateBounceCheck()){
+            $interval = $today->diff($contact->getDateBounceCheck(), true);
+            if($interval->format('%a') < 15){
+                $arr_result['ignored']++;
+                $response->setData($arr_result);
+				return $response;
+            } 
+        }
+
+		$contactService = $this->get('appbundle.crm_contact_service');
+		$bounce = $contactService->verifierBounce($contact);
+		if($bounce == true){
+			$arr_result['bounce']++;
+		} else {
+			$arr_result['valid']++;
+		}
+		
+		$response->setData($arr_result);
+		return $response;
+		
+	}
+
 	
 
 
