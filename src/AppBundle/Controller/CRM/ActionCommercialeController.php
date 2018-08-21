@@ -698,6 +698,7 @@ class ActionCommercialeController extends Controller
 		$newActionCommerciale->setUserCreation($this->getUser());
 		$newActionCommerciale->setDateCreation(new \DateTime(date('Y-m-d')));
 		$newActionCommerciale->setDateEdition(null);
+		$newActionCommerciale->setDate(new \DateTime(date('Y-m-d')));
 		$newActionCommerciale->setUserEdition(null);
 		$newActionCommerciale->setNom('COPIE '.$actionCommerciale->getNom());
 		$newActionCommerciale->setEtat('ONGOING');
