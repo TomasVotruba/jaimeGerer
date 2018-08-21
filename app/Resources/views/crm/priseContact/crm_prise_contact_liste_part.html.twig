@@ -2,11 +2,13 @@
 	<div class="row" id="prises_contact">
 		<div class="col-md-12">
 			<h3>Historique des prises de contact</h3>
-			<p>
-				<a target='_blank' href="{{ path('crm_prise_contact_ajouter', {'id' : contact.id, 'screen' : 'contact' }) }}" class="btn btn-xs btn-success"  data-toggle="modal" data-target="#modal_prise_contact">
-					<span class="glyphicon glyphicon-plus"></span> Ajouter
-				</a>
-			</p>
+			{% if readOnly is not defined %}
+				<p>
+					<a target='_blank' href="{{ path('crm_prise_contact_ajouter', {'id' : contact.id, 'screen' : 'contact' }) }}" class="btn btn-xs btn-success"  data-toggle="modal" data-target="#modal_prise_contact">
+						<span class="glyphicon glyphicon-plus"></span> Ajouter
+					</a>
+				</p>
+			{% endif %}
 			<table id="table_prises_contact" class="table table-bordered table-striped">
 				<thead>
 				<tr>

@@ -54,4 +54,18 @@ class PriseContactController extends Controller
 		));
 	}
 
+	/**
+	 * @Route("/crm/prise_contact/voir/{id}", name="crm_prise_contact_voir", options={"expose"=true})
+	 */
+	public function priseContactVoir(Contact $contact)
+	{
+		
+		return $this->render('crm/priseContact/crm_prise_contact_liste_part.html.twig', array(
+			'contact' => $contact,
+			'div_id' => 'table_prises_contact',
+			'readOnly' => true
+		));
+	}
+
+
 }

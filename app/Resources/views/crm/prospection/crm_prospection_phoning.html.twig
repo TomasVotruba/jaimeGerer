@@ -18,168 +18,179 @@
 				</a>
 			</p>
 
-<script>
-	$(document).ready(function() {
+			<script>
+				$(document).ready(function() {
 
-		$("* [rel='tooltip']").tooltip({
-		   html: true,
-		   placement: 'top'
-		});
+					$("* [rel='tooltip']").tooltip({
+					   html: true,
+					   placement: 'top'
+					});
 
-	});
+				});
 
-	{%   set contact = ""  %}
+				{%   set contact = ""  %}
 
-	var data = {{ data|raw }};
+				var data = {{ data|raw }};
 
-</script>
+			</script>
 
 
 	    </div>
     </div>
 
-	    <div class="row">
-	    	<div class="col-md-12">
-			    <table id="table_contact_list" class="table table-bordered table-striped" style="width: 100%;">
-			    	<tbody>
-			    		<tr style="background: none;">
-			    			<td style="width:33%; padding: 10px; vertical-align:top">
-								<div id="phoningContacts">
-								</div>
-			    			</td>
-			    			<td style="padding : 10px 10px 10px 30px; vertical-align:top" id="rightContent">
-								<div class="row">
-									<div class="col-md-10" id="phoning-compte">
+	<div class="row">
+    	<div class="col-md-12">
+		    <table id="table_contact_list" class="table table-bordered table-striped" style="width: 100%;">
+		    	<tbody>
+		    		<tr style="background: none;">
+		    			<td style="width:33%; padding: 10px; vertical-align:top">
+							<div id="phoningContacts">
+							</div>
+		    			</td>
+		    			<td style="padding : 10px 10px 10px 30px; vertical-align:top" id="rightContent">
+							<div class="row">
+								<div class="col-md-10" id="phoning-compte">
 
-									</div>
-									<div class="col-md-2">
-										<a href="#" class="btn btn-success" style="float:right" id="next">
-											<span class="glyphicon glyphicon-arrow-right"></span> Suivant
-										</a>
-									</div>
 								</div>
-								<div class="row">
-									<div class="col-md-6" id="phoning-tentative">
-										J'ai déjà essayé d'appeler <br />
-										<h3><span class="nbr-tentatives"></span> fois</h3><a title="+1" ​data-toggle="tooltip" class="btn btn-success" href="#" data-prototype=""><strong>+1</strong></a><br /><br />
-										<button class="btn btn-primary btn-xs" href="javascript:void(0)" data-toggle="modal" data-target="#ModalBlacklistConfirmation" id="block_today" > Ne plus afficher aujourd'hui </button>
-									</div>
-									<div class="col-md-6" id="phoning-derniere-tentative">
-										Dernière tentative le <br />
-										<h3></h3>
-										<button class="btn btn-primary btn-xs" id="priseContact">Dernières prises de contact</button>
-									</div>
+								<div class="col-md-2">
+									<a href="#" class="btn btn-success" style="float:right" id="next">
+										<span class="glyphicon glyphicon-arrow-right"></span> Suivant
+									</a>
 								</div>
-								<hr />
+							</div>
+							<div class="row">
+								<div class="col-md-6" id="phoning-tentative">
+									J'ai déjà essayé d'appeler <br />
+									<h3><span class="nbr-tentatives"></span> fois</h3><a title="+1" ​data-toggle="tooltip" class="btn btn-success" href="#" data-prototype=""><strong>+1</strong></a><br /><br />
+									<button class="btn btn-primary btn-xs" href="javascript:void(0)" data-toggle="modal" data-target="#ModalBlacklistConfirmation" id="block_today" > Ne plus afficher aujourd'hui </button>
+								</div>
+								<div class="col-md-6" id="phoning-derniere-tentative">
+									Dernière tentative le <br />
+									<h3></h3>
+								</div>
+							</div>
+							<hr />
 
-								<div class="row">
+							<div class="row">
 
-									<div class="col-md-6">
-										<a data-toggle="modal" data-target="#modal-lg"  class="btn btn-success" id="ajouter_contact">
-											Enregistrer dans les contacts
-										</a>
-									</div>
-									<div class="col-md-6">
-										<a data-toggle="modal" data-target="#ModalBlacklistConfirmation" class="btn btn-danger" style="float:right" id="block">
-											Blacklister
-										</a>
-									</div>
+								<div class="col-md-6">
+									<a data-toggle="modal" data-target="#modal-lg"  class="btn btn-success" id="ajouter_contact">
+										Enregistrer dans les contacts
+									</a>
 								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<hr />
-									</div>
+								<div class="col-md-6">
+									<a data-toggle="modal" data-target="#ModalBlacklistConfirmation" class="btn btn-danger" style="float:right" id="block">
+										Blacklister
+									</a>
 								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<div class="form-group">
-											<label class="control-label" for="note">Note</label>
-											<textarea id="note" name="note" class="form-control tinymce"></textarea>
-											<br />
-											<button class="btn btn-success" id="saveNote">Enregistrer la note</button>
-										</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<hr />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class="control-label" for="note">Note</label>
+										<textarea id="note" name="note" class="form-control tinymce"></textarea>
+										<br />
+										<button class="btn btn-success" id="saveNote">Enregistrer la note</button>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col-md-12">
-										<hr />
-									</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<hr />
 								</div>
-								<div class="row">
-									<div class="col-md-6">
-										<table class="contact-view-table">
-											<tbody>
-												<tr>
-													<td>
-														Adresse
-													</td>
-													<td id='table_adresse'>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<table class="contact-view-table">
+										<tbody>
+											<tr>
+												<td>
+													Adresse
+												</td>
+												<td id='table_adresse'>
 
-													</td>
-												</tr>
-												<tr>
-													<td>
-														Code postal
-													</td>
-													<td id='table_codePostal'>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Code postal
+												</td>
+												<td id='table_codePostal'>
 
-													</td>
-												</tr>
-												<tr>
-													<td>
-														Ville
-													</td>
-													<td id='table_ville'>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Ville
+												</td>
+												<td id='table_ville'>
 
-													</td>
-												</tr>
-												<tr>
-													<td>
-														Région
-													</td>
-													<td id='table_region'>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Région
+												</td>
+												<td id='table_region'>
 
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-									<div class="col-md-6">
-										<table class="contact-view-table">
-											<tbody>
-												<tr>
-													<td>
-														Pays
-													</td>
-													<td id='table_pays'>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="col-md-6">
+									<table class="contact-view-table">
+										<tbody>
+											<tr>
+												<td>
+													Pays
+												</td>
+												<td id='table_pays'>
 
-													</td>
-												</tr>
-												<tr>
-													<td>Téléphone fixe</td>
-													<td id='table_telephoneFixe'></td>
-												</tr>
-												<tr>
-													<td>Tél. portable pro</td>
-													<td id='table_telephonePortable'></td>
-												</tr>
-												<tr>
-													<td>Email</td>
-													<td id='table_email'></td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-							   </div>
+												</td>
+											</tr>
+											<tr>
+												<td>Téléphone fixe</td>
+												<td id='table_telephoneFixe'></td>
+											</tr>
+											<tr>
+												<td>Tél. portable pro</td>
+												<td id='table_telephonePortable'></td>
+											</tr>
+											<tr>
+												<td>Email</td>
+												<td id='table_email'></td>
+											</tr>
+										</tbody>
+									</table>
 
-			    			</td>
-			    		</tr>
-			    	</tbody>
+								</div>
 
-			    </table>
-			</div>
+						   </div>
+						   <div class="row">
+						   		<div class="col-md-12">
+									<div id="historique_prises_contact"></div>
+								</div>
+						   	</div>
+		    			</td>
+		    		</tr>
+		    	</tbody>
+
+		    </table>
+
+
+			
+		
+		</div>
 
 	</div>
+
+
 {% endblock %}
 
 {% block javascripts %}
@@ -241,10 +252,7 @@
 								indexData : indexData,
 								noteContent : noteContent },
 						dataType : 'json',
-						async : false,
-						success : function(d, statut){
-							console.log(d);
-						}
+						async : false
 					});
 
 				}
@@ -319,6 +327,14 @@
 				var ajouterContactURL = Routing.generate('crm_prospection_ajouter_contact', {'id' : data[indexData].id} );
 				$("#ajouter_contact").attr('href', ajouterContactURL);
 
+				$.ajax({
+					url: Routing.generate('crm_prise_contact_voir', {'id' : data[indexData].id}),
+					method: 'GET',
+					success : function(d, statut){
+						$('#historique_prises_contact').html(d);
+					}
+				});
+
 			});
 		}
 
@@ -353,8 +369,6 @@
 						async : false,
 						success : function(d, statut){
 							$('#phoningContacts div.active').trigger('click');
-							console.log(d);
-							console.log(statut);
 						}
 					});
 				}
@@ -383,7 +397,6 @@
 
 
 			//blackLister aujourd'hui
-
 			$('#block_today').click(function(){
 				var indexData = $('#phoning-tentative a').attr('data-prototype');
 				$('#modal-body-blacklist').html('<p>Êtes vous sûr de ne plus afficher '+data[indexData].prenom+' '+data[indexData].nom+' aujourd\'hui ?</p>');
@@ -400,7 +413,6 @@
 			});
 
 			// passer au contact suivant
-
 			$('#next').click(function(e){
 				e.preventDefault();
 				if( $('#phoningContacts div.active').length > 0 )
@@ -494,62 +506,6 @@
 			});
 
 
-			$('#priseContact').click(function(){
-				var indexData = $('#phoning-tentative a').attr('data-prototype');
-
-				$.ajax({
-					url: "{{ path('priseContact')}}",
-					method: 'POST',
-					data: {
-						id : data[indexData]
-					},
-					dataType : 'json',
-					async : false,
-					success : function(d, statut){
-
-						var data =  JSON.parse(d);
-
-						var ul = document.getElementById("priseContactListe");
-						var noHistory = document.getElementById("noHistory");
-						ul.innerHTML = "";
-						noHistory.innerHTML = '';
-						noHistory.classList.remove("alert");
-						noHistory.classList.remove("alert-warning");
-
-
-						if(data.length == 0 ){
-							noHistory.textContent = "Aucune prise de contact pour le moment"
-							noHistory.classList.add("alert");
-							noHistory.classList.add("alert-warning");
-						}
-						else{
-							for(var i = data.length-1; i >= 0; i--){
-
-								var priseContact = JSON.parse(data[i]);
-								var raw =  document.createElement("tr");
-								if(i % 2 == 0){
-									raw.style.backgroundColor = "white";
-								}else{
-									raw.style.backgroundColor = "#dddddd";
-								}
-								var tdDate = document.createElement('td');
-								tdDate.style.paddingLeft = "10px";
-								var tdDesc = document.createElement('td');
-								tdDesc.style.paddingTop = "10px";
-								tdDesc.style.paddingLeft = "10px";
-								tdDate.textContent = priseContact.date;
-								tdDesc.innerHTML = priseContact.description;
-								raw.appendChild(tdDate);
-								raw.appendChild(tdDesc);
-								ul.appendChild(raw);
-							}
-						}
-
-						$('#historique').modal('show');
-					}
-				});
-			});
-
 		});
 
 		$(document).on("submit", '.form-contact', function(e) {
@@ -578,34 +534,6 @@
 {% endblock %}
 {% block additionalModals %}
 
-
-	<div id="historique" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="historique" aria-hidden="true" data-focus-on="input:first">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-					<h3>Historique de prise de contact</h3>
-
-				</div>
-				<div class="modal-body">
-
-					<table class="table table-bordered">
-						<tr>
-							<th>Date</th>
-							<th>Description</th>
-						</tr>
-					</table>
-
-					<table id="priseContactListe" class="table table-bordered">
-
-					</table>
-
-					<p id="noHistory"><p>
-
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<div id="ModalBlacklistConfirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ModalBlacklistConfirmation" aria-hidden="true" data-focus-on="input:first">
 		<div class="modal-dialog">

@@ -474,6 +474,8 @@ class ProspectionControllerCopy extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $prospectionInfosRepo =  $em->getRepository('AppBundle:CRM\ProspectionInfos');
+        $prisecontactRepo = $em->getRepository('AppBundle:CRM\PriseContact');
+
         $prospects = $prospectionInfosRepo->findByProspection($prospection);
 
         $data = [];
@@ -517,6 +519,14 @@ class ProspectionControllerCopy extends Controller
                 "note" => $prospect->getNote(),
                 "onlyProspect" => $prospect->getContact()->getIsOnlyProspect()
             );
+
+            $arr_priseContact = $prisecontactRepo->findByContact($prospect->getContact()->getId());
+            $arr_jsonPriseContact = [];
+            foreach ($arr_priseContact as $index => $priseContact) {
+                $priseContact =  ["date" => $priseContact->getDate()->format('d/m/Y'), "description" => $priseContact->getDescription()];
+                array_push($arr_jsonPriseContact, json_encode($priseContact));
+            }
+            $obj->prises_contact = $arr_jsonPriseContact;
 
             $data[] = $obj;
         }
@@ -623,39 +633,6 @@ class ProspectionControllerCopy extends Controller
         $em->flush();
 
         return new Response(1);
-    }
-
-    /**
-     * @Route("/crm/prospection/rapport/history/priseContact", name="priseContact")
-     */
-    public function rapportHistoryPriseContact()
-    {
-
-        $em = $this->getDoctrine()->getManager();
-        $prisecontactRepo = $em->getRepository('AppBundle:CRM\PriseContact');
-
-        $request = $this->getRequest();
-        $id = intval($request->get('id')["id"]);
-
-        $arr_priseContact = $prisecontactRepo->findByContact($id);
-
-
-        $arr_jsonPriseContact = [];
-
-
-        foreach ($arr_priseContact as $index => $priseContact) {
-
-            $priseContact =  ["date" => $priseContact->getDate()->format('d/m/Y'), "description" => $priseContact->getDescription()];
-
-            array_push($arr_jsonPriseContact, json_encode($priseContact));
-
-        }
-
-        $response = new JsonResponse();
-        $response->setData(json_encode($arr_jsonPriseContact));
-
-        return $response;
-
     }
 
     /**
