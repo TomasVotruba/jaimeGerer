@@ -133,6 +133,14 @@ class CompteType extends AbstractType
                 'label' => 'Mettre à jour les contacts avec la nouvelle adresse',
                 'mapped' => false,
                 'required' => false
+            ))
+            ->add('priveOrPublic', 'choice', array(
+                'label' => 'Privé ou public ?',
+                'required' => false,
+                'choices' => array(
+                    'PUBLIC' => 'Public',
+                    'PRIVE' => 'Privé'
+                )
             ));
            	if( $this->formAction )
 				$builder->setAction($this->formAction);

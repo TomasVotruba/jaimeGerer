@@ -180,6 +180,13 @@ class Compte
     private $secteurActivite;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="prive_or_public", type="string")
+     */
+    private $priveOrPublic;
+
+    /**
      * Set id
      *
      * @param int $id
@@ -703,5 +710,44 @@ class Compte
     public function getSecteurActivite()
     {
         return $this->secteurActivite;
+    }
+
+    /**
+     * Set priveOrPublic
+     *
+     * @param string $priveOrPublic
+     * @return Compte
+     */
+    public function setPriveOrPublic($priveOrPublic)
+    {
+        $this->priveOrPublic = $priveOrPublic;
+
+        return $this;
+    }
+
+    /**
+     * Get priveOrPublic
+     *
+     * @return string 
+     */
+    public function getPriveOrPublic()
+    {
+        return $this->priveOrPublic;
+    }
+
+    /**
+     * Get priveOrPublic as human readable string
+     *
+     * @return string 
+     */
+    public function getPriveOrPublicToString()
+    {
+        if($this->priveOrPublic == "PRIVE") {
+          return 'Privé';
+        } elseif($this->priveOrPublic == "PUBLIC")  {
+          return 'Public';
+        }
+
+        return 'N/A';
     }
 }

@@ -637,7 +637,8 @@ class CompteController extends Controller
 				'region' => $compte->getRegion(),
 				'pays' => $compte->getPays(),
 				'telephone' => $compte->getTelephone(),
-				'fax' => $compte->getFax()
+				'fax' => $compte->getFax(),
+				'priveOrPublic' => $compte->getPriveOrPublic()
 		));
 
 		return $response;

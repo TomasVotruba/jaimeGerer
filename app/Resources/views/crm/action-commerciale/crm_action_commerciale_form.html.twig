@@ -471,23 +471,22 @@
             type: "POST",
             url: url,
             success: function(data) {
-                if(data.secteur != ""){
-                    var arr_childrens =  $(".input-secteur").children();
-                    for(var i = 0; i < arr_childrens.length; i++){
+                // if(data.secteur != ""){
+                //     var arr_childrens =  $(".input-secteur").children();
+                //     for(var i = 0; i < arr_childrens.length; i++){
 
-                        if(arr_childrens[i].textContent  === data.secteur){
-                            arr_childrens[i].setAttribute("selected","");
-                        }
+                //         if(arr_childrens[i].textContent  === data.secteur){
+                //             arr_childrens[i].setAttribute("selected","");
+                //         }
 
-                    }
-                }
+                //     }
+                // }
                 $(".input-adresse").val(data.adresse);
                 $(".input-codepostal").val(data.codePostal);
                 $(".input-ville").val(data.ville);
                 $(".input-region").val(data.region);
                 $(".input-pays").val(data.pays);
-                $(".input-telephone").val(data.telephone);
-                $(".input-fax").val(data.fax);
+                $(".input-priveOrPublic").val(data.priveOrPublic);
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.status);

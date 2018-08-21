@@ -63,6 +63,16 @@
 									{% endif %}
 								</td>
 							</tr>
+							<tr>
+								<td>Privé/public</td>
+								<td id="compte-prive-public">
+									{% if compte.priveOrPublic is empty %}
+										-
+									{% else %}
+										{{ compte.priveOrPublicToString }}
+									{% endif %}
+								</td>
+							</tr>
 	    			</tbody>
 	    		</table>
 	    		<hr />

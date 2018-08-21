@@ -149,10 +149,12 @@ class ActionCommercialeType extends AbstractType
             ->add('priveOrPublic', 'choice', array(
                 'label' => 'Privé ou public ?',
                 'required' => true,
+                'attr' => array('class' => 'input-priveOrPublic'),
                 'choices' => array(
                     'PUBLIC' => 'Public',
                     'PRIVE' => 'Privé'
-                )
+                ),
+                'data' => $this->compte ? $this->compte->getPriveOrPublic() : null
             ))
             ->add('analytique', 'entity', array(
                 'class'=> 'AppBundle\Entity\Settings',

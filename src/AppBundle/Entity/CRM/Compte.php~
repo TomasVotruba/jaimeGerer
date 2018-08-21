@@ -177,15 +177,14 @@ class Compte
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
-    private $secteurActiviteEntitity;
-
+    private $secteurActivite;
 
     /**
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(name="secteurActivite", type="string", nullable=true)
+     * @ORM\Column(name="prive_or_public", type="string", length=6)
      */
-    private $secteurActivite;
+    private $priveOrPublic;
 
     /**
      * Set id
@@ -706,7 +705,7 @@ class Compte
     /**
      * Get secteurActivite
      *
-     * @return \AppBundle\Entity\Settings
+     * @return \AppBundle\Entity\Settings 
      */
     public function getSecteurActivite()
     {
