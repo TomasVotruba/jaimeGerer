@@ -44,16 +44,16 @@ class ZeroBounceAPIService extends ContainerAware
 
   	/*
   	* Vérifie si l'email $emailToValidate est un bounce via l'API ZeroBounce
-  	* Retourne true si c'est un bounce, false sinon
+  	* Return string "bounce", "valid" ou "warning"
   	**/
   	public function isBounce($contact){
 
-  		$ip = ''; //required, but can be blank
         $apiKey = $contact->getCompte()->getCompany()->getZeroBounceApiKey();
         if($apiKey == null){
             throw new \Exception('API Key non renseignée');
         }
 
+        $ip = ''; //required, but can be blank
 		$url = 'https://api.zerobounce.net/v2/validate?api_key='.$apiKey.'&email='.urlencode($contact->getEmail()).'&ip_address='.$ip;
 
 		$ch = curl_init($url);
@@ -69,13 +69,17 @@ class ZeroBounceAPIService extends ContainerAware
   			throw new \Exception('Erreur lors de l\'appel à l\'API ZeroBounce');
   		}
 
-		//cf https://docs.zerobounce.net/docs/status-codes-v2
-		$arr_invalidStatus = array('invalid', 'spamtrap', 'unknown');
+		//cf https://www.zerobounce.net/docs/#status-codes-v2
+        if($json["status"] == "valid"){
+            return "valid";
+        }
+
+		$arr_invalidStatus = array('invalid', 'spamtrap');
 		if( in_array($json["status"], $arr_invalidStatus) ){
-			return true;
-		} 
-			
-		return false;
+			return "bounce";
+		}
+
+		return "warning";
 
   	}
 

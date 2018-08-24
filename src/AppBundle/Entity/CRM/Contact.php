@@ -261,7 +261,7 @@ class Contact
      /**
      * @var boolean
      *
-     * @ORM\Column(name="bounce", type="boolean", nullable=true)
+     * @ORM\Column(name="bounce", type="string", nullable=true)
      */
     private $bounce = null;
 
@@ -1084,7 +1084,7 @@ class Contact
     /**
      * Set bounce
      *
-     * @param boolean $bounce
+     * @param string $bounce
      * @return Contact
      */
     public function setBounce($bounce)
@@ -1097,7 +1097,7 @@ class Contact
     /**
      * Get bounce
      *
-     * @return boolean 
+     * @return string 
      */
     public function getBounce()
     {

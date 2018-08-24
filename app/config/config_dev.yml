@@ -61,8 +61,8 @@ cspoo_swiftmailer_mailgun:
     domain: "testhichem1.mdprc.com"
 
 
-#    transport: "mailgun"
-#    spool:     { type: memory } # This will start sending emails on kernel.terminate event
-
 nicomak_paypal:
     debug: true
+
+swiftmailer:
+    delivery_addresses: [test@nicomak.eu]

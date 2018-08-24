@@ -103,7 +103,7 @@
             {{ form_row(form.totalHT) }}
             <div id="devis-taxe-wrapper">
                 {{ form_row(form.taxePercent) }}
-                    {{ form_row(form.taxe) }}
+                {{ form_row(form.taxe) }}
             </div>
             <p class="fc-taxe-hidden hidden">Vous ne pouvez pas taxer les produits de type FC.</p>
             {{ form_row(form.totalTTC) }}
@@ -433,11 +433,10 @@
             var totalHT = $('.devis-total-ht').val();
             var taxePercent = $('.devis-taxe-percent').val();
             taxePercent = taxePercent.replace(",", "."); 
-            $('.devis-taxe-percent').val(taxePercent);
+            //$('.devis-taxe-percent').val(taxePercent);
 
             if(taxePercent != 0){
                 //Montant Taxe
-                //var taxePercent = taxePercent.replace("%", "");
                 var taxeMontant = taxePercent/100*totalHT;
                 taxeMontant = taxeMontant.toFixed(2);
             } else {
