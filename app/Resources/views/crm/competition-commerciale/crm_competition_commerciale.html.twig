@@ -87,12 +87,12 @@
                     <div class="panel-body">
                         {% for arr_user in arr_users %}
                             <div id="ca-{{ arr_user.user.id }}">
-                                <img src="{{ asset('/web/upload/avatar/'~arr_user.user.id~'/'~arr_user.user.avatar) }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}" /> 
+                                <img src="{{ asset('/upload/avatar/'~arr_user.user.id~'/'~arr_user.user.avatar) }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}" /> 
                                 
                                 Total : {{ arr_user.CAPublic|number_format(2,',',' ') }} € 
 
                                 {% if arr_winners.CAPublic == arr_user.user.id %}
-                                    <img src="{{ asset('/web/images/assets/icon_cup.png') }} " alt="Coupe" title="WINNER !" /> 
+                                    <img src="{{ asset('/images/assets/icon_cup.png') }} " alt="Coupe" title="WINNER !" /> 
                                 {% endif %}
                                 
                                 {% if arr_user.gagneesPublic|length > 0 %}
@@ -134,12 +134,12 @@
                     <div class="panel-body">
                         {% for arr_user in arr_users %}
                             <div id="ca-prive-{{ arr_user.user.id }}">
-                                <img src="{{ asset('/web/upload/avatar/'~arr_user.user.id~'/'~arr_user.user.avatar) }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}" /> 
+                                <img src="{{ asset('/upload/avatar/'~arr_user.user.id~'/'~arr_user.user.avatar) }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}" /> 
                                 
                                 Total : {{ arr_user.CAPrive|number_format(2,',',' ') }} €
 
                                 {% if arr_winners.CAPrive == arr_user.user.id %}
-                                    <img src="{{ asset('/web/images/assets/icon_cup.png') }} " alt="Coupe" title="WINNER !" /> 
+                                    <img src="{{ asset('/images/assets/icon_cup.png') }} " alt="Coupe" title="WINNER !" /> 
                                 {% endif %}
                                 
                                 {% if arr_user.gagneesPrive|length > 0 %}
@@ -181,12 +181,12 @@
                     <div class="panel-body">
                         {% for arr_user in arr_users %}
                             <div id="prescriptions-{{ arr_user.user.id }}">
-                                <img src="{{ asset('/web/upload/avatar/'~arr_user.user.id~'/'~arr_user.user.avatar) }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}" /> 
+                                <img src="{{ asset('/upload/avatar/'~arr_user.user.id~'/'~arr_user.user.avatar) }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}" /> 
                                 
                                 Total : {{ arr_user.prescriptions|length }} affaire{{ arr_user.prescriptions|length > 1?'s':'' }} sur prescription 
 
                                 {% if arr_winners.prescriptions == arr_user.user.id %}
-                                    <img src="{{ asset('/web/images/assets/icon_cup.png') }} " alt="Coupe" title="WINNER !" /> 
+                                    <img src="{{ asset('/images/assets/icon_cup.png') }} " alt="Coupe" title="WINNER !" /> 
                                 {% endif %}
                                 
                                 {% if arr_user.prescriptions|length > 0 %}

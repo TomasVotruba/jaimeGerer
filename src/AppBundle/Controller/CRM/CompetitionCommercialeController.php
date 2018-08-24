@@ -73,7 +73,7 @@ class CompetitionCommercialeController extends Controller
 				}
 
 				//$arr_users[$user->getId()]['CA']+= $actionCommerciale->getMontant();
-				if($actionCommerciale->getPriveOrPublic() == "PRIVE"){
+				if($actionCommerciale->getPriveOrPublic() == "PUBLIC"){
 					$arr_users[$user->getId()]['CAPublic']+= $actionCommerciale->getMontant();
 					$arr_users[$user->getId()]['gagneesPublic'][] = $actionCommerciale;
 				} else {
