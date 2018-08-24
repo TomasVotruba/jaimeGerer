@@ -972,26 +972,4 @@ class ActionCommercialeController extends Controller
 	}
 
 
-	/**
-	 * @Route("/crm/action-commerciale/fix-remises", name="crm_action_commerciale_fix_remises")
-	 */
-	public function fixRemises(){
-
-		$em = $this->getDoctrine()->getManager();
-
-		$actionCoRepo = $em->getRepository('AppBundle:CRM\Opportunite');
-		$arr_actionsCo = $actionCoRepo->findAll();
-
-		foreach($arr_actionsCo as $actionCo){
-			$devis = $actionCo->getDevis();
-			if($devis){
-				$actionCo->setRemise($devis->getRemise());
-				$em->persist($actionCo);
-			}
-		}
-
-		$em->flush();
-		return new Response();
-	}
-
 }

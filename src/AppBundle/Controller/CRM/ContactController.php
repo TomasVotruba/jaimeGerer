@@ -67,18 +67,20 @@ class ContactController extends Controller
 				$arr_sort[0]['dir'],
 				$arr_search['value']
 		);
+
 		foreach( $list as $k=>$v )
 		{
 			$fusion = $repository->findBy(array('compte' => $v['compte_id'], 'isOnlyProspect' => false));
 			$v['fusion'] = count($fusion) > 1 ? 1 : 0;
-			$list[$k] = $v;
+ 			$list[$k] = $v;
 		}
+
 		$response = new JsonResponse();
 		$response->setData(array(
-				'draw' => intval( $requestData->get('draw') ),
-				'recordsTotal' => $repository->count($this->getUser()->getCompany()),
-				'recordsFiltered' => $repository->countForList($this->getUser()->getCompany(), $arr_search['value']),
-				'aaData' => $list,
+			'draw' => intval( $requestData->get('draw') ),
+			'recordsTotal' => $repository->count($this->getUser()->getCompany()),
+			'recordsFiltered' => $repository->countForList($this->getUser()->getCompany(), $arr_search['value']),
+			'aaData' => $list,
 		));
 
 		return $response;
@@ -999,7 +1001,8 @@ class ContactController extends Controller
 		$arr_result = array(
 			'ignored' => 0, 
 			'bounce' => 0, 
-			'valid' => 0
+			'valid' => 0,
+			'warning' => 0
 		);
 
 		if( !$this->getUser()->getCompany()->getZeroBounceApiKey() ){
@@ -1019,10 +1022,12 @@ class ContactController extends Controller
 
 		$contactService = $this->get('appbundle.crm_contact_service');
 		$bounce = $contactService->verifierBounce($contact);
-		if($bounce == true){
+		if(strtoupper($bounce) == "BOUNCE"){
 			$arr_result['bounce']++;
-		} else {
+		} elseif(strtoupper($bounce) == "VALID") {
 			$arr_result['valid']++;
+		} else {
+			$arr_result['warning']++;
 		}
 		
 		$response->setData($arr_result);
@@ -1030,6 +1035,20 @@ class ContactController extends Controller
 		
 	}
 
+	/**
+	 * @Route("/crm/contact/set-bounce/{id}/{bounce}", name="crm_contact_set_bounce", options={"expose"=true})
+	 */
+	public function setBounce(Contact $contact, $bounce){
+		$em = $this->getDoctrine()->getManager();
+		$contact->setBounce(strtoupper(trim($bounce)));
+		$contact->setDateBounceCheck(new \DateTime(date('Y-m-d')));
+		$em->persist($contact);
+		$em->flush();
+
+		return $this->redirect(
+			$this->generateUrl( 'crm_contact_voir', array('id' => $contact->getId()) )
+		);
+	}
 	
 
 

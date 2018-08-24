@@ -48,14 +48,24 @@
 	    
     </div>
 
-    {% if contact.bounce %}
+    {% if contact.isBounce or contact.isWarningBounce %}
     	<div class="row">
-	    	<div class="col-md-12 alert alert-danger">
-	    	 	<strong><span class="glyphicon glyphicon-warning-sign"></span> BOUNCE !</strong><br />
-	    	 	L'adresse email de ce contact ({{ contact.email }}) a été détectée comme bounce. Il est possible que l'adresse email soit mal notée, ou que le contact ait changé d'organisation. Veuillez mettre ce contact à jour. <br />
+	    	<div class="col-md-12 alert {{ contact.isBounce ? 'alert-danger':'alert-warning' }}">
+	    		{% if contact.isBounce %}
+		    	 	<strong><span class="glyphicon glyphicon-warning-sign"></span> BOUNCE !</strong><br />
+		    	 	L'adresse email de ce contact ({{ contact.email }}) a été détectée comme bounce. Il est possible que l'adresse email soit mal notée, ou que le contact ait changé d'organisation. Veuillez mettre ce contact à jour. <br />
+		    	{% else %}
+		    	 	<strong><span class="glyphicon glyphicon-warning-sign"></span> POTENTIEL BOUNCE</strong><br />
+		    	 	L'adresse email de ce contact ({{ contact.email }}) a été détectée comme bounce potentiel. Il est possible que l'adresse email soit mal notée, ou que le contact ait changé d'organisation. Veuillez vérifier. <br />
+		    	{% endif %}
 	    	 	{% if contact.dateBounceCheck is not empty %} Date de vérification : {{ contact.dateBounceCheck|date('d/m/Y') }} {% endif %}
+	    	 	<p>
+	    	 		Vous êtes sûr.e que l'adresse email est correcte ?
+	    	 		<a class="btn btn-primary btn-xs" href="{{ path('crm_contact_set_bounce', {'id' : contact.id, 'bounce': 'VALID'}) }}">
+	    	 			Retirer l'avertissement
+	    	 		</a>
+	    	 	</p>
 	    	</div>
-	    </div>
 	{% endif %}
 
 	<div class="row">
@@ -234,8 +244,10 @@
 						    		-
 						    	{% else %}
 						    		{{ contact.email }}
-						    		{% if contact.bounce %}
+						    		{% if contact.isBounce %}
 										<span class="label label-danger">Bounce</span> 
+						    		{% elseif contact.isWarningBounce %}
+										<span class="label label-warning">Bounce Potentiel</span> 
 									{% endif %}
 						    	{% endif %}	    	
 						    </td>

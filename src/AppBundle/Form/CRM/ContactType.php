@@ -31,6 +31,7 @@ class ContactType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $contact = $builder->getData();
         $builder
             ->add('prenom', 'text', array(
         		'required' => true,
@@ -172,9 +173,14 @@ class ContactType extends AbstractType
            				'mapped' => false,
            				'required' => false
            	))
-            ->add('bounce', 'checkbox', array(
+            ->add('bounce', 'choice', array(
                 'required' => false,
-                'label' => 'Bounce'
+                'label' => 'Bounce',
+                'choices' => array(
+                    'BOUNCE' => 'Bounce', 
+                    'VALID' => 'Valide', 
+                    'WARNING' => 'Warning'
+                )
             ));
                          
             $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));

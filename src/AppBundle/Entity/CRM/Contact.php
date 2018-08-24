@@ -1126,4 +1126,30 @@ class Contact
     {
         return $this->dateBounceCheck;
     }
+
+    /**
+     * Return true if the contact is detected as bounce
+     *
+     * @return boolean
+     */
+    public function isBounce()
+    {
+        if(strtoupper($this->bounce) == "BOUNCE"){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Return true if the contact is detected as potential bounce (=warning=)
+     *
+     * @return boolean
+     */
+    public function isWarningBounce()
+    {
+        if(strtoupper($this->bounce) == "WARNING"){
+            return true;
+        }
+        return false;
+    }
 }

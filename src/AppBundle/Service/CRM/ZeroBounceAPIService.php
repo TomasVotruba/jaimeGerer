@@ -71,15 +71,15 @@ class ZeroBounceAPIService extends ContainerAware
 
 		//cf https://www.zerobounce.net/docs/#status-codes-v2
         if($json["status"] == "valid"){
-            return "valid";
+            return "VALID";
         }
 
 		$arr_invalidStatus = array('invalid', 'spamtrap');
 		if( in_array($json["status"], $arr_invalidStatus) ){
-			return "bounce";
+			return "BOUNCE";
 		}
 
-		return "warning";
+		return "WARNING";
 
   	}
 

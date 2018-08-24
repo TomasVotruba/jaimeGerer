@@ -65,7 +65,7 @@ class ContactRepository extends EntityRepository
 		->andWhere('c.isOnlyProspect = :isOnlyProspect')
 		->setParameter('isOnlyProspect', false)
 		->setParameter('company', $company)
-		->setParameter('bounce', true)
+		->setParameter('bounce', 'BOUNCE')
 		->getQuery()
 		->getSingleScalarResult();
 
@@ -431,13 +431,27 @@ class ContactRepository extends EntityRepository
 
 				if($action == 'EMPTY'){
 					$where.= 'c.'.$champ.' IS NULL';
+
 				} else if($action == 'NOT_EMPTY'){
 					$where.= 'c.'.$champ.' IS NOT NULL AND c.'.$champ.' <> :vide'.$index;
 					$query->setParameter('vide'.$index, '');
+
 				} else if ($action == "IS_TRUE"){
-					$where.= 'c.'.$champ.' =1';
+					if($champ == "bounce"){
+						$where.= 'c.'.$champ.' = :bounceString';
+						$query->setParameter('bounceString', 'BOUNCE');
+					} else {
+						$where.= 'c.'.$champ.' =1';
+					}
+					
 				} else if($action == 'IS_FALSE'){
-					$where.='c.'.$champ.' =0';
+					if($champ == "bounce"){
+						$where.= 'c.'.$champ.' = :bounceString';
+						$query->setParameter('bounceString', 'VALID');
+					} else {
+						$where.= 'c.'.$champ.' =0';
+					}
+					
 				} else {
 
 					for($i=0; $i<count($arr_valeurs); $i++){
@@ -494,7 +508,7 @@ class ContactRepository extends EntityRepository
 			$query->andWhere('c.bounce = :bounce  OR c.bounce IS NULL')
 				->andWhere('c.email IS NOT NULL')
 				->andWhere('c.rejetEmail = :rejetEmail')
-				->setParameter('bounce', false)
+				->setParameter('bounce', 'VALID')
 				->setParameter('rejetEmail', false);
 		}
 

@@ -485,18 +485,14 @@ class ContactService extends ContainerAware {
         }
 
         if($credits > 0){
-            
+             
             try{
                 $bounce = $this->zeroBounceAPIService->isBounce($contact);
+                $contact->setBounce($bounce);
             } catch(\Exception $e){
                 throw $e;
             }
             
-            if($bounce){
-                $contact->setBounce(true);
-            } else {
-                $contact->setBounce(false);
-            }
             $contact->setDateBounceCheck(new \DateTime(date('Y-m-d')));
             $this->em->persist($contact);
             $this->em->flush();
@@ -506,74 +502,4 @@ class ContactService extends ContainerAware {
 
     }
 
-     public function verifierBouncesBatch($arr_contacts, $company){
-
-        ini_set('memory_limit', '2048M');
-        ini_set('max_execution_time', 3600);
-
-        $arr_results = array(
-            'valid' => 0,
-            'bounce' => 0,
-            'total' => 0,
-            'checked' => 0,
-            'ignored' => 0
-        );
-
-        $arr_toCheck = array();
-
-        //only check if the last check was more than 15 days ago
-        $today = new \DateTime(date('Y-m-d'));
-        foreach($arr_contacts as $contact){
-
-            if($contact->getEmail() == "" || $contact->getEmail() == null){
-                $arr_results['ignored']++;
-                continue;
-            }
-
-            if($contact->getDateBounceCheck()){
-                $interval = $today->diff($contact->getDateBounceCheck(), true);
-                $arr_results['total']++;
-                if($interval->format('%a') < 15){
-                    $arr_results['ignored']++;
-                    continue;
-                } 
-            }
-
-            $arr_toCheck[] = $contact;
-        }
-
-        $credits = 0;
-        try{
-            $credits = $this->zeroBounceAPIService->getCreditBalance($company);
-        } catch(\Exception $e){
-            throw $e;
-        }
-
-        if($credits < count($arr_toCheck)){
-            throw new \Exception('Vous n\'avez pas assez de crédits sur ZeroBounce.');
-        }
-        
-        foreach($arr_toCheck as $contact){
-
-            try{
-                $bounce = $this->zeroBounceAPIService->isBounce($contact);
-            } catch(\Exception $e){
-                throw $e;
-            }
-            
-            $arr_results['checked']++;
-            if($bounce){
-                $contact->setBounce(true);
-                $arr_results['bounce']++;
-            } else {
-                $contact->setBounce(false);
-                $arr_results['valid']++;
-            }
-            $contact->setDateBounceCheck(new \DateTime(date('Y-m-d')));
-            $this->em->persist($contact);
-            $this->em->flush();
-        }
-
-        return $arr_results;
-    }
 }

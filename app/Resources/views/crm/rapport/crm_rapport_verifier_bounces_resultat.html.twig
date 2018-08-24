@@ -24,7 +24,6 @@
 
 			<p>Email ignorés (dernière vérification récente) : <span id="number-ignored"></span></p>
 			
-			<h3>Taux de bounces dans cette liste</h3>
 			<div id="gauge">
 				<!-- Gauge Chart loaded by javascript -->
 			</div>
@@ -46,6 +45,14 @@
 					</tr>
 					<tr>
 						<th>
+							Warning
+						</th>
+						<td>
+							<span id="number-warning"></span>
+						</td>
+					</tr>
+					<tr>
+						<th>
 							Valides
 						</th>
 						<td>
@@ -62,6 +69,7 @@
 			<a href="{{ path('crm_rapport_voir', {'id' : rapport.id }) }}" class="btn btn-success" disabled="disabled">Retour au rapport</a>
 			{% if app.user.company.id == 1 %}
 				<a href="{{ path('crm_rapport_voir', {'id' : 414 }) }}" class="btn btn-info" target="_blank" disabled="disabled">Rapport bounces</a>
+				<a href="{{ path('crm_rapport_voir', {'id' : 417 }) }}" class="btn btn-warning" target="_blank" disabled="disabled">Rapport warnings</a>
 			{% endif %}
 		</div>
 	</div>
@@ -83,6 +91,7 @@
 			var numberIgnored = 0;
 			var numberBounce = 0;
 			var numberValid = 0;
+			var numberWarning = 0;
 			var i = 0;
 
 			{% for contact in arr_contacts %}
@@ -97,6 +106,7 @@
 			        	numberIgnored+= data.ignored; 
 			        	numberBounce+= data.bounce; 
 			        	numberValid+= data.valid; 
+			        	numberWarning+= data.warning; 
 
 			        	numberChecked++;
 			        	var percent = Math.round(numberChecked/numberContacts*100);
@@ -111,6 +121,7 @@
 							$('#number-checked').text(numberChecked);
 							$('#number-bounce').text(numberBounce);
 							$('#number-valid').text(numberValid);
+							$('#number-warning').text(numberWarning);
 							$('#number-ignored').text(numberIgnored);
 
 							$('.wrapper-results').removeClass('hidden');
