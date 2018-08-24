@@ -603,7 +603,7 @@ class ProspectionControllerCopy extends Controller
     }
 
     /**
-     * @Route("/crm/prospection/rapport/save_note", name="crm_save_note")
+     * @Route("/crm/prospection/rapport/save_note", name="crm_save_note", options={"expose"=true})
      */
     public function prospectionRapportSaveNotes()
     {

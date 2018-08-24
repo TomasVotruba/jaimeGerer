@@ -92,10 +92,16 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div class="form-group">
+										<div class="alert alert-success hidden" id="saveNoteSuccess">
+											Note enregistrée
+										</div>
 										<label class="control-label" for="note">Note</label>
 										<textarea id="note" name="note" class="form-control tinymce"></textarea>
 										<br />
 										<button class="btn btn-success" id="saveNote">Enregistrer la note</button>
+										<div class="progress hidden" id="saveNoteProgress">
+											<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -488,19 +494,22 @@
 			$("#saveNote").click(function(){
 
 				var indexData = $('#phoning-tentative a').attr('data-prototype');
-
 				var noteContent = tinyMCE.get('note').getContent();
+				$("#saveNote").addClass("hidden");
+				$("#saveNoteProgress").removeClass("hidden");
 
 				$.ajax({
-					url: "{{ path('crm_save_note')}}",
+					url: Routing.generate('crm_save_note'),
 					method: 'POST',
 					data: {
 						contactId : data[indexData],
 						noteContent : noteContent
 					},
 					dataType : 'json',
-					async : false,
 					success : function(d, statut){
+						$("#saveNoteProgress").addClass("hidden");
+						$("#saveNote").removeClass("hidden");
+						$('#saveNoteSuccess').removeClass("hidden").delay(5000).fadeOut();
 					}
 				});
 			});
