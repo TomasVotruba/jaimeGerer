@@ -37,18 +37,23 @@ class CompetitionCommercialeController extends Controller
 		$arr_users = array();
 		foreach($users as $user){
 			$arr_users[$user->getId()]['user'] = $user;
-			$arr_users[$user->getId()]['CA'] = 0;
-			$arr_users[$user->getId()]['ratioCA'] = 0;
+			//$arr_users[$user->getId()]['CA'] = 0;
+			$arr_users[$user->getId()]['CAPublic'] = 0;
+			$arr_users[$user->getId()]['CAPrive'] = 0;
+			//$arr_users[$user->getId()]['ratioCA'] = 0;
 			$arr_users[$user->getId()]['nbGagnes'] = 0;
 			$arr_users[$user->getId()]['prescriptions'] = array();
 			$arr_users[$user->getId()]['nouveauxComptes'] = array();
-			$arr_users[$user->getId()]['gagnees'] = array();
+			$arr_users[$user->getId()]['gagneesPublic'] = array();
+			$arr_users[$user->getId()]['gagneesPrive'] = array();
 		}
 
 		$arr_winners = array(
 			'nouveauxComptes' => null,
-			'CA' => null,
+			//'CA' => null,
 			'prescriptions' => null,
+			'CAPublic' => null,
+			'CAPrive' => null
 		);
 
 		if($competCom && count($arr_users)){
@@ -67,8 +72,14 @@ class CompetitionCommercialeController extends Controller
 					continue;
 				}
 
-				$arr_users[$user->getId()]['gagnees'][] = $actionCommerciale;
-				$arr_users[$user->getId()]['CA']+= $actionCommerciale->getMontant();
+				//$arr_users[$user->getId()]['CA']+= $actionCommerciale->getMontant();
+				if($actionCommerciale->getPriveOrPublic() == "PRIVE"){
+					$arr_users[$user->getId()]['CAPublic']+= $actionCommerciale->getMontant();
+					$arr_users[$user->getId()]['gagneesPublic'][] = $actionCommerciale;
+				} else {
+					$arr_users[$user->getId()]['CAPrive']+= $actionCommerciale->getMontant();
+					$arr_users[$user->getId()]['gagneesPrive'][] = $actionCommerciale;
+				}
 				
 				if($actionCommerciale->getPrescription()){
 					$arr_users[$user->getId()]['prescriptions'][] = $actionCommerciale;
@@ -80,18 +91,30 @@ class CompetitionCommercialeController extends Controller
 			}
 
 			$maxNouveauxComptes = 0;
-			$maxRatioCA = 0;
+			//$maxRatioCA = 0;
 			$maxPrescriptions = 0;
+			$maxCAPublic = 0;
+			$maxCAPrive = 0;
 			foreach($arr_users as $userId => $arr_user){
 
-				if(count($arr_users[$userId]['gagnees']) ){
+				if(count($arr_users[$user->getId()]['gagneesPublic']) || count($arr_users[$user->getId()]['gagneesPrive'])){
 
-					$ratioCA = $arr_users[$userId]['CA']/count($arr_users[$userId]['gagnees']);
-					$arr_users[$userId]['ratioCA'] = $ratioCA;
+					// $ratioCA = $arr_users[$userId]['CA']/count($arr_users[$userId]['gagnees']);
+					// $arr_users[$userId]['ratioCA'] = $ratioCA;
 
-					if($ratioCA > $maxRatioCA){
-						$maxRatioCA = $arr_users[$userId]['ratioCA'];
-						$arr_winners['CA'] = $userId;
+					// if($ratioCA > $maxRatioCA){
+					// 	$maxRatioCA = $arr_users[$userId]['ratioCA'];
+					// 	$arr_winners['CA'] = $userId;
+					// }
+
+					if($arr_users[$userId]['CAPublic'] > $maxCAPublic){
+						$maxCAPublic = $arr_users[$userId]['CAPublic'];
+						$arr_winners['CAPublic'] = $userId;
+					}
+
+					if($arr_users[$userId]['CAPrive'] > $maxCAPrive){
+						$maxCAPrive = $arr_users[$userId]['CAPrive'];
+						$arr_winners['CAPrive'] = $userId;
 					}
 
 					if(count($arr_users[$userId]['nouveauxComptes']) > $maxNouveauxComptes){
