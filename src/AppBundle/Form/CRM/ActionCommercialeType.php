@@ -215,8 +215,7 @@ class ActionCommercialeType extends AbstractType
                 'required' => false,
                 'label' => 'Remise',
                 'precision' => 2,
-                'attr' => array('class' => 'devis-remise'),
-                'mapped' => false,
+                'attr' => array('class' => 'devis-remise')
             ))
             ->add('taxe', 'number', array(
                 'required' => false,

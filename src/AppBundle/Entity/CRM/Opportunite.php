@@ -192,15 +192,22 @@ class Opportunite
    */
   private $dateWon;
 
-  /**
-   * Constructor
-   */
-  public function __construct()
-  {
-      $this->settings = new \Doctrine\Common\Collections\ArrayCollection();
-  }
+   /**
+    * @var float
+    *
+    * @ORM\Column(name="remise", type="float", nullable=true)
+    */
+    private $remise;
 
-  /**
+    /**
+    * Constructor
+    */
+    public function __construct()
+    {
+        $this->settings = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Set id
      *
      * @param int $id
@@ -980,5 +987,28 @@ class Opportunite
     public function getUserCompetCom()
     {
         return $this->userCompetCom;
+    }
+
+    /**
+     * Set remise
+     *
+     * @param float $remise
+     * @return Opportunite
+     */
+    public function setRemise($remise)
+    {
+        $this->remise = $remise;
+
+        return $this;
+    }
+
+    /**
+     * Get remise
+     *
+     * @return float 
+     */
+    public function getRemise()
+    {
+        return $this->remise;
     }
 }

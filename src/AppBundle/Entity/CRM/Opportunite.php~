@@ -99,9 +99,9 @@ class Opportunite
 
   /**
    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-   * @ORM\JoinColumn(nullable=false)
+   * @ORM\JoinColumn(nullable=true)
    */
-  private $userCompetCom;
+  private $userCompetCom = null;
 
   /**
    * @var string
@@ -192,15 +192,22 @@ class Opportunite
    */
   private $dateWon;
 
-  /**
-   * Constructor
-   */
-  public function __construct()
-  {
-      $this->settings = new \Doctrine\Common\Collections\ArrayCollection();
-  }
+   /**
+    * @var float
+    *
+    * @ORM\Column(name="remise", type="float", nullable=true)
+    */
+    private $remise;
 
-  /**
+    /**
+    * Constructor
+    */
+    public function __construct()
+    {
+        $this->settings = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Set id
      *
      * @param int $id
@@ -957,5 +964,28 @@ class Opportunite
     public function getDateWon()
     {
         return $this->dateWon;
+    }
+
+    /**
+     * Set userCompetCom
+     *
+     * @param \AppBundle\Entity\User $userCompetCom
+     * @return Opportunite
+     */
+    public function setUserCompetCom(\AppBundle\Entity\User $userCompetCom)
+    {
+        $this->userCompetCom = $userCompetCom;
+
+        return $this;
+    }
+
+    /**
+     * Get userCompetCom
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getUserCompetCom()
+    {
+        return $this->userCompetCom;
     }
 }
