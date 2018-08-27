@@ -182,7 +182,7 @@ class Compte
     /**
      * @var boolean
      *
-     * @ORM\Column(name="prive_or_public", type="string")
+     * @ORM\Column(name="prive_or_public", type="string", nullable=true)
      */
     private $priveOrPublic;
 
