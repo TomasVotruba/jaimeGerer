@@ -185,7 +185,7 @@
 
 							if(row['email']){
 								s+= (br ? '<br />' : '') + row['email'];
-								if(row['bounce'].toUpperCase() == "BOUNCE"){
+								if(row['bounce'] == "BOUNCE"){
 									s+= " <span class='label label-danger'>Bounce</span>";
 								} else if(row['bounce'].toUpperCase() == "WARNING"){
 									s+= " <span class='label label-warning'>Bounce potentiel</span>";
