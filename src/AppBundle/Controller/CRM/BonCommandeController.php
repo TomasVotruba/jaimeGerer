@@ -58,7 +58,7 @@ class BonCommandeController extends Controller
 
 		$currentYear = date('Y');
 		$arr_years = array();
-		for($i = $yearActivation ; $i<=$currentYear; $i++){
+		for($i = $yearActivation ; $i<=$currentYear+1; $i++){
 			$arr_years[$i] = $i;
 		}
 
