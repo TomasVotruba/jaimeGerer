@@ -45,8 +45,10 @@
 						<td>
 							{% if contact.email is not empty %}
 								{{ contact.email }}
-								{% if contact.bounce %}
+								{% if contact.isBounce %}
 									<span class="label label-danger">Bounce</span>
+								{% elseif contact.isWarningBounce %}
+									<span class="label label-warbing">Bounce potentiel</span>
 								{% endif %}
 							{% endif %}
 						</td>
