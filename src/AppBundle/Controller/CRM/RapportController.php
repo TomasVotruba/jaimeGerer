@@ -752,7 +752,7 @@ class RapportController extends Controller
 						$arr_data['rejetEmail'] = "";
 					}
 
-					if($contact->getBounce()){
+					if($contact->isBounce()){
 						$arr_data['bounce'] = '<span class="glyphicon glyphicon-ok"></span>';
 					} else {
 						$arr_data['bounce'] = "";
