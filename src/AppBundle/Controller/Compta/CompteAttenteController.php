@@ -140,6 +140,17 @@ class CompteAttenteController extends Controller
 		$request = $this->getRequest();
 		$form->handleRequest($request);
 
+		//recuperation de la ligne à corriger
+		if($codeJournal == 'VE'){
+			$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalVente');
+		} elseif($codeJournal == 'AC'){
+			$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalAchat');
+		} elseif($codeJournal != 'OD') {
+			$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalBanque');
+		}
+
+		$ligne = $repo->find($id);
+
 		if ($form->isSubmitted() && $form->isValid()) {
 
 			$compteChoisi = $od->getCompteComptable();
@@ -148,21 +159,11 @@ class CompteAttenteController extends Controller
 			$em = $this->getDoctrine()->getManager();
 			$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
 			$compteAttente = $ccRepository->findOneBy(array(
-					'num' => '471',
-					'company' => $this->getUser()->getCompany()
+				'num' => '471',
+				'company' => $this->getUser()->getCompany()
 			));
 
-			//recuperation de la ligne à corriger
-			if($codeJournal == 'VE'){
-				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalVente');
-			} elseif($codeJournal == 'AC'){
-				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalAchat');
-			} elseif($codeJournal != 'OD') {
-				$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalBanque');
-			}
-
-			$ligne = $repo->find($id);
-
+			
 			//ecriture d'une ligne Opération Diverse au compte choisi
 			$od->setDate(new \DateTime(date('Y-m-d')));
 
@@ -225,48 +226,49 @@ class CompteAttenteController extends Controller
 		}
 
 		return $this->render('compta/compte_attente/compta_compte_attente_corriger_modal.html.twig', array(
-				'form' => $form->createView(),
-				'id' => $id,
-				'codeJournal' => $codeJournal
+			'form' => $form->createView(),
+			'id' => $id,
+			'codeJournal' => $codeJournal,
+				
 		));
 
 	}
 
-	/**
-	 * @Route("/compta/corriger-fiphfp", name="compta_corriger_fiphfp")
-	 */
-	public function corrigerFIPHFPAction(){
+	// /**
+	//  * @Route("/compta/corriger-fiphfp", name="compta_corriger_fiphfp")
+	//  */
+	// public function corrigerFIPHFPAction(){
 
-		//recuperation du compte 471
-		$em = $this->getDoctrine()->getManager();
-		$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
-		$compteAttente = $ccRepository->findOneBy(array(
-				'num' => '471',
-				'company' => $this->getUser()->getCompany()
-		));
+	// 	//recuperation du compte 471
+	// 	$em = $this->getDoctrine()->getManager();
+	// 	$ccRepository = $em->getRepository('AppBundle:Compta\CompteComptable');
+	// 	$compteAttente = $ccRepository->findOneBy(array(
+	// 			'num' => '471',
+	// 			'company' => $this->getUser()->getCompany()
+	// 	));
 
-		$compteTVA = $ccRepository->find(7831);
+	// 	$compteTVA = $ccRepository->find(7831);
 
-		//lignes du journal d'achats pour le compte 471
-		$repoJournalAchat = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalAchat');
-		$arr_journal_achat = $repoJournalAchat->findCompteAttenteACorriger($compteAttente, $this->getUser()->getCompany());
+	// 	//lignes du journal d'achats pour le compte 471
+	// 	$repoJournalAchat = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\JournalAchat');
+	// 	$arr_journal_achat = $repoJournalAchat->findCompteAttenteACorriger($compteAttente, $this->getUser()->getCompany());
 
-		foreach($arr_journal_achat as $ligneJournal){
+	// 	foreach($arr_journal_achat as $ligneJournal){
 
-			$isFIPHFP = false;
-			foreach($ligneJournal->getDepense()->getLignes() as $ligneDepense){
-				if($ligneDepense->getCompteComptable()->getId() == 316167){
-					if($ligneJournal->getDebit() == $ligneDepense->getTaxe()){
-						$ligneJournal->setCompteComptable($compteTVA);
-						$em->persist($ligneJournal);
-					}
-				}
-			}
+	// 		$isFIPHFP = false;
+	// 		foreach($ligneJournal->getDepense()->getLignes() as $ligneDepense){
+	// 			if($ligneDepense->getCompteComptable()->getId() == 316167){
+	// 				if($ligneJournal->getDebit() == $ligneDepense->getTaxe()){
+	// 					$ligneJournal->setCompteComptable($compteTVA);
+	// 					$em->persist($ligneJournal);
+	// 				}
+	// 			}
+	// 		}
 
-		}
+	// 	}
 
-		$em->flush();
-		return new Response();
-	}
+	// 	$em->flush();
+	// 	return new Response();
+	// }
 
 }
