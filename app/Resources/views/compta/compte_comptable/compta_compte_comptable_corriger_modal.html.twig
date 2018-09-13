@@ -109,12 +109,13 @@
 						{% if redirectRoute == "compta_compte_voir" %}
 							var route = "{{ path(redirectRoute, {'id' : compteId}) }}";
 							location.href = route;
+						{% elseif redirectRoute == "compta_compte_attente_voir" %}
+							var year = new Date().getFullYear();
+							var route = "{{ path(redirectRoute, {'year' : "+year+"}) }}";
+							location.href = route;
 						{% elseif redirectRoute != "" %}
 							var route = "{{ path(redirectRoute) }}";
 							location.href = route;
-						{% else %}
-
-
 						{% endif %}
 						 
 					})
