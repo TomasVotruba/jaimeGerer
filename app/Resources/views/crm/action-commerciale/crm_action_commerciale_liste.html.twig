@@ -84,13 +84,23 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
             <p><strong>Etat</strong></p>
             <input type="radio" name="filtre_etat" value="all" class="filte" /> Toutes les lignes<br />
             <input type="radio" name="filtre_etat" value="ongoing" class="filte" /> En cours<br />
             <input type="radio" name="filtre_etat" value="won" class="filte" /> Gagnées<br />
             <input type="radio" name="filtre_etat" value="lost" class="filte" /> Perdues<br />
           
+        </div>
+        <div class="col-md-3">
+            <p><strong>Gestionnaire de projet</strong></p>
+            <select class="form-control" id="select-gestionnaire">
+                <option value="all">Tous</option>
+                {% for user in arr_gestionnaires %}
+                    <option value="{{ user.id }}"> {{ user }}</option>
+                {% endfor %}
+            </select>
+           
         </div>
     </div>
 
@@ -168,6 +178,7 @@
                         d.start_date = $('#start_date_db').val();
                         d.end_date = $('#end_date_db').val();
                         d.etat = $('input[name="filtre_etat"]:checked').val();
+                        d.gestionnaire = $('#select-gestionnaire').val();
                     }
                 },
                  fnDrawCallback: function () {
@@ -335,7 +346,10 @@
             $('#error_dates').hide();
 
             $('input[name="filtre_etat"]').click(function(){
-                console.log('reload');
+                table.ajax.reload();
+            });
+
+            $('#select-gestionnaire').change(function(){
                 table.ajax.reload();
             });
 

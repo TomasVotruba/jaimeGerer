@@ -33,7 +33,7 @@ class OpportuniteRepository extends EntityRepository
 		return $result;
 	}
 
-	public function findForList($company, $length, $start, $orderBy, $dir, $search, $dateRange = '', $etat=null){
+	public function findForList($company, $length, $start, $orderBy, $dir, $search, $dateRange = '', $etat=null, $gestionnaire='all'){
 		$qb = $this->createQueryBuilder('o')
 		->select('o.id', 'o.nom', 'o.montant', 'o.date', 'o.appelOffre', 'c.nom as compte', 'c.id as compte_id', 'o.etat')
 		->leftJoin('o.compte', 'c')
@@ -60,6 +60,11 @@ class OpportuniteRepository extends EntityRepository
 				->setParameter('dateDebut', $dateStart->format('Y-m-d'))
 				->andWhere('o.date <= :dateFin')
 				->setParameter('dateFin', $dateEnd->format('Y-m-d'));
+		}
+
+		if($gestionnaire != 'all'){
+			$qb->andWhere('o.userGestion = :gestionnaire')
+			->setParameter('gestionnaire', $gestionnaire);
 		}
 
 		$qb->setMaxResults($length)

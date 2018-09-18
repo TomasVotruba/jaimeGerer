@@ -62,10 +62,19 @@ class ActionCommercialeController extends Controller
 		$dataChartActionsCoRhoneAlpes = $opportuniteService->getDataChartActionsCoRhoneAlpes($this->getUser()->getCompany(), date('Y'));		
 		$chartActionsCoRhoneAlpes = $chartService->actionsCoRhoneAlpes($dataChartActionsCoRhoneAlpes);
 
+		$arr_gestionnaires = array();
+		$userRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:User');
+		$arr_gestionnaires = $userRepo->findBy(array(
+			'company' => $this->getUser()->getCompany(),
+			'enabled' => true,
+			'competCom' => true
+		));
+
 		return $this->render('crm/action-commerciale/crm_action_commerciale_liste.html.twig', array(
 			'chartTauxTransformation' => $chartTauxTransformation,
 			'chartActionsCoAnalytique' => $chartActionsCoAnalytique,
-			'chartActionsCoRhoneAlpes' => $chartActionsCoRhoneAlpes
+			'chartActionsCoRhoneAlpes' => $chartActionsCoRhoneAlpes,
+			'arr_gestionnaires' => $arr_gestionnaires
 		));
 	}	
 
@@ -87,6 +96,7 @@ class ActionCommercialeController extends Controller
 		$arr_search = $requestData->get('search');
 
 		$etat = $requestData->get('etat');
+		$gestionnaire = $requestData->get('gestionnaire');
 
 		$dateSearch = $requestData->get('date_search', 0);
         $startDate = null;
@@ -128,7 +138,8 @@ class ActionCommercialeController extends Controller
 			$arr_sort[0]['dir'],
 			$arr_search['value'],
 			$dateRange,
-			$etat
+			$etat,
+			$gestionnaire
 		);
 
 		for($i=0; $i<count($list); $i++){

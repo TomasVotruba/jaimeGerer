@@ -485,7 +485,9 @@
                 $(".input-ville").val(data.ville);
                 $(".input-region").val(data.region);
                 $(".input-pays").val(data.pays);
-                $(".input-priveOrPublic").val(data.priveOrPublic);
+                if(data.priveOrPublic){
+                    $(".input-priveOrPublic").val(data.priveOrPublic);
+                }       
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.status);
