@@ -67,10 +67,10 @@
 	<div class="row spacer-top">
 		<div class="col-md-12 center" id="actions-buttons">
 			<a href="{{ path('crm_rapport_voir', {'id' : rapport.id }) }}" class="btn btn-success" disabled="disabled">Retour au rapport</a>
-			{% if app.user.company.id == 1 %}
-				<a href="{{ path('crm_rapport_voir', {'id' : 414 }) }}" class="btn btn-info" target="_blank" disabled="disabled">Rapport bounces</a>
-				<a href="{{ path('crm_rapport_voir', {'id' : 417 }) }}" class="btn btn-warning" target="_blank" disabled="disabled">Rapport warnings</a>
-			{% endif %}
+			
+			<a href="{{ path('crm_rapport_voir', {'id' : rapport.id, 'bounce' : 1 }) }}" class="btn btn-info" target="_blank" disabled="disabled">Rapport bounces</a>
+			<a href="{{ path('crm_rapport_voir', {'id' : rapport.id, 'warning' : 1  }) }}" class="btn btn-warning" target="_blank" disabled="disabled">Rapport warnings</a>
+			
 		</div>
 	</div>
 

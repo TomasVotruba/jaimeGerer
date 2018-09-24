@@ -235,7 +235,7 @@ class ContactRepository extends EntityRepository
 		return $qb->getQuery()->getSingleScalarResult();
 	}
 
-	public function createQueryAndGetResult($arr_filters, $company, $emailing){
+	public function createQueryAndGetResult($arr_filters, $company, $emailing, $bounce = false, $warning = false){
 
 		$qb  = $this->_em->createQueryBuilder();
 
@@ -510,6 +510,16 @@ class ContactRepository extends EntityRepository
 				->andWhere('c.rejetEmail = :rejetEmail')
 				->setParameter('bounce', 'VALID')
 				->setParameter('rejetEmail', false);
+		}
+
+		if($bounce == true){
+			$query->andWhere('c.bounce = :bounce')
+				->setParameter('bounce', 'BOUNCE');
+		}
+
+		if($warning == true){
+			$query->andWhere('c.bounce = :warning')
+				->setParameter('warning', 'WARNING');
 		}
 
 		$result = $query->getQuery()->getResult();

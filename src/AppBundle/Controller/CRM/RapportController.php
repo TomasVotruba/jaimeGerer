@@ -109,33 +109,14 @@ class RapportController extends Controller
 	
 	
 	/**
-	 * @Route("/crm/rapport/voir/{id}", name="crm_rapport_voir")
+	 * @Route("/crm/rapport/voir/{id}/{bounce}/{warning}", name="crm_rapport_voir")
 	 */
-	public function rapportVoirAction(Rapport $rapport)
+	public function rapportVoirAction(Rapport $rapport, $bounce = 0, $warning = 0)
 	{
-        // //mautic session
-        // $tokenMautic = $this->get('session')->get('accessTokenData');
-        // //sert a savoir apres une redirection si l'utilisateur avait demandé un export de segment vers mautic
-        // if($this->get('session')->get('actionInit') || $this->get('session')->get('actionInit') !== null ){
-        //     $actionInit = true;
-        // }
-        // else{
-        //     $actionInit = null;
-        // }
-        // $this->get('session')->set('actionInit', null);
-        // //pour redirection apres la connexion mautic
-        // if($tokenMautic === null) {
-        //     $this->get('session')->set('redirection', 'crm_rapport_voir');
-        //     //Est necessaire pour la redirection vers le bon rappport apres avoir été redirigé pour authentification
-        //     $this->get('session')->set('rapportId' , $rapport->getId());
-        // }
 
 		$encoders = array(new JsonEncoder());
 		$normalizers = array(new GetSetMethodNormalizer());
 		$serializer = new Serializer($normalizers, $encoders);
-		
-		// $arr_data = array();
-		// $arr_data = json_decode($rapport->getData(), true);
 		
 		$arr_headers = array();
 		$arr_columns = array();
@@ -255,78 +236,20 @@ class RapportController extends Controller
 		if (($rapport->getType() == 'devis') || ($rapport->getType() == 'facture')) {
 			$arr_obj = $objRepo->createQueryAndGetResult($arr_filters,$rapport->getType(), $this->getUser()->getCompany());
 		} elseif($rapport->getType() == "contact") {
-			$arr_obj = $objRepo->createQueryAndGetResult($arr_filters, $this->getUser()->getCompany(), $rapport->getEmailing());
+			$arr_obj = $objRepo->createQueryAndGetResult($arr_filters, $this->getUser()->getCompany(), $rapport->getEmailing(), $bounce, $warning);
 		} else {
 			$arr_obj = $objRepo->createQueryAndGetResult($arr_filters, $this->getUser()->getCompany());
 		}
 
 		$arr_new = array();
  		
- 		// if($arr_data != null){
- 			
- 		// 	foreach($arr_obj as $obj){
- 		// 		$found = false;
- 		// 		foreach($arr_data as $data){
- 		// 			$id = $data['id'];
- 		// 			if($obj->getId() == $id){
- 		// 				$found = true;
- 		// 				break;
- 		// 			}
- 		// 		}
- 		// 		if(!$found){
- 		// 			$arr_new[] = $obj;
- 		// 		}
- 		// 	}
- 		
-	 	// 	foreach($arr_data as $data){
-	 	// 		$keys = array_keys($data);
-	 	// 		for($i = 0; $i<count($data); $i++){
-	 	// 			$col = $keys[$i];
-	 	// 			if($col != 'id'){
-		 // 				if(key_exists($col, $arr_headers_keys) && !in_array($arr_headers_keys[$col], $arr_headers)) {
-		 // 					$arr_headers[] = $arr_headers_keys[$col];
-		 					
-		 // 					if (in_array($col, $arr_readOnly_cols)) {
-		 // 					//if($col == 'gestionnaire' || $col == 'type' || $col == 'origine' || $col == 'reseau' || $col == 'carte_voeux' || $col == 'services_interet' || $col == 'themes_interet' || $col == 'num' || $col == 'compte' || $col == 'contact'){ 
-		 // 						$arr_columns[] = array('data' => $col, 'readOnly' => true, 'renderer' => 'html');
-		 // 					} else {
-		 // 						$arr_columns[] = array('data' => $col, 'renderer' => 'html');
-		 // 					}
-		 // 					$arr_columns[] = $this->getHTMLRender($col);
-		 // 				} 
-		 // 			} 
-	 	// 		}
-	 	// 		for($i = 0; $i<count($data); $i++){
-	 	// 			$col = $keys[$i];
-	 	// 			if($col != 'id'){
-		 // 				if(!key_exists($col, $arr_headers_keys) && !in_array($col, $arr_headers)) {
-		 // 					$arr_headers[] = $col;
-		 // 					$arr_columns[] = array('data' => $col, 'renderer' => 'html');
-		 // 				 }
-	 	// 			}
-	 	// 		}
-	 	// 	}
-	 		
-	 	// 	$arr_new_data = $this->_rapportProcessData($rapport->getType(), $arr_new);
-	 	// 	$arr_data = array_merge($arr_data, $arr_new_data);
-	 		
- 		// } else {
- 			
- 			$arr_data = $this->_rapportProcessData($rapport->getType(), $arr_obj);
-				
-			foreach($arr_headers_keys as $col => $header){
-				$arr_headers[] = $header;
-				
-				/*if (in_array($col, $arr_readOnly_cols)) {
-				//if($col == 'gestionnaire' || $col == 'type' || $col == 'origine' || $col == 'reseau' || $col == 'carte_voeux' || $col == 'services_interet' || $col == 'themes_interet' || $col == 'num' || $col == 'compte' || $col == 'contact'){
-					$arr_columns[] = array('data' => $col, 'readOnly' => true, 'renderer' => 'html');
-				} else {
-					$arr_columns[] = array('data' => $col, 'renderer' => 'html');
-				}*/
-				$arr_columns[] = $this->getHTMLRender($col);
-			}
- 		//}
- 		
+		$arr_data = $this->_rapportProcessData($rapport->getType(), $arr_obj);
+			
+		foreach($arr_headers_keys as $col => $header){
+			$arr_headers[] = $header;
+			$arr_columns[] = $this->getHTMLRender($col);
+		}
+	
 		return $this->render('crm/rapport/crm_rapport_voir.html.twig', array(
 				'arr_obj' => $arr_data,
 				'arr_headers' => $arr_headers,
@@ -334,8 +257,8 @@ class RapportController extends Controller
 				'rapport' => $rapport,
 				'hide_tiny' => true,
                 'type' => $rapport->getType(),
-                //'token' => $tokenMautic,
-                //'actionInit' => $actionInit
+                'bounce' => $bounce,
+                'warning' => $warning
 		));
 	}
 	
@@ -917,4 +840,5 @@ class RapportController extends Controller
             'arr_contacts' => $arr_contacts
 		));
 	}
+	
 }

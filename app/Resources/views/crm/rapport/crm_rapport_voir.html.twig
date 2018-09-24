@@ -3,11 +3,35 @@
 {% block content %}
 	<div class="row">
 		<div class="col-md-12">
-			<h1>Rapport : {{ rapport.nom }}</h1>
+			<h1>
+				Rapport : {{ rapport.nom }}
+				{% if bounce == true %}
+					- Bounces
+				{% elseif warning == true %}
+					- Warning bounces
+				{% endif %}
+
+			</h1>
 		</div>
 	</div>
 
 	<div class="row">
+		<div class="col-md-12">
+			<ul class="nav nav-tabs">
+				<li {% if bounce == false and warning == false  %} class="active" {% endif %}>
+					<a href="{{ path('crm_rapport_voir', {'id' : rapport.id }) }}">Rapport</a>
+				</li> 
+				<li {% if bounce == true and warning == false  %} class="active" {% endif %}>
+					<a href="{{ path('crm_rapport_voir', {'id' : rapport.id, 'bounce' : 1 }) }}">Bounces</a>
+				</li>
+				<li {% if bounce == false and warning == true  %} class="active" {% endif %}>
+					<a href="{{ path('crm_rapport_voir', {'id' : rapport.id, 'warning' : 1 }) }}">Warning</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="row spacer-top">
 		<div class="col-md-12">
 			<a class="btn btn-xs btn-success" id="btn-check-all">Tout cocher</a>
 			<a class="btn btn-xs btn-danger" id="btn-uncheck-all">Tout décocher</a>
@@ -33,32 +57,34 @@
 		</div>
 	</div>
 	
-	<div class="row">
-		<div class="col-md-12 center">
-			<a href="{{ path('crm_rapport_editer', {'id' : rapport.id } ) }}" 
-				class="btn btn-warning" ​
-				data-toggle="tooltip-btn-xs" 
-				title="Editer">
-				Editer le rapport
-			</a>
-
-			{% if rapport.type == "contact" and app.user.company.zeroBounceApiKey is not empty %}
-				<a href="{{ path('crm_rapport_verifier_bounces', {'id' : rapport.id } ) }}" 
-					class="btn btn-info" ​>
-					Vérifier les bounces
+	{% if bounce == false and warning == false  %}
+		<div class="row">
+			<div class="col-md-12 center">
+				<a href="{{ path('crm_rapport_editer', {'id' : rapport.id } ) }}" 
+					class="btn btn-warning" ​
+					data-toggle="tooltip-btn-xs" 
+					title="Editer">
+					Editer le rapport
 				</a>
-			{% endif %}
 
-			{% if type == "contact" %}
-				<button id="saveProspection" onclick="saveProspection()" class="btn btn-primary {% if rapport.data == null %}disabled{% endif %}"  title="prospection">
-					<span id="iconPhone" class="glyphicon glyphicon-earphone"></span>
-					Exporter vers prospection
-				</button>
-			{% endif %}
-			<div id="alert-save-success" class="alert alert-success hidden">  Les modifications ont bien été enregistrées.  </div>
-			<hr />
+				{% if rapport.type == "contact" and app.user.company.zeroBounceApiKey is not empty %}
+					<a href="{{ path('crm_rapport_verifier_bounces', {'id' : rapport.id } ) }}" 
+						class="btn btn-info" ​>
+						Vérifier les bounces
+					</a>
+				{% endif %}
+
+				{% if type == "contact" %}
+					<button id="saveProspection" onclick="saveProspection()" class="btn btn-primary {% if rapport.data == null %}disabled{% endif %}"  title="prospection">
+						<span id="iconPhone" class="glyphicon glyphicon-earphone"></span>
+						Exporter vers prospection
+					</button>
+				{% endif %}
+				<div id="alert-save-success" class="alert alert-success hidden">  Les modifications ont bien été enregistrées.  </div>
+				<hr />
+			</div>
 		</div>
-	</div>
+	{% endif %}
 
 
 	<div id="modaleMautic" class="modal fade" role="dialog">
