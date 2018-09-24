@@ -114,22 +114,6 @@
 	<script type="text/javascript">
 		$(document).ready( function () {
 
-			// var addresspickerMap = $( "#{{ form.addressPicker.vars.id }}" ).addresspicker({
-			// 	updateCallback: function(geocodeResult, parsedGeocodeResult){
-			// 		//console.log(parsedGeocodeResult);
-			// 		//$('#callback_result').html(JSON.stringify(parsedGeocodeResult, null, 4));
-			// 		var addressToField = ( parsedGeocodeResult.street_number ? parsedGeocodeResult.street_number + ', ' : '' ) + parsedGeocodeResult.route;
-			// 		$('#{{ form.adresse.vars.id }}').val(addressToField);
-			// 		//$('#callback_result').html(parsedGeocodeResult.street_number + ', ' +parsedGeocodeResult.route);
-			// 	},
-			//   	elements: {
-			// 		postal_code						: '#{{ form.codePostal.vars.id }}',
-			// 		administrative_area_level_1		: '#{{ form.region.vars.id }}',
-			// 		country							: '#{{ form.pays.vars.id }}',
-			// 		locality						: '#{{ form.ville.vars.id }}',
-			// 		target_field					: false,
-			// 	},
-			// });
 			{% if compte_name is defined %}
 				{% if compte is not null %}
 					$('#{{ form.compte.vars.id }}').val('{{ compte.nom }}');
