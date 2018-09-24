@@ -599,8 +599,10 @@ class ContactController extends Controller
 				}	
 			} else {
 				$contact->setBounce(null);
+				$em->persist($contact);
+				$em->flush();
 			}
-			
+
 			return $this->redirect($this->generateUrl(
 					'crm_contact_voir',
 					array('id' => $contact->getId())
