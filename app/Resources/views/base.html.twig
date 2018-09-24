@@ -8,15 +8,15 @@
 
         <!--  CSS  -->
         {% block stylesheets %}
-            <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
-            <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>
-            <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.bootstrap.min.css"/>
-            <link rel="stylesheet" media="screen" href="{{ asset('lib/handsontable/dist/handsontable.full.css') }}">
+            <link rel="stylesheet" type="text/css" href="{{ asset('lib/bootstrap/bootstrap.min.css') }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset('lib/datatables/media/css/dataTables.bootstrap.min.css') }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset('lib/datatables/media/css/buttons.bootstrap.min.css') }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset('lib/handsontable/dist/handsontable.full.css') }}">
             <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.datetimepicker.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('css/base.css') }}"/>
-            <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/ui-lightness/jquery-ui.css" type="text/css"/>
-            <link rel="stylesheet" href="{{ asset('js/bootstrap3-editable/css/bootstrap-editable.css') }}" type="text/css"/>
-            <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+            <link rel="stylesheet" type="text/css" href="{{ asset('lib/jquery-ui/jquery-ui.css') }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset('lib/bootstrap3-editable/css/bootstrap-editable.css') }}" />
+            <link rel="stylesheet" type="text/css" href="{{ asset('lib/bootstrap-toggle/bootstrap-toggle.min.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/jquery-typeahead/dist/jquery.typeahead.min.css') }}">
 
             <!-- fonts -->
@@ -27,28 +27,25 @@
         {% block javascripts %}
             <!-- bloody IE8 doesn't support JQuery >= 2 -->
             <!--[if (!IE)|(gt IE 8)]><!-->
-            <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+            <script src="{{ asset('lib/jquery/jquery-2.2.1.min.js') }}"></script>
             <!--<![endif]-->
-            <!--[if lte IE 8]> <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> <![endif]-->
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-            <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-
-            <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
-            <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
-            <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.bootstrap.min.js"></script>
-            <script src="//cdn.datatables.net/plug-ins/1.10.9/sorting/date-eu.js"></script>
-
-            <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
-
+            <!--[if lte IE 8]> <script src="{{ asset('lib/jquery/jquery-1.9.1.min.js') }}"></script> <![endif]-->
+            <script src="{{ asset('lib/bootstrap/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('lib/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+            <script src="{{ asset('lib/datatables/media/js/dataTables.bootstrap.min.js') }}"></script>
+            <script src="{{ asset('lib/datatables/media/js/dataTables.buttons.min.js') }}"></script>
+            <script src="{{ asset('lib/datatables/media/js/buttons.bootstrap.min.js') }}"></script>
+            <script src="{{ asset('lib/datatables/media/js/date-eu.js') }}"></script>
+            <script src="{{ asset('lib/jquery-ui/jquery-ui.js') }}"></script>
             <script src="{{ asset('lib/handsontable/dist/handsontable.full.js') }}"></script>
             <script src="{{ asset('js/dateinput.js') }}"></script>
             <script src="{{ asset('js/jquery.datetimepicker.full.js') }}"></script>
             <script src="{{ asset('js/jquery.validate.js') }}"></script>
             <script src="{{ asset('js/datepicker-fr.js') }}"></script>
             <script src="{{ asset('lib/jquery-typeahead/dist/jquery.typeahead.js') }}"></script>
-            <script src="{{ asset('js/bootstrap3-editable/js/bootstrap-editable.js') }}"></script>
+            <script src="{{ asset('lib/bootstrap3-editable/js/bootstrap-editable.js') }}"></script>
             <script src="{{ asset('js/jquery.nicescroll.min.js') }}"></script>
-            <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+            <script src="{{ asset('lib/bootstrap-toggle/bootstrap-toggle.min.js') }}"></script>
 
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>

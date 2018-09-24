@@ -597,6 +597,8 @@ class ContactController extends Controller
 					$contactService = $this->get('appbundle.crm_contact_service');
 					$contactService->verifierBounce($contact);
 				}	
+			} else {
+				$contact->setBounce(null);
 			}
 			
 			return $this->redirect($this->generateUrl(
