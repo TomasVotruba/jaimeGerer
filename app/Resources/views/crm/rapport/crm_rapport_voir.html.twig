@@ -175,13 +175,13 @@
 		});
 
 		function buttonSaveRenderer (instance, td, row, col, prop, value, cellProperties) {
-       	  	var $button = $('<a class="btn btn-xs btn-success"><span class="glyphicon glyphicon-floppy-disk"></span></a>');
-       	  	$(td).empty().append($button); //empty is needed because you are rendering to an existing cell
+       	  	var $buttonSave = $('<a class="btn btn-xs btn-success"><span class="glyphicon glyphicon-floppy-disk"></span></a>');
+       	  	$(td).empty().append($buttonSave); //empty is needed because you are rendering to an existing cell
 
-       	  	$button.click(function() {
-       	  	var hotData = { data: hot.getSourceDataAtRow(row), type: "{{ rapport.type }}" };
-	       	$.ajax({
-				   url: "{{ path('crm_rapport_row_maj') }}",
+       	  	$buttonSave.click(function() {
+       	  		var hotData = { data: hot.getSourceDataAtRow(row), type: "{{ rapport.type }}" };
+		       	$.ajax({
+				   url: Routing.generate('crm_rapport_row_maj'),
 				   method: 'POST',
 				   data: hotData,
 				   dataType : 'json',
@@ -189,11 +189,28 @@
 					   var $span = $('<span class="green glyphicon glyphicon-ok"></span>');
 					   $(td).empty().append($span);  
 				  	}
-		 		 });
-       	 	});
+		 		});
+	       	});
+	     
+       	 	var $buttonRemoveWarningBounce = $('<a class="btn btn-xs btn-info"><span class="glyphicon glyphicon-check"></span></a>');
+       	 	$($buttonRemoveWarningBounce).insertAfter($buttonSave); 
+
+       	  	$buttonRemoveWarningBounce.click(function() {
+	       	  	var hotData = { data: hot.getSourceDataAtRow(row), type: "{{ rapport.type }}" };
+		       	$.ajax({
+				   url: Routing.generate('crm_contact_set_bounce', {'id' : hotData.data.id, 'bounce' : 'VALID'}),
+				   method: 'POST',
+				   success : function(d, statut){ 
+					   var $span = $('<span class="green glyphicon glyphicon-ok"></span>');
+					   $(td).empty().append($span);  
+				  	}
+		 		});
+	       	});
 			
 			return td;
         };
+
+
 
 		
 		var globalHeaders = {{ arr_headers|json_encode|raw }};

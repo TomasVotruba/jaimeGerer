@@ -372,7 +372,7 @@ class RapportController extends Controller
 	// }
 	
 	/**
-	 * @Route("/crm/rapport/row_maj", name="crm_rapport_row_maj")
+	 * @Route("/crm/rapport/row_maj", name="crm_rapport_row_maj", options={"expose"=true})
 	 */
 	public function rapportRowMajAction()
 	{
