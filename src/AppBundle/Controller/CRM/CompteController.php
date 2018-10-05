@@ -795,4 +795,49 @@ class CompteController extends Controller
 	}
 
 
+	/**
+	 * @Route("/crm/compte/verifier-bounce/{id}", name="crm_compte_verifier_bounce")
+	 */
+	public function compteVerifierBounceAction(Compte $compte)
+	{
+		$contactRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
+		$arr_contacts = $contactRepository->findByCompte($compte);
+
+		$contactService = $this->get('appbundle.crm_contact_service');
+
+		$arr_result = array(
+			'ignored' => 0, 
+			'bounce' => 0, 
+			'valid' => 0,
+			'warning' => 0
+		);
+
+		foreach($arr_contacts as $contact){
+			//only check if the last check was more than 15 days ago
+			$dateValide = $contactService->verifierBounceDateValide($contact);
+			if($dateValide){
+	            $bounce = $contactService->verifierBounce($contact);
+	            if(strtoupper($bounce) == "BOUNCE"){
+					$arr_result['bounce']++;
+				} elseif(strtoupper($bounce) == "VALID") {
+					$arr_result['valid']++;
+				} else {
+					$arr_result['warning']++;
+				}
+			} else {
+				 $arr_result['ignored']++;
+			}
+		}	
+
+		$result = '<strong>Vérification des adresses emails terminées</strong><ul><li>Valides : '.$arr_result['valid'].'</li><li>Bounces : '.$arr_result['bounce'].'</li><li>Bounces potentiels : '.$arr_result['warning'].'</li><li>Ignorés : '.$arr_result['ignored'].'</li></ul>';
+		$this->get('session')->getFlashBag()->add(
+			'info',
+			$result
+		);
+
+		return $this->redirect(
+			$this->generateUrl( 'crm_compte_voir', array('id' => $compte->getId()) )
+		);
+	}
+
 }

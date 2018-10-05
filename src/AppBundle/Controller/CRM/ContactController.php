@@ -1012,24 +1012,22 @@ class ContactController extends Controller
 		if( !$this->getUser()->getCompany()->getZeroBounceApiKey() ){
 			return $response;
 		}
+		
+		$contactService = $this->get('appbundle.crm_contact_service');
 
 		//only check if the last check was more than 15 days ago
-		$today = new \DateTime(date('Y-m-d'));
-		if($contact->getDateBounceCheck()){
-            $interval = $today->diff($contact->getDateBounceCheck(), true);
-            if($interval->format('%a') < 15){
-                $arr_result['ignored']++;
-                $response->setData($arr_result);
-                if($redirectToContact == 1){
-					return $this->redirect(
-						$this->generateUrl( 'crm_contact_voir', array('id' => $contact->getId()) )
-					);
-				}
-				return $response;
-            } 
-        }
+		$dateValide = $contactService->verifierBounceDateValide($contact);
+		if(!$dateValide){
+            $arr_result['ignored']++;
+            $response->setData($arr_result);
+            if($redirectToContact == 1){
+				return $this->redirect(
+					$this->generateUrl( 'crm_contact_voir', array('id' => $contact->getId()) )
+				);
+			}
+			return $response;
+		}
 
-		$contactService = $this->get('appbundle.crm_contact_service');
 		$bounce = $contactService->verifierBounce($contact);
 		if(strtoupper($bounce) == "BOUNCE"){
 			$arr_result['bounce']++;

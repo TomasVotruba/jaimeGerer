@@ -502,4 +502,16 @@ class ContactService extends ContainerAware {
 
     }
 
+    public function verifierBounceDateValide(Contact $contact){
+        
+        $today = new \DateTime(date('Y-m-d'));
+        if($contact->getDateBounceCheck()){
+            $interval = $today->diff($contact->getDateBounceCheck(), true);
+            if($interval->format('%a') < 15){
+                return false;
+            } 
+        }
+        return true;
+    }
+
 }

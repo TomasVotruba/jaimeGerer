@@ -24,6 +24,9 @@
 			    	<a href="{{ path('crm_compte_supprimer', {'id' : compte.id }) }}"  class="btn btn-danger">
 			    		<span class="glyphicon glyphicon-trash"></span> Supprimer
 			    	</a>
+				   	<a href="{{ path('crm_compte_verifier_bounce', {'id' : compte.id }) }}"  class="btn btn-info" >
+				    	<span class="glyphicon glyphicon-check"></span> Vérifier adresses emails
+				    </a>
 			    	<a href="{{ path('crm_compte_fusionner', {'id' : compte.id }) }}"  class="btn btn-default"  data-toggle="modal" data-target="#modal">
 				    	<span class="glyphicon glyphicon-transfer"></span> Fusionner
 				    </a>
@@ -41,6 +44,17 @@
 		    	</div>
 		    </div>
 	    </div>
+
+	    <div class="row">
+		    <div class="col-md-12">
+				{% for flashMessage in app.session.flashbag.get('info') %}
+				    <div class="alert alert-info">
+				        {{ flashMessage|raw }}
+				    </div>
+				{% endfor %}
+			</div>
+		</div>
+
 	    <div class="row">
 	    	<div class="col-md-12">
 	    		<table class="contact-view-table">
