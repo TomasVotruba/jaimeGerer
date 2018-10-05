@@ -179,8 +179,8 @@
        	  	$(td).empty().append($button); //empty is needed because you are rendering to an existing cell
 
        	  	$button.click(function() {
-       	  	 var hotData = { data: hot.getSourceDataAtRow(row), type: "{{ rapport.type }}" };
-	       	 $.ajax({
+       	  	var hotData = { data: hot.getSourceDataAtRow(row), type: "{{ rapport.type }}" };
+	       	$.ajax({
 				   url: "{{ path('crm_rapport_row_maj') }}",
 				   method: 'POST',
 				   data: hotData,

@@ -395,12 +395,6 @@ class RapportController extends Controller
 				$compte->setCodePostal($data['codePostal']);
 				$compte->setRegion($data['region']);
 				$compte->setPays($data['pays']);
-// 				if($data['telephone'] != null){
-// 					$compte->setTelephone( $this->get('libphonenumber.phone_number_util')->parse($data['telephone'], 'INTERNATIONAL'));
-// 				}
-// 				if($data['fax'] != null){
-// 					$compte->setFax($this->get('libphonenumber.phone_number_util')->parse($data['fax'], 'INTERNATIONAL'));
-// 				} 
 				$compte->setTelephone($data['telephone']);
 				$compte->setFax($data['fax']);
 				$compte->setUrl($data['url']);
@@ -423,17 +417,28 @@ class RapportController extends Controller
 				$contact->setRegion($data['region']);
 				$contact->setPays($data['pays']);
 				if($data['telephoneFixe'] != null){
-					$contact->setTelephoneFixe( $this->get('libphonenumber.phone_number_util')->parse($data['telephoneFixe'], 'FR'));
+					$contact->setTelephoneFixe($data['telephoneFixe']);
 				}
 				if($data['telephonePortable'] != null){
-					$contact->setTelephonePortable( $this->get('libphonenumber.phone_number_util')->parse($data['telephonePortable'], 'FR'));
+					$contact->setTelephonePortable($data['telephonePortable']);
 				}
 				if($data['fax'] != null){
-					$contact->setFax($this->get('libphonenumber.phone_number_util')->parse($data['fax'], 'FR'));
+					$contact->setFax($data['fax']);
 				}
-				$contact->setEmail($data['email']);
+
 				$contact->setDescription($data['description']);
-				
+
+				if($contact->getEmail()){
+					$oldEmail = $contact->getEmail();
+					$contact->setEmail($data['email']);
+					if( $oldEmail != $contact->getEmail() && $contact->getCompte()->getCompany()->getZeroBounceApiKey() ){
+						$contactService = $this->get('appbundle.crm_contact_service');
+						$contactService->verifierBounce($contact);
+					}	
+				} else {
+					$contact->setBounce(null);
+				}
+
 				$em->persist($contact);
 				$em->flush();
 				
