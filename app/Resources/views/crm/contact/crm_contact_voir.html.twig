@@ -29,10 +29,13 @@
 		    	<a href="{{ path('crm_contact_ecrire', {'id' : contact.id }) }}"  class="btn {% if contact.email is null %} btn-default not-active {% else %} btn-primary {% endif %}"  data-toggle="modal" data-target="#modal">
 			    	<span class="glyphicon glyphicon-send"></span> Envoyer un message
 			    </a>
+			    <a href="{{ path('crm_contact_verifier_bounce', {'id' : contact.id, 'redirectToContact' : 1 }) }}"  class="btn {% if contact.email is null %} btn-default not-active {% else %} btn-info {% endif %}" >
+			    	<span class="glyphicon glyphicon-check"></span> Vérifier adresse email
+			    </a>
 			    {% if fusion %}
-		    	<a href="{{ path('crm_contact_fusionner', {'id' : contact.id }) }}"  class="btn btn-default"  data-toggle="modal" data-target="#modal">
-			    	<span class="glyphicon glyphicon-transfer"></span> Fusionner
-			    </a>	
+			    	<a href="{{ path('crm_contact_fusionner', {'id' : contact.id }) }}"  class="btn btn-default"  data-toggle="modal" data-target="#modal">
+				    	<span class="glyphicon glyphicon-transfer"></span> Fusionner
+				    </a>	
 			    {% endif %}
 		    </p>
 	    </div>

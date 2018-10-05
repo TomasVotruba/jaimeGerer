@@ -997,9 +997,9 @@ class ContactController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/contact/verifier-bounce/{id}", name="crm_contact_verifier_bounce", options={"expose"=true})
+	 * @Route("/crm/contact/verifier-bounce/{id}/{redirectToContact}", name="crm_contact_verifier_bounce", options={"expose"=true})
 	 */
-	public function verifierBounce(Contact $contact){
+	public function verifierBounce(Contact $contact, $redirectToContact = 0){
 
 		$response = new JsonResponse();
 		$arr_result = array(
@@ -1020,6 +1020,11 @@ class ContactController extends Controller
             if($interval->format('%a') < 15){
                 $arr_result['ignored']++;
                 $response->setData($arr_result);
+                if($redirectToContact == 1){
+					return $this->redirect(
+						$this->generateUrl( 'crm_contact_voir', array('id' => $contact->getId()) )
+					);
+				}
 				return $response;
             } 
         }
@@ -1035,6 +1040,11 @@ class ContactController extends Controller
 		}
 		
 		$response->setData($arr_result);
+		if($redirectToContact == 1){
+			return $this->redirect(
+				$this->generateUrl( 'crm_contact_voir', array('id' => $contact->getId()) )
+			);
+		}
 		return $response;
 		
 	}
