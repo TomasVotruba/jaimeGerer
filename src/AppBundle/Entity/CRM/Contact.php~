@@ -259,18 +259,25 @@ class Contact
     private $importMauticStatus = false;
 
      /**
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(name="bounce", type="boolean")
+     * @ORM\Column(name="bounce", type="string", nullable=true)
      */
-    private $bounce = false;
+    private $bounce = null;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_bounce_check", type="date")
+     * @ORM\Column(name="date_bounce_check", type="date", nullable=true)
      */
-    private $dateBounceCheck;
+    private $dateBounceCheck = null;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="stop_bounce_warning", type="boolean")
+     */
+    private $stropBounceWarning = false;
 
 
     /**
@@ -1084,7 +1091,7 @@ class Contact
     /**
      * Set bounce
      *
-     * @param boolean $bounce
+     * @param string $bounce
      * @return Contact
      */
     public function setBounce($bounce)
@@ -1097,10 +1104,59 @@ class Contact
     /**
      * Get bounce
      *
-     * @return boolean 
+     * @return string 
      */
     public function getBounce()
     {
         return $this->bounce;
+    }
+
+    /**
+     * Set dateBounceCheck
+     *
+     * @param \DateTime $dateBounceCheck
+     * @return Contact
+     */
+    public function setDateBounceCheck($dateBounceCheck)
+    {
+        $this->dateBounceCheck = $dateBounceCheck;
+
+        return $this;
+    }
+
+    /**
+     * Get dateBounceCheck
+     *
+     * @return \DateTime 
+     */
+    public function getDateBounceCheck()
+    {
+        return $this->dateBounceCheck;
+    }
+
+    /**
+     * Return true if the contact is detected as bounce
+     *
+     * @return boolean
+     */
+    public function isBounce()
+    {
+        if(strtoupper($this->bounce) == "BOUNCE"){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Return true if the contact is detected as potential bounce (=warning=)
+     *
+     * @return boolean
+     */
+    public function isWarningBounce()
+    {
+        if(strtoupper($this->bounce) == "WARNING"){
+            return true;
+        }
+        return false;
     }
 }

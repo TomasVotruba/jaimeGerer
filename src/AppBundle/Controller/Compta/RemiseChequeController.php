@@ -397,8 +397,6 @@ class RemiseChequeController extends Controller
 			$remiseCheque->setUserEdition($this->getUser());
 
 			$em->persist($remiseCheque);
-
-			// dump($remiseCheque);
 			$em->flush();
 
 			return $this->redirect($this->generateUrl(

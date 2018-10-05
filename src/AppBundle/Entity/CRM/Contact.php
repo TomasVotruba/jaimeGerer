@@ -259,7 +259,7 @@ class Contact
     private $importMauticStatus = false;
 
      /**
-     * @var boolean
+     * @var string
      *
      * @ORM\Column(name="bounce", type="string", nullable=true)
      */
@@ -271,6 +271,13 @@ class Contact
      * @ORM\Column(name="date_bounce_check", type="date", nullable=true)
      */
     private $dateBounceCheck = null;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="stop_bounce_warning", type="boolean")
+     */
+    private $stropBounceWarning = false;
 
 
     /**
@@ -1151,5 +1158,28 @@ class Contact
             return true;
         }
         return false;
+    }
+
+    /**
+     * Set stropBounceWarning
+     *
+     * @param boolean $stropBounceWarning
+     * @return Contact
+     */
+    public function setStropBounceWarning($stropBounceWarning)
+    {
+        $this->stropBounceWarning = $stropBounceWarning;
+
+        return $this;
+    }
+
+    /**
+     * Get stropBounceWarning
+     *
+     * @return boolean 
+     */
+    public function getStropBounceWarning()
+    {
+        return $this->stropBounceWarning;
     }
 }

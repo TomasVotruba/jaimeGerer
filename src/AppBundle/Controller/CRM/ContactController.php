@@ -1051,7 +1051,13 @@ class ContactController extends Controller
 	 * @Route("/crm/contact/set-bounce/{id}/{bounce}", name="crm_contact_set_bounce", options={"expose"=true})
 	 */
 	public function setBounce(Contact $contact, $bounce){
+		
 		$em = $this->getDoctrine()->getManager();
+
+		if($contact->getBounce() == "WARNING" && strtoupper(trim($bounce)) == "VALID"){
+			$contact->setStropBounceWarning(true);
+		}
+
 		$contact->setBounce(strtoupper(trim($bounce)));
 		$contact->setDateBounceCheck(new \DateTime(date('Y-m-d')));
 		$em->persist($contact);
@@ -1062,6 +1068,4 @@ class ContactController extends Controller
 		);
 	}
 	
-
-
 }
