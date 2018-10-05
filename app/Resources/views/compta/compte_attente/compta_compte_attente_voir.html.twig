@@ -44,6 +44,10 @@
 				 	{{ ligne.libelle }}
 				 {% else %}
 				 	{{ ligne.nom }}
+				 	{% if ligne.mouvementBancaire is not null %}
+				 		<br />
+				 		<i>Affectation diverse : {{ ligne.mouvementBancaire.rapprochements[0].affectationDiverse.nom }}</i>
+				 	{% endif %}
 				 {% endif %}
 				 <br />
 				 {% if arr_lignes_inverses[ligne.id] is defined %}
