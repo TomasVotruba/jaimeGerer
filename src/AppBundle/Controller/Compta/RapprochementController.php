@@ -261,11 +261,20 @@ class RapprochementController extends Controller
             $depense = $rapprochement->getDepense();
             $depense->setEtat("ENREGISTRE");
             $em->persist($depense);
+            foreach($depense->getJournalAchats() as $ligneJournal){
+                $ligneJournal->setLettrage(null);
+                $em->persist($ligneJournal);
+            }
+
         }
         if($rapprochement->getFacture()){
             $facture = $rapprochement->getFacture();
             $facture->setEtat("ENREGISTRE");
             $em->persist($facture);
+            foreach($depense->getJournalVentes() as $ligneJournal){
+                $ligneJournal->setLettrage(null);
+                $em->persist($ligneJournal);
+            }
         }
         if($rapprochement->getNoteFrais()){
             $ndf = $rapprochement->getNoteFrais();
