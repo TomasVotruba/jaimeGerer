@@ -19,10 +19,9 @@
 				<a target="_blank" href="{{ path('crm_contact_ajouter') }}" class="btn btn-success">
 					<span class="glyphicon glyphicon-plus"></span> Ajouter
 				</a>
-				{#<a href="#" class="btn btn-danger">#}
-				{#<span class="glyphicon glyphicon-trash"></span> Supprimer#}
-				{#</a>#}
-				<a class="btn btn-info" target="_blank" href="{{ path('crm_contact_import_upload' )}}">Importer des contacts</a>
+				<a class="btn btn-info" target="_blank" href="{{ path('crm_contact_import_upload' )}}">
+					Importer des contacts
+				</a>
 			</p>
 
 		</div>
@@ -77,6 +76,7 @@
 
 					]
 				},
+				"iDisplayLength": 100,
 				"language" : {
 					"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"
 				},
