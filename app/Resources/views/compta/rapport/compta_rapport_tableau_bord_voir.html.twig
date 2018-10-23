@@ -6,7 +6,37 @@
         </div>
     {% endfor %}
 {% else %}
-
+<thead id="header-row">
+    <tr>
+        <th class="poste" rowspan="2"></th>
+        <th colspan="{{ moisDebutPredictif > 1 and year <= "now"|date('Y') ? 2 : 3 }}" class="mois" id="mois-1">Janvier</th>
+        <th colspan="{{ moisDebutPredictif > 2 and year <= "now"|date('Y') ? 2 : 3 }}" class="mois" id="mois-2">Février</th>
+        <th colspan="{{ moisDebutPredictif > 3 and year <= "now"|date('Y') ? 2 : 3 }}" class="mois" id="mois-3">Mars</th>
+        <th colspan="{{ moisDebutPredictif > 4 and year <= "now"|date('Y') ? 2 : 3 }}" class="mois" id="mois-4">Avril</th>
+        <th colspan="{{ moisDebutPredictif > 5 and year <= "now"|date('Y') ? 2 : 3 }}" class="mois" id="mois-5">Mai</th>
+        <th colspan="{{ moisDebutPredictif > 6 and year <= "now"|date('Y') ? 2 : 3 }}" class="mois" id="mois-6">Juin</th>
+        <th colspan="{{ moisDebutPredictif > 7 and year <= "now"|date('Y') ? 2 : 3 }}" class="mois" id="mois-7">Juillet</th>
+        <th colspan="{{ moisDebutPredictif > 8 and year <= "now"|date('Y') ? 2 : 3 }}" class="mois" id="mois-8">Août</th>
+        <th colspan="{{ moisDebutPredictif > 9 and year <= "now"|date('Y') ? 2 : 3 }}" class="mois" id="mois-9">Septembre</th>
+        <th colspan="{{ moisDebutPredictif > 10 and year <= "now"|date('Y') ? 2 : 3 }}" class="mois" id="mois-10">Octobre</th>
+        <th colspan="{{ moisDebutPredictif > 11 and year <= "now"|date('Y') ? 2 : 3 }}" class="mois" id="mois-11">Novembre</th>
+        <th colspan="{{ moisDebutPredictif > 12 and year <= "now"|date('Y') ? 2 : 3 }}" class="mois" id="mois-12">Décembre</th>
+        <th colspan="3" class="mois">Total</th>
+    </tr>
+    <tr>
+        {% for i in 1..12 %}
+          <th class="prev">Prévisionnel</th>
+          {% if i >=  moisDebutPredictif or year > "now"|date('Y') %}
+            <th class="predictif">Prédictif</th>
+          {% endif %}
+          <th class="accurate">Réalisé</th>
+        {% endfor %}
+        <th class="prev">Prévisionnel</th>
+        <th class="predictif">Prédictif</th>
+        <th class="accurate">Réalisé</th>
+    </tr>
+</thead>
+<tbody>
   <!-- postes analytiques -->
   {% for poste, label in arr_postes %}
     <!-- totaux du poste -->
@@ -60,7 +90,7 @@
           </p>
         </td>
         
-        {% if i >=  moisDebutPredictif %}
+        {% if i >=  moisDebutPredictif or year > "now"|date('Y') %}
           <td class="predictif"> 
             {% if poste == "actions_commerciales" %}
               -
@@ -229,7 +259,7 @@
                 </a>
               </td>
              
-              {% if i >=  moisDebutPredictif %}
+              {% if i >=  moisDebutPredictif or year > "now"|date('Y') %}
                 <td class="predictif"> 
                   {% if poste == "actions_commerciales" %}
                     -
@@ -302,7 +332,7 @@
                 {% for i in 1..12 %}
                   <td class="prev"></td>
                   
-                  {% if i >=  moisDebutPredictif %}
+                  {% if i >=  moisDebutPredictif or year > "now"|date('Y') %}
                     <td class="predictif"></td>
                   {% endif %}
 
@@ -336,7 +366,7 @@
                 {% for i in 1..12 %}
                   <td class="prev"></td>
 
-                  {% if i >=  moisDebutPredictif %}
+                  {% if i >=  moisDebutPredictif or year > "now"|date('Y') %}
                     <td class="predictif"></td>
                   {% endif %}
 
@@ -375,7 +405,7 @@
               </p>
             </td>
 
-            {% if i >=  moisDebutPredictif %}
+            {% if i >=  moisDebutPredictif or year > "now"|date('Y') %}
              <td class="predictif"> 
               {{ predictif|number_format(2, ',', ' ') }} €
              </td>
@@ -408,7 +438,7 @@
               </p>
             </td>
             
-            {% if i >=  moisDebutPredictif %}
+            {% if i >=  moisDebutPredictif or year > "now"|date('Y') %}
               <td class="predictif"> 
                 {{ predictif|number_format(2, ',', ' ') }} €
               </td>
@@ -438,7 +468,7 @@
               </p>
             </td>
 
-            {% if i >=  moisDebutPredictif %}
+            {% if i >=  moisDebutPredictif or year > "now"|date('Y') %}
               <td class="predictif"> 
                {{ predictif|number_format(2, ',', ' ') }} €
               </td>
@@ -469,7 +499,7 @@
               </p>
             </td>
             
-            {% if i >=  moisDebutPredictif %}
+            {% if i >=  moisDebutPredictif or year > "now"|date('Y') %}
               <td class="predictif"> 
                 {{ predictif|number_format(0, ',', ' ') }} %
               </td>
@@ -486,7 +516,7 @@
 
   {% endfor %}
   <!-- fin postes analytiques -->
-
+</tbody>
 {% endif %}
 
 {% block javascripts %}

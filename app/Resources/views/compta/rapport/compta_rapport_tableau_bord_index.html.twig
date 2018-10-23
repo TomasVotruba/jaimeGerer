@@ -46,38 +46,6 @@
 	<div class="row">
 		<div class="col-md-12 tableau-bord-wrapper">
 			<table class="table table-bordered" id="tableau-bord">
-				<thead id="header-row">
-					<tr>
-						<th class="poste" rowspan="2"></th>
-						<th colspan="{{ moisDebutPredictif > 1 ? 2 : 3 }}" class="mois" id="mois-1">Janvier</th>
-						<th colspan="{{ moisDebutPredictif > 2 ? 2 : 3 }}" class="mois" id="mois-2">Février</th>
-						<th colspan="{{ moisDebutPredictif > 3 ? 2 : 3 }}" class="mois" id="mois-3">Mars</th>
-						<th colspan="{{ moisDebutPredictif > 4 ? 2 : 3 }}" class="mois" id="mois-4">Avril</th>
-						<th colspan="{{ moisDebutPredictif > 5 ? 2 : 3 }}" class="mois" id="mois-5">Mai</th>
-						<th colspan="{{ moisDebutPredictif > 6 ? 2 : 3 }}" class="mois" id="mois-6">Juin</th>
-						<th colspan="{{ moisDebutPredictif > 7 ? 2 : 3 }}" class="mois" id="mois-7">Juillet</th>
-						<th colspan="{{ moisDebutPredictif > 8 ? 2 : 3 }}" class="mois" id="mois-8">Août</th>
-						<th colspan="{{ moisDebutPredictif > 9 ? 2 : 3 }}" class="mois" id="mois-9">Septembre</th>
-						<th colspan="{{ moisDebutPredictif > 10 ? 2 : 3 }}" class="mois" id="mois-10">Octobre</th>
-						<th colspan="{{ moisDebutPredictif > 11 ? 2 : 3 }}" class="mois" id="mois-11">Novembre</th>
-						<th colspan="{{ moisDebutPredictif > 12 ? 2 : 3 }}" class="mois" id="mois-12">Décembre</th>
-						<th colspan="3" class="mois">Total</th>
-					</tr>
-					<tr>
-						{% for i in 1..12 %}
-							<th class="prev">Prévisionnel</th>
-							{% if i >=  moisDebutPredictif %}
-								<th class="predictif">Prédictif</th>
-							{% endif %}
-							<th class="accurate">Réalisé</th>
-						{% endfor %}
-						<th class="prev">Prévisionnel</th>
-						<th class="predictif">Prédictif</th>
-						<th class="accurate">Réalisé</th>
-					</tr>
-				</thead>
-				<tbody id="wrapper-ajax">
-				</tbody>
 			</table>
 			<p class="center" id="loader">
 				<img src="{{ asset('images/assets/dog_loader.gif') }}" alt="Chargement en cours" /><br />
@@ -99,7 +67,7 @@
 
 			$(".year-select").change(function(){
 				$("#loader").removeClass("hidden");
-				$("#wrapper-ajax").html("");
+				$("#tableau-bord").html("");
 				var year = $(this).val();
 				loadTable(year);
 			});
@@ -111,7 +79,7 @@
 					url: Routing.generate('compta_rapport_tableau_bord_voir', {'year' : year}),
 					success: function(data) {
 						$("#loader").addClass("hidden");
-						$("#wrapper-ajax").html(data);
+						$("#tableau-bord").html(data);
 
 						if($('#checkbox-hide-accurate').is(':checked')){
 							$('td.accurate').toggle();
