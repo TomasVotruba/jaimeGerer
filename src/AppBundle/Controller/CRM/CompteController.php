@@ -5,6 +5,7 @@ namespace AppBundle\Controller\CRM;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -17,10 +18,11 @@ use AppBundle\Entity\CRM\Contact;
 use AppBundle\Entity\Settings;
 use AppBundle\Entity\Rapport;
 
+use AppBundle\Entity\CRM\CompteRepository;
+
 use AppBundle\Form\CRM\CompteType;
 use AppBundle\Form\CRM\CompteFilterType;
 use AppBundle\Form\CRM\CompteFusionnerType;
-use AppBundle\Form\CRM\CompteFusionnerEtape2Type;
 use AppBundle\Form\CRM\ContactType;
 use AppBundle\Form\SettingsType;
 use AppBundle\Form\CRM\CompteImportType;
@@ -170,228 +172,58 @@ class CompteController extends Controller
 		));
 	}
 
-	/**
-	 * @Route("/crm/compte/fusionner/{id}", name="crm_compte_fusionner", options={"expose"=true})
+    /**
+	 * @Route("/crm/compte/fusionner/{id}/rechercher", name="crm_compte_fusionner_rechercher", options={"expose"=true})
 	 */
-	public function compteFusionnerAction(Compte $compte)
+	public function compteFusionnerRechercherAjaxAction(Compte $compte, Request $request)
 	{
-		$em = $this->getDoctrine()->getManager();
-		$request = $this->getRequest();
-		//~ var_dump($request->get('id')); exit;
-		$new_contact = new Compte();
-		$new_contact->setUserGestion($this->getUser());
-		$form = $this->createForm(
-				new CompteFusionnerType(
-						$this->getUser()->getId(),
-						$this->get('router'),
-						$request->get('id')
-				),
-				$new_contact
-		);
+        $comptes = [];
+        if($request->get('search')){
+            /* @var $compteRepository CompteRepository */
+            $compteRepository = $this->getDoctrine()->getRepository(Compte::class);
+            $comptes = $compteRepository->findForMerge($this->getUser()->getCompany(), $compte, $request->get('search'));
+        }
+        
+        return $this->render('crm/compte/crm_compte_fusionner_rechercher_resultats.html.twig', array(
+           'comptes' => $comptes, 
+        ));
+	}    
+    
+	/**
+	 * @Route("/crm/compte/fusionner/{id}/rechercher/modal", name="crm_compte_fusionner_rechercher_modal", options={"expose"=true})
+	 */
+	public function compteFusionnerRechercherModalAction(Compte $compte)
+	{
 
-		$form->handleRequest($request);
-
-		if ($form->isSubmitted() && $form->isValid() && 1==0) {
-
-			$new_contact->setDateCreation(new \DateTime(date('Y-m-d')));
-			$new_contact->setUserCreation($this->getUser());
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($new_contact);
-			$em->flush();
-
-			return $this->redirect($this->generateUrl(
-					'crm_compte_voir',
-					array('id' => $compte->getId())
-			));
-		}
-
-		return $this->render('crm/compte/crm_compte_fusionner.html.twig', array(
-				'form' 		=> $form->createView(),
+		return $this->render('crm/compte/crm_compte_fusionner_rechercher_modal.html.twig', array(
 				'compte' 	=> $compte,
-				'step'		=> 'step1'
 		));
 	}
-
+    
 	/**
-	 * @Route("/crm/compte/fusionner/etape2/{id}", name="crm_compte_fusionner_etape2", options={"expose"=true})
-	 */
-	public function compteFusionnerEtape2Action(Compte $compte)
-	{
-		//~ echo "hich"; exit;
-		$em = $this->getDoctrine()->getManager();
-
-
-
-
-		$request = $this->getRequest();
-		//~ var_dump($_POST);
-		//~ $contact = new Contact();
-		//~ $compte->setUserGestion($this->getUser());
-		$form = $this->createForm(
-				new compteFusionnerType(
-						$this->getUser()->getId(),
-						$this->get('router'),
-						$compte->getId()
-				),
-				$compte
-		);
-
-
-		//~ $request = $this->getRequest();
-		$form->handleRequest($request);
-		//~ if ($form->isSubmitted() && $form->isValid()) {
-			$posts = $request->request->get($form->getName());
-			$repository = $em->getRepository('AppBundle:CRM\Compte');
-			$first_compte = $repository->findOneById($compte->getId());
-			$second_compte = $repository->findOneById($posts['compte']);
-			$form = $this->createForm(
-					new CompteFusionnerEtape2Type(
-							$first_compte,
-							$second_compte,
-                            $this->get('router')
-					),
-					$compte
-			);
-
-			return $this->render('crm/compte/crm_compte_fusionner_etape2.html.twig', array(
-					'form' => $form->createView(),
-					'compte' => $compte,
-					'step'	=> 'step2',
-					'first_compte' => $first_compte,
-					'second_compte' => $second_compte
-			));
-		//~ }
-
-		return $this->render('crm/compte/crm_compte_fusionner.html.twig', array(
-				'form' 		=> $form->createView(),
-				'compte' 	=> $compte,
-				'step'		=> 'step2'
-		));
-	}
-
-	/**
-	 * @Route("/crm/compte/fusionner/execution/{id}", name="crm_compte_fusionner_execution", options={"expose"=true})
-	 * @Method("POST")
-	 */
-	public function compteFusionnerExecutionAction(Compte $compte)
-	{
-
-		$em = $this->getDoctrine()->getManager();
-
-		$request = $this->getRequest();
-		$posts = array_values($request->request->all());
-
-		$repository = $em->getRepository('AppBundle:CRM\Compte');
-		$first_compte = $repository->findOneById($request->get('id'));
-		$second_compte = $repository->findOneById($posts[0]['second_compte_id']);
-
-		$form = $this->createForm(
-				new CompteFusionnerEtape2Type(
-						$first_compte,
-						$second_compte,
-						$this->get('router')
-				),
-				$compte
-		);
-
-		$form->handleRequest($request);
-
-			$champs = $em->getClassMetadata('AppBundle:CRM\Compte')->getFieldNames();
-			$compte->setDateEdition(new \DateTime(date('Y-m-d')));
-			$compte->setUserEdition($this->getUser());
-
-			// Temoin pour vérifier qu'au moins une donnée du compte2 est choisi => màj
-			$fusionner_compte = false;
-
-			foreach( $posts[0] as $k=>$v )
-			{
-				if( substr($v, -1) == 2 )
-				{
-					$fusionner_compte = true;
-
-					// valeur choisie est celle du contact 2, on controle le champ pour le setteur de la classe Contact
-					$champ = substr($v, 0, -1);
-					if( $champ == 'adresse' )
-					{
-						$compte->setAdresse($second_compte->getAdresse());
-						$compte->setCodePostal($second_compte->getCodePostal());
-						$compte->setVille($second_compte->getVille());
-						$compte->setRegion($second_compte->getRegion());
-						$compte->setPays($second_compte->getPays());
-					}
-					else if( $champ == 'userGestion' )
-					{
-						$compte->setUserGestion($second_compte->getUserGestion());
-					}
-					else if( in_array($champ, $champs) )
-					{
-						// Le champ existe dans la bdd, on màj
-						$methodSet = 'set'.ucfirst($champ);
-						$methodGet = 'get'.ucfirst($champ);
-						eval("\$var = \$second_compte->$methodGet();");
-						//var_dump($var);
-						eval('$compte->$methodSet($var);');
-					}
-				}
-			}
-
-			if( $fusionner_compte )
-			{
-				$em->persist($compte);
-				$em->flush();
-			}
-
-			// màj dans les tables : devis, factures, opportunités, contacts, dépenses
-			// contacts
-			$repositoryContact = $em->getRepository('AppBundle:CRM\Contact');
-			$Compte2Contact = $repositoryContact->findBy(
-														array('compte' => $second_compte),
-														array('id' => 'DESC')
-													);
-			foreach( $Compte2Contact as $Contact )
-			{
-				$Contact->setCompte($first_compte);
-				$em->persist($Contact);
-			}
-			// devis etfactures
-			$repositoryDevis = $em->getRepository('AppBundle:CRM\DocumentPrix');
-			$Compte2Devis = $repositoryDevis->findBy(
-													array('compte' => $second_compte, 'type' => array('DEVIS', 'FACTURE') ),
-													array('id' => 'DESC')
-												);
-			foreach( $Compte2Devis as $Devis )
-			{
-				$Devis->setCompte($first_compte);
-				$em->persist($Devis);
-			}
-
-			// opportunités
-			$repositoryOpportunite = $em->getRepository('AppBundle:CRM\Opportunite');
-			$Compte2Opportunite = $repositoryOpportunite->findBy(
-													array('compte' => $second_compte),
-													array('id' => 'DESC')
-												);
-			foreach( $Compte2Opportunite as $Opportunite )
-			{
-				$Opportunite->setCompte($first_compte);
-				$em->persist($Opportunite);
-			}
-			
-			$em->flush();
-			$em->remove($second_compte);
-			$em->flush();
-			echo 1; exit;
-
-		//~ }
-
-		return $this->render('crm/compte/crm_compte_fusionner_etape2.html.twig', array(
-				'form' => $form->createView(),
-				'compte' => $compte,
-				'step'	=> 'step2',
-				'first_compte' => $first_compte,
-				'second_compte' => $second_compte
-		));
-	}
+	 * @Route("/crm/compte/fusionner/recapitulatif/modal", name="crm_compte_fusionner_recapitulatif_modal", options={"expose"=true})
+	 */    
+    public function compteFusionnerRecapitulatifAction(Request $request)
+    {
+        if((null !== $idCompteA = $request->get('idCompteA')) && (null !== $idCompteB = $request->get('idCompteB'))){
+            /* @var $compteRepository CompteRepository */
+            $compteRepository = $this->getDoctrine()->getRepository(Compte::class);
+            $compteA = $compteRepository->find($idCompteA);
+            $compteB = $compteRepository->find($idCompteB);
+            if($compteA && $compteB){
+                $newCompte = new Compte();
+                $compteFusionnerForm = $this->createForm(new CompteFusionnerType($compteA, $compteB), $newCompte, []);   
+                
+                return $this->render('crm/compte/crm_compte_fusionner_recap_modal.html.twig', [
+                    'compteFusionnerForm' => $compteFusionnerForm->createView(),
+                    'compteA' => $compteA,
+                    'compteB' => $compteB,
+                ]);                 
+            }
+        }
+        
+        throw new NotFoundHttpException();
+    }
 
 	/**
 	 * @Route("/crm/compte/ajouter_modal", name="crm_compte_ajouter_modal", options={"expose"=true})

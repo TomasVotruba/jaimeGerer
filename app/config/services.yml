@@ -146,3 +146,7 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         arguments: []
+        
+    appbundle.crm_compte_service:
+        class: AppBundle\Service\CRM\CompteService
+        arguments: [ "@doctrine.orm.entity_manager"]

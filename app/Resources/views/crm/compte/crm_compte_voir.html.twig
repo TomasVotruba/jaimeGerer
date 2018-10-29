@@ -27,7 +27,7 @@
 				   	<a href="{{ path('crm_compte_verifier_bounce', {'id' : compte.id }) }}"  class="btn btn-info" >
 				    	<span class="glyphicon glyphicon-check"></span> Vérifier adresses emails
 				    </a>
-			    	<a href="{{ path('crm_compte_fusionner', {'id' : compte.id }) }}"  class="btn btn-default"  data-toggle="modal" data-target="#modal">
+			    	<a href="{{ path('crm_compte_fusionner_rechercher_modal', {'id' : compte.id }) }}"  class="btn btn-default"  data-toggle="modal" data-target="#modal">
 				    	<span class="glyphicon glyphicon-transfer"></span> Fusionner
 				    </a>
 			    </p>
@@ -257,60 +257,30 @@
 	  {{ include('crm/devis/crm_devis_liste_part.html.twig', {'arr_devis': arr_devis, 'div_id': 'table_devis'}) }}
 	  {{ include('crm/facture/crm_facture_liste_part.html.twig', {'arr_facture': arr_factures, 'div_id': 'table_factures'}) }}
 
+      <script>
+          /* Create a fixed menu on scroll for /voir */
+              $(document).ready(function() {
+              var positionElementInPage = $('#compte_details').offset().top;
+              $(window).scroll(
+                   function() {
+                          if ($(window).scrollTop() >= positionElementInPage) {
+                              // fixed
+                              $('#compte_details').addClass("fixed-top");
+                          } else {
+                              // relative
+                              $('#compte_details').removeClass("fixed-top");
+                          }
+                      }
+              );
+              });
+      </script>      
+      
+{% block additionalModals %}      
+    <div class="modal" id="fusionner-recapitulatif-modal" data-focus-on="input:first">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>    
 {% endblock %}
-{% block additionalModals %}
-	<div id="ModalFusionConfirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalFusionConfirmation" aria-hidden="true" data-focus-on="input:first">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-					 <h3 id="myModalFusionConfirmation">Confirmation requise</h3>
-
-				</div>
-				<div class="modal-body">
-					<p>Cette opération est irréversible, veuillez confirmer la fusion</p>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-danger" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove"> </span> Annuler</button>
-					<button class="btn-primary btn" id="SubForm"><span class="glyphicon glyphicon-ok"> </span> Confirmer la fusion</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div id="ModalAlert" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalAlert" aria-hidden="true" data-focus-on="input:first">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-					 <h3 id="myModalAlert">Fusion terminée</h3>
-
-				</div>
-				<div class="modal-body">
-					<p><span class="glyphicon glyphicon glyphicon-ok"> </span> Fusion effectuée avec succès</p>
-				</div>
-				<div class="modal-footer">
-					<button class="btn-primary btn" id="okAlert" data-dismiss="modal" aria-hidden="true">ok</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-<script>
-	/* Create a fixed menu on scroll for /voir */
-		$(document).ready(function() {
-		var positionElementInPage = $('#compte_details').offset().top;
-		$(window).scroll(
-			 function() {
-			        if ($(window).scrollTop() >= positionElementInPage) {
-			            // fixed
-			            $('#compte_details').addClass("fixed-top");
-			        } else {
-			            // relative
-			            $('#compte_details').removeClass("fixed-top");
-			        }
-			    }
-		);
-		});
-</script>
-
+      
 {% endblock %}
