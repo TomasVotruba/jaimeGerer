@@ -4,8 +4,12 @@ namespace AppBundle\Form\CRM;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use AppBundle\Entity\CRM\Compte;
+use AppBundle\Entity\Compta\CompteComptable;
+use AppBundle\Service\CRM\CompteService;
 
 class CompteFusionnerType extends AbstractType
 {
@@ -25,92 +29,66 @@ class CompteFusionnerType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $a = $this->compteA;
-        $b = $this->compteB;
+        $this->builder = $builder;
+        $this->addChoicesField('nom');
+        $this->addChoicesField('telephone');
+        $this->addChoicesField('adresse');
+        $this->addChoicesField('ville');
+        $this->addChoicesField('codePostal');
+        $this->addChoicesField('region');
+        $this->addChoicesField('pays');
+        $this->addChoicesField('url');
+        $this->addChoicesField('fax');
+        $this->addChoicesField('codeEvoliz');
+        $this->addChoicesField('priveOrPublic', 'priveOrPublicToString');
 
-        $builder->add('nom', ChoiceType::class, [
-            'choices' => [$a->getNom(), $b->getNom()],
-            'expanded' => true,
-        ]);
-        if ($this->doDisplayField($a, $b, 'telephone')) {
-            $builder->add('telephone', ChoiceType::class, [
-                'choices' => [$this->compteA->getTelephone(), $this->compteB->getTelephone()],
+        if ($this->doDisplayField('compteComptableClient')) {
+            $builder->add('compteComptableClient', EntityType::class, [
+                'class' => CompteComptable::class,
+                'choice_label' => 'nom',
                 'expanded' => true,
-            ]);
-        }
-        if ($this->doDisplayField($a, $b, 'adresse')) {
-            $builder->add('adresse', ChoiceType::class, [
-                'choices' => [$this->compteA->getAdresse(), $this->compteB->getAdresse()],
-                'expanded' => true,
-            ]);
-        }
-        if ($this->doDisplayField($a, $b, 'ville')) {
-            $builder->add('ville', ChoiceType::class, [
-                'choices' => [$this->compteA->getVille(), $this->compteB->getVille()],
-                'expanded' => true,
-            ]);
-        }
-        if ($this->doDisplayField($a, $b, 'codePostal')) {
-            $builder->add('codePostal', ChoiceType::class, [
-                'choices' => [$this->compteA->getCodePostal(), $this->compteB->getCodePostal()],
-                'expanded' => true,
-            ]);
-        }
-        if ($this->doDisplayField($a, $b, 'region')) {
-            $builder->add('region', ChoiceType::class, [
-                'choices' => [$this->compteA->getRegion(), $this->compteB->getRegion()],
-                'expanded' => true,
-            ]);
-        }
-        if ($this->doDisplayField($a, $b, 'pays')) {
-            $builder->add('pays', ChoiceType::class, [
-                'choices' => [$this->compteA->getPays(), $this->compteB->getPays()],
-                'expanded' => true,
-            ]);
-        }
-        if ($this->doDisplayField($a, $b, 'url')) {
-            $builder->add('url', ChoiceType::class, [
-                'choices' => [$this->compteA->getUrl(), $this->compteB->getUrl()],
-                'expanded' => true,
-            ]);
-        }
-        if ($this->doDisplayField($a, $b, 'fax')) {
-            $builder->add('fax', ChoiceType::class, [
-                'choices' => [$this->compteA->getFax(), $this->compteB->getFax()],
-                'expanded' => true,
-            ]);
-        }
-        if ($this->doDisplayField($a, $b, 'codeEvoliz')) {
-            $builder->add('codeEvoliz', ChoiceType::class, [
-                'choices' => [$this->compteA->getCodeEvoliz(), $this->compteB->getCodeEvoliz()],
-                'expanded' => true,
-            ]);
-        }
-        if ($this->doDisplayField($a, $b, 'priveOrPublic')) {
-            $builder->add('priveOrPublic', ChoiceType::class, [
+                'constraints' => new NotNull(),
                 'choices' => [
-                    $this->compteA->getPriveOrPublicToString() => $this->compteA->getPriveOrPublic(),
-                    $this->compteB->getPriveOrPublicToString() => $this->compteB->getPriveOrPublic()
+                    $this->compteA->getCompteComptableClient(),
+                    $this->compteB->getCompteComptableClient(),
+                ],
+            ]);
+        }
+        if ($this->doDisplayField('compteComptableFournisseur')) {
+            $builder->add('compteComptableFournisseur', EntityType::class, [
+                'class' => CompteComptable::class,
+                'choice_label' => 'nom',
+                'expanded' => true,
+                'constraints' => new NotNull(),
+                'choices' => [
+                    $this->compteA->getCompteComptableFournisseur(),
+                    $this->compteB->getCompteComptableFournisseur(),
+                ],
+            ]);
+        }
+    }
+
+    /**
+     * Add a field to the form, if required
+     * 
+     * @param string $field
+     * @param string $keyField
+     */
+    private function addChoicesField($field, $keyField = null)
+    {
+        if ($this->doDisplayField($field)) {
+            $method = 'get' . ucfirst($field);
+            $keyMethod = $keyField ? 'get' . ucfirst($keyField) : null;
+            if (!$keyMethod || !method_exists(Compte::class, $keyMethod)) {
+                $keyMethod = $method;
+            }
+            $this->builder->add($field, ChoiceType::class, [
+                'choices' => [
+                    $this->compteA->$keyMethod() => $this->compteA->$method(),
+                    $this->compteB->$keyMethod() => $this->compteB->$method(),
                 ],
                 'expanded' => true,
-            ]);
-        }
-        if ($this->doDisplayField($a, $b, 'compteComptableClient')) {
-            $builder->add('compteComptableClient', ChoiceType::class, [
-                'choices' => [
-                    $this->compteA->getCompteComptableClient()->getNom() => $this->compteA->getCompteComptableClient(),
-                    $this->compteB->getCompteComptableClient()->getNom() => $this->compteB->getCompteComptableClient()
-                ],
-                'expanded' => true,
-            ]);
-        }
-        if ($this->doDisplayField($a, $b, 'compteComptableFournisseur')) {
-            $builder->add('compteComptableFournisseur', ChoiceType::class, [
-                'choices' => [
-                    $this->compteA->getCompteComptableFournisseur()->getNom() => $this->compteA->getCompteComptableFournisseur(),
-                    $this->compteB->getCompteComptableFournisseur()->getNom() => $this->compteB->getCompteComptableFournisseur()
-                ],
-                'expanded' => true,
+                'constraints' => new NotNull(),
             ]);
         }
     }
@@ -118,23 +96,16 @@ class CompteFusionnerType extends AbstractType
     /**
      * Return true if a given field must be displayed in the form
      * 
-     * @param Compte $a
-     * @param Compte $b
-     * @param type $field
+     * @param string $field
      * 
      * @return boolean
      */
-    private function doDisplayField(Compte $a, Compte $b, $field){
-        $method = 'get' . ucfirst($field);
-        if(method_exists(Compte::class, $method) && $a->$method() && $b->$method() && $a->$method() !== $b->$method()){
-            
-            return true;
-        }
-        
-        return false;
+    private function doDisplayField($field)
+    {
+        return CompteService::needToChooseField($this->compteA, $this->compteB, $field);
     }
 
-        /**
+    /**
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)

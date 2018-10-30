@@ -1,21 +1,49 @@
 <div class="modal-content">
-<div class="modal-header">
-    <a class="close" data-dismiss="modal">×</a>
-    <h3>Fusionner : "{{ compteA.nom ~ '" avec "' ~ compteB.nom }}"</h3>
-</div>
-<div class="modal-body">
-    <h4>Choisir les données à conserver</h4>        
-    <div class="row">
-        {{ form_start(compteFusionnerForm, {attr:{class:'col-md-12'}}) }}
-        {{ form_end(compteFusionnerForm) }}
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>Fusionner : "{{ compteA.nom ~ '" avec "' ~ compteB.nom }}"</h3>
     </div>
-</div>
+    <div class="modal-body">
+        <h4>Choisir les données à conserver</h4>        
+        <div id="compte-fusionner-form-container" class="row">
+            {{ form_start(compteFusionnerForm, {action: path('crm_compte_fusionner_recapitulatif_modal', {'idCompteA' : compteA.id, 'idCompteB' : compteB.id}), attr:{class:'col-md-12'}}) }}
+            {{ form_end(compteFusionnerForm) }}
+        </div>
+        <br>
+        <div class="row">   
+            <div class="col-md-12">
+                <button id="submit" class="btn btn-success">Valider</button>
+            </div>
+        </div>     
+    </div>
 
-<style>
-</style>        
-        
-<script type="text/javascript">
-    $(document).ready(function () {
-    });
-</script>
+    <style>
+        #compte-fusionner-form-container{
+            max-height: 400px;
+            overflow-y: auto;
+        }      
+    </style>        
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#submit').on('click', function () {
+                var compteFusionnerForm = $('form[name=appbundle_crm_compte_fusionner]');
+                var compteFusionnerFormData = new FormData(compteFusionnerForm[0]);
+                $.ajax({
+                    url: compteFusionnerForm.attr('action'),
+                    method: compteFusionnerForm.attr('method'),
+                    processData: false,
+                    contentType: false,
+                    data: compteFusionnerFormData,
+                    dataType: "json",
+                    success: function (data, success) {
+                        window.location.reload();
+                    },
+                    error: function () {
+                        alert('Une erreur est survenue, merci de réessayer');
+                    }
+                });
+            });
+        });
+    </script>
 </div>

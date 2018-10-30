@@ -28,6 +28,8 @@ use AppBundle\Form\SettingsType;
 use AppBundle\Form\CRM\CompteImportType;
 use AppBundle\Form\CRM\CompteImportMappingType;
 
+use AppBundle\Service\CRM\CompteService;
+
 use AppBundle\Entity\Compta\CompteComptable;
 
 use libphonenumber\PhoneNumberFormat;
@@ -210,9 +212,21 @@ class CompteController extends Controller
             $compteRepository = $this->getDoctrine()->getRepository(Compte::class);
             $compteA = $compteRepository->find($idCompteA);
             $compteB = $compteRepository->find($idCompteB);
+            $newCompte = new Compte();
             if($compteA && $compteB){
-                $newCompte = new Compte();
-                $compteFusionnerForm = $this->createForm(new CompteFusionnerType($compteA, $compteB), $newCompte, []);   
+                $compteFusionnerForm = $this->createForm(new CompteFusionnerType($compteA, $compteB), $newCompte, []); 
+                $compteFusionnerForm->handleRequest($request);
+                if($compteFusionnerForm->isSubmitted() && $compteFusionnerForm->isValid()){
+                    /* @var $compteService CompteService */
+                    $compteService = $this->get('appbundle.crm_compte_service');
+                    if($compteService->mergeComptes($compteA, $compteB, $newCompte)){
+                        
+                        return new JsonResponse(['success' => true], Response::HTTP_OK);
+                    }else{
+                        
+                        return new JsonResponse(['success' => false], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }
+                }
                 
                 return $this->render('crm/compte/crm_compte_fusionner_recap_modal.html.twig', [
                     'compteFusionnerForm' => $compteFusionnerForm->createView(),

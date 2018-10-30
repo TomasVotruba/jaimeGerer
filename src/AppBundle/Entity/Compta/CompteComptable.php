@@ -71,22 +71,22 @@ class CompteComptable
     private $reportCredit;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="compteComptable")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="compteComptable", cascade={"all"})
      */
     private $journalVentes;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalAchat", mappedBy="compteComptable")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalAchat", mappedBy="compteComptable", cascade={"all"})
      */
     private $journalAchats;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalBanque", mappedBy="compteComptable")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalBanque", mappedBy="compteComptable", cascade={"all"})
      */
     private $journalBanque;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\OperationDiverse", mappedBy="compteComptable")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\OperationDiverse", mappedBy="compteComptable", cascade={"all"})
      */
     private $operationsDiverses;
 
