@@ -54,9 +54,15 @@ class CompteService
                 }
             }
         }
+        $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
         // Description
-        $userName = $this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUsername() ? $this->tokenStorage->getToken()->getUsername() : 'Inconnu';
+        $userName = $user ? $this->tokenStorage->getToken()->getUsername() : 'Inconnu';
         $compteA->setDescription($compteA->getDescription() . ' -- ' . $compteA->getNom() . ' fusionné avec ' . $compteB->getNom() . ' le ' . (new \DateTime())->format('d/m/Y') . ' par ' . $userName . ' -- ' .$compteB->getDescription());
+        // Modifié le / par
+        if($user){
+            $compteA->setUserEdition($user);
+        }
+        $compteA->setDateEdition(new \DateTime());
         // Compte comptable client : Journal de ventes, achats, banque, operations diverses
         if($compteA->getCompteComptableClient() && $compteB->getCompteComptableClient() && $compteA->getCompteComptableClient() !== $compteB->getCompteComptableClient()){
             if(!$compteComptableClientToKeep){
