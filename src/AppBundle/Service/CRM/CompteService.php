@@ -132,10 +132,12 @@ class CompteService
             $this->em->beginTransaction();
             $this->em->flush();
             $this->em->remove($compteB);
+            $this->em->flush();
             $this->em->commit();
             
             return true;
         }catch(\Exception $e){
+            $this->em->rollback();
             $this->logger->critical('Error while merging Comptes ' . $compteA->getId() . ' and ' . $compteB->getNom() . ' : ' . $e->getMessage());
             
             return false;

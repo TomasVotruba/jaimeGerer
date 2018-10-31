@@ -90,7 +90,6 @@ class CompteComptable
      */
     private $operationsDiverses;
 
-
     /**
      * Constructor
      */
