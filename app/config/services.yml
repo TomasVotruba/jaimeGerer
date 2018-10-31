@@ -149,4 +149,4 @@ services:
         
     appbundle.crm_compte_service:
         class: AppBundle\Service\CRM\CompteService
-        arguments: [ "@doctrine.orm.entity_manager"]
+        arguments: [ "@doctrine.orm.entity_manager", "@security.token_storage", "@logger"]

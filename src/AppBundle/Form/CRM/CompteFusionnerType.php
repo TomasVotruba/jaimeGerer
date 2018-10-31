@@ -43,7 +43,8 @@ class CompteFusionnerType extends AbstractType
         $this->addChoicesField('priveOrPublic', 'priveOrPublicToString');
 
         if ($this->doDisplayField('compteComptableClient')) {
-            $builder->add('compteComptableClient', EntityType::class, [
+            $builder->add('compteComptableClientToKeep', EntityType::class, [
+                'mapped' => false,
                 'class' => CompteComptable::class,
                 'choice_label' => 'nom',
                 'expanded' => true,
@@ -55,7 +56,8 @@ class CompteFusionnerType extends AbstractType
             ]);
         }
         if ($this->doDisplayField('compteComptableFournisseur')) {
-            $builder->add('compteComptableFournisseur', EntityType::class, [
+            $builder->add('compteComptableFournisseurToKeep', EntityType::class, [
+                'mapped' => false,
                 'class' => CompteComptable::class,
                 'choice_label' => 'nom',
                 'expanded' => true,

@@ -193,7 +193,7 @@ class DocumentPrix
     private $cgv;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="documentPrixs")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
      */

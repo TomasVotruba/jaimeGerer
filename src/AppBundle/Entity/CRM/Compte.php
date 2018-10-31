@@ -185,7 +185,37 @@ class Compte
      * @ORM\Column(name="prive_or_public", type="string", nullable=true)
      */
     private $priveOrPublic;
+    
+    /**
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\DocumentPrix", mappedBy="compte", cascade={"persist", "remove"})
+    */    
+    private $documentPrixs;
 
+    /**
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\Opportunite", mappedBy="compte", cascade={"persist", "remove"})
+    */    
+    private $opportunites;
+
+    /**
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\Contact", mappedBy="compte", cascade={"persist", "remove"})
+    */    
+    private $contacts;
+
+    /**
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\Depense", mappedBy="compte", cascade={"persist", "remove"})
+    */ 
+    private $depenses;
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->documentPrixs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->opportunites = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
+    }    
+    
     /**
      * Set id
      *
@@ -749,5 +779,141 @@ class Compte
         }
 
         return 'N/A';
+    }
+    
+    /**
+     * Add documentPrix
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $documentPrix
+     * @return Compte
+     */
+    public function addDocumentPrix(\AppBundle\Entity\CRM\DocumentPrix $documentPrix)
+    {
+    	$documentPrix->setCompte($this);
+        $this->documentPrixs[] = $documentPrix;
+
+        return $this;
+    }
+
+    /**
+     * Remove documentPrix
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $documentPrix
+     */
+    public function removeDocumentPrix(\AppBundle\Entity\CRM\DocumentPrix $documentPrix)
+    {
+        $this->documentPrixs->removeElement($documentPrix);
+    }
+
+    /**
+     * Get documentPrix
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDocumentPrixs()
+    {
+        return $this->documentPrixs;
+    }    
+
+    /**
+     * Add opportunites
+     *
+     * @param \AppBundle\Entity\CRM\Opportunite $opportunite
+     * @return Compte
+     */
+    public function addOpportunite(\AppBundle\Entity\CRM\Opportunite $opportunite)
+    {
+        $opportunite->setCompte($this);
+        $this->opportunites[] = $opportunite;
+
+        return $this;
+    }
+
+    /**
+     * Remove opportunites
+     *
+     * @param \AppBundle\Entity\CRM\Opportunite $opportunite
+     */
+    public function removeOpportunite(\AppBundle\Entity\CRM\Opportunite $opportunite)
+    {
+        $this->opportunites->removeElement($opportunite);
+    }
+
+    /**
+     * Get opportunites
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOpportunites()
+    {
+        return $this->opportunites;
+    }
+
+    /**
+     * Add contact
+     *
+     * @param \AppBundle\Entity\CRM\Contact $contact
+     * @return Compte
+     */
+    public function addContact(\AppBundle\Entity\CRM\Contact $contact)
+    {
+        $contact->setCompte($this);
+        $this->contacts[] = $contact;
+
+        return $this;
+    }
+
+    /**
+     * Remove contacts
+     *
+     * @param \AppBundle\Entity\CRM\Contact $contact
+     */
+    public function removeContact(\AppBundle\Entity\CRM\Contact $contact)
+    {
+        $this->contacts->removeElement($contact);
+    }
+
+    /**
+     * Get contacts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getContacts()
+    {
+        return $this->contacts;
+    }
+
+    /**
+     * Add depenses
+     *
+     * @param \AppBundle\Entity\Compta\Depense $depense
+     * @return Compte
+     */
+    public function addDepense(\AppBundle\Entity\Compta\Depense $depense)
+    {
+        $depense->setCompte($this);
+        $this->depenses[] = $depense;
+
+        return $this;
+    }
+
+    /**
+     * Remove depenses
+     *
+     * @param \AppBundle\Entity\Compta\Depense $depense
+     */
+    public function removeDepense(\AppBundle\Entity\Compta\Depense $depense)
+    {
+        $this->depenses->removeElement($depense);
+    }
+
+    /**
+     * Get depense
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDepenses()
+    {
+        return $this->depenses;
     }
 }

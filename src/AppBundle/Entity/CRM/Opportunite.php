@@ -124,7 +124,7 @@ class Opportunite
 
 
   /**
-   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte")
+   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="opportunites")
    * @ORM\JoinColumn(nullable=false)
    * @Assert\NotBlank()
    */
