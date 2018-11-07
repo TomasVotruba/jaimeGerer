@@ -94,63 +94,68 @@
 			var numberWarning = 0;
 			var i = 0;
 
+			var contacts = [];
 			{% for contact in arr_contacts %}
+				contacts.push("{{ contact.id }}");
+		  	{% endfor %}
+		  	
+			checkBounce(0, contacts);
 
-				var contact_id = "{{ contact.id }}";
+			function checkBounce(i, contacts){
+				var results;
+				var contact_id = contacts[i];
 
 				$.ajax({
 			    	type: "GET",
 			        url: Routing.generate('crm_contact_verifier_bounce', {'id' : contact_id}),
 			       	success: function(data)
 			        {
-			        	numberIgnored+= data.ignored; 
-			        	numberBounce+= data.bounce; 
-			        	numberValid+= data.valid; 
-			        	numberWarning+= data.warning; 
-
-			        	numberChecked++;
-			        	var percent = Math.round(numberChecked/numberContacts*100);
-			        	$('.progress-bar').css('width', percent+'%');
-			        	$('#progress-percent').text( percent );
-
-			        	if(percent == 100){
-			        		$('.progress-bar').removeClass('progress-bar-striped active');
-							$('.progress-bar').addClass('progress-bar-success');
-							$('#actions-buttons a').attr('disabled', false);
-
-							$('#number-checked').text(numberChecked);
-							$('#number-bounce').text(numberBounce);
-							$('#number-valid').text(numberValid);
-							$('#number-warning').text(numberWarning);
-							$('#number-ignored').text(numberIgnored);
-
-							$('.wrapper-results').removeClass('hidden');
-
-							var g = new JustGage({
-							    id: "gauge",
-							    value: Math.round(numberBounce/(numberChecked-numberIgnored)*100),
-							    min: 0,
-							    max: 100,
-							    title: "Taux de bounces",
-							    levelColors: ["a9d60c", "f8c700", "ff0000"],
-							    levelColorsGradient: false,
-							    label: "%"
-							});
-						}
-
+			        	updateView(data);
+			        	if(i<contacts.length){
+			        		i++;
+			        		checkBounce(i, contacts);
+			        	}
+			        	
 					}
 		        });
+			}
 
-			{% endfor %}
+			function updateView(data){
+				numberIgnored+= data.ignored; 
+		    	numberBounce+= data.bounce; 
+		    	numberValid+= data.valid; 
+		    	numberWarning+= data.warning; 
 
-			
+		    	numberChecked++;
+		    	var percent = Math.round(numberChecked/numberContacts*100);
+		    	$('.progress-bar').css('width', percent+'%');
+		    	$('#progress-percent').text( percent );
 
+		    	if(percent == 100){
+		    		$('.progress-bar').removeClass('progress-bar-striped active');
+					$('.progress-bar').addClass('progress-bar-success');
+					$('#actions-buttons a').attr('disabled', false);
+
+					$('#number-checked').text(numberChecked);
+					$('#number-bounce').text(numberBounce);
+					$('#number-valid').text(numberValid);
+					$('#number-warning').text(numberWarning);
+					$('#number-ignored').text(numberIgnored);
+
+					$('.wrapper-results').removeClass('hidden');
+
+					var g = new JustGage({
+					    id: "gauge",
+					    value: Math.round(numberBounce/(numberChecked-numberIgnored)*100),
+					    min: 0,
+					    max: 100,
+					    title: "Taux de bounces",
+					    levelColors: ["a9d60c", "f8c700", "ff0000"],
+					    levelColorsGradient: false,
+					    label: "%"
+					});
+				}
+			}
 		});
-
-		{# 
-			
-		#}
-
-
 	</script>
 {% endblock %}
