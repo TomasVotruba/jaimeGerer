@@ -1002,6 +1002,7 @@ class ContactController extends Controller
 	public function verifierBounce(Contact $contact, $redirectToContact = 0){
 
 		$response = new JsonResponse();
+
 		$arr_result = array(
 			'ignored' => 0, 
 			'bounce' => 0, 

@@ -107,17 +107,14 @@
 
 				$.ajax({
 			    	type: "GET",
-			        url: Routing.generate('crm_contact_verifier_bounce', {'id' : contact_id}),
-			       	success: function(data)
-			        {
-			        	updateView(data);
-			        	if(i<contacts.length){
-			        		i++;
-			        		checkBounce(i, contacts);
-			        	}
-			        	
-					}
-		        });
+			        url: Routing.generate('crm_contact_verifier_bounce', {'id' : contact_id})
+		        }).always(function(data) {
+			  		updateView(data);
+		        	if(i<contacts.length){
+		        		i++;
+		        		checkBounce(i, contacts);
+		        	}
+				});
 			}
 
 			function updateView(data){
