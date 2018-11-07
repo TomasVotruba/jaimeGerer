@@ -4,6 +4,7 @@ namespace AppBundle\Service\CRM;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Psr\Log\LoggerInterface;
+use AppBundle\Entity\User;
 use AppBundle\Entity\CRM\Compte;
 use AppBundle\Entity\Compta\CompteComptable;
 
@@ -39,6 +40,13 @@ class CompteService
      */
     public function mergeComptes(Compte $compteA, Compte $compteB, CompteComptable $compteComptableClientToKeep = null, CompteComptable $compteComptableFournisseurToKeep = null)
     {
+        // Is the user allowed to merge A & B ?
+        /* @var $user User */
+        $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
+        if(!$user || $user->getCompany() !== $compteA->getCompany() || $user->getCompany() !== $compteB->getCompany()){
+            // L'utilisateur n'a pa les droits de merger ces 2 comptes
+            return false;
+        }
         // Check params validity
         if(!$this->checkMergeParams($compteA, $compteB)){
             // Il faut sélectionner les champs à garder
@@ -54,9 +62,8 @@ class CompteService
                 }
             }
         }
-        $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
         // Description
-        $userName = $user ? $this->tokenStorage->getToken()->getUsername() : 'Inconnu';
+        $userName = $user ? $user->getUsername() : 'Inconnu';
         $compteA->setDescription($compteA->getDescription() . ' -- ' . $compteA->getNom() . ' fusionné avec ' . $compteB->getNom() . ' le ' . (new \DateTime())->format('d/m/Y') . ' par ' . $userName . ' -- ' .$compteB->getDescription());
         // Modifié le / par
         if($user){

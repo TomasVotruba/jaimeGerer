@@ -1,0 +1,85 @@
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Fusionner : "{{ contact.fullName }}"</h3>
+</div>
+<div class="modal-body">
+    <h4>Rechercher un contact à fusionner</h4>        
+    <input type="text" id="search-contact" class="form-control"/>
+    <br>
+    <div class="row">
+        <div id="search-contact-results" class="col-md-12">
+            {# ici seront affichés les résultats de la recherche de contacts à fusionner #}
+        </div>   
+    </div>
+    <br>
+    <div class="row">   
+        <div class="col-md-12">
+            <button id="next-step-doublon" style="display:none;" class="btn btn-success next-step">Fusionner en mode "Doublon"</button>
+            <button id="next-step-evolution" style="display:none;" class="btn btn-success next-step">Fusionner en mode "Evolution"</button>
+        </div>
+    </div>        
+</div>
+
+<style>
+    #search-contact-results{
+        max-height: 400px;
+        overflow-y: auto;
+    }            
+</style>        
+        
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Search for some 'contacts' to merge
+        var ajaxSearch;
+        $('#search-contact').on('keyup change', function () {
+            $('.next-step').hide();
+            if(ajaxSearch){
+                ajaxSearch.abort();
+            }
+            let search = $(this).val().trim();
+            if(search){
+                ajaxSearch = $.ajax({
+                    url: "{{ path('crm_contact_fusionner_rechercher', {'id' : contact.id}) }}",
+                    data: {'search' : search},
+                    success: function (data, status) {
+                        if(status === 'success'){
+                            $('#search-contact-results').html(data);
+                        }else{
+                            $('#search-contact-results').html('');
+                        }
+                    },
+                    error: function(){
+                        $('#search-contact-results').html('');
+                    }
+                });
+            }
+        });
+        
+        // Display the submits btn
+        $(document).on('change', 'input[name=contact-a-fusionner]', function(){
+            $('.next-step').show();
+        });
+        
+        // Open recapitulatif modal for doublon
+        $('#next-step-doublon').on('click', function(){
+            let idCompteB = $('input[name=contact-a-fusionner]:checked').val();
+            if(idCompteB){
+                $('#modal').toggle();
+                $('#fusionner-recapitulatif-modal').modal({
+                    remote: Routing.generate('crm_contact_fusionner_recapitulatif_modal', {'idCompteA' : {{ contact.id }}, 'idCompteB' : idCompteB})
+                });
+            }
+        });
+
+        // Open recapitulatif modal for evolution
+        $('#next-step-evolution').on('click', function(){
+            let idCompteB = $('input[name=contact-a-fusionner]:checked').val();
+            if(idCompteB){
+                $('#modal').toggle();
+                $('#fusionner-recapitulatif-modal').modal({
+                    remote: Routing.generate('crm_contact_fusionner_recapitulatif_modal', {'idCompteA' : {{ contact.id }}, 'idCompteB' : idCompteB})
+                });
+            }
+        });
+    });
+</script>

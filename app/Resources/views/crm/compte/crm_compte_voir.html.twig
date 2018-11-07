@@ -256,7 +256,19 @@
 	  {{ include('crm/opportunite/crm_opportunite_liste_part.html.twig', {'arr_opportunites': arr_opportunites, 'div_id': 'table_opportunites'}) }}
 	  {{ include('crm/devis/crm_devis_liste_part.html.twig', {'arr_devis': arr_devis, 'div_id': 'table_devis'}) }}
 	  {{ include('crm/facture/crm_facture_liste_part.html.twig', {'arr_facture': arr_factures, 'div_id': 'table_factures'}) }}
+      
+{% endblock %}
 
+{% block additionalModals %}      
+    <div class="modal" id="fusionner-recapitulatif-modal" data-focus-on="input:first">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>    
+{% endblock additionalModals%}
+
+{% block javascripts %} 
+    {{ parent() }}
       <script>
           /* Create a fixed menu on scroll for /voir */
               $(document).ready(function() {
@@ -273,14 +285,5 @@
                       }
               );
               });
-      </script>      
-      
-{% block additionalModals %}      
-    <div class="modal" id="fusionner-recapitulatif-modal" data-focus-on="input:first">
-        <div class="modal-dialog">
-            <div class="modal-content"></div>
-        </div>
-    </div>    
-{% endblock %}
-      
-{% endblock %}
+      </script> 
+{% endblock javascripts %} 

@@ -4,17 +4,19 @@
             <th>Nom</th>
             <th>Ville, région et pays</th>
             <th>Téléphone</th>
-            <th>Selectionner</th>
+            <th>✓</th>
         </tr>
     </thead>
     <tboby>
-    {% for compte in comptes %}
-        <tr>
-            <td>{{ compte.nom }}</td>
-            <td>{{ compte.ville }}, {{ compte.region }},{{ compte.pays }}</td>
-            <td>{{ compte.telephone }}</td>
-            <td><input name="compte-a-fusionner" type="radio" value="{{ compte.id }}"/></td>
-        </tr>
-    {% endfor %} 
-    </tbody>
+        {% for compte in comptes %}
+            <tr>
+                <td>{{ compte.nom }}</td>
+                <td>{{ compte.ville }}, {{ compte.region }}, {{ compte.pays }}</td>
+                <td>{{ compte.telephone }}</td>
+                <td><input name="compte-a-fusionner" type="radio" value="{{ compte.id }}"/></td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5">Aucun résultat</td></tr>
+        {% endfor %} 
+        </tbody>
 </table>

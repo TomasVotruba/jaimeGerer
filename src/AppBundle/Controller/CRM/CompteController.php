@@ -2,39 +2,23 @@
 
 namespace AppBundle\Controller\CRM;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use AppBundle\Entity\CRM\Compte;
-use AppBundle\Entity\CRM\Contact;
-use AppBundle\Entity\Settings;
-use AppBundle\Entity\Rapport;
 
 use AppBundle\Entity\CRM\CompteRepository;
 
 use AppBundle\Form\CRM\CompteType;
-use AppBundle\Form\CRM\CompteFilterType;
 use AppBundle\Form\CRM\CompteFusionnerType;
-use AppBundle\Form\CRM\ContactType;
-use AppBundle\Form\SettingsType;
 use AppBundle\Form\CRM\CompteImportType;
 use AppBundle\Form\CRM\CompteImportMappingType;
 
 use AppBundle\Service\CRM\CompteService;
-
-use AppBundle\Entity\Compta\CompteComptable;
-
-use libphonenumber\PhoneNumberFormat;
-
-use FOS\RestBundle\Controller\Annotations as Rest;
 
 class CompteController extends Controller
 {
@@ -212,7 +196,7 @@ class CompteController extends Controller
             $compteRepository = $this->getDoctrine()->getRepository(Compte::class);
             $compteA = $compteRepository->find($idCompteA);
             $compteB = $compteRepository->find($idCompteB);
-            if($compteA && $compteB){
+            if($compteA && $compteB && $compteA->getCompany() === $this->getUser()->getCompany() && $compteB->getCompany() === $this->getUser()->getCompany()){
                 $compteFusionnerForm = $this->createForm(new CompteFusionnerType($compteA, $compteB), $compteA, []); 
                 $compteFusionnerForm->handleRequest($request);
                 if($compteFusionnerForm->isSubmitted() && $compteFusionnerForm->isValid()){

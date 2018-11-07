@@ -1,0 +1,37 @@
+<table id="search-contact-results-listing" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Organisation et titre</th>
+            <th>Ville, région et pays</th>
+            <th>Téléphone et email</th>
+            <th>✓</th>
+        </tr>
+    </thead>
+    <tboby>
+        {% for contact in contacts %}
+            <tr>
+                <td>{{ contact.fullName }}</td>
+                <td>{{ contact.compte ? contact.compte.nom : '' }}, {{ contact.titre }}</td>
+                <td>{{ contact.ville }}, {{ contact.region }}, {{ contact.pays }}</td>
+                <td>
+                    {% if contact.telephoneFixe %}
+                        F: {{ contact.telephoneFixe }}<br>
+                    {% endif %}
+                    {% if contact.telephonePortable %}
+                        P: {{ contact.telephonePortable }}<br>
+                    {% endif %}
+                    {% if contact.telephoneAutres %}
+                        A: {{ contact.telephoneAutres }}<br>
+                    {% endif %}
+                    {% if contact.email %}
+                        @: {{ contact.email }}
+                    {% endif %}
+                </td>
+                <td><input name="contact-a-fusionner" type="radio" value="{{ contact.id }}"/></td>
+            </tr>
+        {% else %}
+            <tr><td colspan="5">Aucun résultat</td></tr>
+        {% endfor %} 
+        </tbody>
+</table>

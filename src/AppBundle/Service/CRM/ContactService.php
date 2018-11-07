@@ -16,6 +16,9 @@ use AppBundle\Entity\CRM\Contact;
 
 class ContactService extends ContainerAware {
 
+    const MERGE_MODE_DOUBLON = "DOUBLON";
+    const MERGE_MODE_EVOLUTION = "EVOLUTION";
+    
     protected $em;
     protected $requestStack;
     protected $rootDir;
@@ -517,5 +520,31 @@ class ContactService extends ContainerAware {
         }
         return true;
     }
+    
+    /**
+     * Tell if 2 Contacts can be merged together
+     * 
+     * @param Contact $contactA
+     * @param Contact $contactB
+     * @param string $mode self::MERGE_MODE_DOUBLON | self:MERGE_MODE_EVOLUTION
+     * 
+     * @return boolean
+     */
+    public function canContactsBeMerged(Contact $contactA, Contact $contactB, $mode)
+    {
+        switch ($mode) {
+            case self::MERGE_MODE_EVOLUTION:
 
+                return true;
+            case self::MERGE_MODE_DOUBLON:
+                if ($contactA->getCompte() !== $contactB->getCompte()) {
+                    //@TODO
+                }
+
+                return false;
+            default:
+
+                return false;
+        }
+    }
 }

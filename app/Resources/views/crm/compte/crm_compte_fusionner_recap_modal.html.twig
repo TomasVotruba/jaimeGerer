@@ -26,7 +26,13 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            var fusionAjaxInProgress = false;
+            if(fusionAjaxInProgress){
+                
+                return;
+            }
             $('#submit').on('click', function () {
+                fusionAjaxInProgress = true;
                 var compteFusionnerForm = $('form[name=appbundle_crm_compte_fusionner]');
                 var compteFusionnerFormData = new FormData(compteFusionnerForm[0]);
                 $.ajax({
@@ -41,6 +47,9 @@
                     },
                     error: function () {
                         alert('Une erreur est survenue, merci de réessayer');
+                    },
+                    complete: function() {
+                        fusionAjaxInProgress = false;
                     }
                 });
             });

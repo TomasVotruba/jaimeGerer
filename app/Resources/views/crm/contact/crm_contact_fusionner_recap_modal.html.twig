@@ -1,0 +1,62 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>Fusionner : "{{ contactA.nom ~ '" avec "' ~ contactB.nom }}"</h3>
+    </div>
+    <div class="modal-body">
+        {% if contactFusionnerForm is not defined %}
+            <h4>Désolé, ces contacts ne peuvent pas être fusionné ensemble</h4>
+        {% else %}
+            <h4>Choisir les données à conserver</h4>        
+            <div id="contact-fusionner-form-container" class="row">
+                {{ form_start(contactFusionnerForm, {action: path('crm_contact_fusionner_recapitulatif_modal', {'idContactA' : contactA.id, 'idContactB' : contactB.id}), attr:{class:'col-md-12'}}) }}
+                {{ form_end(contactFusionnerForm) }}
+            </div>
+            <br>
+            <div class="row">   
+                <div class="col-md-12">
+                    <button id="submit" class="btn btn-success">Valider</button>
+                </div>
+            </div>     
+        </div>
+
+        <style>
+            #contact-fusionner-form-container{
+                max-height: 400px;
+                overflow-y: auto;
+            }      
+        </style>        
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var fusionAjaxInProgress = false;
+                if (fusionAjaxInProgress) {
+
+                    return;
+                }
+                $('#submit').on('click', function () {
+                    fusionAjaxInProgress = true;
+                    var contactFusionnerForm = $('form[name=appbundle_crm_contact_fusionner]');
+                    var contactFusionnerFormData = new FormData(contactFusionnerForm[0]);
+                    $.ajax({
+                        url: contactFusionnerForm.attr('action'),
+                        method: contactFusionnerForm.attr('method'),
+                        processData: false,
+                        contentType: false,
+                        data: contactFusionnerFormData,
+                        dataType: "json",
+                        success: function (data, success) {
+                            window.location.reload();
+                        },
+                        error: function () {
+                            alert('Une erreur est survenue, merci de réessayer');
+                        },
+                        complete: function () {
+                            fusionAjaxInProgress = false;
+                        }
+                    });
+                });
+            });
+        </script>
+    {% endif %}
+</div>
