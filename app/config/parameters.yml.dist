@@ -17,5 +17,5 @@ parameters:
     locale:            fr
 
     # A secret key that's used to generate certain security-related tokens
-    secret:            663c71dadf2fdf721b9b4623c106b3b4d
-    mautic_api_url: http://nicomak.mautic.net
+    secret:         mautic_secret
+    mautic_api_url: mautic_url
