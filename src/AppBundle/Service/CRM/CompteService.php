@@ -127,6 +127,10 @@ class CompteService
         foreach ($compteB->getDepenses() as $depense){
             $depense->setCompte($compteA);
         }        
+        // Si $compteB est parent d'autres comptes, changer ces relations
+        foreach ($compteB->getCompteEnfants() as $compteEnfant){
+            $compteEnfant->setCompteParent($compteA);
+        }
         
         try{
             $this->em->beginTransaction();

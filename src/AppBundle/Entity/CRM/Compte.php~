@@ -111,10 +111,15 @@ class Compte
     private $url;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="compteEnfants")
      * @ORM\JoinColumn(nullable=true)
      */
     private $compteParent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\Compte", mappedBy="compteParent")
+     */
+    private $compteEnfants;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
@@ -799,13 +804,10 @@ class Compte
      * Remove documentPrix
      *
      * @param \AppBundle\Entity\CRM\DocumentPrix $documentPrix
-     * @return Compte     
      */
     public function removeDocumentPrix(\AppBundle\Entity\CRM\DocumentPrix $documentPrix)
     {
         $this->documentPrixs->removeElement($documentPrix);
-        
-        return $this;
     }
 
     /**
@@ -884,5 +886,39 @@ class Compte
     public function getContacts()
     {
         return $this->contacts;
+    }
+
+    /**
+     * Add depenses
+     *
+     * @param \AppBundle\Entity\Compta\Depense $depense
+     * @return Compte
+     */
+    public function addDepense(\AppBundle\Entity\Compta\Depense $depense)
+    {
+        $depense->setCompte($this);
+        $this->depenses[] = $depense;
+
+        return $this;
+    }
+
+    /**
+     * Remove depenses
+     *
+     * @param \AppBundle\Entity\Compta\Depense $depense
+     */
+    public function removeDepense(\AppBundle\Entity\Compta\Depense $depense)
+    {
+        $this->depenses->removeElement($depense);
+    }
+
+    /**
+     * Get depense
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDepenses()
+    {
+        return $this->depenses;
     }
 }
