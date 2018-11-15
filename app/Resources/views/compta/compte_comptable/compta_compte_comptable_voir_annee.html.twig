@@ -25,7 +25,7 @@
 		 	<br />
 		 	<a  class="journal-commentaire"
 	            href="#"
-	            id="{{ ligne.codeJournal~ligne.id }}"
+	            id="commentaire-{{ ligne.codeJournal~ligne.id }}"
 	            data-type="text"
 	            data-pk="{{ ligne.id }}"
 	            data-url="{{ path('compta_compte_commenter', {
@@ -100,6 +100,20 @@
       		{% for ligne in arr_lignes %}
       			var id = "#{{ ligne.codeJournal~ligne.id }}";
 				$(id).editable({
+	                step: 'any',
+	                display: function(value, response) {
+	                    if (value != "Completer") {
+	                        if (value == "" || value == 0){
+	                            $(this).html("Completer");
+	                        } else {
+	                          $(this).html(value);
+	                        }
+	                    }
+	                }
+	            });
+
+	            var commentaireId = "#commentaire-{{ ligne.codeJournal~ligne.id }}";
+				$(commentaireId).editable({
 	                step: 'any',
 	                display: function(value, response) {
 	                    if (value != "Completer") {
