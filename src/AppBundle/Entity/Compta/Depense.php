@@ -785,7 +785,7 @@ class Depense
   		if($this->noteFrais != null){
   			return $this->libelle.' : '.$this->getTotalTTC().'€';
   		} else {
-  			return $this->compte->getNom().' : '.$this->getTotalTTC().'€';
+  			return $this->getNum().' - '.$this->compte->getNom().' : '.$this->getTotalTTC().'€';
   		}
 
   	}
