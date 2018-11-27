@@ -1145,26 +1145,27 @@ class TableauBordService extends ContainerAware {
 
   }
 
-  private function calculResultatExploitation($type){
+    private function calculResultatExploitation($type){
     
-    $cumul = 0;
-    $moisDebutPredictif = $this->getMoisDebutPredictif();
+        $cumul = 0;
+        $moisDebutPredictif = $this->getMoisDebutPredictif();
+        $currentYear = date('Y');
 
-    for($mois=1; $mois<=12; $mois++){
+        for($mois=1; $mois<=12; $mois++){
 
-      if($type == "predictif" && $mois < $moisDebutPredictif){
-        $resultat = $this->arr_totaux['accurate']['marge_brute'][$mois] - $this->arr_totaux['accurate']['couts_exploitation'][$mois] - $this->arr_totaux['accurate']['dotation_amortissements'][$mois];
-      } else {
-        $resultat = $this->arr_totaux[$type]['marge_brute'][$mois] - $this->arr_totaux[$type]['couts_exploitation'][$mois] - $this->arr_totaux[$type]['dotation_amortissements'][$mois];
-      }
+            if($type == "predictif" && $mois < $moisDebutPredictif && $year == $currentYear ){
+                $resultat = $this->arr_totaux['accurate']['marge_brute'][$mois] - $this->arr_totaux['accurate']['couts_exploitation'][$mois] - $this->arr_totaux['accurate']['dotation_amortissements'][$mois];
+            } else {
+                $resultat = $this->arr_totaux[$type]['marge_brute'][$mois] - $this->arr_totaux[$type]['couts_exploitation'][$mois] - $this->arr_totaux[$type]['dotation_amortissements'][$mois];
+            }
 
-      $cumul+=$resultat;
+            $cumul+=$resultat;
 
-      $this->arr_totaux[$type]['resultat_exploitation'][$mois] = $resultat;
-      $this->arr_totaux[$type]['resultat_exploitation_cumule'][$mois] = $cumul;
+            $this->arr_totaux[$type]['resultat_exploitation'][$mois] = $resultat;
+            $this->arr_totaux[$type]['resultat_exploitation_cumule'][$mois] = $cumul;
+        }
+
     }
-
-  }
 
   private function calculRatioResultatCA($type){
 
