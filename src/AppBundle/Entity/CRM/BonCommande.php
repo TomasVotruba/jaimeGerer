@@ -157,7 +157,8 @@ class BonCommande
     {
         $montant = 0;
         foreach($this->factures as $facture){
-            $montant+= intval($facture->getTotalHT()*100);
+    
+                $montant+= intval($facture->getTotalHTMoinsAvoirs()*100);
         }
         return $montant;
        
@@ -172,7 +173,7 @@ class BonCommande
     {
         $montant = 0;
         foreach($this->factures as $facture){
-           $montant+= $facture->getTotalHT();
+           $montant+= $facture->getTotalHTMoinsAvoirs();
         }
         return $montant;
        
