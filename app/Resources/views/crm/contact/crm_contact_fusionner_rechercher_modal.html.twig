@@ -38,6 +38,7 @@
             }
             let search = $(this).val().trim();
             if(search){
+                $('#search-contact-results').html('recherche...');
                 ajaxSearch = $.ajax({
                     url: "{{ path('crm_contact_fusionner_rechercher', {'id' : contact.id}) }}",
                     data: {'search' : search},
@@ -66,7 +67,7 @@
             if(idCompteB){
                 $('#modal').toggle();
                 $('#fusionner-recapitulatif-modal').modal({
-                    remote: Routing.generate('crm_contact_fusionner_recapitulatif_modal', {'idCompteA' : {{ contact.id }}, 'idCompteB' : idCompteB})
+                    remote: Routing.generate('crm_contact_fusionner_recapitulatif_modal', {'idContactA' : {{ contact.id }}, 'idContactB' : idCompteB, 'mode' : 'DOUBLON'})
                 });
             }
         });
@@ -77,7 +78,7 @@
             if(idCompteB){
                 $('#modal').toggle();
                 $('#fusionner-recapitulatif-modal').modal({
-                    remote: Routing.generate('crm_contact_fusionner_recapitulatif_modal', {'idCompteA' : {{ contact.id }}, 'idCompteB' : idCompteB})
+                    remote: Routing.generate('crm_contact_fusionner_recapitulatif_modal', {'idContactA' : {{ contact.id }}, 'idContactB' : idCompteB, 'mode' : 'EVOLUTION'})
                 });
             }
         });

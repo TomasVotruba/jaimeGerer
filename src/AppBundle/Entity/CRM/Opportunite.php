@@ -122,7 +122,6 @@ class Opportunite
    */
   private $settings;
 
-
   /**
    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="opportunites")
    * @ORM\JoinColumn(nullable=false)
@@ -131,7 +130,7 @@ class Opportunite
   private $compte;
 
   /**
-   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact")
+   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact", inversedBy="opportunites")
    * @ORM\JoinColumn(nullable=true)
    */
   private $contact;

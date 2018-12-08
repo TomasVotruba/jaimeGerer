@@ -278,7 +278,20 @@ class Contact
      * @ORM\Column(name="stop_bounce_warning", type="boolean")
      */
     private $stropBounceWarning = false;
+    
+    /**
+     * @var DocumentPrix[]
+     * 
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\DocumentPrix", mappedBy="contact")
+     */
+    private $documentsPrix;   
 
+    /**
+     * @var Opportunite[]
+     * 
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\Opportunite", mappedBy="contact")
+     */
+    private $opportunites;   
 
     /**
      * Set id
@@ -1181,5 +1194,71 @@ class Contact
     public function getStropBounceWarning()
     {
         return $this->stropBounceWarning;
+    }
+
+    /**
+     * Add documentsPrix
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $documentsPrix
+     * @return Contact
+     */
+    public function addDocumentsPrix(\AppBundle\Entity\CRM\DocumentPrix $documentsPrix)
+    {
+        $this->documentsPrix[] = $documentsPrix;
+
+        return $this;
+    }
+
+    /**
+     * Remove documentsPrix
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $documentsPrix
+     */
+    public function removeDocumentsPrix(\AppBundle\Entity\CRM\DocumentPrix $documentsPrix)
+    {
+        $this->documentsPrix->removeElement($documentsPrix);
+    }
+
+    /**
+     * Get documentsPrix
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDocumentsPrix()
+    {
+        return $this->documentsPrix;
+    }
+
+    /**
+     * Add opportunites
+     *
+     * @param \AppBundle\Entity\CRM\Opportunite $opportunites
+     * @return Contact
+     */
+    public function addOpportunite(\AppBundle\Entity\CRM\Opportunite $opportunites)
+    {
+        $this->opportunites[] = $opportunites;
+
+        return $this;
+    }
+
+    /**
+     * Remove opportunites
+     *
+     * @param \AppBundle\Entity\CRM\Opportunite $opportunites
+     */
+    public function removeOpportunite(\AppBundle\Entity\CRM\Opportunite $opportunites)
+    {
+        $this->opportunites->removeElement($opportunites);
+    }
+
+    /**
+     * Get opportunites
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOpportunites()
+    {
+        return $this->opportunites;
     }
 }

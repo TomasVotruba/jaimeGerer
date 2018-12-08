@@ -17,6 +17,7 @@ use AppBundle\Entity\CRM\PriseContact;
 use AppBundle\Entity\CRM\ContactRepository;
 
 use AppBundle\Form\CRM\ContactType;
+use AppBundle\Form\CRM\ContactFusionnerType;
 
 use AppBundle\Service\CRM\ContactService;
 
@@ -275,23 +276,21 @@ class ContactController extends Controller
      */
     public function contactFusionnerRecapitulatifAction(Request $request)
     {
-        if ((null !== $idContactA = $request->get('idContactA')) && (null !== $idContactB = $request->get('idContactB'))) {
+        if ((null !== $idContactA = $request->get('idContactA')) && (null !== $idContactB = $request->get('idContactB')) && (null !== $mode = $request->get('mode')) && in_array($mode, [ContactService::MERGE_MODE_DOUBLON, ContactService::MERGE_MODE_EVOLUTION])) {
             /* @var $contactRepository ContactRepository */
             $contactRepository = $this->getDoctrine()->getRepository(Contact::class);
             $contactA = $contactRepository->find($idContactA);
             $contactB = $contactRepository->find($idContactB);
-            // @TODO Quoi faire si un contact n'a pas de compte ?
+            // @TODO Quoi faire si un contact n'a pas de compte ? (vu avec Laura, ce n'est pas normal qu'il y ait des contacts sans comptes en base, en attendant que ce soit fixé je laisse le teste sur getCompte()
             if ($contactA && $contactB && $contactA->getCompte() && $contactB->getCompte() && $contactA->getCompte()->getCompany() === $this->getUser()->getCompany() && $contactB->getCompte()->getCompany() === $this->getUser()->getCompany()) {
                 /* @var $contactService ContactService */
                 $contactService = $this->get('appbundle.crm_contact_service');
                 if ($contactService->canContactsBeMerged($contactA, $contactB, $mode)) {
-                    $contactFusionnerForm = $this->createForm(new ContactFusionnerType());
+                    $contactFusionnerForm = $this->createForm(new ContactFusionnerType($contactA, $contactB));
                     $contactFusionnerForm->handleRequest($request);
                     if ($contactFusionnerForm->isSubmitted() && $contactFusionnerForm->isValid()) {
 
-                        $contactComptableClientToKeep = $contactFusionnerForm->has('_contactComptableClient') ? $contactFusionnerForm->get('_contactComptableClient')->getData() : null;
-                        $contactComptableFournisseurToKeep = $contactFusionnerForm->has('_contactComptableFournisseur') ? $contactFusionnerForm->get('_contactComptableFournisseur')->getData() : null;
-                        if ($contactService->mergeContacts($contactA, $contactB, $contactComptableClientToKeep, $contactComptableFournisseurToKeep)) {
+                        if ($contactService->mergeContacts($contactA, $contactB)) {
 
                             return new JsonResponse(['success' => true], Response::HTTP_OK);
                         } else {
@@ -303,6 +302,7 @@ class ContactController extends Controller
 
                 return $this->render('crm/contact/crm_contact_fusionner_recap_modal.html.twig', [
                         'contactFusionnerForm' => isset($contactFusionnerForm) ? $contactFusionnerForm->createView() : null,
+                        'mode' => $mode,
                         'contactA' => $contactA,
                         'contactB' => $contactB,
                 ]);

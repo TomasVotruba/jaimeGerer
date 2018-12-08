@@ -19,6 +19,7 @@ class CompteService
     private $em;
     private $tokenStorage;
     private $logger;
+    // Sames than into CompteFusionnerType
     private $fieldsToCheck = ['nom', 'telephone', 'adresse', 'ville', 'codePostal', 'region', 'pays', 'url', 'fax', 'codeEvoliz', 'priveOrPublic', 'compteComptableClient', 'compteComptableFournisseur'];
 
     public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage, LoggerInterface $logger)
@@ -52,6 +53,9 @@ class CompteService
             // Il faut sélectionner les champs à garder
             return false;
         }
+        // Description
+        $userName = $user ? $user->getUsername() : 'Inconnu';
+        $compteA->setDescription($compteA->getDescription() . ' -- ' . $compteA->getNom() . ' fusionné avec ' . $compteB->getNom() . ' le ' . (new \DateTime())->format('d/m/Y') . ' par ' . $userName . ' -- ' .$compteB->getDescription());        
         // Set data if missing
         foreach ($this->fieldsToCheck as $field){
             if(!self::needToChooseField($compteA, $compteB, $field)){
@@ -62,9 +66,6 @@ class CompteService
                 }
             }
         }
-        // Description
-        $userName = $user ? $user->getUsername() : 'Inconnu';
-        $compteA->setDescription($compteA->getDescription() . ' -- ' . $compteA->getNom() . ' fusionné avec ' . $compteB->getNom() . ' le ' . (new \DateTime())->format('d/m/Y') . ' par ' . $userName . ' -- ' .$compteB->getDescription());
         // Modifié le / par
         if($user){
             $compteA->setUserEdition($user);
@@ -145,14 +146,14 @@ class CompteService
             return true;
         }catch(\Exception $e){
             $this->em->rollback();
-            $this->logger->critical('Error while merging Comptes ' . $compteA->getId() . ' and ' . $compteB->getNom() . ' : ' . $e->getMessage());
+            $this->logger->critical('Error while merging Comptes ' . $compteA->getId() . ' and ' . $compteB->getId() . ' : ' . $e->getMessage());
             
             return false;
         }
     }
 
     /**
-     * Return true if data inside $newCompte is OK to be merged
+     * Return true if data between $compteA and $compteB is OK to be merged
      * 
      * @param Compte $compteA
      * @param Compte $compteB

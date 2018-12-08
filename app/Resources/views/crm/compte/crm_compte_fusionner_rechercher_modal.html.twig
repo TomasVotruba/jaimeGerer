@@ -37,6 +37,7 @@
             }
             let search = $(this).val().trim();
             if(search){
+                $('#search-compte-results').html('recherche...');
                 ajaxSearch = $.ajax({
                     url: "{{ path('crm_compte_fusionner_rechercher', {'id' : compte.id}) }}",
                     data: {'search' : search},

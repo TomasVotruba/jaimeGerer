@@ -30,6 +30,7 @@ class CompteFusionnerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->builder = $builder;
+        // Same fields then into CompteService $fieldsToCheck. However, not got them from there as we not necessary add them all the same way
         $this->addChoicesField('nom');
         $this->addChoicesField('telephone');
         $this->addChoicesField('adresse');
