@@ -36,8 +36,10 @@ class BonCommandeRepository extends EntityRepository
 			->setParameter('search', '%'.$search.'%');
 		}
 
-		$qb->andWhere('bc.num LIKE :year')
-		->setParameter('year', $year.'%');
+		if(strtolower($year) != "all"){
+			$qb->andWhere('bc.num LIKE :year')
+			->setParameter('year', $year.'%');
+		}
 
 		if($orderBy == null){
 			$orderBy = 'num';

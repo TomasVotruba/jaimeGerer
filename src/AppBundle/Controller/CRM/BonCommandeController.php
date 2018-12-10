@@ -57,7 +57,7 @@ class BonCommandeController extends Controller
 		$yearActivation = $activation->getDate()->format('Y');
 
 		$currentYear = date('Y');
-		$arr_years = array();
+		$arr_years = array('all' => 'Toutes les années');
 		for($i = $yearActivation ; $i<=$currentYear+1; $i++){
 			$arr_years[$i] = $i;
 		}
@@ -69,7 +69,7 @@ class BonCommandeController extends Controller
 					'label' => 'Année',
 					'choices' => $arr_years,
 					'attr' => array('class' => 'year-select'),
-					'data' => $currentYear
+					'data' => 'all'
 			))
 			->add('etat', 'choice', array(
 					'required' => true,
