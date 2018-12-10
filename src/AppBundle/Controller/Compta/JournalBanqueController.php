@@ -263,7 +263,6 @@ class JournalBanqueController extends Controller
 					$lettrage = $lettrageService->findNextNum($rapprochementBancaire->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur());
 					$ligne->setLettrage($lettrage);
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setLettrage($ligneJournalAchats->getLettrage());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 					$ligne->setNumEcriture($numEcriture);
 					$em->persist($ligne);
