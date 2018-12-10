@@ -504,13 +504,14 @@ class ContactRepository extends EntityRepository
 				->andWhere('co.company = :company')
 				->setParameter('company', $company);
 
-		if($emailing == true){
+		if($emailing == true && $bounce == false && $warning == false){
 			$query->andWhere('c.bounce = :bounce  OR c.bounce IS NULL')
 				->andWhere('c.email IS NOT NULL')
 				->andWhere('c.rejetEmail = :rejetEmail')
 				->setParameter('bounce', 'VALID')
 				->setParameter('rejetEmail', false);
 		} else {
+
 			if($bounce == true){
 				$query->andWhere('c.bounce = :bounce')
 					->setParameter('bounce', 'BOUNCE');
