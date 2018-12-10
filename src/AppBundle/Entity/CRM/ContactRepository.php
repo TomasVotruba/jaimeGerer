@@ -519,7 +519,7 @@ class ContactRepository extends EntityRepository
 
 		if($warning == true){
 			$query->andWhere('c.bounce = :warning')
-				->setParameter('bounce', 'WARNING');
+				->setParameter('warning', 'WARNING');
 		}
 
 		$result = $query->getQuery()->getResult();
