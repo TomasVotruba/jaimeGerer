@@ -40,7 +40,10 @@
 					<select class="select-depenses form-control">
 						<option value=""></option>
 						{% for depense in arr_depenses %}
-							<option value="{{ depense.id }}">{{ depense.compte }} : {{ depense.totalTTC }} €</option>
+							<option value="{{ depense.id }}">
+								{{ depense.compte }} : {{ depense.totalTTC }} €
+								{{ depense.compte|upper == "DIVERS" ? '('~depense.libelle~')' : '' }}
+							</option>
 						{% endfor %}
 					</select>
 				</div>

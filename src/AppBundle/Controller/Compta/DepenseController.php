@@ -1500,6 +1500,30 @@ class DepenseController extends Controller
 		));
 	}
 
+	/**
+	 * @Route("/compta/depense/get-liste",
+	 *   name="compta_depense_get_liste",
+	 *   options={"expose"=true}
+	 * )
+	 */
+	public function depenseGetListeAction() {
+
+		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Depense');
+
+		$list = $repository->findForCompany($this->getUser()->getCompany());
+
+		$res = array();
+		foreach ($list as $depense) {
+
+			$_res = array('id' => $depense->getId(), 'display' => $depense->getNum());
+			$res[] = $_res;
+		}
+
+		$response = new \Symfony\Component\HttpFoundation\Response(json_encode($res));
+		$response->headers->set('Content-Type', 'application/json');
+		return $response;
+	}
+
 	// /**
 	//  * @Route("/compta/depenses-corriger", name="compta_depenses_corriger")
 	//  */

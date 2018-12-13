@@ -465,4 +465,28 @@ class AvoirController extends Controller
 		));
 	}
 
+	/**
+	 * @Route("/compta/avoir/get-liste/{type}",
+	 *   name="compta_avoir_get_liste",
+	 *   options={"expose"=true}
+	 * )
+	 */
+	public function avoirGetListeAction($type) {
+
+		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\Avoir');
+
+		$list = $repository->findForCompany($type, $this->getUser()->getCompany());
+
+		$res = array();
+		foreach ($list as $avoir) {
+
+			$_res = array('id' => $avoir->getId(), 'display' => $avoir->getNum());
+			$res[] = $_res;
+		}
+
+		$response = new \Symfony\Component\HttpFoundation\Response(json_encode($res));
+		$response->headers->set('Content-Type', 'application/json');
+		return $response;
+	}
+
 }

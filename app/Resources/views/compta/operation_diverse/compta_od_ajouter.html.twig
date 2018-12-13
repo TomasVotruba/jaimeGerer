@@ -18,9 +18,25 @@
             {{ form_row(form.libelle) }}
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.pieceType) }}
+        </div>
+        <div class="col-md-6">
+            <div class="typeahead-container">
+                <div class="typeahead-field">
+                    <span class="typeahead-query">
+                        {{ form_row(form.piece) }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
      <div class="row">
-        <div class="col-md-12">
-            <strong>Débit</strong>
+        <div class="col-md-12 center">
+             <hr />
+            <strong>DEBIT</strong>
         </div>
     </div>
     <div class="row">
@@ -32,10 +48,10 @@
         </div>
     </div>
 
-       <div class="row">
-        <div class="col-md-12">
+    <div class="row">
+        <div class="col-md-12 center">
             <hr />
-            <strong>Crédit</strong>
+            <strong>CREDIT</strong>
         </div>
     </div>
 
@@ -47,6 +63,71 @@
             {{ form_row(form.credit) }}
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12 center">
+            {{ form_row(form.commentaire) }}
+        </div>
+    </div>
     {{ form_end(form) }}
 
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $('.piece-type').change(function(){
+
+                $('.typeahead-piece').val('');
+                $('.entity-facture').val('');
+                $('.entity-depense').val('');
+                $('.entity-avoir').val('');
+                
+                if($(this).val() == "NONE"){
+                    $('.typeahead-piece').attr('disabled', true);
+                } else {
+                    $('.typeahead-piece').attr('disabled', false);
+                    initTypeahead($(this).val() );
+                }
+                
+            });
+
+            function initTypeahead(type){
+                
+                var url = "";
+                var entity = "";
+
+                if(type == "FACTURE"){
+                    url = Routing.generate('compta_facture_get_liste');
+                    entity = $('.entity-facture');
+                } else if(type == "DEPENSE"){
+                    url = Routing.generate('compta_depense_get_liste');
+                    entity = $('.entity-depense');
+                } else if(type == "AVOIR-CLIENT"){
+                    url = Routing.generate('compta_avoir_get_liste', {'type' : 'CLIENT'});
+                    entity = $('.entity-avoir');
+                } else if(type == "AVOIR-FOURNISSEUR"){
+                    url = Routing.generate('compta_avoir_get_liste', {'type' : 'FOURNISSEUR'});
+                    entity = $('.entity-avoir');
+                }
+
+                $('.typeahead-piece').typeahead({
+                        order: "desc",
+                        accent: true,
+                        source: {
+                            url: url
+                        },
+                        callback: {
+                            onClickAfter: function(node, a, item, event) {
+                                entity.val(item.id);
+                            }
+                        },
+                        debug: true
+                });
+            }
+        });
+    </script>
 {% endblock %}

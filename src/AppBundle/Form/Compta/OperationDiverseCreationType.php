@@ -64,6 +64,50 @@ class OperationDiverseCreationType extends AbstractType
                     ->orderBy('c.num', 'ASC');
                 }
             ))
+            ->add('commentaire', 'text', array(
+                'required' => false,
+                'label' => 'Commentaire'
+            ))
+            ->add('pieceType', 'choice', array(
+                'required' => true,
+                'expanded' => false,
+                'multiple' => false,
+                'choices' => array(
+                    'NONE' => 'Aucune pièce',
+                    'FACTURE' => 'Facture',
+                    'DEPENSE' => 'Dépense',
+                    'AVOIR-CLIENT' => 'Avoir client',
+                    'AVOIR-FOURNISSEUR' => 'Avoir fournisseur'
+                ),
+                'mapped' => false,
+                'label' => 'Type de pièce',
+                'attr' => array('class' => 'piece-type')
+            ))
+            ->add('piece', 'text', array(
+                'required' => false,
+                'label' => 'Pièce (numéro)',
+                'mapped' => false,
+                'attr' => array('class' => 'typeahead-piece', 'autocomplete' => 'off'),
+                'disabled' => true
+            ))
+            ->add('facture', 'entity', array(
+                'attr' => array('class' => 'entity-facture hidden'),
+                'class' => 'AppBundle:CRM\DocumentPrix',
+                'required' => false,
+                'label_attr'=> array('class' => 'hidden')
+            ))
+            ->add('depense', 'entity', array(
+                'attr' => array('class' => 'entity-depense hidden'),
+                'class' => 'AppBundle:Compta\Depense',
+                'required' => false,
+                'label_attr'=> array('class' => 'hidden')
+            ))
+            ->add('avoir', 'entity', array(
+                'attr' => array('class' => 'entity-avoir hidden'),
+                'class' => 'AppBundle:Compta\Avoir',
+                'required' => false,
+                'label_attr'=> array('class' => 'hidden')
+            ))
             ->add('submit','submit', array(
                     'label' => 'Enregistrer',
                     'attr' => array('class' => 'btn btn-success')

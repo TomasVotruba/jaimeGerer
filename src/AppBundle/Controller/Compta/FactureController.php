@@ -1319,5 +1319,29 @@ class FactureController extends Controller
 		));
 	}
 
+	/**
+	 * @Route("/compta/facture/get-liste",
+	 *   name="compta_facture_get_liste",
+	 *   options={"expose"=true}
+	 * )
+	 */
+	public function factureGetListeAction() {
+
+		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
+
+		$list = $repository->findForCompany($this->getUser()->getCompany(), 'FACTURE');
+
+		$res = array();
+		foreach ($list as $facture) {
+
+			$_res = array('id' => $facture->getId(), 'display' => $facture->getNum());
+			$res[] = $_res;
+		}
+
+		$response = new \Symfony\Component\HttpFoundation\Response(json_encode($res));
+		$response->headers->set('Content-Type', 'application/json');
+		return $response;
+	}
+
 
 }
