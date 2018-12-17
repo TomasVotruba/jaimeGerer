@@ -228,6 +228,7 @@ class JournalVentesController extends Controller
 				'company' => $this->getUser()->getCompany()
 		));
 
+		$newNumEcriture = false;
 		if(!$numEcriture){
 			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 			$newNumEcriture = true;

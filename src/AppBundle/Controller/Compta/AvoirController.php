@@ -232,7 +232,7 @@ class AvoirController extends Controller
 			if($activationCompta){
 				//supprimer les lignes du journal de vente
 				$numEcriture = null;
-				if($type == "CLIENT"){
+				if($avoir->getType() == "CLIENT"){
 					
 					foreach($avoir->getJournalVentes() as $ligne){
 						$numEcriture = $ligne->getNumEcriture();
