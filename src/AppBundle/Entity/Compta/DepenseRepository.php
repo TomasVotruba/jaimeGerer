@@ -92,7 +92,7 @@ class DepenseRepository extends EntityRepository
 		->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
 		->leftJoin('AppBundle\Entity\Compta\LigneDepense', 'l', 'WITH', 'd.id = l.depense')
 		->where('c.company = :company')
-		->setParameter('company', $company;
+		->setParameter('company', $company);
 		if($orderByNum){
 			$qb->addOrderBy('d.num', 'DESC');
 		}
