@@ -240,7 +240,7 @@ class AvoirController extends Controller
 					}
 					//ecrire dans le journal de vente
 					$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
-					$result = $journalVenteService->journalVentesAjouterAvoirAction($numEcriture, $facture);
+					$result = $journalVenteService->journalVentesAjouterAvoirAction($numEcriture, $avoir);
 				} else {
 					foreach($avoir->getJournalAchats() as $ligne){
 						$numEcriture = $ligne->getNumEcriture();
@@ -248,7 +248,7 @@ class AvoirController extends Controller
 					}
 					//ecrire dans le journal des achats
 					$journalAchatService = $this->container->get('appbundle.compta_journal_achats_controller');
-					$result = $journalAchatService->journalAchatsAjouterAvoirAction($numEcriture, $facture);
+					$result = $journalAchatService->journalAchatsAjouterAvoirAction($numEcriture, $avoir);
 				}
 			}
 
