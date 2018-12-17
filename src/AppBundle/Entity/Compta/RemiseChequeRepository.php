@@ -16,7 +16,8 @@ class RemiseChequeRepository extends EntityRepository
 		$qb = $this->createQueryBuilder('r')
 		->leftJoin('AppBundle\Entity\Compta\CompteBancaire', 'c', 'WITH', 'c.id = r.compteBancaire')
 		->where('c.company = :company')
-		->setParameter('company', $company);
+		->setParameter('company', $company)
+		->addOrderBy('r.date', 'DESC');
 
 		return $qb->getQuery()->getResult();
 	}

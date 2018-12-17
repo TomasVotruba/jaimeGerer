@@ -93,7 +93,8 @@ class DepenseRepository extends EntityRepository
 		->leftJoin('AppBundle\Entity\Compta\LigneDepense', 'l', 'WITH', 'd.id = l.depense')
 		->where('c.company = :company')
 		->setParameter('company', $company)
-		->orderBy('c.nom', 'ASC')
+		->addOrderBy('d.num', 'DESC')
+		->addOrderBy('c.nom', 'ASC')
 		->addOrderBy('l.montant', 'ASC')
 		;
 
@@ -107,6 +108,7 @@ class DepenseRepository extends EntityRepository
 				->andWhere('d.date <= :dateFin')
 				->setParameter('dateFin', $dateEnd);
 		}
+
 
 		return $qb->getQuery()->getResult();
 	}

@@ -20,6 +20,7 @@ class AvoirRepository extends EntityRepository
 		->leftJoin('AppBundle\Entity\CRM\Compte', 'c2', 'WITH', 'c2.id = d.compte')
 		->where('c1.company = :company OR c2.company = :company')
 		->andWhere('a.type = :type')
+		->addOrderBy('a.num', 'DESC')
 		->setParameter('company', $company)
 		->setParameter('type', $type);
 
