@@ -87,16 +87,17 @@ class DepenseRepository extends EntityRepository
 		return $qb->getQuery()->getSingleScalarResult();
 	}
 
-	public function findForCompany($company, $dateRange = null){
+	public function findForCompany($company, $dateRange = null, $orderByNum = false){
 		$qb = $this->createQueryBuilder('d')
 		->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
 		->leftJoin('AppBundle\Entity\Compta\LigneDepense', 'l', 'WITH', 'd.id = l.depense')
 		->where('c.company = :company')
-		->setParameter('company', $company)
-		->addOrderBy('d.num', 'DESC')
-		->addOrderBy('c.nom', 'ASC')
-		->addOrderBy('l.montant', 'ASC')
-		;
+		->setParameter('company', $company;
+		if($orderByNum){
+			$qb->addOrderBy('d.num', 'DESC');
+		}
+		$qb->addOrderBy('c.nom', 'ASC')
+		->addOrderBy('l.montant', 'ASC');
 
 		if( is_array($dateRange) ){
 			$dateStart = $dateRange['start'] instanceof \DateTime ? $dateRange['start'] :

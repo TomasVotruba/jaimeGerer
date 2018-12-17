@@ -611,7 +611,7 @@ class RapprochementController extends Controller
         }
 
         //depenses
-        $arr_all_depenses = $depenseRepo->findForCompany($this->getUser()->getCompany());
+        $arr_all_depenses = $depenseRepo->findForCompany($this->getUser()->getCompany(), null, true);
         foreach($arr_all_depenses as $depense){
           if($depense->getEtat() != 'RAPPROCHE'){
             if($depense->getTotalRapproche() < $depense->getTotalTTC() && !$depense->isLettre()){
