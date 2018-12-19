@@ -48,7 +48,7 @@ $(document).ready( function () {
 		order: "desc",
 		accent: true,
 		source: {
-			url: "/web/app_dev.php/crm/compte/get-comptes"
+			url: Routing.generate('crm_compte_get_liste')
 		},
 		callback: {
 			onInit: function (node) {

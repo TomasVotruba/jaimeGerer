@@ -124,7 +124,7 @@
 					order: "desc",
 					accent: true,
 					source: {
-						url: "/web/app_dev.php/crm/contact/get-contacts"+ ($('.entity-compte').val() > 0 ? '/'+$('.entity-compte').val() : '')
+						url: "/crm/contact/get-contacts"+ ($('.entity-compte').val() > 0 ? '/'+$('.entity-compte').val() : '')
 					},
 					callback: {
 						onInit: function (node) {
@@ -150,7 +150,7 @@
 					});
 				},*/
 			    source: {
-			        url: "/web/app_dev.php/crm/contact/get-contacts"+ ($('.entity-compte').val() > 0 ? '/'+$('.entity-compte').val() : '')
+			        url: "/crm/contact/get-contacts"+ ($('.entity-compte').val() > 0 ? '/'+$('.entity-compte').val() : '')
 			    },
 			    callback: {
 			        onInit: function (node) {
@@ -170,8 +170,7 @@
 			function changeAddress() {
 				$.ajax({
 					type: "POST",
-					url: "/web/app_dev.php/crm/compte/get_coordonnees_by_id/"+$('.entity-compte').val(),
-//					url: Routing.generate("crm_compte_get_coordonnees_by_id",{"id":$('.entity-compte').val()}),
+					url: Routing.generate("crm_compte_get_coordonnees_by_id",{"id":$('.entity-compte').val()}),
 					success: function(data) {
 						$(".input-adresse").val(data.adresse);
 						$(".input-codepostal").val(data.codePostal);
