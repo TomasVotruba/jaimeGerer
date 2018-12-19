@@ -48,7 +48,7 @@ class LigneDepenseType extends AbstractType
      	   ))
             ->add('compteComptable', 'entity', array(
             		'class'=>'AppBundle:Compta\CompteComptable',
-            		'property' => 'nom',
+            		'property' => 'nameAndNum',
             		'query_builder' => function (EntityRepository $er) {
             			return $er->createQueryBuilder('c')
             			->where('c.company = :company')

@@ -169,6 +169,11 @@ class CompteComptable
 		return $this->num.' : '.$this->nom;
 	}
 
+    public function getNameAndNum(){
+        return $this->nom.' ('.$this->num.')';
+    }
+
+
 
     /**
      * Set compteTVA
