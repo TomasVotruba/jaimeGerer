@@ -14,7 +14,7 @@
     </div>
 
     <div id="filter" class="row well">
-        <h3 class=" col-md-offset-5">Filtres :</h3>
+        <h3 class=" col-md-offset-2">Filtres :</h3>
         <span id="filterState" class="col-md-offset-1 col-md-4">
             <h5>Etat</h5>
             <input type="radio" name="filter_state" id="all" class="filter_state" value="ALL" checked />
@@ -34,8 +34,13 @@
         </span>
         <span class="col-md-3">
             <h5>Date</h5>
-            <label id="NodesToMove class="hidden""><input id="dateRange" name="dateRange"></label>
+            <input id="dateRange" name="dateRange">
         </span>
+         <span class="col-md-3">
+            <h5>Date de création</h5>
+            <input id="dateCreationRange" class="dateRange">
+        </span>
+
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -44,7 +49,8 @@
                 <thead>
                     <tr>
                         <th>Nom du salarié</th>
-                        <th>Date</th>
+                        <th>Mois</th>
+                        <th>Date de création</th>
                         <th>Total</th>
                         <th>Etat</th>
                         <th>Actions</th>
@@ -103,7 +109,7 @@
                     type: "post",
                     "data": function(d) {
                         d.dateRange = $("#dateRange").daterangepicker("getRange");
-                        // 
+                        d.dateCreationRange = $("#dateCreationRange").daterangepicker("getRange");
                         d.etat = $(".filter_state:checked").val();
                     }
                 },
@@ -112,17 +118,23 @@
                     $('#dateRange').change(function() {
                         $('#table_note_frais_list tbody').find('tr').remove();
                         tableau.draw();
-                    })
+                    });
+                    $('#dateCreationRange').change(function() {
+                        $('#table_note_frais_list tbody').find('tr').remove();
+                        tableau.draw();
+                    });
                     $('input[type=radio][name=filter_state]').change(function() {
                         $('#table_note_frais_list tbody').find('tr').remove();
                         tableau.draw();
-                    })
+                    });
                 },
                 "columns": [
                     {
                         "data": "nom"
                     }, {
                         "data": "date"
+                    }, {
+                        "data": "dateCreation"
                     }, {
                         "data": "total"
                     }, {
@@ -135,7 +147,7 @@
                         "targets": ['id']
                     }, {
                         "render": function(data, type, row) {
-														var actionUrl = Routing.generate("ndf_voir", {'id' : row['id']});
+							var actionUrl = Routing.generate("ndf_voir", {'id' : row['id']});
                             return '<a href="' + actionUrl + '">' + data + '</a>';
                         },
                         "targets": 0
@@ -146,9 +158,14 @@
                         "targets": 1
                     }, {
                         "render": function(data, type, row) {
-                            return accounting.formatMoney(row['total'], { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 })+ " TTC";
+                            return moment(row['dateCreation'].date).format('DD/MM/YYYY');
                         },
                         "targets": 2
+                    },{
+                        "render": function(data, type, row) {
+                            return accounting.formatMoney(row['total'], { symbol: "€",  format: "%v %s", decimal: ",", thousand: " ", precision: 2 })+ " TTC";
+                        },
+                        "targets": 3
                     }, {
                         // The `data` parameter refers to the data for the cell (defined by the `data` option, which defaults to the column being worked with, in this case `data: 0`.
                         "render": function(data, type, row) {
@@ -178,7 +195,7 @@
                                
                           return s;
                         },
-                        "targets": 4
+                        "targets": 5
                     }
                 ],
                 fnDrawCallback: function () {
@@ -196,9 +213,13 @@
                         "fade": 250,
                         "tooltipClass": 'btn',
                     });
-                    $("#NodesToMove").detach().removeClass("hidden").appendTo('div.dataTables_dateRange');
+                    //$("#NodesToMove").detach().removeClass("hidden").appendTo('div.dataTables_dateRange');
     
                     $('#dateRange').change(function() {
+                        $('#table_note_frais_list tbody').find('tr').remove();
+                        tableau.draw();
+                    })
+                    $('#dateCreationRange').change(function() {
                         $('#table_note_frais_list tbody').find('tr').remove();
                         tableau.draw();
                     })

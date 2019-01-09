@@ -12,10 +12,10 @@ use Doctrine\ORM\EntityRepository;
  */
 class NoteFraisRepository extends EntityRepository
 {
-	public function findForList($company, $length, $start, $orderBy, $dir, $search, $etat = '', $dateRange = '' ){
+	public function findForList($company, $length, $start, $orderBy, $dir, $search, $etat = '', $dateRange = '', $dateCreationRange = '' ){
 
 		$qb = $this->createQueryBuilder('n')
-		->select('n.id',  "CONCAT( CONCAT(u.firstname, ' '),  u.lastname) as nom" , 'n.month', 'n.year', 'n.etat')
+		->select('n.id',  "CONCAT( CONCAT(u.firstname, ' '),  u.lastname) as nom" , 'n.month', 'n.year', 'n.etat', 'n.dateCreation')
 		->leftJoin('AppBundle\Entity\Compta\CompteComptable', 'c', 'WITH', 'c.id = n.compteComptable')
 		->leftJoin('AppBundle\Entity\User', 'u', 'WITH', 'u.id = n.user')
 		->where('c.company = :company')
@@ -38,8 +38,15 @@ class NoteFraisRepository extends EntityRepository
 				->setParameter('anneeFin', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end'])->format('Y'))
 				->setParameter('moisFin', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['end'])->format('n'));
 		}
-		
 
+		if( is_array($dateCreationRange) ){
+
+			$qb->andWhere('n.dateCreation >= :dateDebut')
+				->andWhere('n.dateCreation <= :dateFin')
+				->setParameter('dateDebut', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateCreationRange['start'])->format('Y-m-d'))
+				->setParameter('dateFin', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateCreationRange['end'])->format('Y-m-d'));
+		}
+		
 		if($search){
 			$qb->andWhere('u.firstname LIKE :search or u.lastname LIKE :search')
 				->setParameter('search', '%'.$search.'%');

@@ -788,6 +788,7 @@ class NDFController extends Controller
 		$arr_search = $requestData->get('search');
 		$etat = $requestData->get('etat');
 		$arr_date = $requestData->get('dateRange');
+		$arr_creation_date = $requestData->get('dateCreationRange');
 
 
 		$list = $repository->findForList(
@@ -798,7 +799,8 @@ class NDFController extends Controller
 				$arr_sort[0]['dir'],
 				$arr_search['value'],
 				$etat,
-				$arr_date
+				$arr_date,
+				$arr_creation_date
 		);
 
 
@@ -814,10 +816,10 @@ class NDFController extends Controller
 
 		$response = new JsonResponse();
 		$response->setData(array(
-				'draw' => intval( $requestData->get('draw') ),
-				'recordsTotal' => $repository->count($this->getUser()->getCompany()),
-				'recordsFiltered' => $repository->countForList($this->getUser()->getCompany(), $arr_search['value'],$etat,$arr_date),
-				'aaData' => $list,
+			'draw' => intval( $requestData->get('draw') ),
+			'recordsTotal' => $repository->count($this->getUser()->getCompany()),
+			'recordsFiltered' => $repository->countForList($this->getUser()->getCompany(), $arr_search['value'],$etat,$arr_date),
+			'aaData' => $list,
 		));
 
 		return $response;
