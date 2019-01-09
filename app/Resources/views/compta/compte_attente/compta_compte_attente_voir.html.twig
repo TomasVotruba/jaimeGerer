@@ -49,16 +49,33 @@
 				 		<i>Affectation diverse : {{ ligne.mouvementBancaire.rapprochements[0].affectationDiverse.nom }}</i>
 				 	{% endif %}
 				 {% endif %}
-				 <br />
+				 
 				 {% if arr_lignes_inverses[ligne.id] is defined %}
 				 	{% for inverse in arr_lignes_inverses[ligne.id] %}
 				 		{% if inverse.credit != 0 %}
-							<i>Crédit : {{ inverse.credit }} € au compte {{ inverse.compteComptable.num }}</i><br />
+							<br /><i>Crédit : {{ inverse.credit }} € au compte {{ inverse.compteComptable.num }} {{ inverse.compteComptable.nom }}</i>
 						{% else %}
-							<i>Débit : {{ inverse.debit }} € au compte {{ inverse.compteComptable.num }}</i>
+							<br /><i>Débit : {{ inverse.debit }} € au compte {{ inverse.compteComptable.num }} {{ inverse.compteComptable.nom }}</i>
 						{% endif %}
 					{% endfor %}
 				 {% endif %}
+	 			<br /><a  class="journal-commentaire"
+		            href="#"
+		            id="commentaire-{{ ligne.codeJournal~ligne.id }}"
+		            data-type="text"
+		            data-pk="{{ ligne.id }}"
+		            data-url="{{ path('compta_compte_commenter', {
+		              'id' : ligne.id,
+		              'journal' : ligne.codeJournal
+		            } ) }}"
+		            data-title="Commentaire"
+		            >
+						{% if ligne.commentaire == "" or ligne.commentaire == null %}
+		                    Commenter
+		                {% else %}
+		                  <span class="journal-commentaire">{{ ligne.commentaire }}</span>
+		                {% endif %}
+				</a>
 			</td>
 			<td class="align-right">{{ ligne.debit|number_format(2,',',' ')  }}</td>
 			<td class="align-right">{{ ligne.credit|number_format(2,',',' ')  }}</td>
@@ -82,3 +99,26 @@
 	</tr>
 </tbody>
 
+
+{% block javascripts %}
+    <script type="text/javascript">
+      	$(document).ready(function() {
+      		{% for ligne in arr_lignes %}
+
+	            var id = "#commentaire-{{ ligne.codeJournal~ligne.id }}";
+				$(id).editable({
+	                step: 'any',
+	                display: function(value, response) {
+	                    if (value != "Renommer") {
+	                        if (value == "" || value == 0){
+	                            $(this).html("Renommer");
+	                        } else {
+	                          $(this).html(value);
+	                        }
+	                    }
+	                }
+	            });
+      		{% endfor %}
+		});
+	</script>
+{% endblock %}

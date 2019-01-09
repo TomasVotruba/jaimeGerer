@@ -1191,6 +1191,4 @@ class CompteComptableController extends Controller
 	}
 
 
-	
-
 }
