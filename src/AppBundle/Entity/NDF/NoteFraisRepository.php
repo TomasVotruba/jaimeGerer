@@ -40,7 +40,6 @@ class NoteFraisRepository extends EntityRepository
 		}
 
 		if( is_array($dateCreationRange) ){
-
 			$qb->andWhere('n.dateCreation >= :dateDebut')
 				->andWhere('n.dateCreation <= :dateFin')
 				->setParameter('dateDebut', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateCreationRange['start'])->format('Y-m-d'))
