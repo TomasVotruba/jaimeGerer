@@ -10,10 +10,14 @@ use Doctrine\ORM\EntityRepository;
 class RecuType extends AbstractType
 {
     protected $companyId;
+    protected $fc;
+    protected $deplacements;
 
-    public function __construct ($companyId = null)
+    public function __construct ($companyId = null, $fc = null, $deplacements = null)
     {
-      $this->companyId = $companyId;
+        $this->companyId = $companyId;
+        $this->fc = $fc;
+        $this->deplacements = $deplacements;
     }
 
     /**
@@ -26,13 +30,17 @@ class RecuType extends AbstractType
             ->add('date', 'date', array('widget' => 'single_text',
               'input' => 'datetime',
               'format' => 'dd/MM/yyyy',
-              'attr' => array('class' => 'dateInput'),
+              'attr' => array('class' => 'dateInput', 'autofocus' => true),
               'required' => true,
               'label' => 'Date du reçu'
             ))
             ->add('fournisseur', 'text', array(
               'label' => 'Fournisseur',
               'required' => true
+            ))
+            ->add('libelle', 'text', array(
+              'label' => 'Projet ou libellé',
+              'required' => false
             ))
             ->add('montantHT', 'number', array(
                'required' => true,
@@ -53,17 +61,18 @@ class RecuType extends AbstractType
                'attr' => array('class' => 'montant-ttc')
              ))
             ->add('analytique', 'entity', array(
-           			'class'=>'AppBundle:Settings',
-           			'required' => true,
-           			'label' => 'Analytique',
-           			'query_builder' => function (EntityRepository $er) {
-           				return $er->createQueryBuilder('s')
-           				->where('s.company = :company')
-           				->andWhere('s.parametre = :parametre')
-           				->setParameter('company', $this->companyId)
-           				->setParameter('parametre', 'analytique')
-                  ->orderBy('s.valeur', 'ASC');
-           			},
+       			'class'=>'AppBundle:Settings',
+       			'required' => true,
+       			'label' => 'Analytique',
+       			'query_builder' => function (EntityRepository $er) {
+       				return $er->createQueryBuilder('s')
+       				     ->where('s.company = :company')
+       				     ->andWhere('s.parametre = :parametre')
+       				     ->setParameter('company', $this->companyId)
+       				     ->setParameter('parametre', 'analytique')
+                        ->orderBy('s.valeur', 'ASC');
+       			},
+                'data' => $this->fc
            	))
             ->add('compteComptable', 'entity', array(
                 'class'=>'AppBundle:Compta\CompteComptable',
@@ -71,13 +80,14 @@ class RecuType extends AbstractType
                 'label' => 'Compte comptable',
                 'property' => 'nom',
                 'query_builder' => function (EntityRepository $er) {
-                  return $er->createQueryBuilder('c')
-                  ->where('c.company = :company')
-                  ->andWhere('c.num LIKE :num')
-                  ->setParameter('company', $this->companyId)
-                  ->setParameter('num', '6%')
-                  ->orderBy('c.nom', 'ASC');
+                    return $er->createQueryBuilder('c')
+                      ->where('c.company = :company')
+                      ->andWhere('c.num LIKE :num')
+                      ->setParameter('company', $this->companyId)
+                      ->setParameter('num', '6%')
+                      ->orderBy('c.nom', 'ASC');
                 },
+                'data' => $this->deplacements
             ))
             ->add('save', 'submit', array(
               'label' => 'Enregistrer et revenir à la liste des reçus',

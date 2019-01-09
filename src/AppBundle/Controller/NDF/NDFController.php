@@ -73,7 +73,23 @@ class NDFController extends Controller
 
 		$recu = new Recu();
 
-		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId()), $recu);
+		$fc = null;
+
+		if($this->getUser()->getCompany()->getId() == 1){
+			$fc = $em->getRepository('AppBundle:Settings')->findOneBy(array(
+				'company' => $this->getUser()->getCompany(),
+				'parametre' => 'analytique',
+				'valeur' => 'FC'
+			));
+
+			$deplacements = $em->getRepository('AppBundle:Compta\CompteComptable')->findOneBy(array(
+				'company' => $this->getUser()->getCompany(),
+				'nom' => 'Voyages et déplacements',
+			));
+		}
+
+	
+		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId(), $fc, $deplacements), $recu);
 
 		$form->add('next', 'submit', array(
 			'label' => 'Enregistrer et ajouter un autre reçu'
@@ -354,7 +370,11 @@ class NDFController extends Controller
 					if($recu->getAnalytique()->getId() == $analytique->getId()){
 
 						$ligne = new LigneDepense();
-						$ligne->setNom($recu->getDate()->format('d/m/Y').' : '.$recu->getFournisseur());
+						$nom = $recu->getDate()->format('d/m/Y').' : '.$recu->getFournisseur();
+						if($recu->getLibelle()){
+							$nom.=' - '.$recu->getLibelle();
+						}
+						$ligne->setNom($nom);
 						$ligne->setMontant($recu->getMontantHT());
 						$ligne->setTaxe($recu->getTva());
 						$ligne->setDepense($depense);
@@ -505,7 +525,11 @@ class NDFController extends Controller
 					if($recu->getAnalytique()->getId() == $analytique->getId()){
 
 						$ligne = new LigneDepense();
-						$ligne->setNom($recu->getDate()->format('d/m/Y').' : '.$recu->getFournisseur());
+						$nom = $recu->getDate()->format('d/m/Y').' : '.$recu->getFournisseur();
+						if($recu->getLibelle()){
+							$nom.=' - '.$recu->getLibelle();
+						}
+						$ligne->setNom($nom);
 						$ligne->setMontant($recu->getMontantHT());
 						$ligne->setTaxe($recu->getTva());
 						$ligne->setCompteComptable($recu->getCompteComptable());

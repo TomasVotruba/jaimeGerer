@@ -121,6 +121,13 @@ class Recu
     private $userEdition;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="libelle", type="string", length=255, nullable=true)
+     */
+    private $libelle;
+
+    /**
      * Get id
      *
      * @return integer
@@ -486,5 +493,28 @@ class Recu
     public function getLigneDepense()
     {
         return $this->ligneDepense;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     * @return Recu
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string 
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
     }
 }

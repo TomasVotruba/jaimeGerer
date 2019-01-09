@@ -518,8 +518,6 @@ class ContactRepository extends EntityRepository
 				$query->andWhere('c.bounce != :warning')
 					->setParameter('warning', 'WARNING');
 			}
-
-
 			
 		} else {
 

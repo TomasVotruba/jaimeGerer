@@ -24,7 +24,7 @@ class Recu
     /**
      * @var string
      *
-     * @ORM\Column(name="file", type="string", length=255)
+     * @ORM\Column(name="file", type="string", length=255, nullable=true)
      */
     private $file;
 
@@ -119,6 +119,13 @@ class Recu
      * @ORM\JoinColumn(nullable=true)
      */
     private $userEdition;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="libelle", type="string", length=255, nullable=true)
+     */
+    private $libelle;
 
     /**
      * Get id

@@ -24,7 +24,6 @@
 			<table class="table table-bordered table-striped">
 				<thead>
 					<tr>
-						<th class="col-md-1">Fichier</th>
 						<th class="col-md-1">Date</th>
 						<th class="col-md-2">Fournisseur</th>
 						<th class="col-md-1">Montant HT</th>
@@ -32,6 +31,7 @@
 						<th class="col-md-1">Montant TTC</th>
 						<th class="col-md-2">Compte comptable</th>
 						<th class="col-md-1">Analytique</th>
+						<th class="col-md-1">Libelle</th>
 						<th class="col-md-1">Upload</th>
 						<th class="col-md-1">Actions</th>
 					</tr>
@@ -39,11 +39,6 @@
 				<tbody>
 					{% for recu in arr_recus %}
 						<tr>
-							<td class="center">
-								<a data-toggle="modal" data-target="#modal-lg" href="{{ path('ndf_recu_afficher_modal', {'id' : recu.id}) }}">
-									<span class="xl glyphicon glyphicon-file"></span>
-								</a>
-							</td>
 							{% if recu.etat != "PROCESSING" %}
 								<td>{{ recu.date|date('d/m/Y') }}</td>
 								<td>{{ recu.fournisseur }}</td>
@@ -85,6 +80,7 @@
 							{% else %}
 								<td colspan="7" class="center"><i><span class="glyphicon glyphicon-warning-sign"></span> Ce reçu n'a pas encore été traité.</i></td>
 							{% endif %}
+							<td>{{ recu.libelle }}</td>
 							<td>Le {{ recu.dateCreation|date('d/m/Y') }}<br />par {{ recu.userCreation }}</td>
 							<td>
 								<a href="{{ path('ndf_recu_modifier', {'id' : recu.id }) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>
