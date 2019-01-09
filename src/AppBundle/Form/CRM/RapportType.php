@@ -49,7 +49,11 @@ class RapportType extends AbstractType
 
         if($this->type == "contact"){
             $builder ->add('emailing', 'checkbox', array(
-                'label' => 'Cette liste sert à faire un emailing',
+                'label' => 'Cette liste sert à faire un emailing (retirer les adresses email vides, bounces, ne pas contacter)',
+                'required' => false
+            ));
+            $builder ->add('excludeWarnings', 'checkbox', array(
+                'label' => 'Retirer les warning bounces',
                 'required' => false
             ));
         }

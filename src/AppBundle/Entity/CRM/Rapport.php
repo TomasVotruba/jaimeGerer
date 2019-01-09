@@ -97,6 +97,13 @@ class Rapport
      * @ORM\Column(name="emailing", type="boolean", nullable=true)
      */
     private $emailing = null;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="exclude_warnings", type="boolean", nullable=true)
+     */
+    private $excludeWarnings = null;
     
     /**
      * Get id
@@ -362,5 +369,28 @@ class Rapport
     public function getEmailing()
     {
         return $this->emailing;
+    }
+
+    /**
+     * Set excludeWarnings
+     *
+     * @param boolean $excludeWarnings
+     * @return Rapport
+     */
+    public function setExcludeWarnings($excludeWarnings)
+    {
+        $this->excludeWarnings = $excludeWarnings;
+
+        return $this;
+    }
+
+    /**
+     * Get excludeWarnings
+     *
+     * @return boolean 
+     */
+    public function getExcludeWarnings()
+    {
+        return $this->excludeWarnings;
     }
 }

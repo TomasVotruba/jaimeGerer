@@ -235,7 +235,7 @@ class ContactRepository extends EntityRepository
 		return $qb->getQuery()->getSingleScalarResult();
 	}
 
-	public function createQueryAndGetResult($arr_filters, $company, $emailing, $bounce = false, $warning = false){
+	public function createQueryAndGetResult($arr_filters, $company, $emailing, $bounce = false, $warning = false, $excludeWarnings){
 
 		$qb  = $this->_em->createQueryBuilder();
 
@@ -504,12 +504,23 @@ class ContactRepository extends EntityRepository
 				->andWhere('co.company = :company')
 				->setParameter('company', $company);
 
-		if($emailing == true && $bounce == false && $warning == false){
-			$query->andWhere('c.bounce = :bounce  OR c.bounce IS NULL')
-				->andWhere('c.email IS NOT NULL')
-				->andWhere('c.rejetEmail = :rejetEmail')
-				->setParameter('bounce', 'VALID')
-				->setParameter('rejetEmail', false);
+		if($bounce == false && $warning == false){
+
+			if($emailing == true){
+				$query->andWhere('c.bounce != :bounce')
+					->andWhere('c.email IS NOT NULL')
+					->andWhere('c.rejetEmail = :rejetEmail')
+					->setParameter('bounce', 'BOUNCE')
+					->setParameter('rejetEmail', false);
+			}
+
+			if($excludeWarnings == true){
+				$query->andWhere('c.bounce != :warning')
+					->setParameter('warning', 'WARNING');
+			}
+
+
+			
 		} else {
 
 			if($bounce == true){

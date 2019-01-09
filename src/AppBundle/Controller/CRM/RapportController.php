@@ -236,7 +236,7 @@ class RapportController extends Controller
 		if (($rapport->getType() == 'devis') || ($rapport->getType() == 'facture')) {
 			$arr_obj = $objRepo->createQueryAndGetResult($arr_filters,$rapport->getType(), $this->getUser()->getCompany());
 		} elseif($rapport->getType() == "contact") {
-			$arr_obj = $objRepo->createQueryAndGetResult($arr_filters, $this->getUser()->getCompany(), $rapport->getEmailing(), $bounce, $warning);
+			$arr_obj = $objRepo->createQueryAndGetResult($arr_filters, $this->getUser()->getCompany(), $rapport->getEmailing(), $bounce, $warning, $rapport->getExcludeWarnings());
 		} else {
 			$arr_obj = $objRepo->createQueryAndGetResult($arr_filters, $this->getUser()->getCompany());
 		}
