@@ -31,6 +31,8 @@ class MailgunTestController extends Controller
 	            ->setBody('YO <a href="www.nicomak.eu">Das website !!</a>', 'text/html');
 
 	        $this->get('mailer')->send($message);
+
+
 		} catch(\Exception $e){
 			throw $e;
 		}
@@ -83,6 +85,7 @@ class MailgunTestController extends Controller
 		$event = $request->request->get('event');
 
 		try{
+			$this->get('logger')->error($e->getMessage());
 			$mail = \Swift_Message::newInstance()
 				->setSubject('mailgun webhook')
 				->setFrom('gilquin@nicomak.eu')
@@ -91,7 +94,7 @@ class MailgunTestController extends Controller
 			;
 			$this->get('mailer')->send($mail);
 		} catch(\Exception $e){
-			throw $e;
+			$this->get('logger')->error($e->getMessage());
 		}
 		
 		
