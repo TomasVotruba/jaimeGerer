@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Mailgun\Mailgun;
 
+use AppBundle\Entity\Emailing\Campagne;
+use AppBundle\Entity\Emailing\CampagneContact;
+
 
 class MailgunTestController extends Controller
 {
@@ -47,22 +50,64 @@ class MailgunTestController extends Controller
 	 */ 
 	public function testAPI(){
 
-		$key = $this->container->getParameter('mailgun_api_key');
-		$domain = 'sandbox4401bff394d34fec9b0f77bcfffd3ee6.mailgun.org';
-
-		$mgClient = new \Mailgun\Mailgun($key);
 		
-		//Make the call to the client.
+		$em = $this->getDoctrine()->getManager();
+		//$campagne = $em->getRepository('AppBundle:Emailing\Campagne')->find(14);
+		
+		//set campaign details
+		$campagne = new Campagne();
+		$campagne->setNom('Dev - Newsletter');
+		$campagne->setObjet('Newsletter Nicomak');
+		$campagne->setNomExpediteur('Nicomak');
+		$campagne->setEmailExpediteur('contact@nicomak.eu');
+		$campagne->setDateCreation(new \DateTime(date('Y-m-d')));
+		$campagne->setUserCreation($this->getUser());
+		$campagne->setDateEnvoi(new \DateTime(date('Y-m-d')));
+
+		//set HTML
+		$path = $this->get('kernel')->getRootDir().('\..\web\files\emailing\\');
+		$html = file_get_contents($path.'newsletter.html');
+		$campagne->setHtml($html);
+
+		$em->persist($campagne);
+
+		//add contacts
+		$rapportRepo = $em->getRepository('AppBundle:CRM\Rapport');
+		$rapport = $rapportRepo->find(435);
+		$filterRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\RapportFilter');
+		$arr_filters = $filterRepo->findByRapport($rapport);
+		$contactRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
+		$arr_contacts = $contactRepo->createQueryAndGetResult($arr_filters, $this->getUser()->getCompany(), true);
+
+		foreach($arr_contacts as $contact){
+			$campagneContact = new CampagneContact();
+			$campagneContact->setContact($contact);
+			$campagne->addCampagneContact($campagneContact);
+		}
+
+		$em->persist($campagne);
+		$em->flush();
+
+		//Send via MailGun API
+		$key = $this->container->getParameter('mailgun_api_key');
+		$domain = $this->container->getParameter('mailgun_domain');
+		$mgClient = new \Mailgun\Mailgun($key);
+		$id = $campagne->getId();
+		$companyId = $this->getUser()->getCompany()->getId();
+
 		$result = $mgClient->sendMessage($domain, array(
-		    'from'    => 'gilquin@nicomak.eu',
-		    'to'      => array('laura@web4change.com', 'slac@nicomak.eu'),
-		    'subject' => 'Test API',
-		    'text'    => 'Testing some Mailgun awesomness !',
-		    'html'    => 'Testing some Mailgun awesomness ! <a href="www.nicomak.eu">Coucou le site web</a>',
-		    'recipient-variables' => '{"bob@example.com": {"first":"Bob", "id":1}, "alice@example.com": {"first":"Alice", "id": 2}}',
-		    'v:my-custom-data'   => "{'id' => 54}",
-		    'o:testmode' => 'true'
+		    'from'    => $campagne->getNomExpediteur().' <'.$campagne->getEmailExpediteur().'>',
+		    'to'      => $campagne->getDestinataires(),
+		    'subject' => $campagne->getObjet(),
+		   // 'text' => $campagne->getObjet(),
+		    'html'    => $campagne->getHtml(),
+		    'recipient-variables' => '{}',
+		    'v:my-custom-data'   => "{'campagne-id' => $id, 'company-id' => $companyId }",
+		    'o:testmode ' => true
 		));
+
+		dump($result);
+
 
 	 	return new Response();
 	}
@@ -75,41 +120,56 @@ class MailgunTestController extends Controller
 		$response = new Response();
 		$request = $this->getRequest();
 
-		var_dump('Testing webhook');
+		$content = json_decode($request->getContent(), true);
 
-		$content = json_decode($request->getContent());
-
-		$signature = $content->signature;
+		$signature = $content['signature'];
 
 		//check the signature
-		if( $this->verifiyWebhookCall($signature->token, $signature->timestamp, $signature->signature ) === false ){
-			var_dump('signature KO');
+		if( $this->verifiyWebhookCall($signature['token'], $signature['timestamp'], $signature['signature'] ) === false ){
 			$response->setStatusCode('401');
 			return $response;
 		}
 
-		var_dump('signature OK');
+		$eventData = $content['event-data'];
 
-		//var_dump($request->request);
+		$contactEmail = $eventData['recipient'];
+		$campagneId = $eventData['my-custom-data']['campagne-id'];
+		$companyId = $eventData['my-custom-data']['company-id'];
+		$timestamp = $eventData['timestamp'];
 
-		// $event = $request->request->get('event');
-		// echo($event);
+		if(!$contactEmail || !$campagneId || !$companyId){
+			return $response();
+		}
 
-		// try{
-		// 	$this->get('logger')->error($e->getMessage());
-		// 	$mail = \Swift_Message::newInstance()
-		// 		->setSubject('mailgun webhook')
-		// 		->setFrom('gilquin@nicomak.eu')
-		// 		->setTo('gilquin@nicomak.eu')
-		// 		->setBody('Event : '.$event, 'text/html')
-		// 	;
-		// 	$this->get('mailer')->send($mail);
-		// } catch(\Exception $e){
-		// 	echo($e->getMessage());
-		// 	$this->get('logger')->error($e->getMessage());
-		// }
-		
-		
+		$em = $this->getDoctrine()->getManager();
+		$contactRepository = $em->getRepository('AppBundle:CRM\Contact');
+		$campagneContactRepository = $em->getRepository('AppBundle:Emailing\CampagneContact');
+
+		$contact = $contactRepository->findByEmailAndCompany($contactEmail, $companyId);
+
+		if($contact){
+
+			$campagneContact = $campagneContactRepository->findOneBy(array(
+				'contact' => $contact,
+				'campagne' => $campagneId
+			));
+
+			if($campagneContact){
+
+				switch($event){
+
+					case 'delivered':
+						$campagneContact->setDelivered(true);
+						$campagneContact->setDeliveredDate(new \DateTime(date('Y-m-d', $timestamp)));
+
+				}
+				
+				$em->persist($campagneContact);
+				$em->flush();
+			}
+
+		}
+	
 		return $response;
 		
 	}
@@ -120,7 +180,7 @@ class MailgunTestController extends Controller
 	public function testEvents(){
 
 		$key = $this->container->getParameter('mailgun_api_key');
-		$domain = 'sandbox4401bff394d34fec9b0f77bcfffd3ee6.mailgun.org';
+		$domain = $this->container->getParameter('mailgun_domain');
 
 		$mgClient = new \Mailgun\Mailgun($key);
 		$result = $mgClient->get("$domain/events");

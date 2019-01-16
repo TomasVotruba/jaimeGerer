@@ -39,8 +39,6 @@ class CampagneController extends Controller
 	public function indexAction()
 	{
 		return $this->render('emailing/emailing_index.html.twig');
-		
-
 	}
 	
 	/**

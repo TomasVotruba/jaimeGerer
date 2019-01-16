@@ -277,7 +277,14 @@ class Contact
      *
      * @ORM\Column(name="stop_bounce_warning", type="boolean")
      */
-    private $stropBounceWarning = false;
+    private $stopBounceWarning = false;
+
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Emailing\CampagneContact", mappedBy="contact")
+    *
+    */
+    private $campagneContacts;
 
 
     /**
@@ -1161,25 +1168,59 @@ class Contact
     }
 
     /**
-     * Set stropBounceWarning
+     * Set stopBounceWarning
      *
-     * @param boolean $stropBounceWarning
+     * @param boolean $stopBounceWarning
      * @return Contact
      */
-    public function setStropBounceWarning($stropBounceWarning)
+    public function setStopBounceWarning($stopBounceWarning)
     {
-        $this->stropBounceWarning = $stropBounceWarning;
+        $this->stopBounceWarning = $stopBounceWarning;
 
         return $this;
     }
 
     /**
-     * Get stropBounceWarning
+     * Get stopBounceWarning
      *
      * @return boolean 
      */
-    public function getStropBounceWarning()
+    public function getStopBounceWarning()
     {
-        return $this->stropBounceWarning;
+        return $this->stopBounceWarning;
+    }
+
+    /**
+     * Add campagneContacts
+     *
+     * @param \AppBundle\Entity\Emailing\CampagneContact $campagneContacts
+     * @return Contact
+     */
+    public function addCampagneContact(\AppBundle\Entity\Emailing\CampagneContact $campagneContacts)
+    {
+        $campagneContacts->setContact($this);
+        $this->campagneContacts[] = $campagneContacts;
+
+        return $this;
+    }
+
+    /**
+     * Remove campagneContacts
+     *
+     * @param \AppBundle\Entity\Emailing\CampagneContact $campagneContacts
+     */
+    public function removeCampagneContact(\AppBundle\Entity\Emailing\CampagneContact $campagneContacts)
+    {
+        $this->campagneContacts->removeElement($campagneContacts);
+    }
+
+    /**
+     * Get campagneContacts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCampagneContacts()
+    {
+        return $this->campagneContacts;
     }
 }

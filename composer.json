@@ -48,7 +48,9 @@
 	  "symfony/phpunit-bridge": "^4.0",
 	  "nelmio/api-doc-bundle": "^2.4",
 	  "friendsofsymfony/rest-bundle": "~2.0",
-	  "mailgun/mailgun-php": "~2.4"
+	  "mailgun/mailgun-php": "~2.4",
+		"php-http/curl-client": "^1.7",
+		"guzzlehttp/psr7": "^1.5"
 	},
 	"require-dev" : {
 		"sensio/generator-bundle" : "~2.3",

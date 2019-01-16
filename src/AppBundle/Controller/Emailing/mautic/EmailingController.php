@@ -43,22 +43,22 @@ class EmailingController extends Controller
     public function indexAction(Request $request)
     {
 
-        $mauticCredentials = $this->_checkDataBaseCredentials();
+        //$mauticCredentials = $this->_checkDataBaseCredentials();
 
 
-        $mauticService = $this->get('mautic');
-        try{
-            $mauticService->authorization($mauticCredentials);
-        } catch(\Exception $e){
-            throw $e;
-        }
+        // $mauticService = $this->get('mautic');
+        // try{
+        //     $mauticService->authorization($mauticCredentials);
+        // } catch(\Exception $e){
+        //     throw $e;
+        // }
 
-        if($this->get('session')->get('redirection')){
-            if($this->get('session')->get('rapportId')){
-                return $this->redirect($this->generateUrl($this->get('session')->get('redirection'), array("id" => $this->get('session')->get('rapportId'))));
-            }
-            return $this->redirect($this->generateUrl($this->get('session')->get('redirection')));
-        }
+        // if($this->get('session')->get('redirection')){
+        //     if($this->get('session')->get('rapportId')){
+        //         return $this->redirect($this->generateUrl($this->get('session')->get('redirection'), array("id" => $this->get('session')->get('rapportId'))));
+        //     }
+        //     return $this->redirect($this->generateUrl($this->get('session')->get('redirection')));
+        // }
 
 
         $accessTokenData = $this->get('session')->get('accessTokenData');

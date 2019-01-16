@@ -24,16 +24,23 @@ class Campagne
     /**
      * @var string
      *
-     * @ORM\Column(name="nom_campagne", type="string", length=50)
+     * @ORM\Column(name="nom", type="string", length=50)
      */
-    private $nomCampagne;
+    private $nom;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="objet_email", type="string", length=255)
+     * @ORM\Column(name="objet", type="string", length=255)
      */
-    private $objetEmail;
+    private $objet;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="html", type="text")
+     */
+    private $html;
 
     /**
      * @var string
@@ -48,6 +55,21 @@ class Campagne
      * @ORM\Column(name="email_expediteur", type="string", length=100)
      */
     private $emailExpediteur;
+
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="envoyee", type="boolean")
+     */
+    private $envoyee = false;
+
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_envoi", type="datetime", nullable=true)
+     */
+    private $dateEnvoi;
 
     /**
      * @var \DateTime
@@ -65,36 +87,6 @@ class Campagne
 
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="envoyee", type="boolean")
-     */
-    private $envoyee = false;
-
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_envoi", type="datetime", nullable=true)
-     */
-    private $dateEnvoi;
-
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="template", type="text", nullable=true)
-     */
-    private $template;
-
-
-    /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\CRM\Rapport", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-     */
-    private $listesContact;
-    
-    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -105,13 +97,14 @@ class Campagne
      * @ORM\JoinColumn(nullable=true)
      */
     private $userEdition;
-    
+
     /**
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Emailing\ZoneContent", mappedBy="campagne", cascade={"persist", "remove"}, orphanRemoval=true)
-     *
-     */
-    private $zoneContents;
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Emailing\CampagneContact", mappedBy="campagne", cascade={"persist"})
+    *
+    */
+    private $campagneContacts;
+ 
 
     /**
      * Get id
@@ -124,49 +117,72 @@ class Campagne
     }
 
     /**
-     * Set nomCampagne
+     * Set nom
      *
-     * @param string $nomCampagne
+     * @param string $nom
      * @return Campagne
      */
-    public function setNomCampagne($nomCampagne)
+    public function setNom($nom)
     {
-        $this->nomCampagne = $nomCampagne;
+        $this->nom = $nom;
 
         return $this;
     }
 
     /**
-     * Get nomCampagne
+     * Get nom
      *
      * @return string 
      */
-    public function getNomCampagne()
+    public function getNom()
     {
-        return $this->nomCampagne;
+        return $this->nom;
     }
 
     /**
-     * Set objetEmail
+     * Set objet
      *
-     * @param string $objetEmail
+     * @param string $objet
      * @return Campagne
      */
-    public function setObjetEmail($objetEmail)
+    public function setObjet($objet)
     {
-        $this->objetEmail = $objetEmail;
+        $this->objet = $objet;
 
         return $this;
     }
 
     /**
-     * Get objetEmail
+     * Get objet
      *
      * @return string 
      */
-    public function getObjetEmail()
+    public function getObjet()
     {
-        return $this->objetEmail;
+        return $this->objet;
+    }
+
+    /**
+     * Set html
+     *
+     * @param string $html
+     * @return Campagne
+     */
+    public function setHtml($html)
+    {
+        $this->html = $html;
+
+        return $this;
+    }
+
+    /**
+     * Get html
+     *
+     * @return string 
+     */
+    public function getHtml()
+    {
+        return $this->html;
     }
 
     /**
@@ -216,6 +232,52 @@ class Campagne
     }
 
     /**
+     * Set envoyee
+     *
+     * @param boolean $envoyee
+     * @return Campagne
+     */
+    public function setEnvoyee($envoyee)
+    {
+        $this->envoyee = $envoyee;
+
+        return $this;
+    }
+
+    /**
+     * Get envoyee
+     *
+     * @return boolean 
+     */
+    public function getEnvoyee()
+    {
+        return $this->envoyee;
+    }
+
+    /**
+     * Set dateEnvoi
+     *
+     * @param \DateTime $dateEnvoi
+     * @return Campagne
+     */
+    public function setDateEnvoi($dateEnvoi)
+    {
+        $this->dateEnvoi = $dateEnvoi;
+
+        return $this;
+    }
+
+    /**
+     * Get dateEnvoi
+     *
+     * @return \DateTime 
+     */
+    public function getDateEnvoi()
+    {
+        return $this->dateEnvoi;
+    }
+
+    /**
      * Set dateCreation
      *
      * @param \DateTime $dateCreation
@@ -259,75 +321,6 @@ class Campagne
     public function getDateEdition()
     {
         return $this->dateEdition;
-    }
-
-    /**
-     * Set dateEnvoi
-     *
-     * @param \DateTime $dateEnvoi
-     * @return Campagne
-     */
-    public function setDateEnvoi($dateEnvoi)
-    {
-        $this->dateEnvoi = $dateEnvoi;
-
-        return $this;
-    }
-
-    /**
-     * Get dateEnvoi
-     *
-     * @return \DateTime 
-     */
-    public function getDateEnvoi()
-    {
-        return $this->dateEnvoi;
-    }
-
-    /**
-     * Set envoyee
-     *
-     * @param boolean $envoyee
-     * @return Contact
-     */
-    public function setEnvoyee($envoyee)
-    {
-        $this->envoyee = $envoyee;
-
-        return $this;
-    }
-
-    /**
-     * Get envoyee
-     *
-     * @return boolean 
-     */
-    public function getEnvoyee()
-    {
-        return $this->envoyee;
-    }
-
-    /**
-     * Set template
-     *
-     * @param string $template
-     * @return Campagne
-     */
-    public function setTemplate($template)
-    {
-        $this->template = $template;
-
-        return $this;
-    }
-
-    /**
-     * Get template
-     *
-     * @return string 
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**
@@ -375,97 +368,54 @@ class Campagne
     {
         return $this->userEdition;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->campagneContacts = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
-     * Add zoneContents
+     * Add campagneContacts
      *
-     * @param \AppBundle\Entity\Emailing\ZoneContent $zoneContents
+     * @param \AppBundle\Entity\Emailing\CampagneContact $campagneContacts
      * @return Campagne
      */
-    public function addZoneContent(\AppBundle\Entity\Emailing\ZoneContent $zoneContents)
+    public function addCampagneContact(\AppBundle\Entity\Emailing\CampagneContact $campagneContacts)
     {
-        $this->zoneContents[] = $zoneContents;
+        $campagneContacts->setCampagne($this);
+        $this->campagneContacts[] = $campagneContacts;
 
         return $this;
     }
 
     /**
-     * Remove zoneContents
+     * Remove campagneContacts
      *
-     * @param \AppBundle\Entity\Emailing\ZoneContent $zoneContents
+     * @param \AppBundle\Entity\Emailing\CampagneContact $campagneContacts
      */
-    public function removeZoneContent(\AppBundle\Entity\Emailing\ZoneContent $zoneContents)
+    public function removeCampagneContact(\AppBundle\Entity\Emailing\CampagneContact $campagneContacts)
     {
-        $this->zoneContents->removeElement($zoneContents);
+        $this->campagneContacts->removeElement($campagneContacts);
     }
 
     /**
-     * Get zoneContents
+     * Get campagneContacts
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getZoneContents()
+    public function getCampagneContacts()
     {
-         $criteria = Criteria::create()
-	      ->orderBy(array("date" => Criteria::DESC));
-	
-	    return $this->zoneContents->matching($criteria);
+        return $this->campagneContacts;
     }
 
-    /**
-     * Add listes
-     *
-     * @param \AppBundle\Entity\CRM\Rapport $listesContact
-     * @return Contact
-     */
-    public function addListeContact(\AppBundle\Entity\CRM\Rapport $listesContact)
-    {
-    	$found = false;
+    public function getDestinataires(){
 
-    	if( isset($this->listesContact) ){
-			foreach($this->listesContact as $old_listeContact){
-				if($old_listeContact->getId() == $listesContact->getId()){
-					$found = true;
-				}
-			}
-    	}
-    	//~ else{
-			//~ $this->listeContact = array();
-		//~ }
-    	if(!$found){
-       		$this->listesContact[] = $listesContact;
-    	}
-        return $this;
+        $arr_destinataires = array();
+        foreach($this->campagneContacts as $campagneContact){
+            $arr_destinataires[] = $campagneContact->getContact()->getEmail();
+        }
+        return $arr_destinataires;
     }
-
-    /**
-     * Remove all listes
-     *
-     * @param \AppBundle\Entity\CRM\Rapport $listesContact
-     */
-    public function removeListesContact()
-    {
-        $this->listesContact = null;
-    }
-    
-    /**
-     * Remove liste
-     *
-     * @param \AppBundle\Entity\CRM\Rapport $listesContact
-     */
-    public function removeListeContact(\AppBundle\Entity\CRM\Rapport $listesContact)
-    {
-    	$this->listesContact->removeElement($listesContact);
-    }
-
-    /**
-     * Get listesContact
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getListesContact()
-    {
-        return $this->listesContact;
-    }
-
 }

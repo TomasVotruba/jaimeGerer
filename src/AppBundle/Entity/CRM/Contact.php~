@@ -277,7 +277,14 @@ class Contact
      *
      * @ORM\Column(name="stop_bounce_warning", type="boolean")
      */
-    private $stropBounceWarning = false;
+    private $stopBounceWarning = false;
+
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Emailing\CampagneContact", mappedBy="contact")
+    *
+    */
+    private $campagneContacts;
 
 
     /**
@@ -1158,5 +1165,28 @@ class Contact
             return true;
         }
         return false;
+    }
+
+    /**
+     * Set stopBounceWarning
+     *
+     * @param boolean $stopBounceWarning
+     * @return Contact
+     */
+    public function setStopBounceWarning($stopBounceWarning)
+    {
+        $this->stopBounceWarning = $stopBounceWarning;
+
+        return $this;
+    }
+
+    /**
+     * Get stopBounceWarning
+     *
+     * @return boolean 
+     */
+    public function getStopBounceWarning()
+    {
+        return $this->stopBounceWarning;
     }
 }

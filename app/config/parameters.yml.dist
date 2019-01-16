@@ -15,11 +15,7 @@ parameters:
     mailer_password:   ~
 
     locale:            fr
-
-    # A secret key that's used to generate certain security-related tokens
-    secret:         mautic_secret
-    mautic_api_url: mautic_url
+    secret: secret
 
     mailgun_api_key: key
     mailgun_domain: domain
-    mailgun_public_key: public_key

@@ -24,16 +24,23 @@ class Campagne
     /**
      * @var string
      *
-     * @ORM\Column(name="nom_campagne", type="string", length=50)
+     * @ORM\Column(name="nom", type="string", length=50)
      */
     private $nomCampagne;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="objet_email", type="string", length=255)
+     * @ORM\Column(name="objet", type="string", length=255)
      */
-    private $objetEmail;
+    private $objet;
+
+    /**
+     * @var text
+     *
+     * @ORM\Column(name="html")
+     */
+    private $html;
 
     /**
      * @var string
@@ -48,6 +55,21 @@ class Campagne
      * @ORM\Column(name="email_expediteur", type="string", length=100)
      */
     private $emailExpediteur;
+
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="envoyee", type="boolean")
+     */
+    private $envoyee = false;
+
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_envoi", type="datetime", nullable=true)
+     */
+    private $dateEnvoi;
 
     /**
      * @var \DateTime
@@ -65,36 +87,6 @@ class Campagne
 
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="envoyee", type="boolean")
-     */
-    private $envoyee = false;
-
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_envoi", type="datetime", nullable=true)
-     */
-    private $dateEnvoi;
-
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="template", type="text", nullable=true)
-     */
-    private $template;
-
-
-    /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\CRM\Rapport", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-     */
-    private $listesContact;
-    
-    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -105,13 +97,14 @@ class Campagne
      * @ORM\JoinColumn(nullable=true)
      */
     private $userEdition;
-    
+
     /**
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Emailing\ZoneContent", mappedBy="campagne", cascade={"persist", "remove"}, orphanRemoval=true)
-     *
-     */
-    private $zoneContents;
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Emailing\CampagneContact", mappedBy="campagne")
+    *
+    */
+    private $campagneContacts;
+ 
 
     /**
      * Get id
@@ -147,26 +140,49 @@ class Campagne
     }
 
     /**
-     * Set objetEmail
+     * Set objet
      *
-     * @param string $objetEmail
+     * @param string $objet
      * @return Campagne
      */
-    public function setObjetEmail($objetEmail)
+    public function setObjet($objet)
     {
-        $this->objetEmail = $objetEmail;
+        $this->objet = $objet;
 
         return $this;
     }
 
     /**
-     * Get objetEmail
+     * Get objet
      *
      * @return string 
      */
-    public function getObjetEmail()
+    public function getObjet()
     {
-        return $this->objetEmail;
+        return $this->objet;
+    }
+
+    /**
+     * Set html
+     *
+     * @param string $html
+     * @return Campagne
+     */
+    public function setHtml($html)
+    {
+        $this->html = $html;
+
+        return $this;
+    }
+
+    /**
+     * Get html
+     *
+     * @return string 
+     */
+    public function getHtml()
+    {
+        return $this->html;
     }
 
     /**
@@ -216,6 +232,52 @@ class Campagne
     }
 
     /**
+     * Set envoyee
+     *
+     * @param boolean $envoyee
+     * @return Campagne
+     */
+    public function setEnvoyee($envoyee)
+    {
+        $this->envoyee = $envoyee;
+
+        return $this;
+    }
+
+    /**
+     * Get envoyee
+     *
+     * @return boolean 
+     */
+    public function getEnvoyee()
+    {
+        return $this->envoyee;
+    }
+
+    /**
+     * Set dateEnvoi
+     *
+     * @param \DateTime $dateEnvoi
+     * @return Campagne
+     */
+    public function setDateEnvoi($dateEnvoi)
+    {
+        $this->dateEnvoi = $dateEnvoi;
+
+        return $this;
+    }
+
+    /**
+     * Get dateEnvoi
+     *
+     * @return \DateTime 
+     */
+    public function getDateEnvoi()
+    {
+        return $this->dateEnvoi;
+    }
+
+    /**
      * Set dateCreation
      *
      * @param \DateTime $dateCreation
@@ -262,75 +324,6 @@ class Campagne
     }
 
     /**
-     * Set dateEnvoi
-     *
-     * @param \DateTime $dateEnvoi
-     * @return Campagne
-     */
-    public function setDateEnvoi($dateEnvoi)
-    {
-        $this->dateEnvoi = $dateEnvoi;
-
-        return $this;
-    }
-
-    /**
-     * Get dateEnvoi
-     *
-     * @return \DateTime 
-     */
-    public function getDateEnvoi()
-    {
-        return $this->dateEnvoi;
-    }
-
-    /**
-     * Set envoyee
-     *
-     * @param boolean $envoyee
-     * @return Contact
-     */
-    public function setEnvoyee($envoyee)
-    {
-        $this->envoyee = $envoyee;
-
-        return $this;
-    }
-
-    /**
-     * Get envoyee
-     *
-     * @return boolean 
-     */
-    public function getEnvoyee()
-    {
-        return $this->envoyee;
-    }
-
-    /**
-     * Set template
-     *
-     * @param string $template
-     * @return Campagne
-     */
-    public function setTemplate($template)
-    {
-        $this->template = $template;
-
-        return $this;
-    }
-
-    /**
-     * Get template
-     *
-     * @return string 
-     */
-    public function getTemplate()
-    {
-        return $this->template;
-    }
-
-    /**
      * Set userCreation
      *
      * @param \AppBundle\Entity\User $userCreation
@@ -374,119 +367,5 @@ class Campagne
     public function getUserEdition()
     {
         return $this->userEdition;
-    }
-
-    /**
-     * Add zoneContents
-     *
-     * @param \AppBundle\Entity\Emailing\ZoneContent $zoneContents
-     * @return Campagne
-     */
-    public function addZoneContent(\AppBundle\Entity\Emailing\ZoneContent $zoneContents)
-    {
-        $this->zoneContents[] = $zoneContents;
-
-        return $this;
-    }
-
-    /**
-     * Remove zoneContents
-     *
-     * @param \AppBundle\Entity\Emailing\ZoneContent $zoneContents
-     */
-    public function removeZoneContent(\AppBundle\Entity\Emailing\ZoneContent $zoneContents)
-    {
-        $this->zoneContents->removeElement($zoneContents);
-    }
-
-    /**
-     * Get zoneContents
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getZoneContents()
-    {
-         $criteria = Criteria::create()
-	      ->orderBy(array("date" => Criteria::DESC));
-	
-	    return $this->zoneContents->matching($criteria);
-    }
-
-    /**
-     * Add listes
-     *
-     * @param \AppBundle\Entity\CRM\Rapport $listesContact
-     * @return Contact
-     */
-    public function addListeContact(\AppBundle\Entity\CRM\Rapport $listesContact)
-    {
-    	$found = false;
-
-    	if( isset($this->listesContact) ){
-			foreach($this->listesContact as $old_listeContact){
-				if($old_listeContact->getId() == $listesContact->getId()){
-					$found = true;
-				}
-			}
-    	}
-    	//~ else{
-			//~ $this->listeContact = array();
-		//~ }
-    	if(!$found){
-       		$this->listesContact[] = $listesContact;
-    	}
-        return $this;
-    }
-
-    /**
-     * Remove all listes
-     *
-     * @param \AppBundle\Entity\CRM\Rapport $listesContact
-     */
-    public function removeListesContact()
-    {
-        $this->listesContact = null;
-    }
-    
-    /**
-     * Remove liste
-     *
-     * @param \AppBundle\Entity\CRM\Rapport $listesContact
-     */
-    public function removeListeContact(\AppBundle\Entity\CRM\Rapport $listesContact)
-    {
-    	$this->listesContact->removeElement($listesContact);
-    }
-
-    /**
-     * Get listesContact
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getListesContact()
-    {
-        return $this->listesContact;
-    }
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->listesContact = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->zoneContents = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Add listesContact
-     *
-     * @param \AppBundle\Entity\CRM\Rapport $listesContact
-     * @return Campagne
-     */
-    public function addListesContact(\AppBundle\Entity\CRM\Rapport $listesContact)
-    {
-        $this->listesContact[] = $listesContact;
-
-        return $this;
     }
 }

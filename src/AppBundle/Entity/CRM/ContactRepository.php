@@ -235,7 +235,7 @@ class ContactRepository extends EntityRepository
 		return $qb->getQuery()->getSingleScalarResult();
 	}
 
-	public function createQueryAndGetResult($arr_filters, $company, $emailing, $bounce = false, $warning = false, $excludeWarnings){
+	public function createQueryAndGetResult($arr_filters, $company, $emailing, $bounce = false, $warning = false, $excludeWarnings = false){
 
 		$qb  = $this->_em->createQueryBuilder();
 
