@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CampagneContact
  *
- * @ORM\Table()
+ * @ORM\Table(name="campagne_contact")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Emailing\CampagneContactRepository")
  */
 class CampagneContact
