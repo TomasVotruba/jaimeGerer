@@ -72,18 +72,20 @@ class MailgunTestController extends Controller
 	 */
 	public function testWebhook(Request $request){
 		
-		echo('Testing webhook');
-
+		
 		$key = 'key-0be179cdcb7a0ef5648920d7e744c1ad';
 
-		$reponse = new Response();
+		$response = new Response();
 
-		echo $this->verifiyWebhookCall( $key, $request->request->get('token'), $request->request->get('timestamp'), $request->request->get('signature') );
+		echo('Testing webhook');
+
+
+		var_dump( $request->request );
 
 		//check the signature
 		if( $this->verifiyWebhookCall($key, $request->request->get('token'), $request->request->get('timestamp'), $request->request->get('signature') ) === false ){
-			$reponse->setStatusCode('401');
-			return $reponse;
+			$response->setStatusCode('401');
+			return $response;
 		}
 
 		echo('signature OK !');
@@ -108,7 +110,7 @@ class MailgunTestController extends Controller
 		// }
 		
 		
-		return new Response();
+		return $response;
 		
 	}
 
