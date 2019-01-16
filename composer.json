@@ -31,7 +31,7 @@
 	  "sonata-project/easy-extends-bundle" : ">2.1.7",
 	  "sonata-project/intl-bundle" : "2.3.2",
 	  "lexik/form-filter-bundle" : "~5.0",
-	  "knplabs/knp-snappy-bundle" : "dev-master",
+	  "knplabs/knp-snappy-bundle" : "1.0.4",
 	  "knplabs/knp-menu" : "2.3.0",
 	  "knplabs/knp-menu-bundle" : "2.2.1",
 	  "stfalcon/tinymce-bundle" : "1.1",
@@ -41,7 +41,6 @@
 	  "friendsofsymfony/jsrouting-bundle" : "^1.5",
 	  "ekino/wordpress-bundle" : "1.1.0",
 	  "ddeboer/tesseract" : "1.1",
-	  "cspoo/swiftmailer-mailgun-bundle" : "0.2.1",
 	  "it-blaster/color-picker-type-bundle" : "dev-master@dev",
 	  "rcousens/amcharts-bundle" : "dev-master@dev",
 	  "sensio/buzz-bundle": "dev-master",
@@ -50,7 +49,8 @@
 	  "mautic/api-library": "^2.6",
 	  "symfony/phpunit-bridge": "^4.0",
 	  "nelmio/api-doc-bundle": "^2.4",
-	  "friendsofsymfony/rest-bundle": "~2.0"
+	  "friendsofsymfony/rest-bundle": "~2.0",
+	  "mailgun/mailgun-php": "~2.4"
 	},
 	"require-dev" : {
 		"sensio/generator-bundle" : "~2.3",

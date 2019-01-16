@@ -19,3 +19,6 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:         mautic_secret
     mautic_api_url: mautic_url
+
+    mailgun_api_key: key-0be179cdcb7a0ef5648920d7e744c1ad;
+    mailgun_domain: sandbox4401bff394d34fec9b0f77bcfffd3ee6.mailgun.org;

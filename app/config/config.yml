@@ -69,9 +69,17 @@ doctrine:
         auto_mapping: true
 
 # Swiftmailer Configuration
+# Swiftmailer Configuration
 swiftmailer:
     transport: '%mailer_transport%'
-
+    host: '%mailer_host%'
+    username:  '%mailer_user%'
+    password:  '%mailer_password%'
+    port: 465
+    encryption: ssl
+    auth_mode: login
+    logging: true
+    
 # Shtumi Useful Bundle Configuration
 shtumi_useful:
     autocomplete_entities:
@@ -186,11 +194,8 @@ stfalcon_tinymce:
                      - {title: 'Test template 2', content: 'Test 2'}
 
 cspoo_swiftmailer_mailgun:
-    #key: "key-ebd2508e9c7346eb95c5eea86240029d"
-    #domain: "sandboxfa8c7f17ce114f1b939e5dd2937d6588.mailgun.org"
-    key: "key-13587873277bfb8194c52290c0850753"
-    #domain: "sandboxd55b4a445a5948409dc77ea13bef9d5a.mailgun.org"
-    domain: "testhichem1.mdprc.com"
+    key: "key-0be179cdcb7a0ef5648920d7e744c1ad"
+    domain: "sandbox4401bff394d34fec9b0f77bcfffd3ee6.mailgun.org"
 
 nicomak_paypal:
     email: "events@nicomak.eu"
