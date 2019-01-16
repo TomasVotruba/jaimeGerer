@@ -65,7 +65,7 @@ class MailgunTestController extends Controller
 		$campagne->setDateEnvoi(new \DateTime(date('Y-m-d')));
 
 		//set HTML
-		$path = $this->get('kernel')->getRootDir().'/../web/files\emailing/';
+		$path = $this->get('kernel')->getRootDir().'/../web/files/emailing/';
 		$html = file_get_contents($path.'newsletter.html');
 		$campagne->setHtml($html);
 
