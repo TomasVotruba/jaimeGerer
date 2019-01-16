@@ -58,3 +58,13 @@ fos_js_routing:
 # SnowcapImBundle
 snowcap_im:
     resource: "@SnowcapImBundle/Resources/config/routing.yml"
+
+# Route for mailgun.com to post the information that we want to store in the database
+azine_mailgun_webhooks_bundle_webhook:
+    resource: "@AzineMailgunWebhooksBundle/Resources/config/routing/mailgunevent_webhook.yml"
+    prefix:   /
+
+# Routes for administration of the posted data
+azine_mailgun_webhooks_bundle_admin:
+    resource: "@AzineMailgunWebhooksBundle/Resources/config/routing/mailgunevent_admin.yml"
+    prefix:   /admin/

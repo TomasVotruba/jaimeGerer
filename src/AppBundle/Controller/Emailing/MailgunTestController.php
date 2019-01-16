@@ -47,7 +47,7 @@ class MailgunTestController extends Controller
 	 */ 
 	public function testAPI(){
 
-		$key = 'key-0be179cdcb7a0ef5648920d7e744c1ad';
+		$key = $this->container->getParameter('mailgun_api_key');
 		$domain = 'sandbox4401bff394d34fec9b0f77bcfffd3ee6.mailgun.org';
 
 		$mgClient = new \Mailgun\Mailgun($key);
@@ -68,29 +68,30 @@ class MailgunTestController extends Controller
 	}
 
 	/**
-	 * @Route("/emailing/test/webhook", name="emailing_test_webhook")
+	 * @Route("/emailing/test/webhook", name="emailing_test_webhook", methods={"POST"})
 	 */
-	public function testWebhook(Request $request){
+	public function testWebhook(){
 		
-		
-		$key = 'key-0be179cdcb7a0ef5648920d7e744c1ad';
-
 		$response = new Response();
 
-		echo('Testing webhook');
+		$form = $this->createFormBuilder()->getForm();
+		$request = $this->getRequest();
+		$form->handleRequest($request);
 
+		var_dump('Testing webhook');
 
-		var_dump( $request->request );
+		var_dump( $request->files->all() );
 
 		//check the signature
-		if( $this->verifiyWebhookCall($key, $request->request->get('token'), $request->request->get('timestamp'), $request->request->get('signature') ) === false ){
+		if( $this->verifiyWebhookCall($request->request->get('token'), $request->request->get('timestamp'), $request->request->get('signature') ) === false ){
+			var_dump('signature KO');
 			$response->setStatusCode('401');
 			return $response;
 		}
 
-		echo('signature OK !');
+		var_dump('signature OK');
 
-		var_dump($request->request);
+		//var_dump($request->request);
 
 		// $event = $request->request->get('event');
 		// echo($event);
@@ -119,7 +120,7 @@ class MailgunTestController extends Controller
 	 */
 	public function testEvents(){
 
-		$key = 'key-0be179cdcb7a0ef5648920d7e744c1ad';
+		$key = $this->container->getParameter('mailgun_api_key');
 		$domain = 'sandbox4401bff394d34fec9b0f77bcfffd3ee6.mailgun.org';
 
 		$mgClient = new \Mailgun\Mailgun($key);
@@ -133,8 +134,9 @@ class MailgunTestController extends Controller
 	/**
 	 * Check request signature when receiving a call from a Mailgun webhook
 	 **/
-	private function verifiyWebhookCall($key, $token, $timestamp, $signature){
+	private function verifiyWebhookCall($token, $timestamp, $signature){
 		
+		$key = $this->container->getParameter('mailgun_api_key');
 	 	/*
 	 		From Mailgun docs : https://documentation.mailgun.com/en/latest/user_manual.html#webhooks
 			To verify the webhook is originating from Mailgun you need to:

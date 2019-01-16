@@ -53,10 +53,6 @@ knp_snappy:
         binary:     C:\wkhtmltopdf12\bin\wkhtmltopdf
         options: []
 
-cspoo_swiftmailer_mailgun:
-    key: "key-0be179cdcb7a0ef5648920d7e744c1ad"
-    domain: "sandbox4401bff394d34fec9b0f77bcfffd3ee6.mailgun.org"
-
 nicomak_paypal:
     debug: true
 

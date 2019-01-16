@@ -23,7 +23,6 @@ class AppKernel extends Kernel
         	new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
         	new Liuggio\ExcelBundle\LiuggioExcelBundle(),
         	new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
-        	new cspoo\Swiftmailer\MailgunBundle\cspooSwiftmailerMailgunBundle(),
         	new Fenrizbes\ColorPickerTypeBundle\FenrizbesColorPickerTypeBundle(),
         	new RC\AmChartsBundle\RCAmChartsBundle(),
         	new FOS\UserBundle\FOSUserBundle(),
@@ -41,6 +40,7 @@ class AppKernel extends Kernel
           new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
           new Snowcap\ImBundle\SnowcapImBundle(),
           new CMEN\GoogleChartsBundle\CMENGoogleChartsBundle(),
+          new Azine\MailgunWebhooksBundle\AzineMailgunWebhooksBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

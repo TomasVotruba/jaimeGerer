@@ -22,3 +22,4 @@ parameters:
 
     mailgun_api_key: key;
     mailgun_domain: domain;
+    mailgun_public_key: public_key;
