@@ -78,6 +78,8 @@ class MailgunTestController extends Controller
 
 		$reponse = new Response();
 
+		echo $this->verifiyWebhookCall( $key, $request->request->get('token'), $request->request->get('timestamp'), $request->request->get('signature') );
+
 		//check the signature
 		if( $this->verifiyWebhookCall($key, $request->request->get('token'), $request->request->get('timestamp'), $request->request->get('signature') ) === false ){
 			$reponse->setStatusCode('401');
