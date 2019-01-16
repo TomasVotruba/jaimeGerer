@@ -130,8 +130,8 @@ class MailgunTestController extends Controller
 		$eventData = $content['event-data'];
 
 		$contactEmail = $eventData['recipient'];
-		$campagneId = $eventData['my-custom-data']['campagne-id'];
-		$companyId = $eventData['my-custom-data']['company-id'];
+		$campagneId = $eventData['user-variables']['my-custom-data']['campagne-id'];
+		$companyId = $eventData['user-variables']['my-custom-data']['company-id'];
 		$timestamp = $eventData['timestamp'];
 
 		if(!$contactEmail || !$campagneId || !$companyId){
