@@ -73,7 +73,7 @@ class MailgunTestController extends Controller
 
 		//add contacts
 		$rapportRepo = $em->getRepository('AppBundle:CRM\Rapport');
-		$rapport = $rapportRepo->find(435);
+		$rapport = $rapportRepo->find(442);
 		$filterRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\RapportFilter');
 		$arr_filters = $filterRepo->findByRapport($rapport);
 		$contactRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
@@ -103,7 +103,7 @@ class MailgunTestController extends Controller
 		    'html'    => $campagne->getHtml(),
 		    'recipient-variables' => '{}',
 		    'v:my-custom-data'   => "{'campagne-id' => $id, 'company-id' => $companyId }",
-		    'o:testmode ' => true
+		    'o:testmode ' => 'true'
 		));
 
 		dump($result);
