@@ -72,6 +72,8 @@ class MailgunTestController extends Controller
 	 */
 	public function testWebhook(Request $request){
 		
+		$this->get('logger')->info('Testing webhook');
+
 		$key = 'key-0be179cdcb7a0ef5648920d7e744c1ad';
 
 		$reponse = new Response();
