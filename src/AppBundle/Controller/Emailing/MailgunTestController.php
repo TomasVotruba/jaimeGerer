@@ -81,9 +81,8 @@ class MailgunTestController extends Controller
 
 		$signature = $content->signature;
 
-
 		//check the signature
-		if( $this->verifiyWebhookCall($request->request->get('token'), $request->request->get('timestamp'), $request->request->get('signature') ) === false ){
+		if( $this->verifiyWebhookCall($signature->token, $signature->timestamp, $signature->signature ) === false ){
 			var_dump('signature KO');
 			$response->setStatusCode('401');
 			return $response;
