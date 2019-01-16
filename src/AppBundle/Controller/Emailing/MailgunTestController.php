@@ -72,7 +72,7 @@ class MailgunTestController extends Controller
 	 */
 	public function testWebhook(Request $request){
 		
-		$this->get('logger')->info('Testing webhook');
+		echo('Testing webhook');
 
 		$key = 'key-0be179cdcb7a0ef5648920d7e744c1ad';
 
@@ -84,7 +84,9 @@ class MailgunTestController extends Controller
 			return $reponse;
 		}
 
+
 		$event = $request->request->get('event');
+		echo($event);
 
 		try{
 			$this->get('logger')->error($e->getMessage());
@@ -96,6 +98,7 @@ class MailgunTestController extends Controller
 			;
 			$this->get('mailer')->send($mail);
 		} catch(\Exception $e){
+			echo($e->getMessage());
 			$this->get('logger')->error($e->getMessage());
 		}
 		
