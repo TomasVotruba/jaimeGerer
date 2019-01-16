@@ -55,6 +55,7 @@ security:
     # http://symfony.com/doc/current/cookbook/security/access_control.html
     access_control:
         - { path: ^/emailing/campagne/lancer, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1  }
+        - { path: ^/emailing/test/webhook, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/crm/contactwebForm/addContactWeb, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -72,4 +73,3 @@ security:
         - { path: ^/admin/logout, roles: ROLE_USER }
         - { path: ^/admin/, roles: ROLE_ADMIN }
         - { path: ^/superadmin/, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/emailing/test/webhook, roles: IS_AUTHENTICATED_ANONYMOUSLY }
