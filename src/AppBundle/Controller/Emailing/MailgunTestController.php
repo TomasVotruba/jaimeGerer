@@ -82,13 +82,18 @@ class MailgunTestController extends Controller
 
 		$event = $request->request->get('event');
 
-		$mail = \Swift_Message::newInstance()
-			->setSubject('mailgun webhook')
-			->setFrom('gilquin@nicomak.eu')
-			->setTo('gilquin@nicomak.eu')
-			->setBody('Event : '.$event, 'text/html')
-		;
-		$this->get('mailer')->send($mail);
+		try{
+			$mail = \Swift_Message::newInstance()
+				->setSubject('mailgun webhook')
+				->setFrom('gilquin@nicomak.eu')
+				->setTo('gilquin@nicomak.eu')
+				->setBody('Event : '.$event, 'text/html')
+			;
+			$this->get('mailer')->send($mail);
+		} catch(\Exception $e){
+			throw $e;
+		}
+		
 		
 		return new Response();
 		
