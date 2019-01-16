@@ -106,9 +106,6 @@ class MailgunTestController extends Controller
 		    'o:testmode ' => 'true'
 		));
 
-		dump($result);
-
-
 	 	return new Response();
 	}
 
@@ -138,7 +135,7 @@ class MailgunTestController extends Controller
 		$timestamp = $eventData['timestamp'];
 
 		if(!$contactEmail || !$campagneId || !$companyId){
-			return $response();
+			return $response;
 		}
 
 		$em = $this->getDoctrine()->getManager();
@@ -162,6 +159,14 @@ class MailgunTestController extends Controller
 						$campagneContact->setDelivered(true);
 						$campagneContact->setDeliveredDate(new \DateTime(date('Y-m-d', $timestamp)));
 
+					case 'opened':
+						$campagneContact->setOpen(true);
+						$campagneContact->setOpenDate(new \DateTime(date('Y-m-d', $timestamp)));
+
+					case 'clicked':
+						$campagneContact->setClick(true);
+						$campagneContact->setClickDate(new \DateTime(date('Y-m-d', $timestamp)));
+
 				}
 				
 				$em->persist($campagneContact);
@@ -184,8 +189,6 @@ class MailgunTestController extends Controller
 
 		$mgClient = new \Mailgun\Mailgun($key);
 		$result = $mgClient->get("$domain/events");
-
-		dump($result);
 
 		return new Response();
 	}
