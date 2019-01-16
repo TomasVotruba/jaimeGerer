@@ -20,6 +20,6 @@ parameters:
     secret:         mautic_secret
     mautic_api_url: mautic_url
 
-    mailgun_api_key: key;
-    mailgun_domain: domain;
-    mailgun_public_key: public_key;
+    mailgun_api_key: key
+    mailgun_domain: domain
+    mailgun_public_key: public_key

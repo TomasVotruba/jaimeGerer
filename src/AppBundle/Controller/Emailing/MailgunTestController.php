@@ -68,19 +68,19 @@ class MailgunTestController extends Controller
 	}
 
 	/**
-	 * @Route("/emailing/test/webhook", name="emailing_test_webhook", methods={"POST"})
+	 * @Route("/emailing/test/webhook", name="emailing_test_webhook")
 	 */
 	public function testWebhook(){
 		
 		$response = new Response();
-
-		$form = $this->createFormBuilder()->getForm();
 		$request = $this->getRequest();
-		$form->handleRequest($request);
 
 		var_dump('Testing webhook');
 
-		var_dump( $request->files->all() );
+		$content = json_decode($request->getContent());
+
+		$signature = $content->signature;
+
 
 		//check the signature
 		if( $this->verifiyWebhookCall($request->request->get('token'), $request->request->get('timestamp'), $request->request->get('signature') ) === false ){

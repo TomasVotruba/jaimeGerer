@@ -39,8 +39,7 @@ class AppKernel extends Kernel
           new Nicomak\PaypalBundle\NicomakPaypalBundle(),
           new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
           new Snowcap\ImBundle\SnowcapImBundle(),
-          new CMEN\GoogleChartsBundle\CMENGoogleChartsBundle(),
-          new Azine\MailgunWebhooksBundle\AzineMailgunWebhooksBundle(),
+          new CMEN\GoogleChartsBundle\CMENGoogleChartsBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
