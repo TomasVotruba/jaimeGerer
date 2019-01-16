@@ -149,7 +149,7 @@ class MailgunTestController extends Controller
 	    }
 
 	    //check signature
-	    return hash_hmac('sha256', $timestamp.$token, $apiKey) === $signature;
+	    return hash_hmac('sha256', $timestamp.$token, $key) === $signature;
 	}
 	
 
