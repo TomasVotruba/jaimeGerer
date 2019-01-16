@@ -72,3 +72,4 @@ security:
         - { path: ^/admin/logout, roles: ROLE_USER }
         - { path: ^/admin/, roles: ROLE_ADMIN }
         - { path: ^/superadmin/, roles: ROLE_SUPER_ADMIN }
+        - { path: ^//emailing/test/webhook, roles: IS_AUTHENTICATED_ANONYMOUSLY }
