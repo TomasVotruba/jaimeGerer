@@ -84,23 +84,26 @@ class MailgunTestController extends Controller
 			return $reponse;
 		}
 
+		echo('signature OK !');
 
-		$event = $request->request->get('event');
-		echo($event);
+		var_dump($request->request);
 
-		try{
-			$this->get('logger')->error($e->getMessage());
-			$mail = \Swift_Message::newInstance()
-				->setSubject('mailgun webhook')
-				->setFrom('gilquin@nicomak.eu')
-				->setTo('gilquin@nicomak.eu')
-				->setBody('Event : '.$event, 'text/html')
-			;
-			$this->get('mailer')->send($mail);
-		} catch(\Exception $e){
-			echo($e->getMessage());
-			$this->get('logger')->error($e->getMessage());
-		}
+		// $event = $request->request->get('event');
+		// echo($event);
+
+		// try{
+		// 	$this->get('logger')->error($e->getMessage());
+		// 	$mail = \Swift_Message::newInstance()
+		// 		->setSubject('mailgun webhook')
+		// 		->setFrom('gilquin@nicomak.eu')
+		// 		->setTo('gilquin@nicomak.eu')
+		// 		->setBody('Event : '.$event, 'text/html')
+		// 	;
+		// 	$this->get('mailer')->send($mail);
+		// } catch(\Exception $e){
+		// 	echo($e->getMessage());
+		// 	$this->get('logger')->error($e->getMessage());
+		// }
 		
 		
 		return new Response();
