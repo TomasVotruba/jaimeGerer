@@ -338,7 +338,8 @@ class JournalVentesController extends Controller
 			'Libellé',
 			'Débit',
 			'Crédit',
-			'Analytique'
+			'Analytique',
+			'Commentaire'
 		);
 		$row = 1;
 		$col = 'A';
@@ -373,6 +374,8 @@ class JournalVentesController extends Controller
 				$analytique = $settingsAnalytique->getValeur();
 			}
 			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $analytique);
+			$col++;
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCommentaire());
 		}
 
 		//set column width

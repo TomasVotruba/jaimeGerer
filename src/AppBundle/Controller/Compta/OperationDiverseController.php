@@ -183,6 +183,7 @@ class OperationDiverseController extends Controller
 			'Tiers',
 			'Débit',
 			'Crédit',
+			'Commentaire'
 		);
 		$row = 1;
 		$col = 'A';
@@ -227,6 +228,8 @@ class OperationDiverseController extends Controller
 			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getDebit());
 			$col++;
 			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCredit());
+			$col++;
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCommentaire());
 	  	}
 
 		//set column width
