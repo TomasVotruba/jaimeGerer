@@ -238,7 +238,6 @@ class OperationDiverseController extends Controller
 		}
 
 		$response = new Response();
-
 		$response->headers->set('Content-Type', 'application/vnd.ms-excel');
 		$response->headers->set('Content-Disposition', 'attachment;filename="journal_od.xlsx"');
 		$response->headers->set('Cache-Control', 'max-age=0');

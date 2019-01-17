@@ -36,11 +36,11 @@ class DepenseRepository extends EntityRepository
      */
 	public function findForList($company, $length, $start, $orderBy, $dir, $search, $dateRange = ''){
 		$qb = $this->createQueryBuilder('d')
-		->select('d.id', 'd.date', 'd.etat', 'c.nom as compte_nom', 'c.id as compte_id', 'd.libelle', 'd.num')
-		->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
-		->leftJoin('AppBundle\Entity\Compta\LigneDepense', 'l', 'WITH', 'd.id = l.depense');
+			->select('d.id', 'd.date', 'd.etat', 'c.nom as compte_nom', 'c.id as compte_id', 'd.libelle', 'd.num')
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
+			->leftJoin('AppBundle\Entity\Compta\LigneDepense', 'l', 'WITH', 'd.id = l.depense');
 		$qb->where('c.company = :company')
-		->setParameter('company', $company);
+			->setParameter('company', $company);
 		if( is_array($dateRange) ){
 			$qb->andWhere('d.date >= :dateDebut')
 				->setParameter('dateDebut', \DateTime::createFromFormat('D M d Y H:i:s e+', $dateRange['start']))
@@ -52,16 +52,17 @@ class DepenseRepository extends EntityRepository
 			->setParameter('search', '%'.$search.'%');
 		}
 
-
-		$qb->setMaxResults($length)
-		->setFirstResult($start);
-
 		if($orderBy == 'compte_nom'){
 			$qb->addOrderBy('c.nom', $dir);
 		} else if($orderBy != 'totaux') {
 			$qb->addOrderBy('d.'.$orderBy, $dir);
 		}
-	
+
+		if($orderBy != 'totaux'){
+			$qb->setMaxResults($length)
+			->setFirstResult($start);
+		}
+		
 		return $qb->getQuery()->getResult();
 	}
 
