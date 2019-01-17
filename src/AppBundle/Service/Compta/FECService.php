@@ -152,7 +152,7 @@ class FECService extends ContainerAware {
                  ));
 
                 if(!$compteComptable){
-                    var_dump($shortNum);
+                    var_dump('Compte comptable à créer : '.$shortNum);
                 }
 
             }

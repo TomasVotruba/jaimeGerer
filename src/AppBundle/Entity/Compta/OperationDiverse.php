@@ -365,7 +365,7 @@ class OperationDiverse
       } else if($this->avoir) {
         return $this->avoir->getDateCreation();
       } else if($this->facture){
-        return $this->facture->getDate();
+        return $this->facture->getDateCreation();
       } else {
         return $this->getDate();
       }
