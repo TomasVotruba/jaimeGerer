@@ -425,6 +425,14 @@ class DocumentPrixRepository extends EntityRepository
 		->from('AppBundle\Entity\Compta\Avoir', 'a')
 		->where('a.facture = d.id');
 
+		//ne pas prendre les factures qui sont lettrées
+		$lettrageSubQueryBuilder = $this->_em->createQueryBuilder();
+		$lettrageSubQueryBuilder->select('IDENTITY(jv.facture)')
+		->from('AppBundle\Entity\Compta\JournalVente', 'jv')
+		->where('jv.facture = d.id')
+		->andWhere('jv.debit IS NOT NULL')
+		->andWhere('jv.lettrage IS NOT NULL');
+
 		$query = $this->createQueryBuilder('d');
 		$query->select('d.id', 'd.objet', 'd.num', 'd.dateCreation', 'd.dateValidite', 'c.nom as compte_nom', 'c.id as compte_id', 're.num as num_relance')
 			->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
@@ -452,6 +460,7 @@ class DocumentPrixRepository extends EntityRepository
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($chequeSubQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($avoirSubQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($lettrageSubQueryBuilder->getDQL())));
 
 		$query->setMaxResults($length)
 		->setFirstResult($start)
@@ -475,6 +484,20 @@ class DocumentPrixRepository extends EntityRepository
 		->innerJoin('AppBundle\Entity\Compta\Cheque', 'ch', 'WITH', 'cp.cheque = ch.id')
 		->innerJoin('AppBundle\Entity\Compta\Rapprochement', 'rp', 'WITH', 'rp.remiseCheque = ch.remiseCheque')
 		->where('cp.facture = d.id');
+
+		//ne pas prendre les factures qui ont des avoirs
+		$avoirSubQueryBuilder = $this->_em->createQueryBuilder();
+		$avoirSubQueryBuilder->select('IDENTITY(a.facture)')
+		->from('AppBundle\Entity\Compta\Avoir', 'a')
+		->where('a.facture = d.id');
+
+		//ne pas prendre les factures qui sont lettrées
+		$lettrageSubQueryBuilder = $this->_em->createQueryBuilder();
+		$lettrageSubQueryBuilder->select('IDENTITY(jv.facture)')
+		->from('AppBundle\Entity\Compta\JournalVente', 'jv')
+		->where('jv.facture = d.id')
+		->andWhere('jv.debit IS NOT NULL')
+		->andWhere('jv.lettrage IS NOT NULL');
 
 		$query = $this->createQueryBuilder('d');
 		$query->select('COUNT(d)')
@@ -501,6 +524,8 @@ class DocumentPrixRepository extends EntityRepository
 
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($chequeSubQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($avoirSubQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($lettrageSubQueryBuilder->getDQL())));
 
 		return $query->getQuery()->getSingleScalarResult();
 	}
@@ -538,6 +563,14 @@ class DocumentPrixRepository extends EntityRepository
 		->from('AppBundle\Entity\Compta\Avoir', 'a')
 		->where('a.facture = d.id');
 
+		//ne pas prendre les factures qui sont lettrées
+		$lettrageSubQueryBuilder = $this->_em->createQueryBuilder();
+		$lettrageSubQueryBuilder->select('IDENTITY(jv.facture)')
+		->from('AppBundle\Entity\Compta\JournalVente', 'jv')
+		->where('jv.facture = d.id')
+		->andWhere('jv.debit IS NOT NULL')
+		->andWhere('jv.lettrage IS NOT NULL');
+
 		if($compta != null){
 			$query->andWhere('d.compta = :compta')
 			->setParameter('compta', $compta);
@@ -554,6 +587,7 @@ class DocumentPrixRepository extends EntityRepository
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($chequeSubQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($avoirSubQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($lettrageSubQueryBuilder->getDQL())));
 
 		$query->setMaxResults($length)
 		->setFirstResult($start)
@@ -577,6 +611,20 @@ class DocumentPrixRepository extends EntityRepository
 		->innerJoin('AppBundle\Entity\Compta\Cheque', 'ch', 'WITH', 'cp.cheque = ch.id')
 		->innerJoin('AppBundle\Entity\Compta\Rapprochement', 'rp', 'WITH', 'rp.remiseCheque = ch.remiseCheque')
 		->where('cp.facture = d.id');
+
+		//ne pas prendre les factures qui ont des avoirs
+		$avoirSubQueryBuilder = $this->_em->createQueryBuilder();
+		$avoirSubQueryBuilder->select('IDENTITY(a.facture)')
+		->from('AppBundle\Entity\Compta\Avoir', 'a')
+		->where('a.facture = d.id');
+
+		//ne pas prendre les factures qui sont lettrées
+		$lettrageSubQueryBuilder = $this->_em->createQueryBuilder();
+		$lettrageSubQueryBuilder->select('IDENTITY(jv.facture)')
+		->from('AppBundle\Entity\Compta\JournalVente', 'jv')
+		->where('jv.facture = d.id')
+		->andWhere('jv.debit IS NOT NULL')
+		->andWhere('jv.lettrage IS NOT NULL');
 
 		$query = $this->createQueryBuilder('d');
 		$query->select('COUNT(d)')
@@ -603,6 +651,8 @@ class DocumentPrixRepository extends EntityRepository
 
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($chequeSubQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($avoirSubQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($lettrageSubQueryBuilder->getDQL())));
 
 		return $query->getQuery()->getSingleScalarResult();
 	}
@@ -629,6 +679,14 @@ class DocumentPrixRepository extends EntityRepository
 		->from('AppBundle\Entity\Compta\Avoir', 'a')
 		->where('a.facture = d.id');
 
+		//ne pas prendre les factures qui sont lettrées
+		$lettrageSubQueryBuilder = $this->_em->createQueryBuilder();
+		$lettrageSubQueryBuilder->select('IDENTITY(jv.facture)')
+		->from('AppBundle\Entity\Compta\JournalVente', 'jv')
+		->where('jv.facture = d.id')
+		->andWhere('jv.debit IS NOT NULL')
+		->andWhere('jv.lettrage IS NOT NULL');
+
 		$query = $this->createQueryBuilder('d')
 		->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
 		->where('c.company = :company')
@@ -643,6 +701,7 @@ class DocumentPrixRepository extends EntityRepository
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($chequeSubQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($avoirSubQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($lettrageSubQueryBuilder->getDQL())));
 
 		return $query->getQuery()->getResult();
 	}
@@ -669,6 +728,15 @@ class DocumentPrixRepository extends EntityRepository
 		->from('AppBundle\Entity\Compta\Avoir', 'a')
 		->where('a.facture = d.id');
 
+		//ne pas prendre les factures qui sont lettrées
+		$lettrageSubQueryBuilder = $this->_em->createQueryBuilder();
+		$lettrageSubQueryBuilder->select('IDENTITY(jv.facture)')
+		->from('AppBundle\Entity\Compta\JournalVente', 'jv')
+		->where('jv.facture = d.id')
+		->andWhere('jv.debit IS NOT NULL')
+		->andWhere('jv.lettrage IS NOT NULL');
+
+
 
 		$query = $this->createQueryBuilder('d');
 		$query->select()
@@ -684,6 +752,7 @@ class DocumentPrixRepository extends EntityRepository
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($chequeSubQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($avoirSubQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($lettrageSubQueryBuilder->getDQL())));
 
 
 		$query->addOrderBy('d.num', 'ASC');
@@ -716,6 +785,15 @@ class DocumentPrixRepository extends EntityRepository
 		->from('AppBundle\Entity\Compta\Avoir', 'a')
 		->where('a.facture = d.id');
 
+		//ne pas prendre les factures qui sont lettrées
+		$lettrageSubQueryBuilder = $this->_em->createQueryBuilder();
+		$lettrageSubQueryBuilder->select('IDENTITY(jv.facture)')
+		->from('AppBundle\Entity\Compta\JournalVente', 'jv')
+		->where('jv.facture = d.id')
+		->andWhere('jv.debit IS NOT NULL')
+		->andWhere('jv.lettrage IS NOT NULL');
+
+
 		$query = $this->createQueryBuilder('d')
 		->where('d.compte = :compte')
 		->andWhere('d.dateValidite <= :now')
@@ -730,6 +808,7 @@ class DocumentPrixRepository extends EntityRepository
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($chequeSubQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($avoirSubQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($lettrageSubQueryBuilder->getDQL())));
 
 
 		$query->addOrderBy('d.num', 'ASC');
@@ -763,6 +842,7 @@ class DocumentPrixRepository extends EntityRepository
 		$lettrageSubQueryBuilder->select('IDENTITY(jv.facture)')
 		->from('AppBundle\Entity\Compta\JournalVente', 'jv')
 		->where('jv.facture = d.id')
+		->andWhere('jv.debit IS NOT NULL')
 		->andWhere('jv.lettrage IS NOT NULL');
 
 		$query = $this->createQueryBuilder('d')
@@ -771,11 +851,11 @@ class DocumentPrixRepository extends EntityRepository
 		->andWhere('d.dateValidite <= :now')
 		->andWhere('d.compta = :compta')
 		->andWhere('d.etat <> :etat')
+		->andWhere('d.type = :type')
 		->setParameter('company', $company)
 		->setParameter('compta', true)
 		->setParameter('now', new \DateTime('yesterday'))
-		->setParameter('etat', 'PAID');
-		$query->andWhere('d.type = :type')
+		->setParameter('etat', 'PAID')
 		->setParameter('type', 'FACTURE');
 
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
