@@ -100,7 +100,7 @@ class Campagne
 
     /**
     *
-    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Emailing\CampagneContact", mappedBy="campagne", cascade={"persist"})
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Emailing\CampagneContact", mappedBy="campagne", cascade={"persist", "remove"}, orphanRemoval=true)
     *
     */
     private $campagneContacts;

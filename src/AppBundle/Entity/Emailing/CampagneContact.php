@@ -23,13 +23,13 @@ class CampagneContact
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Emailing\Campagne", inversedBy="campagneContacts", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $campagne;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact", inversedBy="campagneContacts")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $contact;
 

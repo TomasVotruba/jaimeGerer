@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
 	{{ parent() }}
-	<link rel="stylesheet" href="{{ asset('css/crm.css') }}" type="text/css" />
+	<link rel="stylesheet" href="{{ asset('css/emailing.css') }}" type="text/css" />
 {% endblock %}
 
 {% block body %}
@@ -10,59 +10,39 @@
 		<div class="col-xs-1 aside full-height">
 	    	<ul>
 	    		<li id="link-emailing">
-	    			<a href="{{ path('emailing_index') }}">Accueil</a>
+	    		    <a href="{{ path('emailing_index') }}">
+	    		      <span class="glyphicon glyphicon-home" style="font-size: 2em;"></span>
+	    		        <div class="tooltoop">Accueil</div>
+	    		    </a>
 	    		</li> 
 	    		<li id="link-campagne">
-
 	    			<a href="{{ path('emailing_campagne_liste') }}">
-	    				<span class="glyphicon glyphicon-briefcase" style="font-size: 2em;"></span> 
+	    				<span class="glyphicon glyphicon-envelope" style="font-size: 2em;"></span> 
 	    				<div class="tooltoop">Campagnes</div>
-	    			</a>
-	    		</li>
-	    		<!--li id="link-template"> 
-	    			<a href="{{ path('emailing_template_emailing_liste') }}">
-	    			<span class="glyphicon glyphicon-user" style="font-size: 2em;"></span>
-	    			<div class="tooltoop">Templates</div>
-	    		</li-->
-	    		<li id="link-statistiques">
-	    			<a href="{{ path('emailing_campagne_statistiques') }}">
-	    				<span class="glyphicon glyphicon-time" style="font-size: 2em;"></span>
-	    				<div class="tooltoop">Statistiques</div>
-	    			</a>
-	    		</li>
-	    		<li id="link-rapport">
-	    			<a href="{{ path('emailing_rapport_liste', {'type' : 'contact'} ) }}">
-	    				<span class="glyphicon glyphicon-list-alt" style="font-size: 2em;"></span> 
-	    				<div class="tooltoop">Listes de contacts</div>
 	    			</a>
 	    		</li>
 	    	</ul>
 	    </div>
 	    		
-	    <div class="col-xs-10 fit wrap-content wrap-content-commercial">
-	     <div class="titre titre-emailing">
-			<h1>J'aime communiquer</h1>
-		</div>
+	    <div class="col-xs-10 fit wrap-content wrap-content-emailing">
+	     	<div class="titre titre-emailing">
+				<h1>J'aime communiquer</h1>
+			</div>
 	    	{% block content %} 
 	    			
 	    	{% endblock %}
 	    </div>
 
 	</div>
-<link rel="stylesheet" type="text/css" href="{{ asset('lib/jquery-typeahead/dist/jquery.typeahead.min.css') }}">
 {% endblock %}
 
 {% block javascripts %}
-
 	{{ parent() }}
-
-	   <script type="text/javascript">
-
+   <script type="text/javascript">
 	   /* Add class "current" on the right menu item by checking the page URL */
 	   $(document).ready(function() {
-			var arr_links = ['rapport', 'statistiques', 'campagne'];
+			var arr_links = ['campagne'];
 		    var arr_param = window.location.href.split("/"); 
-//console.log(arr_param);
 		    var index;
 		    for (index = 0; index < arr_param.length; ++index) {
 		    	if($.inArray(arr_param[index], arr_links) != -1){
@@ -71,9 +51,5 @@
 			    }
 		    }
 		});
-
 	</script>
-
-
 {% endblock %}
-

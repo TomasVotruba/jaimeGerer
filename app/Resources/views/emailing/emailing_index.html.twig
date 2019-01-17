@@ -2,21 +2,15 @@
 
 {% block content %}
 
-<div class="row" id="crm_index">
+<div class="row" id="emailing_index">
 
 	<div class="col-md-12 text-accueil-outil">
 		<div class="page-head">
 			<h1>{{ random(['La communication, c\'est génial !']) }}</h1>
-			<p class="l">Faites de l'emailing avec le sourire :-)</p>
+			<p class="l">Envoyez vos emailings sans prise de tête ! ;-)</p>
 			<div class="page-index-alert-box">
 				<div class="page-index-alert-box-normal">Version</br>
 					<span>Bêta</span>
-				</div>
-				<div class="page-index-alert-box-hover">
-  				<a href="mailto:contact@jaime-gerer.com">
-				<img src="{{ asset('images/assets/fusee-trace.png') }}" alt="jaimegerer" width="50"/>
-					Donnez-nous votre avis
-				</a>
 				</div>
 			</div>
 		</div>
@@ -25,42 +19,13 @@
 	<div class="col-md-4">
 		<p>
 			<a href="{{ path('emailing_campagne_liste') }}">
-			<span class="glyphicon glyphicon-briefcase" style="font-size: 2em;"></span> 
+			<span class="glyphicon glyphicon-envelope" style="font-size: 2em;"></span> 
 				<br />
 				Campagnes
 			</a>
 		</p>
 	</div>
-	
-	<!--div class="col-md-4"> 
-		<p>
-			<a href="{{ path('emailing_template_emailing_liste') }}">
-				<span class="glyphicon glyphicon-user" style="font-size: 2em;"></span>
-				<br />
-				Templates
-			</a>
-		</p>
-	</div-->
-	
-	<div class="col-md-4">
-		<p>
-			<a href="{{ path('emailing_campagne_statistiques') }}">
-				<span class="glyphicon glyphicon-time" style="font-size: 2em;"></span> 
-				<br />
-				Statistiques
-			</a>
-		</p>
-	</div>
-	
-	<div class="col-md-4">
-		<p>
-   			<a href="{{ path('emailing_rapport_liste', {'type' : 'contact'} ) }}">
-				<span class="glyphicon glyphicon-list-alt" style="font-size: 2em;" ></span> 
-				<br />
-				Listes
-			</a>
-		</p>
-	</div>
+
 	
 </div>
 

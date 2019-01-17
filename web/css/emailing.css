@@ -1,0 +1,27 @@
+body{
+	background: rgba(242, 131, 92, 0.12) !important;
+}
+
+#emailing_index{
+	text-align: center;
+}
+
+#emailing_index a{
+	color: #fb7155;
+}
+
+.aside ul .current a{
+	color: #fb7155;
+}
+
+.aside ul li:hover a span{
+    color: #fb7155;
+}
+
+.tooltoop{
+    background: #fb7155;
+}
+
+.tooltoop:before{
+    border-right:8px solid #fb7155;
+}

@@ -142,3 +142,8 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         arguments: []
+    appbundle.mailgun:
+        class: AppBundle\Service\Emailing\MailgunService
+        calls:
+            - [setContainer, ["@service_container"]]
+        arguments: ['%mailgun_api_key%', '%mailgun_domain%', "@doctrine.orm.entity_manager"]

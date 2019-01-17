@@ -58,6 +58,7 @@ class DepenseController extends Controller
 
 		$arr_search = $requestData->get('search');
 		$arr_date = $requestData->get('dateRange');
+
 		$list = $repository->findForList(
 				$this->getUser()->getCompany(),
 				$requestData->get('length'),
@@ -92,6 +93,13 @@ class DepenseController extends Controller
 			}
 		}
 
+		if($arr_cols[$col]['data'] == 'totaux' && $arr_sort[0]['dir'] == 'asc'){
+			usort($list, array($this, 'sortByTotalAsc'));
+		} else if($arr_cols[$col]['data'] == 'totaux' && $arr_sort[0]['dir'] == 'desc'){
+			usort($list, array($this, 'sortByTotalDesc'));
+		}
+		
+
 		$response = new JsonResponse();
 		$response->setData(array(
 				'draw' => intval( $requestData->get('draw') ),
@@ -101,6 +109,22 @@ class DepenseController extends Controller
 		));
 
 		return $response;
+	}
+
+	private function sortByTotalAsc($a, $b)
+	{
+	    if ($a['totaux']['HT'] == $b['totaux']['HT']) {
+	        return 0;
+	    }
+	    return ($a['totaux']['HT'] < $b['totaux']['HT']) ? -1 : 1;
+	}
+
+	private function sortByTotalDesc($a, $b)
+	{
+	    if ($a['totaux']['HT'] == $b['totaux']['HT']) {
+	        return 0;
+	    }
+	    return ($a['totaux']['HT'] < $b['totaux']['HT']) ? 1 : -1;
 	}
 
 	/**
