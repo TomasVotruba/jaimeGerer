@@ -313,15 +313,34 @@ class DocumentPrixRepository extends EntityRepository
 
 		$queryBuilder  = $this->_em->createQueryBuilder();
 		$subQueryBuilder = $this->_em->createQueryBuilder();
+		$subQueryBuilderAvoir = $this->_em->createQueryBuilder();
+		$subQueryBuilderCheque = $this->_em->createQueryBuilder();
+		$subQueryBuilderLettrage = $this->_em->createQueryBuilder();
 
 		$subQueryBuilder->select('IDENTITY(r.facture)')
 		->from('AppBundle\Entity\Compta\Rapprochement', 'r')
 		->where('r.facture = d.id ');
 
+		$subQueryBuilderAvoir->select('IDENTITY(a.facture)')
+		->from('AppBundle\Entity\Compta\Avoir', 'a')
+		->where('a.facture = d.id ');
+
+		$subQueryBuilderCheque->select('IDENTITY(cp.facture)')
+		->from('AppBundle\Entity\Compta\ChequePiece', 'cp')
+		->where('cp.facture = d.id ');
+
+		$subQueryBuilderLettrage->select('IDENTITY(j.facture)')
+		->from('AppBundle\Entity\Compta\JournalVente', 'j')
+		->where('j.facture = d.id ')
+		->andWhere('j.lettrage IS NOT NULL');
+
 		$query = $this->createQueryBuilder('d')
 			->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
 			->where('c.company = :company')
 			->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())))
+			->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilderAvoir->getDQL())))
+			->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilderCheque->getDQL())))
+			->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilderLettrage->getDQL())))
 			->andWhere('d.type = :type')
 			->setParameter('company', $company)
 			->setParameter('type', 'FACTURE')
@@ -739,6 +758,13 @@ class DocumentPrixRepository extends EntityRepository
 		->from('AppBundle\Entity\Compta\Avoir', 'a')
 		->where('a.facture = d.id');
 
+		//ne pas prendre les factures qui sont lettrées
+		$lettrageSubQueryBuilder = $this->_em->createQueryBuilder();
+		$lettrageSubQueryBuilder->select('IDENTITY(jv.facture)')
+		->from('AppBundle\Entity\Compta\JournalVente', 'jv')
+		->where('jv.facture = d.id')
+		->andWhere('jv.lettrage IS NOT NULL');
+
 		$query = $this->createQueryBuilder('d')
 		->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
 		->where('c.company = :company')
@@ -755,6 +781,7 @@ class DocumentPrixRepository extends EntityRepository
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($chequeSubQueryBuilder->getDQL())));
 		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($avoirSubQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($lettrageSubQueryBuilder->getDQL())));
 
 		$query->addOrderBy('d.num', 'ASC');
 
