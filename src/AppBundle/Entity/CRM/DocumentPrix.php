@@ -877,7 +877,7 @@ class DocumentPrix
             $totalTTC = $totalHT+$this->taxe;
         }
 
-        return intval($totalTTC*100);
+        return intval(strval($totalTTC*100));
     }
 
     public function getTotalHTMoinsAvoirs(){
@@ -903,7 +903,7 @@ class DocumentPrix
         foreach($this->rapprochements as $rapprochement){
             $total+= $rapprochement->getMouvementBancaire()->getMontant()*100;
         }
-        return intval($total);
+        return intval(strval($total));
     }
 
 

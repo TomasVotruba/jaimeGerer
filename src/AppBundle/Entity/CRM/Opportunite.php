@@ -917,7 +917,7 @@ class Opportunite
     }
 
     public function getMontantInt(){
-        return intval($this->montant*100);
+        return intval(strval($this->montant*100));
     }
 
     /**
