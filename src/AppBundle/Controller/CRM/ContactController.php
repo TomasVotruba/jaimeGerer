@@ -1056,7 +1056,7 @@ class ContactController extends Controller
 		$em = $this->getDoctrine()->getManager();
 
 		if($contact->getBounce() == "WARNING" && strtoupper(trim($bounce)) == "VALID"){
-			$contact->setStropBounceWarning(true);
+			$contact->setStopBounceWarning(true);
 		}
 
 		$contact->setBounce(strtoupper(trim($bounce)));
