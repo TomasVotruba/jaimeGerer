@@ -489,7 +489,7 @@ class ContactService extends ContainerAware {
             try{
                 $bounce = $this->zeroBounceAPIService->isBounce($contact);
 
-                if($bounce != "WARNING" || $contact->getStropBounceWarning() != true) {
+                if($bounce != "WARNING" || $contact->getStopBounceWarning() != true) {
                     $contact->setBounce($bounce);
                 }
                
