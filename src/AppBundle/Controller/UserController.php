@@ -246,8 +246,7 @@ class UserController extends Controller
     $mail = \Swift_Message::newInstance()
       ->setSubject('Youpi, un nouvel utilisateur s\'est inscrit sur J\'aime gérer ! ')
       ->setFrom('laura@jaime-gerer.com')
-      ->setTo('salavin@nicomak.eu')
-      ->setCc('laura@jaime-gerer.com')
+      ->setTo('laura@jaime-gerer.com')
       ->setBody($message, 'text/html');
     $this->get('mailer')->send($mail);
 
