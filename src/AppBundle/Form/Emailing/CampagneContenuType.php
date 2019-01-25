@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class CampagneType extends AbstractType
+class CampagneContenuType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -15,22 +15,20 @@ class CampagneType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom', 'text', array(
+            ->add('file', 'file', array(
             	'required' => true,
-            	'label' => 'Nom de la campagne'
+            	'label' => 'Contenu (fichier HTML)',
+                'mapped' => false,
+                'attr' => array('class' => 'file-input')
         	))
-            ->add('objet', 'text', array(
-            	'required' => true,
-            	'label' => 'Objet de l\'email'
-        	)) 
-            ->add('nomExpediteur', 'text', array(
-            	'required' => true,
-            	'label' => 'Nom de l\'expéditeur'
-        	))
-            ->add('emailExpediteur', 'email', array(
-            	'required' => true,
-            	'label' => 'Email de l\'expéditeur'
-        	))
+            ->add('preview', 'submit', array(
+                'label' => 'Preview',
+                'attr' => array('class' => 'btn btn-info preview')
+            ))
+            ->add('submit', 'submit', array(
+                'label' => 'Suite',
+                'attr' => array('class' => 'btn btn-success')
+            ))
         ;
     }
     
@@ -49,7 +47,7 @@ class CampagneType extends AbstractType
      */
     public function getName()
     {
-        return 'appbundle_emailing_campagne';
+        return 'appbundle_emailing_campagne_contenu';
     }
 
 }

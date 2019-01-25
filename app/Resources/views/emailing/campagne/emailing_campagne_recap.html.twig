@@ -1,0 +1,67 @@
+{% extends 'emailing/emailing_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>{{ campagne.nom }}</h1>	
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<p><strong>Nom de la campagne: </strong> {{ campagne.nom }}</p>
+			<p><strong>Nom de l'expéditeur  : </strong> {{ campagne.nomExpediteur }}</p>
+			<p><strong>Email de l'expéditeur : </strong> {{ campagne.emailExpediteur }}</p>
+			<p><strong>Objet : </strong> {{ campagne.objet }}</p>
+			<p><strong>Contenu : </strong> <a href="#" data-toggle="modal" data-target="#modal-preview">Aperçu</a></p>
+			<p><strong>Destinataires : </strong> {{ campagne.nbDestinataires }} contacts de la liste {{ campagne.nomRapport }} </p>
+
+		</div>
+	</div>
+
+	<div class="row">
+
+		<div class="col-md-4 center">
+			<a href="{{ path('emailing_campagne_tester', {'id' : campagne.id }) }}" data-toggle="modal" data-target="#modal" class="btn btn-info">Envoyer un email de test</a>
+		</div>
+
+		<div class="col-md-4 center">
+			<a href="#" data-toggle="modal" data-target="#modal-validation-envoi" class="btn btn-success">Envoyer la campagne</a>
+		</div>
+	</div>
+
+	<div class="modal" id="modal-preview">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            	<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+				</div>
+            	<div class="modal-body">
+	            	<div id="emailing-preview">
+	            		{{ campagne.html|raw }}
+	            	</div>
+	            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-validation-envoi">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            	<div class="modal-header">
+            		<h3>Envoyer la campagne "{{ campagne.nom }}"</h3>
+					<a class="close" data-dismiss="modal">×</a>
+				</div>
+            	<div class="modal-body center">
+            		<h4 class="center">Alors ça y est, c'est parti ?</h4>
+	            	<p class="center">
+	            		<a class="btn btn-success" href="{{ path('emailing_campagne_envoyer', {'id' : campagne.id }) }}">Envoyer !</a>
+
+	           		</p>
+	            </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

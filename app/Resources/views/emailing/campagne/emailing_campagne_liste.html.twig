@@ -13,47 +13,31 @@
 		    	<a href="{{ path('emailing_campagne_ajouter') }}" class="btn btn-success">
 		    		<span class="glyphicon glyphicon-plus"></span> Ajouter
 		    	</a>
-		    	<a href="#" class="btn btn-danger">
-		    		<span class="glyphicon glyphicon-trash"></span> Supprimer
-		    	</a>
 		    </p>
 
-<script>
-$(document).ready(function() {
-
-$("* [rel='tooltip']").tooltip({
-   html: true, 
-   placement: 'top'
-});
-
-});
-</script>
-<style>
-#table_contact_list td{ vertical-align: top; }
-</style>
-
-	    </div>
+		</div>
     </div>
     
-	    <div class="row">
-	    	<div class="col-md-12">
-			    <table id="table_contact_list" class="table table-bordered table-striped">    
-			    	<thead>        
-			    		<tr>            
-			    			<th>Nom</th>            
-			    			<th>Date</th>
-			    			<th>Destinataires</th>  
-			    			<th>Actions</th>         
-			    		</tr>    
-			    	</thead>    
-			    	
-			    </table>
-			</div>
+	<div class="row">
+    	<div class="col-md-12">
+		    <table id="table_contact_list" class="table table-bordered table-striped">    
+		    	<thead>        
+		    		<tr>            
+		    			<th>Nom</th>   
+		    			<th>Destinataires</th>         
+		    			<th>Création</th>
+		    			<th>Actions</th>         
+		    		</tr>    
+		    	</thead>    
+		    	
+		    </table>
+		</div>
 	</div>
 {% endblock %}
 
 {% block javascripts %}
 	{{ parent() }}
+
 	<script type="text/javascript">
 		$(document).ready( function () {    
 			$('#table_contact_list').DataTable({
@@ -74,7 +58,6 @@ $("* [rel='tooltip']").tooltip({
 			                    "sFileName": "campagnes.pdf",
 			                    "sTitle": "campagne"
 			                },
-			               
 			            ]
 			        },
 					"language" : {                
@@ -84,14 +67,13 @@ $("* [rel='tooltip']").tooltip({
 					"processing": true,
 				    "serverSide": true,
 				    "ajax":{
-		                url :"{{ path('emailing_campagne_liste_ajax') }}", // json datasource
-		                type: "post",  // method  , by default get
+		                url : Routing.generate('emailing_campagne_liste_ajax'),
+		                type: "post",
 		            },
 		            "columns": [
-	                   { "data": "nomCampagne" },
+	                   { "data": "nom" },
+	                   { "data": "nomRapport" },
 	                   { "data": "dateCreation" },
-	                   { "data": "objetEmail" },
-	                   { "data": "listeContact" },
 	                ],
 					fnDrawCallback: function () {
 					  $( 'a', this.fnGetNodes() ).tooltip( {
@@ -110,61 +92,69 @@ $("* [rel='tooltip']").tooltip({
 					  } );
 					},
 	                "columnDefs": [
-	                               {
-	                                   "render": function ( data, type, row ) {
-	                                       var s = '<a href="voir/'+row['id']+'">' ;
-											if(row['nomCampagne']){
-												s+= row['nomCampagne']+' ';
-											}
+                       {
+                           "render": function ( data, type, row ) {
+                           		var url = Routing.generate('emailing_campagne_voir', {'id' : row['id'] });
+                                var s = '<a href="'+url+'">'+data+'</a><br />' ;
+								if(row['etat'] == 'DRAFT'){
+									s+= '<span class="label label-default">Brouillon</span>';
+								} else if(row['etat'] == 'SCHEDULED'){
+									s+= '<span class="label label-info">Planifiée</span>';
+								} else if(row['etat'] == 'SENT'){
+									s+= '<span class="label label-success">Envoyée</span>';
+								}
+                               return s;
+                           },
+                           "targets": 0
+                       },
+                       {
+                           "render": function ( data, type, row ) {
+                               var s = row['nomRapport']+'<br />'+row['nbContacts']+' destinataires' ;
+                               return s;
+                           },
+                           "targets": 1
+                       },
+                       {
+						   "render": function ( data, type, row ) {
+							   var d = data.date;
+							   var arr = d.split("-");
+							   var y = arr[0];
+							   var m = arr[1];
+							   var arrj = arr[2].split(" ");
+							   var j = arrj[0];
+							   var res = j+"/"+m+"/"+y;  
+							  
+							   return 'Créée le '+res+' <br />par '+row['user'];
+						   },
+                           "targets": 2
+                       },
+                       {
+                           // The `data` parameter refers to the data for the cell (defined by the
+                           // `data` option, which defaults to the column being worked with, in
+                           // this case `data: 0`.
+                           "render": function ( data, type, row ) {
+    
+                                var voirUrl = Routing.generate('emailing_campagne_voir', {'id' : row['id']});
+                                var supprimerUrl = Routing.generate('emailing_campagne_supprimer', {'id' : row['id']});
 
-	                                       s+= data+'</a>';
-	                                       return s;
-	                                   },
-	                                   "targets": 0
-	                               },
-	                               {
-									   "render": function ( data, type, row ) {
-										   var d = data.date;
-										   var arr = d.split("-");
-										   var y = arr[0];
-										   var m = arr[1];
-										   var arrj = arr[2].split(" ");
-										   var j = arrj[0];
-										   var res = j+"/"+m+"/"+y;  
-										   return res;
-									   },
-	                                   "targets": 1
-	                               },
-	                               {
-	                                   // The `data` parameter refers to the data for the cell (defined by the
-	                                   // `data` option, which defaults to the column being worked with, in
-	                                   // this case `data: 0`.
-	                                   "render": function ( data, type, row ) {
-	                                      var s="";
-											if(row['listeContact']){
-												s+= row['listeContact'];
-											}											
-	                                      return s;
-	                                   },
-	                                   "targets": 2
-	                               },
-	                               {
-	                                   // The `data` parameter refers to the data for the cell (defined by the
-	                                   // `data` option, which defaults to the column being worked with, in
-	                                   // this case `data: 0`.
-	                                   "render": function ( data, type, row ) {
-	                                        var s = "";
-											if(!row['envoyee']){
-											  s+="<a href=\"editer/"+row['id']+"\" class=\"btn btn-xs btn-warning\" ​data-toggle=\"tooltip\" title=\"Editer\"><span class=\"glyphicon glyphicon-pencil\"></span></a>";
-											}
-	                                       return "<a href=\"voir/"+row['id']+"\" class=\"btn btn-xs btn-info\" ​data-toggle=\"tooltip\" title=\"Voir\"><span class=\"glyphicon glyphicon-eye-open\"></span></a>" +" "+ s 
-	                                    	 +" "+
-	                                    	"<a href=\"supprimer/"+row['id']+"\" class=\"btn btn-xs btn-danger\" ​data-toggle=\"tooltip\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a>";
-	                                   },
-	                                   "targets": 3
-	                               },
-	                               { "visible": false,  "targets": [ 'id' ] }
-	                           ]
+                                var s = '<a href="'+voirUrl+'" class="btn btn-xs btn-info" ​data-toggle="tooltip" title="Voir"><span class="glyphicon glyphicon-eye-open"></span></a>';
+                                
+								// if(!row['envoyee']){
+								//   s+="<a href=\"editer/"+row['id']+"\" class=\"btn btn-xs btn-warning\" ​data-toggle=\"tooltip\" title=\"Editer\"><span class=\"glyphicon glyphicon-pencil\"></span></a>";
+								// }
+
+								s += ' <a href="'+supprimerUrl+'" class="btn btn-xs btn-danger" ​data-toggle="tooltip" title="Supprimer"><span class="glyphicon glyphicon-trash"></span></a>';
+                                return  s;
+                           },
+                           "targets": 3
+                       },
+                       { "visible": false,  "targets": [ 'id' ] }
+                   ]
+			});
+
+			$("* [rel='tooltip']").tooltip({
+			   	html: true, 
+			   	placement: 'top'
 			});
 		});
 	</script>

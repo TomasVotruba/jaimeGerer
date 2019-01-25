@@ -28,7 +28,24 @@ class MailgunService extends ContainerAware {
     /**
      * Send $campagne via MailGun API
      **/ 
-    public function sendViaAPI($campagne){
+    public function sendTestViaAPI($campagne, $to){
+
+        $mgClient = new \Mailgun\Mailgun($this->apiKey);
+       
+        $result = $mgClient->sendMessage($this->domain, array(
+            'from'    => $campagne->getNomExpediteur().' <'.$campagne->getEmailExpediteur().'>',
+            'to'      => $to,
+            'subject' => '[TEST] '.$campagne->getObjet(),
+            'html'    => $campagne->getHtml(),
+        ));
+
+        return $result;
+    }
+
+    /**
+     * Send $campagne via MailGun API
+     **/ 
+    public function sendCampagneViaAPI($campagne){
 
         $mgClient = new \Mailgun\Mailgun($this->apiKey);
        
@@ -44,6 +61,19 @@ class MailgunService extends ContainerAware {
         ));
 
         return $result;
+    }
+
+    /**
+     * Add unsubsribe link at the bottom of $campagne
+     **/ 
+    public function ajouterLienDesinscription($campagne){
+
+        $unsubscribeLink = '<p style="text-align: center; margin-top: 20px;"><a href="#">Désinscription</a></p>';
+        $html = $campagne->getHtml();
+        $campagne->setHtml($html.$unsubscribeLink);
+
+        $this->em->persist($campagne);
+        $this->em->flush();
     }
 
     /**
@@ -111,6 +141,13 @@ class MailgunService extends ContainerAware {
                         case 'clicked':
                             $campagneContact->setClick(true);
                             $campagneContact->setClickDate(new \DateTime(date('Y-m-d', $timestamp)));
+
+
+                        case 'failed':
+                            $campagneContact->setBounce(true);
+                            $campagneContact->setBounceDate(new \DateTime(date('Y-m-d', $timestamp)));
+                            $campagneContact->getContact()->setBounce('BOUNCE');
+                            $this->em->persist($campagneContact->getContact());
 
                     }
                     

@@ -2,321 +2,235 @@
 
 {% block content %}
 	<div class="row">
-		<div class="col-md-12 bread-crumb-back">
-		<a href="{{ path('emailing_campagne_liste') }}" class="small">< Retour à la listes des campagnes</a>
-		</div>
-	</div>
-<div class="row" id="campagne_details">
-	    <div class="col-md-6">
-	    		<h1 style="float:left;">
-					Campagne : {{ campagne.nomCampagne }}
-					<div class="small">{% if campagne.dateEnvoi is not null %}Date d'envoi : {{ campagne.dateEnvoi|format_datetime('EEEE, dd MMMM Y \à HH:mm', 'fr', 'Europe/Paris', constant('IntlDateFormatter::SHORT'), constant('IntlDateFormatter::SHORT')) }}{% else %} Aucune date d'envoi n'est planifiée {% endif %}</div>
-				</h1>
-	    </div>
-
-		<div class="col-md-6">
-		    <p class="group-btn">
-		    {% if campagne.envoyee == 0 %}
-		    	<a href="{{ path('emailing_campagne_editer', {'id' : campagne.id }) }}"  class="btn btn-warning">
-		    		<span class="glyphicon glyphicon-pencil"></span> Modifier
-		    	</a>
-		    {% endif %}
+		<div class="col-md-12">
+			  	{#   {% if campagne.envoyee == 0 %}
+			    	<a href="{{ path('emailing_campagne_editer', {'id' : campagne.id }) }}"  class="btn btn-warning">
+			    		<span class="glyphicon glyphicon-pencil"></span> Modifier
+			    	</a>
+			    {% endif %} #}
 		    	<a href="{{ path('emailing_campagne_supprimer', {'id' : campagne.id }) }}"  class="btn btn-danger">
 		    		<span class="glyphicon glyphicon-trash"></span> Supprimer
 		    	</a>
-		    </p>
-	    </div>
-	    <div class="col-md-12">
-	    		<p>
-	    			<a href="#template">Template</a> - 
-	    			<a href="#listes">Listes de destinataires</a> - 
-	    			<a href="#statistiques">Statistiques</a>
-	    		</p>
-	    	</div>
-    </div>
-
-	<div class="row">
-		<div class="col-md-12">
-			{% for flashMessage in app.session.flashbag.get('success') %}
-			    <div class="alert alert-success">
-			        {{ flashMessage }}
-			    </div>
-			{% endfor %}
-			{% for flashMessage in app.session.flashbag.get('danger') %}
-			    <div class="alert alert-danger">
-			        {{ flashMessage }}
-			    </div>
-			{% endfor %}
 		</div>
 	</div>
-		<div class="row">
-	    	<div class="col-md-6">
-	    		<table class="campagne-view-table col-md-12">
-	    			<tbody>
-		    			<tr>
-		    				<td class="col-md-4">
-		    					Nom de la campagne 
-		    				</td>
-		    				<td class="col-md-8">
-		    					{% if campagne.nomCampagne is empty %}
-					    			-
-					    		{% else %}
-					    			{{ campagne.nomCampagne }}
-					    		{% endif %}
-		    				</td>
-		    			</tr>
-		    			<tr>
-		    				<td class="col-md-4">
-		    					Nom de l'expéditeur 
-		    				</td>
-		    				<td class="col-md-8">
-		    					{% if campagne.nomExpediteur is empty %}
-					    			-
-					    		{% else %}
-					    			{{ campagne.nomExpediteur }}
-					    		{% endif %}
-		    				</td>
-		    			</tr>
-		    			</tr>
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    	<div class="col-md-6">
-	    		<table class="campagne-view-table col-md-12">
-	    			<tbody>
-		    			<tr>
-		    				<td class="col-md-4">
-		    					Objet de l'email 
-		    				</td>
-		    				<td class="col-md-8">
-		    					{% if campagne.objetEmail is empty %}
-					    			-
-					    		{% else %}
-					    			{{ campagne.objetEmail }}
-					    		{% endif %}
-		    				</td>
-		    			</tr>
-		    			<tr>
-		    				<td class="col-md-4">
-		    					Email de l'expéditeur 
-		    				</td>
-		    				<td class="col-md-8">
-		    					{% if campagne.emailExpediteur is empty %}
-					    			-
-					    		{% else %}
-					    			{{ campagne.emailExpediteur }}
-					    		{% endif %}
-		    				</td>
-		    			</tr>
-	    			</tbody>
-	    		</table>
-	    	</div>
-	   </div>
+
+	<div class="row">
+	    <div class="col-md-12">
+    		<h1>Campagne : {{ campagne.nom }}
+	    		{% if campagne.isSent %}
+	    			<span class="label label-success">Envoyée</span>
+	    		{% elseif campagne.isScheduled %}
+	    			<span class="label label-info">Planifiée</span>
+	    		{% elseif campagne.isDraft %}
+	    			<span class="label label-default">Brouillon</span>
+	    		{% endif %}
+			</h1>
+	    </div>
+    </div>
+
+     <div class="row">
+    	<div class="col-md-6">
+     		<table class="contact-view-table">
+     			<tbody>
+     				<tr>
+     					<td>Date d'envoi</td>  
+			    		<td>
+			    			{{ campagne.dateEnvoi is empty ? '-' : campagne.dateEnvoi|date('d/m/Y') }}
+			    		</td> 
+     				</tr>
+     				<tr>
+     					<td>Objet</td>  
+	    				<td>
+							{{ campagne.objet is empty ? '-' : campagne.objet }}
+						</td>
+     				
+     				</tr>
+     			</tbody>
+	    	</table>
+	    </div>
+	    <div class="col-md-6">
+	    	<table class="contact-view-table">
+	    		<tbody>
+     				<tr>
+     					<td>Nom de l'expéditeur</td>  
+	    				<td>
+							{{ campagne.nomExpediteur is empty ? '-' : campagne.nomExpediteur }}
+						</td>
+     				
+     				</tr>
+     				<tr>
+     					<td>Email de l'expéditeur</td>  
+	    				<td>
+							{{ campagne.emailExpediteur is empty ? '-' : campagne.emailExpediteur }}
+						</td>
+     				
+     				</tr>
+		    	</tbody>
+    		</table>
+    	</div>
+    </div>
+
+    <div class="row">
+    	<div class="col-md-12">
+    		<hr />
+    	</div>
+    </div>
+ 
+    <div class="row">
+    	<div class="col-md-6">
+     		<table class="contact-view-table">
+     			<tbody>
+     				<tr>
+     					<td>Créée le</td>  
+			    		<td>
+			    			{{ campagne.dateCreation|date("d/m/Y") }}
+			    		</td> 
+     				</tr>
+     				<tr>
+     					<td>Par</td>  
+	    				<td>
+							{{ campagne.userCreation }}
+						</td>
+     				
+     				</tr>
+     			</tbody>
+	    	</table>
+	    </div>
+	    <div class="col-md-6">
+	    	<table class="contact-view-table">
+	    		<tbody>
+     				<tr>
+			    		<td>Modifiée le</td>  
+			    		<td id="contact-date-edition">
+			    			{% if campagne.dateEdition is empty %}
+					    		Jamais
+					    	{% else %}
+								{{ campagne.dateEdition|date("d/m/Y") }}	
+					    	{% endif %}
+			    		</td> 
+		    		</tr>
+		    		<tr>
+	    			{% if campagne.userEdition is not empty %}
+			    		<td>Par</td>  
+	    				<td id="contact-user-edition">
+							{{ campagne.userEdition }}
+						</td>
+			    	{% endif %}
+		    		</tr>
+		    	</tbody>
+    		</table>
+    	</div>
+    </div>
+
+    {% if campagne.nomRapport %}
 	    <div class="row">
 	    	<div class="col-md-12">
 	    		<hr />
+	    		<h2>Destinataires <br />
+	    			<small>{{ campagne.nbDestinataires }} contacts de la liste "{{ campagne.nomRapport }}"</small>
+	    		</h2>
 	    	</div>
 	    </div>
-	   <div class="row">
-	    	<div class="col-md-6">
-	     		<table class="campagne-view-table col-md-12">
-	     			<tbody>
-	     				<tr>
-	     					<td class="col-md-4">Créé le</td>  
-				    		<td class="col-md-8">
-				    			{{ campagne.dateCreation|date("d/m/Y") }}
-				    		</td> 
-	     				</tr>
-	     				<tr>
-	     					<td class="col-md-4">Par</td>  
-		    				<td class="col-md-8">
-								{{ campagne.userCreation }}
-							</td>
-	     				
-	     				</tr>
-	     			</tbody>
-		    	</table>
-		    </div>
-		    <div class="col-md-6">
-		    	<table class="campagne-view-table col-md-12">
-		    		<tbody>
-	     				<tr>
-				    		<td class="col-md-4">Modifié le</td>  
-				    		<td class="col-md-8">
-				    			{% if campagne.dateEdition is empty %}
-						    		Jamais
-						    	{% else %}
-									{{ campagne.dateEdition|date("d/m/Y") }}	
-						    	{% endif %}
-				    		</td> 
-			    		</tr>
-			    		<tr>
-		    			{% if campagne.userEdition is not empty %}
-				    		<td class="col-md-4">Par</td>  
-		    				<td class="col-md-8">
-								{{ campagne.userEdition }}
-							</td>
-				    	{% endif %}
-			    		</tr>
-			    	</tbody>
-	    		</table>
-	    	</div>
-	   </div>
-	    <div class="row">
-	    	<div class="col-md-12">
-	    		<hr />
-	    	</div>
-	    </div>
-		<div class="row" id="template">
-			<h3>Template</h3>
-			{% if campagne.template is not null %}
-	    	<div class="col-md-12">
-				<iframe srcdoc="{{ campagne.template|e('html_attr') }}" style="width:100%; height:400px; border:none;">
-				  <p>Votre navigateur ne supporte pas les iframes.</p>
-				</iframe>
-	    	</div>
-			{% else %}
-	    	<div class="col-md-12">
-			    <div class="alert alert-info">
-			        Le template de cette campagne n'est pas encore défini, <a href="{{ path('emailing_campagne_template', {'id' : campagne.id}) }}">cliquer ici</a> pour le définir.
-			    </div>
-			</div>		
-			{% endif %}
-	   </div>
-	    <div class="row">
-	    	<div class="col-md-12">
-	    		<hr />
-	    	</div>
-	    </div>
-		<div class="row" id="listes">
-	    	<div class="col-md-12">
-			<h3>Liste{% if campagne.listesContact|length > 1 %}s{% endif %} de contact</h3>
-			    <table id="table_emailing_rapport_list" class="table table-bordered table-striped">    
-			    	<thead>        
-			    		<tr>            
-			    			<th>Nom</th>            
-			    			<th>Description</th>  
-			    			<th>Créé le</th>  
-			    			<th>Créé par</th> 
-			    			<th>Actions</th>         
-			    		</tr>    
-			    	</thead>    
-			    	<tbody>
-				{% for rapport in campagne.listesContact %}
-			    		<tr>            
-			    			<td>
-			    				<a href="{{ path('emailing_rapport_voir', {'id' : rapport.id } ) }}">{{ rapport.nom }}</a>
-			    			</td>            
-			    			<td>
-			    				{{ rapport.description|raw }}
-			    			</td> 
-			    			<td>
-			    				{{ rapport.dateCreation|date("d/m/Y") }}
-			    			</td>
-			    			<td>
-			    				{{ rapport.userCreation }}
-			    			</td>
-			    			<td>
-			    				<a href="{{ path('emailing_rapport_voir', {'id' : rapport.id } ) }}" class="btn btn-xs btn-info" ​data-toggle="tooltip-btn-xs" title="Voir">
-			    					<span class="glyphicon glyphicon-eye-open"></span>
-			    				</a>
-			    				<a href="{{ path('emailing_rapport_editer', {'id' : rapport.id } ) }}" class="btn btn-xs btn-warning" ​data-toggle="tooltip-btn-xs" title="Editer">
-			    					<span class="glyphicon glyphicon-pencil"></span>
-			    				</a>
-			    				<a href="{{ path('emailing_rapport_supprimer', {'id' : rapport.id} ) }}" class="btn btn-xs btn-danger" ​data-toggle="tooltip-btn-xs" title="Supprimer">
-			    					<span class="glyphicon glyphicon-trash"></span>
-			    				</a>
-			    			</td>        
-			    		</tr>        
-			    		{% endfor %} 
-			    	</tbody>
-			    </table>
-			</div>
-		</div>
-	    <div class="row">
-	    	<div class="col-md-12">
-	    		<hr />
-	    	</div>
-	    </div>
-		<div class="row" id="statistiques">
-			<h3>Statistiques</h3>
-		{% if chart != false %}
-	    	<div class="col-md-12">
-				<p class="group-btn">
-					Taux d'ouverture : {{ (stats.unique.opened.recipient / stats.total.sent * 100)|round(2, 'floor') }} || Taux de clique : {{ (stats.unique.clicked.recipient / stats.total.sent * 100)|round(2, 'floor') }} % || Soft bounce : {{ bounced.temporary }} || Hard bounce : {{ bounced.permanent }} 
-				</p>
-			</div>
-	    	<div class="col-md-12">
-				<div id="piechart" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
-			</div>
-		{% else %}
-	    	<div class="col-md-12">
-			    <div class="alert alert-info">
-			        La campagne n'est pas encore envoyée, aucune statistique n'est disponible
-			    </div>
-			</div>		
-		{% endif %}
-		</div>
+	{% endif %}
+
+	<div class="row">
+    	<div class="col-md-4 well center">
+    		<span class="jaimelemailing xl">Taux d'ouverture</span><br />
+    		<span class="xxl">{{ campagne.openRate }} %</span>
+    	</div>
+
+    	<div class="col-md-4 well center">
+    		<span class="jaimelemailing xl">Taux de clic</span><br />
+    		<span class="xxl">{{ campagne.clickRate }} %</span>
+    	</div>
+
+    	<div class="col-md-4 well center">
+    		<span class="jaimelemailing xl">Taux de bounce</span><br />
+    		<span class="xxl">{{ campagne.bounceRate }} %</span>
+    	</div>
+    </div>
+
+    <div class="row">
+    	<div class="col-md-12">
+    		<table id="table_contact_list" class="table table-bordered table-striped">   
+    			<thead>
+    				<tr>
+    					<th>Prénom</th>
+    					<th>Nom</th>
+    					<th>Organisation</th>
+    					<th>Titre</th>
+    					<th>Email</th>
+    					<th>Ouvert</th>
+    					<th>Clic</th>
+    					<th>Bounce</th>
+    				</tr>
+    			</thead>
+    		</table>
+    	</div>
+    </div>
+
 	  
 {% endblock %}
+
 {% block javascripts %}
 	{{ parent() }}
-	{% if chart != false %}
- <script src="{{ asset('bundles/rcamcharts/js/amcharts/amcharts.js') }}"></script>
-<!--script src="{{ asset('bundles/rcamcharts/js/amcharts/pie.js') }}"></script-->
-<script src="{{ asset('bundles/rcamcharts/js/amcharts/serial.js') }}"></script>
-<script src="{{ asset('bundles/rcamcharts/js/amcharts/lang/fr.js') }}"></script>
-<!-- script src="{{ asset('bundles/rcamcharts/js/amcharts/themes/none.js') }}"></script-->
-<script type="text/javascript">
-   {{ amchart(chart) }}
-</script>
-	{% endif %}
-	<script type="text/javascript">
-		$(document).ready( function () {    
-			$('#table_emailing_rapport_list').DataTable({
-				"language" : {                
-					"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"            
-				},
-				fnDrawCallback: function () {
-				  $( 'a', this.fnGetNodes() ).tooltip( {
-					"delay": 0,
-					"track": true,
-					"fade": 250,
-					"tooltipClass": 'btn btn-default',
-				  } );
-				},
-                fnInitComplete: function () {
-				  $( 'a', this.fnGetNodes() ).tooltip( {
-					"delay": 0,
-					"track": true,
-					"fade": 250,
-					"tooltipClass": 'btn btn-default',
-				  } );
-				},
-				"responsive": true
+		<script type="text/javascript">
+			$(document).ready( function () {    
+				
+				var campagneId = "{{ campagne.id }}";
+				$('#table_contact_list').DataTable({
+					"language" : {                
+						"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"            
+					},
+					"responsive": true,
+					"processing": true,
+				    "serverSide": true,
+				    "bFilter": false,
+				    "bSort" : false,
+				    "iDisplayLength": 25,
+				    "ajax":{
+		                url : Routing.generate('emailing_campagne_liste_contacts_ajax', { 'id' : campagneId }),
+		                type: "post",
+		            },
+		            "columns": [
+	                   { "data": "prenom" },
+	                   { "data": "nom" },
+	                   { "data": "organisation" },
+	                   { "data": "titre" },
+	                   { "data": "email" },
+	                   { "data": "open" },
+	                   { "data": "click" },
+	                   { "data": "bounce" },
+	                ],
+	                "columnDefs": [
+                       {
+                           "render": function ( data, type, row ) {
+                           		if(data === true){
+                           			return '<span class="glyphicon glyphicon-ok green"></span>';
+                           		}
+                           		return '';
+                           },
+                           "targets": 5
+                       }, {
+                           "render": function ( data, type, row ) {
+                           		if(data === true){
+                           			return '<span class="glyphicon glyphicon-ok green"></span>';
+                           		}
+                           		return '';
+                           },
+                           "targets": 6
+                       }, {
+                           "render": function ( data, type, row ) {
+                           		if(data === true){
+                           			return '<span class="glyphicon glyphicon-remove red"></span>';
+                           		}
+                           		return '';
+                           },
+                           "targets": 7
+                       },
+                   ]
 			});
+    	});
 
-		});
 	</script>
-{% endblock %}
-
-{% block additionalModals %}
-<script>
-	/* Create a fixed menu on scroll for /voir */
-		$(document).ready(function() {
-		var positionElementInPage = $('#campagne_details').offset().top;
-		$(window).scroll(
-			 function() {
-			        if ($(window).scrollTop() >= positionElementInPage) {
-			            // fixed
-			            $('#compte_details').addClass("fixed-top");
-			        } else {
-			            // relative
-			            $('#compte_details').removeClass("fixed-top");
-			        }
-			    }
-		);
-		});
-</script>
-
 {% endblock %}

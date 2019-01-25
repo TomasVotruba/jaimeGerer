@@ -12,43 +12,29 @@ use Doctrine\ORM\EntityRepository;
  */
 class CampagneRepository extends EntityRepository
 {
-	public function count($userCreation){
+	public function count($company){
 		$result = $this->createQueryBuilder('c')
 		->select('COUNT(c)')
-		->where('c.userCreation = :userCreation')
-		->setParameter('userCreation', $userCreation)
+		->leftJoin('AppBundle\Entity\User', 'u', 'WITH', 'u.id = c.userCreation')
+		->where('u.company = :company')
+		->setParameter('company', $company)
 		->getQuery()
 		->getSingleScalarResult();
 		
 		return $result;
 	}
 	
-	public function findForList($userCreation, $length, $start, $orderBy, $dir, $search){
+	public function findForList($company, $length, $start, $orderBy, $dir, $search){
 		$qb = $this->createQueryBuilder('c')
-			->select('c.id', 'c.nomCampagne', 'c.dateCreation', 'c.objetEmail', 'c.envoyee')
-			//~ ->innerJoin('AppBundle\Entity\CRM\Rapport', 'ra', 'WITH', 'ra.id = c.listesContact')
-			->where('c.userCreation = :userCreation')
-			->setParameter('userCreation', $userCreation);
+			->select('DISTINCT(c.id) as id', 'c.nom', 'c.dateCreation', 'c.objet', 'c.nomRapport', 'CONCAT(u.firstname,\' \',u.lastname) as user', 'COUNT(cc.id) AS nbContacts', 'c.etat')
+			->leftJoin('AppBundle\Entity\User', 'u', 'WITH', 'u.id = c.userCreation')
+			->leftJoin('AppBundle\Entity\Emailing\CampagneContact', 'cc', 'WITH', 'cc.campagne = c.id')
+			->where('u.company = :company')
+			->setParameter('company', $company);
 		
 		if($search != ""){
 			$search = trim($search);
-			$qb->andWhere('c.nomCampagne LIKE :search')
-			//~ ->orWhere('c.region LIKE :search')
-			//~ ->orWhere('c.ville LIKE :search')
-			//~ ->orWhere('c.pays LIKE :search')
-			//~ ->orWhere('c.telephone LIKE :search')
-			//~ ->orWhere($qb->expr()->like(
-						//~ $qb->expr()->concat(
-							//~ 'co.nom', 
-						//~ $qb->expr()->concat(
-								//~ $qb->expr()->literal(' '), 'co.prenom')),
-								//~ $qb->expr()->literal('%'.$search.'%')))
-			//~ ->orWhere($qb->expr()->like(
-						//~ $qb->expr()->concat(
-							//~ 'co.prenom', 
-						//~ $qb->expr()->concat(
-								//~ $qb->expr()->literal(' '), 'co.nom')),
-								//~ $qb->expr()->literal('%'.$search.'%')))
+			$qb->andWhere('c.nom LIKE :search')
 			->setParameter('search', '%'.$search.'%');
 		}
 		
@@ -59,50 +45,31 @@ class CampagneRepository extends EntityRepository
 		return $qb->getQuery()->getResult();
 	}
 	
-	public function countForList($userCreation, $search){
+	public function countForList($company, $search){
 		$qb = $this->createQueryBuilder('c')
 		->select('COUNT(c)')
-		//~ ->leftJoin('AppBundle\Entity\CRM\Contact', 'co', 'WITH', 'co.compte = c.id')
-		->where('c.userCreation = :userCreation')
-		->setParameter('userCreation', $userCreation);
+		->leftJoin('AppBundle\Entity\User', 'u', 'WITH', 'u.id = c.userCreation')
+		->where('u.company = :company')
+		->setParameter('company', $company);
 		
 		if($search != ""){
 				
-			$qb->andWhere('c.nomCampagne LIKE :search')
-			//~ ->orWhere('c.region LIKE :search')
-			//~ ->orWhere('c.ville LIKE :search')
-			//~ ->orWhere('c.pays LIKE :search')
-			//~ ->orWhere('c.telephone LIKE :search')
-			//~ ->orWhere($qb->expr()->like(
-						//~ $qb->expr()->concat(
-							//~ 'co.nom', 
-						//~ $qb->expr()->concat(
-								//~ $qb->expr()->literal(' '), 'co.prenom')),
-								//~ $qb->expr()->literal('%'.$search.'%')))
-			//~ ->orWhere($qb->expr()->like(
-						//~ $qb->expr()->concat(
-							//~ 'co.prenom', 
-						//~ $qb->expr()->concat(
-								//~ $qb->expr()->literal(' '), 'co.nom')),
-								//~ $qb->expr()->literal('%'.$search.'%')))
+			$qb->andWhere('c.nom LIKE :search')
 			->setParameter('search', '%'.$search.'%');
 		}
 		
-//\Doctrine\Common\Util\Debug::dump($qb->getQuery()->getSql());		
 		return $qb->getQuery()->getSingleScalarResult();
 	}
 		
 	public function findForListStats($userCreation, $length, $start, $orderBy, $dir, $search){
 		$qb = $this->createQueryBuilder('c')
-			->select('c.id', 'c.nomCampagne', 'c.dateCreation', 'c.objetEmail', 'c.envoyee')
+			->select('c.id', 'c.nom', 'c.dateCreation', 'c.objet')
 			->where('c.userCreation = :userCreation')
-			->andWhere('c.envoyee = :envoyee')
-			->setParameter('envoyee', true)
 			->setParameter('userCreation', $userCreation);
 		
 		if($search != ""){
 			$search = trim($search);
-			$qb->andWhere('c.nomCampagne LIKE :search')
+			$qb->andWhere('c.nom LIKE :search')
 			->setParameter('search', '%'.$search.'%');
 		}
 		
@@ -116,7 +83,6 @@ class CampagneRepository extends EntityRepository
 	public function countForListStats($userCreation, $search){
 		$qb = $this->createQueryBuilder('c')
 		->select('COUNT(c)')
-		//~ ->leftJoin('AppBundle\Entity\CRM\Contact', 'co', 'WITH', 'co.compte = c.id')
 		->where('c.userCreation = :userCreation')
 		->andWhere('c.envoyee = :envoyee')
 		->setParameter('envoyee', true)
@@ -124,11 +90,10 @@ class CampagneRepository extends EntityRepository
 		
 		if($search != ""){
 				
-			$qb->andWhere('c.nomCampagne LIKE :search')
+			$qb->andWhere('c.nom LIKE :search')
 			->setParameter('search', '%'.$search.'%');
 		}
 		
-//\Doctrine\Common\Util\Debug::dump($qb->getQuery()->getSql());		
 		return $qb->getQuery()->getSingleScalarResult();
 	}
 		

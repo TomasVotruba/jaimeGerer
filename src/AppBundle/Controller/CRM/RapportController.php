@@ -109,7 +109,7 @@ class RapportController extends Controller
 	
 	
 	/**
-	 * @Route("/crm/rapport/voir/{id}/{bounce}/{warning}", name="crm_rapport_voir")
+	 * @Route("/crm/rapport/voir/{id}/{bounce}/{warning}", name="crm_rapport_voir", options={"expose"=true})
 	 */
 	public function rapportVoirAction(Rapport $rapport, $bounce = 0, $warning = 0)
 	{
@@ -844,6 +844,23 @@ class RapportController extends Controller
             'arr_results' => $arr_results,
             'arr_contacts' => $arr_contacts
 		));
+	}
+
+
+	/**
+	 * @Route("/crm/rapport/get-contacts-for-emailing/{id}", name="crm_rapport_get_contacts_for_emailing", options={"expose"=true})
+	 */
+	public function rapportGetContactsForEmailingAction(Rapport $rapport)
+	{
+		$repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
+		$filterRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\RapportFilter');
+
+		$arr_filters = $filterRepo->findByRapport($rapport);
+		$arr_obj = $repo->createQueryAndGetResult($arr_filters, $rapport->getCompany(), true, false, false, false);		
+
+		$response = new JsonResponse();
+		$response->setData($arr_obj);
+		return $response;
 	}
 	
 }

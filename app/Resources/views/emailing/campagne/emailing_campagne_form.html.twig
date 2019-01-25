@@ -1,26 +1,15 @@
 {{ form_start(form) }}
-	<div class="row">
-		<div class="col-md-6">
-			{{ form_errors(form) }}
-			{{ form_row(form.nomCampagne) }}
-			{{ form_row(form.objetEmail) }}
-		</div>
-		<div class="col-md-6">
-			{{ form_row(form.nomExpediteur) }}
-			{{ form_row(form.emailExpediteur) }}
-			
+<div class="row">
+	<div class="col-md-12">
+		{{ form_errors(form) }}
+		{{ form_row(form.nom) }}
+		{{ form_row(form.objet) }}
+		{{ form_row(form.nomExpediteur) }}
+		{{ form_row(form.emailExpediteur) }}
+
+		<div class="center">
+			<input type="submit" value="Suite" class="btn btn-success" />
 		</div>
 	</div>
-    <input type="submit" value="Enregistrer" class="btn btn-success" />
-    {{ form_end(form) }}
-{% block additionalJS %}
-	<script type="text/javascript">
-		$(document).ready( function () {    
-		});
-		JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
-	</script>
-	
-	<script src="{{ asset('js/error.js') }}"></script>
-{% endblock %}
-
-	
+</div>
+{{ form_end(form) }}

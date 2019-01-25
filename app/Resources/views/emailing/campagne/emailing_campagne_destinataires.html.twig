@@ -1,0 +1,67 @@
+{% extends 'emailing/emailing_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Créer une campagne d'emailing</h1>	
+		</div>
+	</div>
+
+	{{ form_start(form) }}
+	
+	{{ form_row(form.rapport) }}
+
+
+	<div class="progress hidden">
+  		<div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+  		</div>
+	</div>
+
+	<p id="destinataires" class="well hidden">
+		Ce rapport contient <span id="nb-destinataires"></span> destinataires.
+		<a href="#" id="link-rapport" target="_blank">Voir le rapport</a>
+	</p>
+	
+	{{ form_row(form.submit) }}
+	
+	{{ form_end(form) }}
+
+	
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+		$(document).ready( function () {   
+
+			$('.rapport-select').change(function(e){
+
+				$('#destinataires').addClass('hidden');
+				$('#nb-destinataires').html('');
+				$('.progress').removeClass('hidden');
+				$('.submit').attr('disabled', true);
+				$('#link-rapport').attr('href', '#');
+
+				var rapportId = $('.rapport-select').val();
+				$.ajax({
+			    	type: "POST",
+			        url: Routing.generate('crm_rapport_get_contacts_for_emailing', {'id' : rapportId }),
+			        success: function(data)
+			        {
+			        	$('#nb-destinataires').html(data.length);
+			        	$('#destinataires').removeClass('hidden');
+			        	$('.progress').addClass('hidden');
+			        	$('#link-rapport').attr('href', Routing.generate('crm_rapport_voir', {'id' : rapportId} ));
+
+			        	$('.submit').attr('disabled', false);
+			        }
+		        });
+
+
+			});
+				
+		});
+	</script>
+{% endblock %}

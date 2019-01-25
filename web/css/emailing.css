@@ -25,3 +25,30 @@ body{
 .tooltoop:before{
     border-right:8px solid #fb7155;
 }
+
+.contact-view-table tr td:first-child{
+	font-weight: bold;
+	width: 150px;
+}
+
+.contact-view-table tr td{
+	padding: 5px;
+	vertical-align: top;
+}
+
+.contact-view-table{
+	width: 100%;
+}
+
+.contact-view-table ul{
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.emailing-stats-block{
+	text-align: center;
+}
+
+#emailing-preview tr{
+	background-color: unset;
+}

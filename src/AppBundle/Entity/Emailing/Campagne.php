@@ -38,7 +38,7 @@ class Campagne
     /**
      * @var string
      *
-     * @ORM\Column(name="html", type="text")
+     * @ORM\Column(name="html", type="text", nullable=true)
      */
     private $html;
 
@@ -55,14 +55,6 @@ class Campagne
      * @ORM\Column(name="email_expediteur", type="string", length=100)
      */
     private $emailExpediteur;
-
-     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="envoyee", type="boolean")
-     */
-    private $envoyee = false;
-
 
     /**
      * @var \DateTime
@@ -104,7 +96,30 @@ class Campagne
     *
     */
     private $campagneContacts;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nom_rapport", type="string", length=255, nullable=true)
+     */
+    private $nomRapport;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="etat", type="string", length=10)
+     */
+    private $etat;
  
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->etat = "DRAFT";
+        $this->campagneContacts = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -232,29 +247,6 @@ class Campagne
     }
 
     /**
-     * Set envoyee
-     *
-     * @param boolean $envoyee
-     * @return Campagne
-     */
-    public function setEnvoyee($envoyee)
-    {
-        $this->envoyee = $envoyee;
-
-        return $this;
-    }
-
-    /**
-     * Get envoyee
-     *
-     * @return boolean 
-     */
-    public function getEnvoyee()
-    {
-        return $this->envoyee;
-    }
-
-    /**
      * Set dateEnvoi
      *
      * @param \DateTime $dateEnvoi
@@ -368,13 +360,6 @@ class Campagne
     {
         return $this->userEdition;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->campagneContacts = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Add campagneContacts
@@ -400,6 +385,15 @@ class Campagne
         $this->campagneContacts->removeElement($campagneContacts);
     }
 
+     /**
+     * Remove all campagneContacts
+     *
+     */
+    public function removeAllCampagneContacts()
+    {
+        $this->campagneContacts = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
     /**
      * Get campagneContacts
      *
@@ -417,5 +411,109 @@ class Campagne
             $arr_destinataires[] = $campagneContact->getContact()->getEmail();
         }
         return $arr_destinataires;
+    }
+
+    public function getNbDestinataires(){
+        return count($this->campagneContacts);
+    }
+
+    public function getOpenRate(){
+
+        $nbDestinataire = count($this->campagneContacts);
+        $nbOpen = 0;
+        
+        foreach($this->campagneContacts as $campagneContact){
+            if($campagneContact->getOpen() === true){
+                $nbOpen++;
+            }
+            
+        }
+        return $nbOpen / $nbDestinataire * 100 ;
+    }
+
+    public function getClickRate(){
+
+        $nbDestinataire = count($this->campagneContacts);
+        $nbClick = 0;
+            
+        foreach($this->campagneContacts as $campagneContact){
+            if($campagneContact->getClick() === true){
+                $nbClick++;
+            }
+            
+        }
+        return $nbClick / $nbDestinataire * 100 ;
+    }
+
+    public function getBounceRate(){
+
+        $nbDestinataire = count($this->campagneContacts);
+        $nbBounce = 0;
+        
+        foreach($this->campagneContacts as $campagneContact){
+            if($campagneContact->getBounce() === true){
+                $nbBounce++;
+            }
+            
+        }
+        return $nbBounce / $nbDestinataire * 100 ;
+    }
+
+    /**
+     * Set nomRapport
+     *
+     * @param string $nomRapport
+     * @return Campagne
+     */
+    public function setNomRapport($nomRapport)
+    {
+        $this->nomRapport = $nomRapport;
+
+        return $this;
+    }
+
+    /**
+     * Get nomRapport
+     *
+     * @return string 
+     */
+    public function getNomRapport()
+    {
+        return $this->nomRapport;
+    }
+
+    /**
+     * Set etat
+     *
+     * @param string $etat
+     * @return Campagne
+     */
+    public function setEtat($etat)
+    {
+        $this->etat = strtoupper($etat);
+
+        return $this;
+    }
+
+    /**
+     * Get etat
+     *
+     * @return string 
+     */
+    public function getEtat()
+    {
+        return strtoupper($this->etat);
+    }
+
+    public function isSent(){
+        return (strtoupper($this->etat) == 'SENT');
+    }
+
+    public function isScheduled(){
+        return (strtoupper($this->etat) == 'SCHEDULED');
+    }
+
+    public function isDraft(){
+        return (strtoupper($this->etat) == 'DRAFT');
     }
 }

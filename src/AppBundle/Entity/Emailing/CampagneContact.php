@@ -3,11 +3,12 @@
 namespace AppBundle\Entity\Emailing;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 /**
  * CampagneContact
  *
- * @ORM\Table(name="campagne_contact")
+ * @ORM\Table(name="campagne_contact", uniqueConstraints={@UniqueConstraint(name="campagne_contact", columns={"contact_id", "campagne_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Emailing\CampagneContactRepository")
  */
 class CampagneContact

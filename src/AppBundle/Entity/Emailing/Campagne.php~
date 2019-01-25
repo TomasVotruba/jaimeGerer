@@ -26,7 +26,7 @@ class Campagne
      *
      * @ORM\Column(name="nom", type="string", length=50)
      */
-    private $nomCampagne;
+    private $nom;
 
     /**
      * @var string
@@ -36,9 +36,9 @@ class Campagne
     private $objet;
 
     /**
-     * @var text
+     * @var string
      *
-     * @ORM\Column(name="html")
+     * @ORM\Column(name="html", type="text")
      */
     private $html;
 
@@ -55,14 +55,6 @@ class Campagne
      * @ORM\Column(name="email_expediteur", type="string", length=100)
      */
     private $emailExpediteur;
-
-     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="envoyee", type="boolean")
-     */
-    private $envoyee = false;
-
 
     /**
      * @var \DateTime
@@ -100,10 +92,24 @@ class Campagne
 
     /**
     *
-    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Emailing\CampagneContact", mappedBy="campagne")
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Emailing\CampagneContact", mappedBy="campagne", cascade={"persist", "remove"}, orphanRemoval=true)
     *
     */
     private $campagneContacts;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nom_rapport", type="string", length=255, nullable=true)
+     */
+    private $nomRapport;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="etat", type="string", length=10)
+     */
+    private $etat;
  
 
     /**
@@ -117,26 +123,26 @@ class Campagne
     }
 
     /**
-     * Set nomCampagne
+     * Set nom
      *
-     * @param string $nomCampagne
+     * @param string $nom
      * @return Campagne
      */
-    public function setNomCampagne($nomCampagne)
+    public function setNom($nom)
     {
-        $this->nomCampagne = $nomCampagne;
+        $this->nom = $nom;
 
         return $this;
     }
 
     /**
-     * Get nomCampagne
+     * Get nom
      *
      * @return string 
      */
-    public function getNomCampagne()
+    public function getNom()
     {
-        return $this->nomCampagne;
+        return $this->nom;
     }
 
     /**
@@ -367,5 +373,78 @@ class Campagne
     public function getUserEdition()
     {
         return $this->userEdition;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->campagneContacts = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add campagneContacts
+     *
+     * @param \AppBundle\Entity\Emailing\CampagneContact $campagneContacts
+     * @return Campagne
+     */
+    public function addCampagneContact(\AppBundle\Entity\Emailing\CampagneContact $campagneContacts)
+    {
+        $campagneContacts->setCampagne($this);
+        $this->campagneContacts[] = $campagneContacts;
+
+        return $this;
+    }
+
+    /**
+     * Remove campagneContacts
+     *
+     * @param \AppBundle\Entity\Emailing\CampagneContact $campagneContacts
+     */
+    public function removeCampagneContact(\AppBundle\Entity\Emailing\CampagneContact $campagneContacts)
+    {
+        $this->campagneContacts->removeElement($campagneContacts);
+    }
+
+    /**
+     * Get campagneContacts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCampagneContacts()
+    {
+        return $this->campagneContacts;
+    }
+
+    public function getDestinataires(){
+
+        $arr_destinataires = array();
+        foreach($this->campagneContacts as $campagneContact){
+            $arr_destinataires[] = $campagneContact->getContact()->getEmail();
+        }
+        return $arr_destinataires;
+    }
+
+    /**
+     * Set nomRapport
+     *
+     * @param string $nomRapport
+     * @return Campagne
+     */
+    public function setNomRapport($nomRapport)
+    {
+        $this->nomRapport = $nomRapport;
+
+        return $this;
+    }
+
+    /**
+     * Get nomRapport
+     *
+     * @return string 
+     */
+    public function getNomRapport()
+    {
+        return $this->nomRapport;
     }
 }

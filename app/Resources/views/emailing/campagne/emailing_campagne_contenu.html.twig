@@ -1,0 +1,59 @@
+{% extends 'emailing/emailing_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Créer une campagne d'emailing</h1>	
+		</div>
+	</div>
+
+	{{ form_start(form) }}
+	
+	{{ form_row(form.file) }}
+	{{ form_row(form.preview) }}
+	{{ form_row(form.submit) }}
+	
+	{{ form_end(form) }}
+
+	<div class="modal" id="modal-preview">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            	<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+				</div>
+            	<div class="modal-body">
+	            	<div id="emailing-preview"></div>
+	            </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+		$(document).ready( function () {    
+
+			/**
+			*	 Display a preview of the HTML email in the modal #modal-preview
+			**/
+			$('.preview').click(function(e){
+				e.preventDefault();
+
+		  		var fileToLoad = $('.file-input')[0]['files'][0];
+
+		  		var fileReader = new FileReader();
+		  		fileReader.onload = function(fileLoadedEvent){
+		      		var textFromFileLoaded = fileLoadedEvent.target.result;
+		      		$('#emailing-preview').html(textFromFileLoaded);
+		      		$('#modal-preview').modal('show');
+		  		};
+
+		  		fileReader.readAsText(fileToLoad, "UTF-8");
+			});
+
+		});
+	</script>
+{% endblock %}

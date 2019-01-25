@@ -28,8 +28,23 @@
 	     	<div class="titre titre-emailing">
 				<h1>J'aime communiquer</h1>
 			</div>
+
+			<div class="row">
+			    <div class="col-md-12">
+			        {% for flashMessage in app.session.flashbag.get('success') %}
+			            <div class="alert alert-success">
+			                {{ flashMessage }}
+			            </div>
+			        {% endfor %}
+			        {% for flashMessage in app.session.flashbag.get('danger') %}
+			            <div class="alert alert-danger">
+			                {{ flashMessage }}
+			            </div>
+			        {% endfor %}
+			    </div>
+			</div>
+
 	    	{% block content %} 
-	    			
 	    	{% endblock %}
 	    </div>
 
