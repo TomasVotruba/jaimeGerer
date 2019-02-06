@@ -1,19 +1,7 @@
 {% extends 'emailing/emailing_layout.html.twig' %}
 
 {% block content %}
-	<div class="row">
-		<div class="col-md-12">
-			  	{#   {% if campagne.envoyee == 0 %}
-			    	<a href="{{ path('emailing_campagne_editer', {'id' : campagne.id }) }}"  class="btn btn-warning">
-			    		<span class="glyphicon glyphicon-pencil"></span> Modifier
-			    	</a>
-			    {% endif %} #}
-		    	<a href="{{ path('emailing_campagne_supprimer', {'id' : campagne.id }) }}"  class="btn btn-danger">
-		    		<span class="glyphicon glyphicon-trash"></span> Supprimer
-		    	</a>
-		</div>
-	</div>
-
+	
 	<div class="row">
 	    <div class="col-md-12">
     		<h1>Campagne : {{ campagne.nom }}
@@ -28,7 +16,23 @@
 	    </div>
     </div>
 
-     <div class="row">
+    <div class="row">
+		<div class="col-md-12">
+			  	{#   {% if campagne.envoyee == 0 %}
+			    	<a href="{{ path('emailing_campagne_editer', {'id' : campagne.id }) }}"  class="btn btn-warning">
+			    		<span class="glyphicon glyphicon-pencil"></span> Modifier
+			    	</a>
+			    {% endif %} #}
+			    <a href="#"  class="btn btn-info" data-toggle="modal" data-target="#modal-preview">
+		    		<span class="glyphicon glyphicon-eye-open"></span> Voir l'email
+		    	</a>
+		    	<a href="{{ path('emailing_campagne_supprimer', {'id' : campagne.id }) }}"  class="btn btn-danger">
+		    		<span class="glyphicon glyphicon-trash"></span> Supprimer
+		    	</a>
+		</div>
+	</div>
+
+     <div class="row spacer-top">
     	<div class="col-md-6">
      		<table class="contact-view-table">
      			<tbody>
@@ -126,9 +130,9 @@
 	    <div class="row">
 	    	<div class="col-md-12">
 	    		<hr />
-	    		<h2>Destinataires <br />
+	    		<h3>Destinataires <br />
 	    			<small>{{ campagne.nbDestinataires }} contacts de la liste "{{ campagne.nomRapport }}"</small>
-	    		</h2>
+	    		</h3>
 	    	</div>
 	    </div>
 	{% endif %}
@@ -155,20 +159,34 @@
     		<table id="table_contact_list" class="table table-bordered table-striped">   
     			<thead>
     				<tr>
-    					<th>Prénom</th>
     					<th>Nom</th>
     					<th>Organisation</th>
     					<th>Titre</th>
     					<th>Email</th>
-    					<th>Ouvert</th>
-    					<th>Clic</th>
-    					<th>Bounce</th>
+    					<th class="center">Ouvert</th>
+    					<th class="center">Clic</th>
+    					<th class="center">Bounce</th>
+    					<th class="center">Désinscription</th>
     				</tr>
     			</thead>
     		</table>
     	</div>
     </div>
 
+	<div class="modal" id="modal-preview">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            	<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+				</div>
+            	<div class="modal-body">
+	            	<div id="emailing-preview">
+	            		{{ campagne.html|raw }}
+	            	</div>
+	            </div>
+            </div>
+        </div>
+    </div>
 	  
 {% endblock %}
 
@@ -193,7 +211,6 @@
 		                type: "post",
 		            },
 		            "columns": [
-	                   { "data": "prenom" },
 	                   { "data": "nom" },
 	                   { "data": "organisation" },
 	                   { "data": "titre" },
@@ -201,33 +218,41 @@
 	                   { "data": "open" },
 	                   { "data": "click" },
 	                   { "data": "bounce" },
+	                   { "data": "unsubscribe" },
 	                ],
 	                "columnDefs": [
-                       {
+	                	{
+                           "render": function ( data, type, row ) {
+                           	var url = Routing.generate('crm_contact_voir', {'id' : row['id']});
+                           		return '<a href="'+url+'" target="_blank">'+row['prenom']+" "+row['nom']+'</a>';
+                           },
+                           "targets": 0
+                        },
+                        {
                            "render": function ( data, type, row ) {
                            		if(data === true){
-                           			return '<span class="glyphicon glyphicon-ok green"></span>';
+                           			return '<p class="center"><span class="glyphicon glyphicon-ok green"></span></p>';
+                           		}
+                           		return '';
+                           },
+                           "targets": 4
+                        }, {
+                           "render": function ( data, type, row ) {
+                           		if(data === true){
+                           			return '<p class="center"><span class="glyphicon glyphicon-ok green"></span></p>';
                            		}
                            		return '';
                            },
                            "targets": 5
-                       }, {
+                        }, {
                            "render": function ( data, type, row ) {
                            		if(data === true){
-                           			return '<span class="glyphicon glyphicon-ok green"></span>';
+                           			return '<p class="center"><span class="glyphicon glyphicon-remove red"></span></p>';
                            		}
                            		return '';
                            },
                            "targets": 6
-                       }, {
-                           "render": function ( data, type, row ) {
-                           		if(data === true){
-                           			return '<span class="glyphicon glyphicon-remove red"></span>';
-                           		}
-                           		return '';
-                           },
-                           "targets": 7
-                       },
+                        },
                    ]
 			});
     	});

@@ -1223,4 +1223,34 @@ class Contact
     {
         return $this->campagneContacts;
     }
+
+    public function getOpenRate(){
+
+        $nbCampagnes = count($this->campagneContacts);
+        $nbOpen = 0;
+        
+        foreach($this->campagneContacts as $campagneContact){
+            if($campagneContact->getOpen() === true){
+                $nbOpen++;
+            }
+            
+        }
+        return $nbOpen / $nbCampagnes * 100 ;
+    }
+
+    public function getClickRate(){
+
+        $nbCampagnes = count($this->campagneContacts);
+        $nbClick = 0;
+            
+        foreach($this->campagneContacts as $campagneContact){
+            if($campagneContact->getClick() === true){
+                $nbClick++;
+            }
+            
+        }
+        return $nbClick / $nbCampagnes * 100 ;
+    }
 }
+
+

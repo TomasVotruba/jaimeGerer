@@ -149,6 +149,13 @@ class MailgunService extends ContainerAware {
                             $campagneContact->getContact()->setBounce('BOUNCE');
                             $this->em->persist($campagneContact->getContact());
 
+                        case 'unsubscribed':
+                            $campagneContact->setUnsubscribed(true);
+                            $campagneContact->setUnsubscribedDate(new \DateTime(date('Y-m-d', $timestamp)));
+                            $campagneContact->getContact()->setRejetEmail(true);
+                            $campagneContact->getContact()->setRejetNewsletter(true);
+                            $this->em->persist($campagneContact->getContact());
+
                     }
                     
                     $this->em->persist($campagneContact);

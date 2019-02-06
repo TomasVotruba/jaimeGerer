@@ -402,6 +402,61 @@ class DocumentPrixRepository extends EntityRepository
 		return $result;
 	}
 
+	public function findForRemiseCheque($company, $type, $compta = null){
+
+		$queryBuilder  = $this->_em->createQueryBuilder();
+
+		$subQueryBuilder = $this->_em->createQueryBuilder();
+		$subQueryBuilder->select('IDENTITY(r.facture)')
+		->from('AppBundle\Entity\Compta\Rapprochement', 'r')
+		->where('r.facture = d.id');
+
+		//ne pas prendre les factures qui sont dans une remise de cheque rapprochée
+		$chequeSubQueryBuilder = $this->_em->createQueryBuilder();
+		$chequeSubQueryBuilder->select('IDENTITY(cp.facture)')
+		->from('AppBundle\Entity\Compta\ChequePiece', 'cp')
+		->innerJoin('AppBundle\Entity\Compta\Cheque', 'ch', 'WITH', 'cp.cheque = ch.id')
+		->innerJoin('AppBundle\Entity\Compta\Rapprochement', 'rp', 'WITH', 'rp.remiseCheque = ch.remiseCheque')
+		->where('cp.facture = d.id');
+
+		//ne pas prendre les factures qui ont des avoirs
+		$avoirSubQueryBuilder = $this->_em->createQueryBuilder();
+		$avoirSubQueryBuilder->select('IDENTITY(a.facture)')
+		->from('AppBundle\Entity\Compta\Avoir', 'a')
+		->where('a.facture = d.id');
+
+		//ne pas prendre les factures qui sont lettrées
+		$lettrageSubQueryBuilder = $this->_em->createQueryBuilder();
+		$lettrageSubQueryBuilder->select('IDENTITY(jv.facture)')
+		->from('AppBundle\Entity\Compta\JournalVente', 'jv')
+		->where('jv.facture = d.id')
+		->andWhere('jv.debit IS NOT NULL')
+		->andWhere('jv.lettrage IS NOT NULL');
+
+		$query = $this->createQueryBuilder('d');
+		$query
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = d.compte')
+			->where('c.company = :company')
+			->andWhere('d.etat <> :etat')
+			->andWhere('d.type = :type')
+			->setParameter('company', $company)
+			->setParameter('etat', 'PAID')
+			->setParameter('type', $type);
+
+		if($compta != null){
+			$query->andWhere('d.compta = :compta')
+			->setParameter('compta', $compta);
+		}
+
+
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($subQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($chequeSubQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($avoirSubQueryBuilder->getDQL())));
+		$query->andWhere($queryBuilder->expr()->not($queryBuilder->expr()->exists($lettrageSubQueryBuilder->getDQL())));
+
+		return $query->getQuery()->getResult();
+	}
+
 	public function findForListRetard($company, $type, $length, $start, $orderBy, $dir, $search, $compta=null){
 
 		$queryBuilder  = $this->_em->createQueryBuilder();

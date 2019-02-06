@@ -91,6 +91,20 @@ class CampagneContact
      */
     private $deliveredDate;
 
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="unsubscribed", type="boolean")
+     */
+    private $unsubscribed = false;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="unsubscribedDate", type="datetime", nullable=true)
+     */
+    private $unsubscribedDate;
+
 
     /**
      * Get id
@@ -330,5 +344,51 @@ class CampagneContact
     public function getDeliveredDate()
     {
         return $this->deliveredDate;
+    }
+
+    /**
+     * Set unsubscribed
+     *
+     * @param boolean $unsubscribed
+     * @return CampagneContact
+     */
+    public function setUnsubscribed($unsubscribed)
+    {
+        $this->unsubscribed = $unsubscribed;
+
+        return $this;
+    }
+
+    /**
+     * Get unsubscribed
+     *
+     * @return boolean 
+     */
+    public function getUnsubscribed()
+    {
+        return $this->unsubscribed;
+    }
+
+    /**
+     * Set unsubscribedDate
+     *
+     * @param \DateTime $unsubscribedDate
+     * @return CampagneContact
+     */
+    public function setUnsubscribedDate($unsubscribedDate)
+    {
+        $this->unsubscribedDate = $unsubscribedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get unsubscribedDate
+     *
+     * @return \DateTime 
+     */
+    public function getUnsubscribedDate()
+    {
+        return $this->unsubscribedDate;
     }
 }

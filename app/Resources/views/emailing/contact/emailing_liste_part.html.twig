@@ -1,0 +1,62 @@
+{% block content %}
+	<div class="row" id="emailings">
+		<div class="col-md-12">
+			<h3>Historique des emailing</h3>
+		</div>
+		<div class="col-md-3 col-md-offset-2 well center">
+			<h4>Taux d'ouverture</h4>
+			<p class="xl center">{{ contact.openRate }} %</p>
+		</div>
+		<div class="col-md-3 col-md-offset-2 well center">
+			<h4>Taux de clic</h4>
+			<p class="xl center">{{ contact.openRate }} %</p>
+		</div>
+		<div class="col-md-12">
+			<table id="table_emailing" class="table table-bordered table-striped">
+				<thead>
+				<tr>
+					<th>Campagne</th>
+					<th>Liste</th>
+					<th>Date d'envoi</th>
+					<th class="center">Ouverture</th>
+					<th class="center">Clic</th>
+				</tr>
+				</thead>
+				<tbody>
+				{% for campagneContact in contact.campagneContacts %}
+					<tr>
+						<td>
+							<a href="{{ path('emailing_campagne_voir', {'id' : campagneContact.campagne.id }) }}" target="_blank">{{ campagneContact.campagne.nom }}</a>
+							<br />
+							{% if campagneContact.campagne.isDraft %}
+									<span class="label label-default">Brouillon</span>
+							{% elseif campagneContact.campagne.isScheduled %}
+									<span class="label label-info">Planifiée</span>
+							{% elseif campagneContact.campagne.isSent %}
+									<span class="label label-success">Envoyée</span>
+							{% endif %}
+						</td>
+						<td>
+							{{ campagneContact.campagne.nomRapport }}
+						</td>
+						<td>
+							{{ campagneContact.campagne.dateEnvoi ? campagneContact.campagne.dateEnvoi|date('d/m/Y') : '-' }}
+						</td>
+						<td class="center">
+							{% if campagneContact.open %}
+								<span class="glyphicon glyphicon-ok green"></span>
+							{% endif %}
+						</td>
+						<td class="center">
+							{% if campagneContact.click %}
+								<span class="glyphicon glyphicon-ok green"></span>
+							{% endif %}
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+ {% endblock %}

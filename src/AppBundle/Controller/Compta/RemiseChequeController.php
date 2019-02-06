@@ -117,12 +117,10 @@ class RemiseChequeController extends Controller
 		}
 
 		//factures
-		$arr_all_factures = $repoFactures->findForCompany($this->getUser()->getCompany(), 'FACTURE', true);
+		$arr_all_factures = $repoFactures->findForRemiseCheque($this->getUser()->getCompany(), 'FACTURE', true);
 		$arr_factures = array();
 		foreach($arr_all_factures as $facture){
-			if($facture->getTotalRapproche() < $facture->getTotalTTC() && $facture->getEtat() != "PAID" && !in_array($facture->getId(), $arr_factures_rapprochees_par_remises_cheques) && $facture->getTotalAvoirs() < $facture->getTotalTTC()){
-				$arr_factures['F'.$facture->getId()] = $facture->getNum().' - '.$facture->getCompte().' - '.$facture->getTotalTTC().'€';
-			}
+			$arr_factures['F'.$facture->getId()] = $facture->getNum().' - '.$facture->getCompte().' - '.$facture->getTotalTTC().'€';
 		}
 
 		$avoirsRepo = $em->getRepository('AppBundle:Compta\Avoir');

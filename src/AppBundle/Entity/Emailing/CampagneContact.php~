@@ -3,11 +3,12 @@
 namespace AppBundle\Entity\Emailing;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 /**
  * CampagneContact
  *
- * @ORM\Table()
+ * @ORM\Table(name="campagne_contact", uniqueConstraints={@UniqueConstraint(name="campagne_contact", columns={"contact_id", "campagne_id"})})
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Emailing\CampagneContactRepository")
  */
 class CampagneContact
@@ -23,13 +24,13 @@ class CampagneContact
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Emailing\Campagne", inversedBy="campagneContacts", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $campagne;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact", inversedBy="campagneContacts")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $contact;
 
@@ -89,6 +90,20 @@ class CampagneContact
      * @ORM\Column(name="deliveredDate", type="datetime", nullable=true)
      */
     private $deliveredDate;
+
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="unsubscribed", type="boolean")
+     */
+    private $unsubscribed = false;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="unsubscribedDate", type="datetime", nullable=true)
+     */
+    private $unsubscribedDate;
 
 
     /**
@@ -283,5 +298,51 @@ class CampagneContact
     public function getContact()
     {
         return $this->contact;
+    }
+
+    /**
+     * Set delivered
+     *
+     * @param boolean $delivered
+     * @return CampagneContact
+     */
+    public function setDelivered($delivered)
+    {
+        $this->delivered = $delivered;
+
+        return $this;
+    }
+
+    /**
+     * Get delivered
+     *
+     * @return boolean 
+     */
+    public function getDelivered()
+    {
+        return $this->delivered;
+    }
+
+    /**
+     * Set deliveredDate
+     *
+     * @param \DateTime $deliveredDate
+     * @return CampagneContact
+     */
+    public function setDeliveredDate($deliveredDate)
+    {
+        $this->deliveredDate = $deliveredDate;
+
+        return $this;
+    }
+
+    /**
+     * Get deliveredDate
+     *
+     * @return \DateTime 
+     */
+    public function getDeliveredDate()
+    {
+        return $this->deliveredDate;
     }
 }

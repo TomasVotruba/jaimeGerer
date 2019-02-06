@@ -61,10 +61,14 @@ class CampagneController extends Controller
 				$this->getUser()->getCompany(),
 				$requestData->get('length'),
 				$requestData->get('start'),
-				$arr_cols[$col]['data'],
-				$arr_sort[0]['dir'],
 				$arr_search['value']
 		);
+
+		for($i = 0; $i<count($list); $i++){
+			$id = $list[$i]['id'];
+			$campagne = $repository->find($id);
+			$list[$i]['nbContacts'] = $campagne->getNbDestinataires();
+		}
 
 		$response = new JsonResponse();
 		$response->setData(array(
@@ -96,6 +100,7 @@ class CampagneController extends Controller
 		$list = array();
 		foreach($campagne->getCampagneContacts() as $campagneContact){
 			$arrContact = array();
+			$arrContact['id'] = $campagneContact->getContact()->getId();
 			$arrContact['prenom'] = $campagneContact->getContact()->getPrenom();
 			$arrContact['nom'] = $campagneContact->getContact()->getNom();
 			$arrContact['organisation'] = $campagneContact->getContact()->getCompte()->getNom();
@@ -355,7 +360,6 @@ class CampagneController extends Controller
 
 		try{
 			$mailgunService = $this->get('appbundle.mailgun');
-			$mailgunService->ajouterLienDesinscription($campagne);
 			$mailgunService->sendCampagneViaAPI($campagne);
 		} catch(\Exception $e){
 			$error =  $e->getMessage();

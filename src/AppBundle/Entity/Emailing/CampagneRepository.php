@@ -24,23 +24,22 @@ class CampagneRepository extends EntityRepository
 		return $result;
 	}
 	
-	public function findForList($company, $length, $start, $orderBy, $dir, $search){
+	public function findForList($company, $length, $start, $search){
 		$qb = $this->createQueryBuilder('c')
-			->select('DISTINCT(c.id) as id', 'c.nom', 'c.dateCreation', 'c.objet', 'c.nomRapport', 'CONCAT(u.firstname,\' \',u.lastname) as user', 'COUNT(cc.id) AS nbContacts', 'c.etat')
+			->select('DISTINCT(c.id) as id', 'c.nom', 'c.dateCreation', 'c.objet', 'c.nomRapport', 'CONCAT(u.firstname,\' \',u.lastname) as user', 'c.etat')
 			->leftJoin('AppBundle\Entity\User', 'u', 'WITH', 'u.id = c.userCreation')
-			->leftJoin('AppBundle\Entity\Emailing\CampagneContact', 'cc', 'WITH', 'cc.campagne = c.id')
 			->where('u.company = :company')
 			->setParameter('company', $company);
 		
 		if($search != ""){
 			$search = trim($search);
-			$qb->andWhere('c.nom LIKE :search')
+			$qb->andWhere('c.nom LIKE :search OR c.nomRapport LIKE :search')
 			->setParameter('search', '%'.$search.'%');
 		}
 		
 		$qb->setMaxResults($length)
 	        ->setFirstResult($start)
-	        ->addOrderBy('c.'.$orderBy, $dir);
+	        ->addOrderBy('c.dateCreation', 'DESC');
 	
 		return $qb->getQuery()->getResult();
 	}
