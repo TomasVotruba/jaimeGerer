@@ -9,25 +9,133 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-12">
-			<p><strong>Nom de la campagne: </strong> {{ campagne.nom }}</p>
-			<p><strong>Nom de l'expéditeur  : </strong> {{ campagne.nomExpediteur }}</p>
-			<p><strong>Email de l'expéditeur : </strong> {{ campagne.emailExpediteur }}</p>
-			<p><strong>Objet : </strong> {{ campagne.objet }}</p>
-			<p><strong>Contenu : </strong> <a href="#" data-toggle="modal" data-target="#modal-preview">Aperçu</a></p>
-			<p><strong>Destinataires : </strong> {{ campagne.nbDestinataires }} contacts de la liste {{ campagne.nomRapport }} </p>
-
+		<div class="col-md-4 col-md-offset-3">
+			<h3>Nom de la campagne</h3>  
 		</div>
+		<div class="col-md-2">
+			<p>
+				<a href="{{ path('emailing_campagne_editer_infos', {'id' : campagne.id }) }}" class="btn btn-warning">Modifier</a>
+
+			</p>
+		</div>
+		<div class="col-md-6 col-md-offset-3">
+			{{ campagne.nom }}
+			<hr />
+		</div>
+		
+	</div>
+
+	<div class="row">
+		<div class="col-md-4 col-md-offset-3">
+			<h3>Nom de l'expéditeur</h3>  
+		</div>
+		<div class="col-md-2">
+			<p>
+				<a href="{{ path('emailing_campagne_editer_infos', {'id' : campagne.id }) }}" class="btn btn-warning">Modifier</a>
+
+			</p>
+		</div>
+		<div class="col-md-6 col-md-offset-3">
+			{{ campagne.nomExpediteur }}
+			<hr />
+		</div>
+		
+	</div>
+
+	<div class="row">
+		<div class="col-md-4 col-md-offset-3">
+			<h3>Email de l'expéditeur</h3>  
+		</div>
+		<div class="col-md-2">
+			<p>
+				<a href="{{ path('emailing_campagne_editer_infos', {'id' : campagne.id }) }}" class="btn btn-warning">Modifier</a>
+
+			</p>
+		</div>
+		<div class="col-md-6 col-md-offset-3">
+			{{ campagne.emailExpediteur }}
+			<hr />
+		</div>
+		
+	</div>
+
+	<div class="row">
+		<div class="col-md-4 col-md-offset-3">
+			<h3>Objet de l'email</h3>  
+		</div>
+		<div class="col-md-2">
+			<p>
+				<a href="{{ path('emailing_campagne_editer_infos', {'id' : campagne.id }) }}" class="btn btn-warning">Modifier</a>
+
+			</p>
+		</div>
+		<div class="col-md-6 col-md-offset-3">
+			{{ campagne.objet }}
+			<hr />
+		</div>
+		
+	</div>
+
+	<div class="row">
+		<div class="col-md-4 col-md-offset-3">
+			<h3>Contenu de l'email</h3>  
+		</div>
+		<div class="col-md-2">
+			<p>
+				<a href="{{ path('emailing_campagne_contenu', {'id' : campagne.id }) }}" class="btn btn-warning">Modifier</a>
+
+			</p>
+		</div>
+		<div class="col-md-6 col-md-offset-3">
+			<a href="#" data-toggle="modal" data-target="#modal-preview">Aperçu</a>
+			<hr />
+		</div>
+		
+	</div>
+
+	<div class="row">
+		<div class="col-md-4 col-md-offset-3">
+			<h3>Destinataires</h3>  
+		</div>
+		<div class="col-md-2">
+			<p>
+				<a href="{{ path('emailing_campagne_destinataires', {'id' : campagne.id }) }}" class="btn btn-warning">Modifier</a>
+
+			</p>
+		</div>
+		<div class="col-md-6 col-md-offset-3">
+			{{ campagne.nbDestinataires }} contacts  				
+			{% if campagne.nomRapport != null %}
+				de la liste {{ campagne.nomRapport }} 
+			{% endif %}
+
+			{% if campagne.nbDestinataires == 0 or campagne.html == null %} 
+				<span class="red glyphicon glyphicon-warning-sign"></span>  
+			{% endif %}
+			<hr />
+		</div>
+		
 	</div>
 
 	<div class="row">
 
-		<div class="col-md-4 center">
-			<a href="{{ path('emailing_campagne_tester', {'id' : campagne.id }) }}" data-toggle="modal" data-target="#modal" class="btn btn-info">Envoyer un email de test</a>
+		<div class="col-md-2 col-md-offset-3 center">
+			<a href="{{ path('emailing_campagne_tester', {'id' : campagne.id }) }}" data-toggle="modal" data-target="#modal" class="btn btn-primary">Envoyer un email de test</a>
 		</div>
 
-		<div class="col-md-4 center">
-			<a href="#" data-toggle="modal" data-target="#modal-validation-envoi" class="btn btn-success">Envoyer la campagne</a>
+		<div class="col-md-2 center">
+			<a href="#" data-toggle="modal" data-target="#modal-validation-envoi" class="btn btn-success" 
+				{% if campagne.nbDestinataires == 0 or campagne.html == null %} disabled {% endif %}>
+				Envoyer la campagne
+			</a>
+		</div>
+
+		<div class="col-md-2 center">
+			<a href="#" data-toggle="modal" data-target="#modal-planification" class="btn btn-info" 
+				 disabled>
+				Planifier la campagne
+			</a>
+			<br /><i>Bientôt disponible !</i>
 		</div>
 	</div>
 
@@ -50,17 +158,30 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
             	<div class="modal-header">
-            		<h3>Envoyer la campagne "{{ campagne.nom }}"</h3>
 					<a class="close" data-dismiss="modal">×</a>
+					<h3>Envoyer la campagne "{{ campagne.nom }}"</h3>
 				</div>
             	<div class="modal-body center">
             		<h4 class="center">Alors ça y est, c'est parti ?</h4>
-	            	<p class="center">
-	            		<a class="btn btn-success" href="{{ path('emailing_campagne_envoyer', {'id' : campagne.id }) }}">Envoyer !</a>
+	            	<img src="{{ asset('images/assets/cat_heavy_breathing.gif') }}" alt="Exciting !" />
+	           		<p class="center">
+	           			<a class="btn btn-success" href="{{ path('emailing_campagne_envoyer', {'id' : campagne.id }) }}" id="btn-send">Envoyer !</a>
 	           		</p>
 	            </div>
             </div>
         </div>
     </div>
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+		$(document).ready( function () {    
+			$('#btn-send').click(function(){
+				$(this).attr('disabled', true);
+			});
+		});
+	</script>
 
 {% endblock %}

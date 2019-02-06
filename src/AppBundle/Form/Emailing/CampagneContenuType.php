@@ -22,12 +22,12 @@ class CampagneContenuType extends AbstractType
                 'attr' => array('class' => 'file-input')
         	))
             ->add('preview', 'submit', array(
-                'label' => 'Preview',
-                'attr' => array('class' => 'btn btn-info preview')
+                'label' => 'Aperçu',
+                'attr' => array('class' => 'btn btn-info preview btn-lg')
             ))
             ->add('submit', 'submit', array(
                 'label' => 'Suite',
-                'attr' => array('class' => 'btn btn-success')
+                'attr' => array('class' => 'btn btn-success btn-lg')
             ))
         ;
     }

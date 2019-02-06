@@ -30,15 +30,14 @@ class MailgunService extends ContainerAware {
      **/ 
     public function sendTestViaAPI($campagne, $to){
 
-        $mgClient = new \Mailgun\Mailgun($this->apiKey);
-       
-        $result = $mgClient->sendMessage($this->domain, array(
+        $mgClient = Mailgun::create($this->apiKey, 'https://api.eu.mailgun.net');
+        $result = $mgClient->messages()->send($this->domain, [
             'from'    => $campagne->getNomExpediteur().' <'.$campagne->getEmailExpediteur().'>',
             'to'      => $to,
             'subject' => '[TEST] '.$campagne->getObjet(),
             'html'    => $campagne->getHtml(),
-        ));
-
+        ]);
+     
         return $result;
     }
 
@@ -47,20 +46,26 @@ class MailgunService extends ContainerAware {
      **/ 
     public function sendCampagneViaAPI($campagne){
 
-        $mgClient = new \Mailgun\Mailgun($this->apiKey);
+        $mgClient = Mailgun::create($this->apiKey, 'https://api.eu.mailgun.net');
+        $arr_destinataires = $campagne->getDestinataires();
        
-        $result = $mgClient->sendMessage($this->domain, array(
-            'from'    => $campagne->getNomExpediteur().' <'.$campagne->getEmailExpediteur().'>',
-            'to'      => $campagne->getDestinataires(),
-            'subject' => $campagne->getObjet(),
-           // 'text' => $campagne->getObjet(),
-            'html'    => $campagne->getHtml(),
-            'recipient-variables' => '{}',
-            'v:campagne-id'   =>  $campagne->getId(),
-            'v:company-id'   =>  $campagne->getUserCreation()->getCompany()->getId()
-        ));
+        $results = array();
 
-        return $result;
+        //send by 500 as MailGun limit is 1000 at the same time
+        $chunks = array_chunk($arr_destinataires,500,true);
+        foreach($chunks as $chunk){
+            $results[] = $mgClient->messages()->send($this->domain, [
+                'from'    => $campagne->getNomExpediteur().' <'.$campagne->getEmailExpediteur().'>',
+                'to'      => $chunk,
+                'subject' => $campagne->getObjet(),
+                'html'    => $campagne->getHtml(),
+                'recipient-variables' => '{}',
+                'v:campagne-id'   =>  $campagne->getId(),
+                'v:company-id'   =>  $campagne->getUserCreation()->getCompany()->getId()
+            ]);
+        }
+       
+        return $results;
     }
 
     /**

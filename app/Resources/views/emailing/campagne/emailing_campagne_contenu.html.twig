@@ -8,12 +8,44 @@
 		</div>
 	</div>
 
+	<div class="row">
+		<div class="col-md-12">
+
+		 	<div class="alert alert-info alert-dismissible" role="alert">
+	            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	                <span aria-hidden="true">&times;</span>
+	            </button>
+	            <p>
+	              <span class="glyphicon glyphicon-info-sign"></span>
+	              Vous pouvez créer votre template HTML sur 
+	              <a class="alert-link" href="https://topol.io/" target="_blank">Topol</a>.
+	            </p>
+	        </div>
+	    </div>
+	</div>
+
 	{{ form_start(form) }}
-	
-	{{ form_row(form.file) }}
-	{{ form_row(form.preview) }}
-	{{ form_row(form.submit) }}
-	
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<h3>{{ form_label(form.file) }}</h3>  
+		</div>
+		<div class="col-md-6 col-md-offset-3">
+			{{ form_errors(form.file) }}
+			{{ form_widget(form.file) }}
+			<hr />
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6 center">
+			{{ form_row(form.preview) }}
+		</div>
+		<div class="col-md-6 center">
+			{{ form_row(form.submit) }}
+		</div>
+	</div>
+
 	{{ form_end(form) }}
 
 	<div class="modal" id="modal-preview">

@@ -112,8 +112,14 @@
                        },
                        {
                            "render": function ( data, type, row ) {
-                               var s = row['nomRapport']+'<br />'+row['nbContacts']+' destinataires' ;
-                               return s;
+                           		var s = '';
+                           		if(null != row['nomRapport']){
+                           			s+=row['nomRapport'];
+                           		} else {
+                           			s+='<i>Aucun rapport sélectionné</i>';
+                           		}
+                               	s+= '<br />'+row['nbContacts']+' destinataires' ;
+                               	return s;
                            },
                            "targets": 1
                        },
@@ -138,16 +144,18 @@
                            "render": function ( data, type, row ) {
     
                                 var voirUrl = Routing.generate('emailing_campagne_voir', {'id' : row['id']});
-                                var supprimerUrl = Routing.generate('emailing_campagne_supprimer', {'id' : row['id']});
-
                                 var s = '<a href="'+voirUrl+'" class="btn btn-xs btn-info" ​data-toggle="tooltip" title="Voir"><span class="glyphicon glyphicon-eye-open"></span></a>';
                                 
-								// if(!row['envoyee']){
-								//   s+="<a href=\"editer/"+row['id']+"\" class=\"btn btn-xs btn-warning\" ​data-toggle=\"tooltip\" title=\"Editer\"><span class=\"glyphicon glyphicon-pencil\"></span></a>";
-								// }
+								if (row['etat'] == 'DRAFT'){
+									var editerUrl = Routing.generate('emailing_campagne_editer', {'id' : row['id']});
+									s += ' <a href="'+editerUrl+'" class="btn btn-xs btn-warning" ​data-toggle="tooltip" title="Editer"><span class="glyphicon glyphicon-pencil"></span></a>';
+								}
 
+								var supprimerUrl = Routing.generate('emailing_campagne_supprimer', {'id' : row['id']});
 								s += ' <a href="'+supprimerUrl+'" class="btn btn-xs btn-danger" ​data-toggle="tooltip" title="Supprimer"><span class="glyphicon glyphicon-trash"></span></a>';
+                                
                                 return  s;
+
                            },
                            "targets": 3
                        },

@@ -252,6 +252,14 @@
                            		return '';
                            },
                            "targets": 6
+                        },  {
+                           "render": function ( data, type, row ) {
+                           		if(data === true){
+                           			return '<p class="center"><span class="glyphicon glyphicon-remove red"></span></p>';
+                           		}
+                           		return '';
+                           },
+                           "targets": 7
                         },
                    ]
 			});

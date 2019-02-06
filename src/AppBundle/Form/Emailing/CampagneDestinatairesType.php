@@ -20,6 +20,7 @@ class CampagneDestinatairesType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('rapport', 'entity', array(
                 'class'=>'AppBundle:CRM\Rapport',
@@ -41,7 +42,7 @@ class CampagneDestinatairesType extends AbstractType
             ))
             ->add('submit', 'submit', array(
                 'label' => 'Suite',
-                'attr' => array('class' => 'btn btn-success submit', 'disabled' => true)
+                'attr' => array('class' => 'btn btn-success btn-lg submit', 'disabled' => true)
             ))
         ;
     }

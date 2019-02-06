@@ -31,7 +31,10 @@ class CampagneController extends Controller
 	 */ 
 	public function indexAction()
 	{
-		return $this->render('emailing/emailing_index.html.twig');
+		//return $this->render('emailing/emailing_index.html.twig');
+		return $this->redirect($this->generateUrl(
+			'emailing_campagne_liste'
+		));
 	}
 	
 	/**
@@ -109,6 +112,7 @@ class CampagneController extends Controller
 			$arrContact['open'] = $campagneContact->getOpen();
 			$arrContact['click'] = $campagneContact->getClick();
 			$arrContact['bounce'] = $campagneContact->getBounce();
+			$arrContact['unsubscribe'] = $campagneContact->getUnsubscribed();
 
 			$list[] = $arrContact;
 		}
@@ -215,6 +219,14 @@ class CampagneController extends Controller
 			$em->persist($campagne);
 			$em->flush();
 
+			if(null != $campagne->getNomRapport() && 0 != $campagne->getNbDestinataires()){
+				return $this->redirect($this->generateUrl(
+					'emailing_campagne_recap', array(
+						'id' => $campagne->getId()
+					)
+				));
+			}
+
 			return $this->redirect($this->generateUrl(
 				'emailing_campagne_destinataires', array(
 					'id' => $campagne->getId()
@@ -222,7 +234,8 @@ class CampagneController extends Controller
 			));
 		}
 		return $this->render('emailing/campagne/emailing_campagne_contenu.html.twig', array(
-			'form' => $form->createView()
+			'form' => $form->createView(),
+			'campagne' => $campagne
 		));
 	}
 
@@ -277,9 +290,12 @@ class CampagneController extends Controller
 					'id' => $campagne->getId()
 				)
 			));
+
 		}
+
 		return $this->render('emailing/campagne/emailing_campagne_destinataires.html.twig', array(
-			'form' => $form->createView()
+			'form' => $form->createView(),
+			'campagne' => $campagne
 		));
 	}
 
@@ -360,29 +376,84 @@ class CampagneController extends Controller
 
 		try{
 			$mailgunService = $this->get('appbundle.mailgun');
-			$mailgunService->sendCampagneViaAPI($campagne);
+			$result = $mailgunService->sendCampagneViaAPI($campagne);
+
+			$this->get('session')->getFlashBag()->add('success', 'La campagne '.$campagne->getNom().' a été envoyée !');
+
+			$campagne->setDateEnvoi(new \DateTime(date('Y-m-d')));
+			$campagne->setEtat('SENT');
+			$em = $this->getDoctrine()->getManager();					
+			$em->persist($campagne);
+			$em->flush();
+		
 		} catch(\Exception $e){
 			$error =  $e->getMessage();
-			$this->get('session')->getFlashBag()->add('danger', "La campagne n'a pas été envoyé pour la raison suivante : $error");
+			$this->get('session')->getFlashBag()->add('danger', "La campagne n'a pas été envoyée pour la raison suivante : $error");
 			return $this->redirect($this->generateUrl(
 					'emailing_campagne_recap',
 					array('id' => $campagne->getId())
 			));
 		}
 
-		$this->get('session')->getFlashBag()->add('success', 'La campagne '.$campagne->getNom().' a été envoyée !');
-
-		$campagne->setDateEnvoi(new \DateTime(date('Y-m-d')));
-		$campagne->setEtat('SENT');
-		$em = $this->getDoctrine()->getManager();					
-		$em->persist($campagne);
-		$em->flush();
-
 		return $this->redirect($this->generateUrl(
 			'emailing_campagne_voir',
 			array('id' => $campagne->getId())
 		));
 		
+	}
+
+	/**
+	 * @Route("/emailing/campagne/editer/{id}", name="emailing_campagne_editer" , options={"expose"=true})
+	 */
+	public function campagneEditerAction(Campagne $campagne)
+	{
+
+		if(null === $campagne->getHTML() || '' === $campagne->getHTML()){
+			return $this->redirect($this->generateUrl(
+				'emailing_campagne_contenu',
+				array('id' => $campagne->getId())
+			));
+		} else if(null === $campagne->getNomRapport() || 0 == $campagne->getNbDestinataires()){
+			return $this->redirect($this->generateUrl(
+				'emailing_campagne_destinataires',
+				array('id' => $campagne->getId())
+			));
+		} 
+		
+		return $this->redirect($this->generateUrl(
+			'emailing_campagne_recap',
+			array('id' => $campagne->getId())
+		));
+	}
+
+	/**
+	 * @Route("/emailing/campagne/editer-infos/{id}", name="emailing_campagne_editer_infos")
+	 */
+	public function campagneEditerInfosAction(Campagne $campagne)
+	{
+
+		$form = $this->createForm(
+			new CampagneType(), 
+			$campagne
+		);
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+		
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$em = $this->getDoctrine()->getManager();					
+			$em->persist($campagne);
+			$em->flush();
+
+			return $this->redirect($this->generateUrl(
+				'emailing_campagne_recap',
+				array('id' => $campagne->getId())
+			));
+		}
+		
+		return $this->render('emailing/campagne/emailing_campagne_ajouter.html.twig', array(
+			'form' => $form->createView()
+		));
 	}
 
 	
