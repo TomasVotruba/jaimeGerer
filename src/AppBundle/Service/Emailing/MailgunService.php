@@ -144,7 +144,7 @@ class MailgunService extends ContainerAware {
 
                         case 'delivered':
                             $campagneContact->setDelivered(true);
-                            $campagneContact->setDeliveredDate(new \DateTime(date('Y-m-d', $timestamp)));
+                            $campagneContact->setDeliveredDate(new \DateTime(date('Y-m-d h:i:s', $timestamp)));
 
                             $campagne = $campagneContact->getCampagne();
                             if($campagne->isDelivering()){
@@ -155,25 +155,25 @@ class MailgunService extends ContainerAware {
 
                         case 'opened':
                             $campagneContact->setOpen(true);
-                            $campagneContact->setOpenDate(new \DateTime(date('Y-m-d', $timestamp)));
+                            $campagneContact->setOpenDate(new \DateTime(date('Y-m-d h:i:s', $timestamp)));
                             break;
 
                         case 'clicked':
                             $campagneContact->setClick(true);
-                            $campagneContact->setClickDate(new \DateTime(date('Y-m-d', $timestamp)));
+                            $campagneContact->setClickDate(new \DateTime(date('Y-m-d h:i:s', $timestamp)));
                             break;
 
 
                         case 'failed':
                             $campagneContact->setBounce(true);
-                            $campagneContact->setBounceDate(new \DateTime(date('Y-m-d', $timestamp)));
+                            $campagneContact->setBounceDate(new \DateTime(date('Y-m-d h:i:s', $timestamp)));
                             $campagneContact->getContact()->setBounce('BOUNCE');
                             $this->em->persist($campagneContact->getContact());
                             break;
 
                         case 'unsubscribed':
                             $campagneContact->setUnsubscribed(true);
-                            $campagneContact->setUnsubscribedDate(new \DateTime(date('Y-m-d', $timestamp)));
+                            $campagneContact->setUnsubscribedDate(new \DateTime(date('Y-m-d h:i:s', $timestamp)));
                             $campagneContact->getContact()->setRejetEmail(true);
                             $campagneContact->getContact()->setRejetNewsletter(true);
                             $this->em->persist($campagneContact->getContact());
