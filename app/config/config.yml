@@ -231,10 +231,15 @@ services:
             - { name: twig.extension }
 
 monolog:
-    channels: ['tva_logger']
+    channels: ['tva_logger', 'cron_logger']
     handlers:
         tva_logger:
             level:    debug
             path:     '%kernel.logs_dir%/tva.log'
             channels: [tva_logger]
+            type:     stream
+        cron_logger:
+            level:    debug
+            path:     '%kernel.logs_dir%/cron.log'
+            channels: [cron_logger]
             type:     stream

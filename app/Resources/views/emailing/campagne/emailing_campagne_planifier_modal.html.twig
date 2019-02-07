@@ -1,0 +1,29 @@
+<div class="modal-header">
+	<a class="close" data-dismiss="modal">×</a>
+	<h3>Planifier l'envoi</h3>
+</div>
+
+<div class="modal-body">
+	{{ form_start(form, {'action': path('emailing_campagne_planifier', {'id' : campagne.id }) }) }}
+	<div class="row">
+		<div class="col-md-12 center">
+		 	{{ form_row(form.dateEnvoi) }} 
+		 </div>
+	</div>
+	<div class="row">
+    	<div class="col-md-12 center">
+	   	 	<input type="submit" value="Planifier" class="btn btn-success btn-lg btn-schedule" />
+	    </div>
+    </div>
+	{{ form_rest(form) }}
+	{{ form_end(form) }}
+</div>
+
+<script type="text/javascript">
+	$(document).ready( function () { 
+
+		// $('form').submit(function(){
+		// 	$('.btn-schedule').attr('disabled', true);
+		// });
+	});
+</script>

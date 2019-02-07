@@ -3,15 +3,15 @@
 {% block content %}
 	<div class="row">
 		<div class="col-md-12">
-			<h1>Campagnes</h1>	 
+			<h1>Campagnes emailing</h1>	 
 		</div>
 	</div>
 		
 	<div class="row">
 		<div class="col-md-12">
 		    <p>
-		    	<a href="{{ path('emailing_campagne_ajouter') }}" class="btn btn-success">
-		    		<span class="glyphicon glyphicon-plus"></span> Ajouter
+		    	<a href="{{ path('emailing_campagne_ajouter') }}" class="btn btn-success btn-lg">
+		    		<span class="glyphicon glyphicon-plus"></span> Nouvelle campagne
 		    	</a>
 		    </p>
 
@@ -97,7 +97,13 @@
 	                "columnDefs": [
                        {
                            "render": function ( data, type, row ) {
-                           		var url = Routing.generate('emailing_campagne_voir', {'id' : row['id'] });
+                           		
+                           		var url ='';
+                           		if (row['etat'] == 'DRAFT'){
+									url = Routing.generate('emailing_campagne_editer', {'id' : row['id']});
+								} else {
+									url = Routing.generate('emailing_campagne_voir', {'id' : row['id'] });
+								}
                                 var s = '<a href="'+url+'">'+data+'</a><br />' ;
 								if(row['etat'] == 'DRAFT'){
 									s+= '<span class="label label-default">Brouillon</span>';
@@ -105,6 +111,10 @@
 									s+= '<span class="label label-info">Planifiée</span>';
 								} else if(row['etat'] == 'SENT'){
 									s+= '<span class="label label-success">Envoyée</span>';
+								} else if(row['etat'] == 'DELIVERING'){
+									s+= '<span class="label label-warning">En cours d\'envoi</span>';
+								} else if(row['etat'] == 'ERROR'){
+									s+= '<span class="label label-danger">Erreur lors de l\'envoi</span>';
 								}
                                return s;
                            },
@@ -143,12 +153,14 @@
                            // this case `data: 0`.
                            "render": function ( data, type, row ) {
     
-                                var voirUrl = Routing.generate('emailing_campagne_voir', {'id' : row['id']});
-                                var s = '<a href="'+voirUrl+'" class="btn btn-xs btn-info" ​data-toggle="tooltip" title="Voir"><span class="glyphicon glyphicon-eye-open"></span></a>';
+                                var s = '';
                                 
 								if (row['etat'] == 'DRAFT'){
 									var editerUrl = Routing.generate('emailing_campagne_editer', {'id' : row['id']});
 									s += ' <a href="'+editerUrl+'" class="btn btn-xs btn-warning" ​data-toggle="tooltip" title="Editer"><span class="glyphicon glyphicon-pencil"></span></a>';
+								} else {
+									var voirUrl = Routing.generate('emailing_campagne_voir', {'id' : row['id']});
+                                	s += '<a href="'+voirUrl+'" class="btn btn-xs btn-info" ​data-toggle="tooltip" title="Statistiques"><span class="glyphicon glyphicon-stats"></span></a>';
 								}
 
 								var supprimerUrl = Routing.generate('emailing_campagne_supprimer', {'id' : row['id']});

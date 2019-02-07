@@ -21,6 +21,7 @@ use AppBundle\Entity\Emailing\CampagneContact;
 use AppBundle\Form\Emailing\CampagneType;
 use AppBundle\Form\Emailing\CampagneContenuType;
 use AppBundle\Form\Emailing\CampagneDestinatairesType;
+use AppBundle\Form\Emailing\CampagneDateEnvoiType;
 
 
 class CampagneController extends Controller
@@ -189,7 +190,8 @@ class CampagneController extends Controller
 		}
 		
 		return $this->render('emailing/campagne/emailing_campagne_ajouter.html.twig', array(
-			'form' => $form->createView()
+			'form' => $form->createView(),
+
 		));
 	}
 
@@ -304,7 +306,7 @@ class CampagneController extends Controller
 	 */
 	public function campagneRecapAction(Campagne $campagne){
 
-		if( !$campagne->isDraft() ){
+		if( !$campagne->isDraft() && !$campagne->isScheduled() && !$campagne->isDelivering()){
 			throw new AccessDeniedException;
 		}
 
@@ -374,6 +376,8 @@ class CampagneController extends Controller
 			throw new AccessDeniedException;
 		}
 
+		$em = $this->getDoctrine()->getManager();
+
 		try{
 			$mailgunService = $this->get('appbundle.mailgun');
 			$result = $mailgunService->sendCampagneViaAPI($campagne);
@@ -381,17 +385,22 @@ class CampagneController extends Controller
 			$this->get('session')->getFlashBag()->add('success', 'La campagne '.$campagne->getNom().' a été envoyée !');
 
 			$campagne->setDateEnvoi(new \DateTime(date('Y-m-d')));
-			$campagne->setEtat('SENT');
-			$em = $this->getDoctrine()->getManager();					
+			$campagne->setEtat('DELIVERING');
+					
 			$em->persist($campagne);
 			$em->flush();
 		
 		} catch(\Exception $e){
 			$error =  $e->getMessage();
 			$this->get('session')->getFlashBag()->add('danger', "La campagne n'a pas été envoyée pour la raison suivante : $error");
+			
+			$campagne->setEtat('ERROR');
+			$em->persist($campagne);
+			$em->flush();
+
 			return $this->redirect($this->generateUrl(
-					'emailing_campagne_recap',
-					array('id' => $campagne->getId())
+				'emailing_campagne_recap',
+				array('id' => $campagne->getId())
 			));
 		}
 
@@ -407,6 +416,9 @@ class CampagneController extends Controller
 	 */
 	public function campagneEditerAction(Campagne $campagne)
 	{
+		if( !$campagne->isDraft() ){
+			throw new AccessDeniedException;
+		}
 
 		if(null === $campagne->getHTML() || '' === $campagne->getHTML()){
 			return $this->redirect($this->generateUrl(
@@ -431,6 +443,9 @@ class CampagneController extends Controller
 	 */
 	public function campagneEditerInfosAction(Campagne $campagne)
 	{
+		if( !$campagne->isDraft() ){
+			throw new AccessDeniedException;
+		}
 
 		$form = $this->createForm(
 			new CampagneType(), 
@@ -452,8 +467,99 @@ class CampagneController extends Controller
 		}
 		
 		return $this->render('emailing/campagne/emailing_campagne_ajouter.html.twig', array(
-			'form' => $form->createView()
+			'form' => $form->createView(),
+			'campagne' => $campagne
 		));
+	}
+
+	/**
+	 * @Route("/emailing/campagne/planifier/{id}", name="emailing_campagne_planifier")
+	 */
+	public function campagnePlanifierAction(Campagne $campagne)
+	{
+		if( !$campagne->isDraft() ){
+			throw new AccessDeniedException;
+		}
+
+		$campagne->setDateEnvoi(new \DateTime());
+
+		$form = $this->createForm(
+			new CampagneDateEnvoiType(), 
+			$campagne
+		);
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+		
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			try{
+				$em = $this->getDoctrine()->getManager();			
+
+				$campagne->setEtat('SCHEDULED');	
+				$em->persist($campagne);
+				$em->flush();
+
+				if($campagne->getDateEnvoi()->format('Ymd') == date('Ymd')){
+					$mailgunService = $this->get('appbundle.mailgun');
+				    $result = $mailgunService->sendCampagneViaAPI($campagne);
+				    $campagne->setEtat('DELIVERING');
+
+				    $em->persist($campagne);
+					$em->flush();
+				}
+
+				$this->get('session')->getFlashBag()->add('success', 'La campagne '.$campagne->getNom().' a été planifiée pour le '.$campagne->getDateEnvoi()->format('d/m/Y').' à '.$campagne->getDateEnvoi()->format('h:i').' !');
+
+			
+			} catch(\Exception $e){
+
+				$error =  $e->getMessage();
+				$this->get('session')->getFlashBag()->add('danger', "La campagne n'a pas été planifiée pour la raison suivante : $error");
+
+				$campagne->setEtat('DRAFT');	
+				$em->persist($campagne);
+				$em->flush();
+
+				return $this->redirect($this->generateUrl(
+						'emailing_campagne_recap',
+						array('id' => $campagne->getId())
+				));
+			}
+			
+			return $this->redirect($this->generateUrl(
+				'emailing_campagne_recap',
+				array('id' => $campagne->getId())
+			));
+		}
+		
+		return $this->render('emailing/campagne/emailing_campagne_planifier_modal.html.twig', array(
+			'form' => $form->createView(),
+			'campagne' => $campagne
+		));
+
+	}
+
+	/**
+	 * @Route("/emailing/campagne/annuler-envoi/{id}", name="emailing_campagne_annuler_envoi")
+	 */
+	public function campagneAnnulerEnvoiAction(Campagne $campagne)
+	{
+		if( false === $campagne->isScheduled() || true === $campagne->isDelivering()){
+			throw new AccessDeniedException;
+		}
+
+		$campagne->setEtat('DRAFT');	
+		$campagne->setDateEnvoi(null);
+
+		$em = $this->getDoctrine()->getManager();			
+		$em->persist($campagne);
+		$em->flush();
+
+		return $this->redirect($this->generateUrl(
+			'emailing_campagne_recap',
+			array('id' => $campagne->getId())
+		));
+
 	}
 
 	

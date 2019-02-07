@@ -4,7 +4,9 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<h1>Créer une campagne d'emailing</h1>	
+			<h1>
+				{{ campagne.nom == null ? 'Nouvelle campagne emailing' : 'Campagne emailing : '~campagne.nom }}
+			</h1>	
 		</div>
 	</div>
 	{% include 'emailing/campagne/emailing_campagne_form.html.twig' %}

@@ -54,7 +54,8 @@ class MailgunService extends ContainerAware {
         //send by 500 as MailGun limit is 1000 at the same time
         $chunks = array_chunk($arr_destinataires,500,true);
         foreach($chunks as $chunk){
-            $results[] = $mgClient->messages()->send($this->domain, [
+
+            $params = [
                 'from'    => $campagne->getNomExpediteur().' <'.$campagne->getEmailExpediteur().'>',
                 'to'      => $chunk,
                 'subject' => $campagne->getObjet(),
@@ -62,7 +63,13 @@ class MailgunService extends ContainerAware {
                 'recipient-variables' => '{}',
                 'v:campagne-id'   =>  $campagne->getId(),
                 'v:company-id'   =>  $campagne->getUserCreation()->getCompany()->getId()
-            ]);
+            ];
+
+            if($campagne->isScheduled()){
+                $params['o:deliverytime'] = $campagne->getDateEnvoi()->getTimestamp();
+            }
+
+            $results[] = $mgClient->messages()->send($this->domain, $params);
         }
        
         return $results;
@@ -138,6 +145,12 @@ class MailgunService extends ContainerAware {
                         case 'delivered':
                             $campagneContact->setDelivered(true);
                             $campagneContact->setDeliveredDate(new \DateTime(date('Y-m-d', $timestamp)));
+
+                            $campagne = $campagneContact->getCampagne();
+                            if($campagne->isDelivering()){
+                                $campagne->setEtat('SENT');
+                                $em->persist($campagne);
+                            }
 
                         case 'opened':
                             $campagneContact->setOpen(true);

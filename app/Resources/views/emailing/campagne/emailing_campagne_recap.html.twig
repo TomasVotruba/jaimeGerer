@@ -4,7 +4,20 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<h1>{{ campagne.nom }}</h1>	
+			<h1>
+				Campagne emailing : {{ campagne.nom }} 
+				{% if campagne.isSent %}
+					<span class="label label-success">Envoyée</span>
+				{% elseif campagne.isScheduled %}
+					<span class="label label-info">Planifiée</span>
+				{% elseif campagne.isDelivering %}
+					<span class="label label-warning">En cours d'envoi</span>
+				{% elseif campagne.isDraft %}
+					<span class="label label-default">Brouillon</span>
+				{% elseif campagne.isError %}
+					<span class="label label-danger">Erreur lors de l\'envoi</span>
+				{% endif %}
+			</h1>	
 		</div>
 	</div>
 
@@ -22,7 +35,6 @@
 			{{ campagne.nom }}
 			<hr />
 		</div>
-		
 	</div>
 
 	<div class="row">
@@ -39,7 +51,6 @@
 			{{ campagne.nomExpediteur }}
 			<hr />
 		</div>
-		
 	</div>
 
 	<div class="row">
@@ -56,7 +67,6 @@
 			{{ campagne.emailExpediteur }}
 			<hr />
 		</div>
-		
 	</div>
 
 	<div class="row">
@@ -73,7 +83,6 @@
 			{{ campagne.objet }}
 			<hr />
 		</div>
-		
 	</div>
 
 	<div class="row">
@@ -90,7 +99,6 @@
 			<a href="#" data-toggle="modal" data-target="#modal-preview">Aperçu</a>
 			<hr />
 		</div>
-		
 	</div>
 
 	<div class="row">
@@ -114,10 +122,9 @@
 			{% endif %}
 			<hr />
 		</div>
-		
 	</div>
 
-	<div class="row">
+	<div class="row {{ campagne.isScheduled or campagne.isDelivering ? 'hidden' : '' }}">
 
 		<div class="col-md-2 col-md-offset-3 center">
 			<a href="{{ path('emailing_campagne_tester', {'id' : campagne.id }) }}" data-toggle="modal" data-target="#modal" class="btn btn-primary">Envoyer un email de test</a>
@@ -126,16 +133,29 @@
 		<div class="col-md-2 center">
 			<a href="#" data-toggle="modal" data-target="#modal-validation-envoi" class="btn btn-success" 
 				{% if campagne.nbDestinataires == 0 or campagne.html == null %} disabled {% endif %}>
-				Envoyer la campagne
+				Envoyer maintenant
 			</a>
 		</div>
 
 		<div class="col-md-2 center">
-			<a href="#" data-toggle="modal" data-target="#modal-planification" class="btn btn-info" 
-				 disabled>
-				Planifier la campagne
+			<a href="{{ path('emailing_campagne_planifier', {'id' : campagne.id }) }}" data-toggle="modal" data-target="#modal" class="btn btn-info" >
+				Planifier l'envoi
 			</a>
-			<br /><i>Bientôt disponible !</i>
+		</div>
+	</div>
+
+	<div class="row {{ campagne.isScheduled or campagne.isDelivering ? '' : 'hidden' }}">
+		<div class="col-md-12 well center">
+			<p>Cette campagne emailing sera envoyée le {{ campagne.dateEnvoi|date('d/m/Y') }} à {{ campagne.dateEnvoi|date('H:i') }}.</p>
+			<p class="row">
+				{% if campagne.isDelivering %}
+					<i>La campagne ne peut plus être annulée car elle est en cours d'envoi.</i>
+				{% elseif campagne.isScheduled %}
+					<a href="{{ path('emailing_campagne_annuler_envoi', {'id' : campagne.id }) }}" class="btn btn-danger" >
+						Annuler l'envoi
+					</a>
+				{% endif %}
+			</p>
 		</div>
 	</div>
 

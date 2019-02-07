@@ -110,6 +110,7 @@ class Campagne
      * @ORM\Column(name="etat", type="string", length=10)
      */
     private $etat;
+
  
 
     /**
@@ -516,4 +517,13 @@ class Campagne
     public function isDraft(){
         return (strtoupper($this->etat) == 'DRAFT');
     }
+
+    public function isDelivering(){
+        return (strtoupper($this->etat) == 'DELIVERING');
+    }
+
+    public function isError(){
+        return (strtoupper($this->etat) == 'ERROR');
+    }
+
 }

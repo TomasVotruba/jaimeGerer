@@ -4,13 +4,17 @@
 	
 	<div class="row">
 	    <div class="col-md-12">
-    		<h1>Campagne : {{ campagne.nom }}
-	    		{% if campagne.isSent %}
+    		<h1>Campagne emailing : {{ campagne.nom }} 
+	    	    {% if campagne.isSent %}
 	    			<span class="label label-success">Envoyée</span>
 	    		{% elseif campagne.isScheduled %}
 	    			<span class="label label-info">Planifiée</span>
+                {% elseif campagne.isDelivering %}
+                    <span class="label label-warning">En cours d'envoi</span>
 	    		{% elseif campagne.isDraft %}
 	    			<span class="label label-default">Brouillon</span>
+                {% elseif campagne.isError %}
+                    <span class="label label-danger">Erreur lors de l\'envoi</span>
 	    		{% endif %}
 			</h1>
 	    </div>

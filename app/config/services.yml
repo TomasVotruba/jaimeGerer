@@ -147,3 +147,8 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         arguments: ['%mailgun_api_key%', '%mailgun_domain%', "@doctrine.orm.entity_manager"]
+    appbundle.command.emailing_send_scheduled_command:
+        class: AppBundle\Command\EmailingSendScheduledCommand
+        tags:
+            - { name: console.command }
+        arguments: [ "@doctrine.orm.entity_manager", "@appbundle.mailgun" ]
