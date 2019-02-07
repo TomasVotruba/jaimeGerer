@@ -191,6 +191,7 @@ class CampagneController extends Controller
 		
 		return $this->render('emailing/campagne/emailing_campagne_ajouter.html.twig', array(
 			'form' => $form->createView(),
+			'campagne' => $campagne
 
 		));
 	}
