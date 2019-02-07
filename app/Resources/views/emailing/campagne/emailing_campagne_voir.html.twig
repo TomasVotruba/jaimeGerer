@@ -142,20 +142,25 @@
 	{% endif %}
 
 	<div class="row">
-    	<div class="col-md-4 well center">
+    	<div class="col-md-3 well center">
     		<span class="jaimelemailing xl">Taux d'ouverture</span><br />
     		<span class="xxl">{{ campagne.openRate|number_format(1, ',') }} %</span>
     	</div>
 
-    	<div class="col-md-4 well center">
+    	<div class="col-md-3 well center">
     		<span class="jaimelemailing xl">Taux de clic</span><br />
     		<span class="xxl">{{ campagne.clickRate|number_format(1, ',') }} %</span>
     	</div>
 
-    	<div class="col-md-4 well center">
+    	<div class="col-md-3 well center">
     		<span class="jaimelemailing xl">Taux de bounce</span><br />
     		<span class="xxl">{{ campagne.bounceRate|number_format(1, ',') }} %</span>
     	</div>
+
+        <div class="col-md-3 well center">
+            <span class="jaimelemailing xl">Taux de désinscription</span><br />
+            <span class="xxl">{{ campagne.unsubscribeRate|number_format(1, ',') }} %</span>
+        </div>
     </div>
 
     <div class="row">

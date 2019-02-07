@@ -460,6 +460,21 @@ class Campagne
         return $nbBounce / $nbDestinataire * 100 ;
     }
 
+    public function getUnsubscribeRate(){
+
+        $nbDestinataire = count($this->campagneContacts);
+        $nbUnsubscribed = 0;
+        
+        foreach($this->campagneContacts as $campagneContact){
+            if($campagneContact->getUnsubscribed() === true){
+                $nbUnsubscribed++;
+            }
+            
+        }
+        return $nbUnsubscribed / $nbDestinataire * 100 ;
+    }
+
+
     /**
      * Set nomRapport
      *
