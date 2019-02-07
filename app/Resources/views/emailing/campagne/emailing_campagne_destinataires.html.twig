@@ -31,7 +31,8 @@
 			</div>
 
 			<p id="destinataires" class="well hidden">
-				Ce rapport contient <span id="nb-destinataires"></span> destinataires.
+				Ce rapport contient <span id="nb-destinataires"></span> destinataires. <a href="#" id="refresh">Actualiser</a>
+				<br />
 				<a href="#" id="link-rapport" target="_blank">Voir le rapport</a>
 			</p>
 		</div>
@@ -56,7 +57,14 @@
 		$(document).ready( function () {   
 
 			$('.rapport-select').change(function(e){
+				compteDestinataires();
+			});
 
+			$('#refresh').click(function(e){
+				compteDestinataires();
+			});
+
+			function compteDestinataires(){
 				$('#destinataires').addClass('hidden');
 				$('#nb-destinataires').html('');
 				$('.progress').removeClass('hidden');
@@ -77,9 +85,8 @@
 			        	$('.submit').attr('disabled', false);
 			        }
 		        });
+			}
 
-
-			});
 				
 		});
 	</script>
