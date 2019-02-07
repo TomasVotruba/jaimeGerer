@@ -149,16 +149,19 @@ class MailgunService extends ContainerAware {
                             $campagne = $campagneContact->getCampagne();
                             if($campagne->isDelivering()){
                                 $campagne->setEtat('SENT');
-                                $em->persist($campagne);
+                                $this->em->persist($campagne);
                             }
+                            break;
 
                         case 'opened':
                             $campagneContact->setOpen(true);
                             $campagneContact->setOpenDate(new \DateTime(date('Y-m-d', $timestamp)));
+                            break;
 
                         case 'clicked':
                             $campagneContact->setClick(true);
                             $campagneContact->setClickDate(new \DateTime(date('Y-m-d', $timestamp)));
+                            break;
 
 
                         case 'failed':
@@ -166,6 +169,7 @@ class MailgunService extends ContainerAware {
                             $campagneContact->setBounceDate(new \DateTime(date('Y-m-d', $timestamp)));
                             $campagneContact->getContact()->setBounce('BOUNCE');
                             $this->em->persist($campagneContact->getContact());
+                            break;
 
                         case 'unsubscribed':
                             $campagneContact->setUnsubscribed(true);
@@ -173,6 +177,7 @@ class MailgunService extends ContainerAware {
                             $campagneContact->getContact()->setRejetEmail(true);
                             $campagneContact->getContact()->setRejetNewsletter(true);
                             $this->em->persist($campagneContact->getContact());
+                            break;
 
                     }
                     
