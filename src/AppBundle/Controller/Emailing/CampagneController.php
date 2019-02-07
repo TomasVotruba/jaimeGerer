@@ -565,9 +565,9 @@ class CampagneController extends Controller
 
 
 	/**
-	 * @Route("/emailing/campagne/mailgun-webhook", name="emailing_campagne_mailgun_webhook")
+	 * @Route("/emailing/mailgun-webhook", name="emailing_mailgun_webhook")
 	 */
-	public function campagneMailgunWebhookAction()
+	public function mailgunWebhookAction()
 	{
 		$response = new Response();
 		$mailgunService = $this->get('appbundle.mailgun');
