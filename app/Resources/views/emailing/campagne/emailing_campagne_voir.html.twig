@@ -144,17 +144,17 @@
 	<div class="row">
     	<div class="col-md-4 well center">
     		<span class="jaimelemailing xl">Taux d'ouverture</span><br />
-    		<span class="xxl">{{ campagne.openRate }} %</span>
+    		<span class="xxl">{{ campagne.openRate|number_format(1, ',') }} %</span>
     	</div>
 
     	<div class="col-md-4 well center">
     		<span class="jaimelemailing xl">Taux de clic</span><br />
-    		<span class="xxl">{{ campagne.clickRate }} %</span>
+    		<span class="xxl">{{ campagne.clickRate|number_format(1, ',') }} %</span>
     	</div>
 
     	<div class="col-md-4 well center">
     		<span class="jaimelemailing xl">Taux de bounce</span><br />
-    		<span class="xxl">{{ campagne.bounceRate }} %</span>
+    		<span class="xxl">{{ campagne.bounceRate|number_format(1, ',') }} %</span>
     	</div>
     </div>
 
