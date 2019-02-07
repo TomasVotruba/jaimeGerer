@@ -75,18 +75,18 @@ class MailgunService extends ContainerAware {
         return $results;
     }
 
-    /**
-     * Add unsubsribe link at the bottom of $campagne
-     **/ 
-    public function ajouterLienDesinscription($campagne){
+    // /**
+    //  * Add unsubsribe link at the bottom of $campagne
+    //  **/ 
+    // public function ajouterLienDesinscription($campagne){
 
-        $unsubscribeLink = '<p style="text-align: center; margin-top: 20px;"><a href="#">Désinscription</a></p>';
-        $html = $campagne->getHtml();
-        $campagne->setHtml($html.$unsubscribeLink);
+    //     $unsubscribeLink = '<p style="text-align: center; margin-top: 20px;"><a href="#">Désinscription</a></p>';
+    //     $html = $campagne->getHtml();
+    //     $campagne->setHtml($html.$unsubscribeLink);
 
-        $this->em->persist($campagne);
-        $this->em->flush();
-    }
+    //     $this->em->persist($campagne);
+    //     $this->em->flush();
+    // }
 
     /**
      * Check request signature when receiving a call from a Mailgun webhook

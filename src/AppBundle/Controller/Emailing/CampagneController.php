@@ -563,5 +563,32 @@ class CampagneController extends Controller
 
 	}
 
+
+	/**
+	 * @Route("/emailing/campagne/mailgun-webhook", name="emailing_campagne_mailgun_webhook")
+	 */
+	public function campagneMailgunWebhookAction()
+	{
+		$response = new Response();
+		$mailgunService = $this->get('appbundle.mailgun');
+
+		$request = $this->getRequest();
+		$content = json_decode($request->getContent(), true);
+
+		//check the signature
+		$signature = $content['signature'];
+		if ( $mailgunService->checkWebhookSignature($signature['token'], $signature['timestamp'], $signature['signature'] ) === false ) {
+       		$response->setStatusCode('401');
+			return $response;
+		}
+
+		$eventData = $content['event-data'];
+		if( $mailgunService->saveWebhookEvent($eventData) === false ){
+			$response->setStatusCode('500');
+			return $response;
+		}
+
+		return $response;
+	}
 	
 }
