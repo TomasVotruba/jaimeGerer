@@ -231,27 +231,11 @@
                     "responsive": true,
                     "processing": true,
                     "serverSide": true,
-                    "iDisplayLength": 25,
+                    "iDisplayLength": 1,
 				    "ajax":{
 		                url : Routing.generate('emailing_campagne_liste_contacts_ajax', { 'id' : campagneId }),
 		                type: "post",
 		            },
-                    fnDrawCallback: function () {
-                      $( 'a', this.fnGetNodes() ).tooltip( {
-                        "delay": 0,
-                        "track": true,
-                        "fade": 250,
-                        "tooltipClass": 'btn',
-                      } );
-                    },
-                    fnInitComplete: function () {
-                      $( 'a', this.fnGetNodes() ).tooltip( {
-                        "delay": 0,
-                        "track": true,
-                        "fade": 250,
-                        "tooltipClass": 'btn',
-                      } );
-                    },
 		            "columns": [
 	                   { "data": "nom" },
 	                   { "data": "organisation" },
@@ -263,6 +247,10 @@
 	                   { "data": "unsubscribe" }
 	                ],
 	                "columnDefs": [
+                         {
+                            "visible": false,
+                            "targets": ['id']
+                        },
 	                	{
                            "render": function ( data, type, row ) {
                            	var url = Routing.generate('crm_contact_voir', {'id' : row['id']});

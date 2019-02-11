@@ -110,8 +110,11 @@ class CampagneController extends Controller
 		$orderBy = $arr_cols[$col]['data'];
 		$orderDir = $arr_sort[0]['dir'];
 
+		$search = $requestData->get('search')['value'];
+
 		$list = array();
 		foreach($campagne->getCampagneContacts() as $campagneContact){
+
 			$arrContact = array();
 			$arrContact['id'] = $campagneContact->getContact()->getId();
 			$arrContact['prenom'] = $campagneContact->getContact()->getPrenom();
@@ -124,8 +127,22 @@ class CampagneController extends Controller
 			$arrContact['bounce'] = $campagneContact->getBounce()?1:0;
 			$arrContact['unsubscribe'] = $campagneContact->getUnsubscribed()?1:0;
 
-			$list[] = $arrContact;
+			if($search !== null && $search !== ''){
+				if( stripos($arrContact['prenom'], $search) !== false ||
+					stripos($arrContact['nom'], $search) !== false ||
+					stripos($arrContact['organisation'], $search) !== false ||
+					stripos($arrContact['titre'], $search) !== false ||
+					stripos($arrContact['email'], $search) !== false
+				){
+					$list[] = $arrContact;
+				}
+			} else {
+				$list[] = $arrContact;
+			}
+			
 		}
+
+		$nbFiltered = count($list);
 
 		usort($list, function($a, $b) use ($orderBy, $orderDir) {
 	        $result = null;
@@ -145,7 +162,7 @@ class CampagneController extends Controller
 		$response->setData(array(
 			'draw' =>  intval( $requestData->get('draw') ),
 			'recordsTotal' => $campagne->getNbDestinataires(),
-			'recordsFiltered' => count($list),
+			'recordsFiltered' => $nbFiltered,
 			'aaData' => $list,
 		));
 	
