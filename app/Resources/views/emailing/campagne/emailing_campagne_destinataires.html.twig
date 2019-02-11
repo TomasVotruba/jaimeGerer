@@ -8,6 +8,28 @@
 		</div>
 	</div>
 
+	<div class="row">
+		<div class="col-md-12">
+
+		 	<div class="alert alert-info alert-dismissible" role="alert">
+	            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	                <span aria-hidden="true">&times;</span>
+	            </button>
+	            <p>
+	              	<span class="glyphicon glyphicon-info-sign"></span>
+	              	Utilisez la fonctionnalité "Rapports" de <span class="jaimelecommercial">J'aime le commercial</span> pour créer vos listes de destinataires.
+	            </p>
+	            <p>
+	            	<strong>Oups, mon rapport n'existe pas encore...</strong><br />
+	            	<a href="{{ path('crm_rapport_ajouter', {'type' : 'contact' }) }}" target="_blank" class="btn btn-primary btn-xs">
+	            		<span class="glyphicon glyphicon-plus"></span> Créer un nouveau rapport
+	            	</a><br />
+	            	Pensez à actualiser cette page une fois que vous avez créé le rapport.
+	            </p>
+	        </div>
+	    </div>
+	</div>
+
 	{{ form_start(form) }}
 
 
@@ -31,7 +53,7 @@
 			</div>
 
 			<p id="destinataires" class="well hidden">
-				Ce rapport contient <span id="nb-destinataires"></span> destinataires. <a href="#" id="refresh">Actualiser</a>
+				Ce rapport contient <span id="nb-destinataires"></span> destinataires. <a href="#" id="refresh">Actualiser la liste des destinataires</a>
 				<br />
 				<a href="#" id="link-rapport" target="_blank">Voir le rapport</a>
 			</p>

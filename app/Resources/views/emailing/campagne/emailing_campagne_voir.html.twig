@@ -172,10 +172,10 @@
     					<th>Organisation</th>
     					<th>Titre</th>
     					<th>Email</th>
-    					<th class="center">Ouvert</th>
-    					<th class="center">Clic</th>
-    					<th class="center">Bounce</th>
-    					<th class="center">Désinscription</th>
+    					<th>Ouvert</th>
+    					<th>Clic</th>
+    					<th>Bounce</th>
+    					<th>Désinscription</th>
     				</tr>
     			</thead>
     		</table>
@@ -206,19 +206,53 @@
 				
 				var campagneId = "{{ campagne.id }}";
 				$('#table_contact_list').DataTable({
+                    "dom": 'T<"clear">lfrtip',
+                    "oTableTools": {
+                        "sSwfPath": "/web/lib/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+                        "aButtons": [
+                            {
+                                "sExtends": "csv",
+                                "sButtonText": "Excel",
+                                "mColumns": [ 0, 1, 2, 3 ],
+                                "sFileName": "contacts.csv"
+                            },
+                            {
+                                "sExtends": "pdf",
+                                "sButtonText": "PDF",
+                                "mColumns": [ 0, 1, 2, 3 ],
+                                "sFileName": "campagnes.pdf",
+                                "sTitle": "campagne"
+                            },
+                        ]
+                    },
 					"language" : {                
 						"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"            
 					},
-					"responsive": true,
-					"processing": true,
-				    "serverSide": true,
-				    "bFilter": false,
-				    "bSort" : false,
-				    "iDisplayLength": 25,
+                    "responsive": true,
+                    "processing": true,
+                    "serverSide": true,
+                    "bFilter": false,
+                    "iDisplayLength": 25,
 				    "ajax":{
 		                url : Routing.generate('emailing_campagne_liste_contacts_ajax', { 'id' : campagneId }),
 		                type: "post",
 		            },
+                    fnDrawCallback: function () {
+                      $( 'a', this.fnGetNodes() ).tooltip( {
+                        "delay": 0,
+                        "track": true,
+                        "fade": 250,
+                        "tooltipClass": 'btn',
+                      } );
+                    },
+                    fnInitComplete: function () {
+                      $( 'a', this.fnGetNodes() ).tooltip( {
+                        "delay": 0,
+                        "track": true,
+                        "fade": 250,
+                        "tooltipClass": 'btn',
+                      } );
+                    },
 		            "columns": [
 	                   { "data": "nom" },
 	                   { "data": "organisation" },
@@ -227,7 +261,7 @@
 	                   { "data": "open" },
 	                   { "data": "click" },
 	                   { "data": "bounce" },
-	                   { "data": "unsubscribe" },
+	                   { "data": "unsubscribe" }
 	                ],
 	                "columnDefs": [
 	                	{
@@ -239,7 +273,7 @@
                         },
                         {
                            "render": function ( data, type, row ) {
-                           		if(data === true){
+                           		if(data === 1){
                            			return '<p class="center"><span class="glyphicon glyphicon-ok green"></span></p>';
                            		}
                            		return '';
@@ -247,7 +281,7 @@
                            "targets": 4
                         }, {
                            "render": function ( data, type, row ) {
-                           		if(data === true){
+                           		if(data === 1){
                            			return '<p class="center"><span class="glyphicon glyphicon-ok green"></span></p>';
                            		}
                            		return '';
@@ -255,21 +289,21 @@
                            "targets": 5
                         }, {
                            "render": function ( data, type, row ) {
-                           		if(data === true){
-                           			return '<p class="center"><span class="glyphicon glyphicon-remove red"></span></p>';
+                           		if(data === 1){
+                           			return '<p class="center"><span class="glyphicon glyphicon-ok red"></span></p>';
                            		}
                            		return '';
                            },
                            "targets": 6
                         },  {
                            "render": function ( data, type, row ) {
-                           		if(data === true){
-                           			return '<p class="center"><span class="glyphicon glyphicon-remove red"></span></p>';
+                           		if(data === 1){
+                           			return '<p class="center"><span class="glyphicon glyphicon-ok red"></span></p>';
                            		}
                            		return '';
                            },
                            "targets": 7
-                        },
+                        }
                    ]
 			});
     	});

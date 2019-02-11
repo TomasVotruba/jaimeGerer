@@ -181,10 +181,10 @@ class DepenseController extends Controller
 
 		$response = new JsonResponse();
 		$response->setData(array(
-				'draw' => intval( $requestData->get('draw') ),
-				'recordsTotal' => $repository->count($this->getUser()->getCompany()),
-				'recordsFiltered' => $repository->countForListRetard($this->getUser()->getCompany(), $arr_search['value'], $arr_date),
-				'aaData' => $list,
+			'draw' => intval( $requestData->get('draw') ),
+			'recordsTotal' => $repository->count($this->getUser()->getCompany()),
+			'recordsFiltered' => $repository->countForListRetard($this->getUser()->getCompany(), $arr_search['value'], $arr_date),
+			'aaData' => $list,
 		));
 
 		return $response;

@@ -101,6 +101,15 @@ class CampagneController extends Controller
 	public function campagneListeContactsAjaxAction(Campagne $campagne)
 	{
 
+		$requestData = $this->getRequest();
+
+		$arr_sort = $requestData->get('order');
+		$arr_cols = $requestData->get('columns');
+		$col = $arr_sort[0]['column'];
+
+		$orderBy = $arr_cols[$col]['data'];
+		$orderDir = $arr_sort[0]['dir'];
+
 		$list = array();
 		foreach($campagne->getCampagneContacts() as $campagneContact){
 			$arrContact = array();
@@ -110,20 +119,31 @@ class CampagneController extends Controller
 			$arrContact['organisation'] = $campagneContact->getContact()->getCompte()->getNom();
 			$arrContact['titre'] = $campagneContact->getContact()->getTitre();
 			$arrContact['email'] = $campagneContact->getContact()->getEmail();
-			$arrContact['open'] = $campagneContact->getOpen();
-			$arrContact['click'] = $campagneContact->getClick();
-			$arrContact['bounce'] = $campagneContact->getBounce();
-			$arrContact['unsubscribe'] = $campagneContact->getUnsubscribed();
+			$arrContact['open'] = $campagneContact->getOpen()?1:0;
+			$arrContact['click'] = $campagneContact->getClick()?1:0;
+			$arrContact['bounce'] = $campagneContact->getBounce()?1:0;
+			$arrContact['unsubscribe'] = $campagneContact->getUnsubscribed()?1:0;
 
 			$list[] = $arrContact;
 		}
 
-		$requestData = $this->getRequest();
-		$list = array_slice($list, $requestData->get('start'), $requestData->get('length'));
+		usort($list, function($a, $b) use ($orderBy, $orderDir) {
+	        $result = null;
+
+	        if(strtoupper($orderDir) == 'ASC'){
+    			$result = strcasecmp($a[$orderBy], $b[$orderBy]);
+    		} else {
+    			$result = strcasecmp($b[$orderBy], $a[$orderBy]);
+    		}
+
+	        return $result;  
+	    });
+
+	    $list = array_slice( $list, $requestData->get('start'), $requestData->get('length'));
 
 		$response = new JsonResponse();
 		$response->setData(array(
-			'draw' => 25,
+			'draw' =>  intval( $requestData->get('draw') ),
 			'recordsTotal' => $campagne->getNbDestinataires(),
 			'recordsFiltered' => count($list),
 			'aaData' => $list,
