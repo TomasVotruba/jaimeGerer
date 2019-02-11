@@ -62,10 +62,10 @@ class CampagneController extends Controller
 		$arr_search = $requestData->get('search');
 	
 		$list = $repository->findForList(
-				$this->getUser()->getCompany(),
-				$requestData->get('length'),
-				$requestData->get('start'),
-				$arr_search['value']
+			$this->getUser()->getCompany(),
+			$requestData->get('length'),
+			$requestData->get('start'),
+			$arr_search['value']
 		);
 
 		for($i = 0; $i<count($list); $i++){
