@@ -116,7 +116,8 @@ class ContactType extends AbstractType
             ->add('addressPicker', 'text', array(
                 'label'     => 'Veuillez renseigner l\'adresse ici',
                 'mapped'    => false,
-                'required'  => false
+                'required'  => false,
+                'attr' => array('class' => '.adresspicker')
             ));
 
             if($this->type == "CLIENT"){

@@ -105,11 +105,14 @@
 	{{ form_end(form) }}
 
 {% block additionalJS %}
+
+	
+
 	<script type="text/javascript">
 		var JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
 	</script>
 	<script src="{{ asset('js/error.js') }}"></script>
-	<script src="//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+
 	<script type="text/javascript" src="{{ asset('js/jquery.ui.addresspicker.js') }}"></script>
 	<script type="text/javascript">
 		$(document).ready( function () {
@@ -119,6 +122,26 @@
 					$('#{{ form.compte.vars.id }}').val('{{ compte.nom }}');
 				{% endif %}
 			{% endif %}
+
+			var addresspickerMap = $( "#{{ form.addressPicker.vars.id }}" ).addresspicker({
+				updateCallback: function(geocodeResult, parsedGeocodeResult){
+						//console.log(parsedGeocodeResult);
+						//$('#callback_result').html(JSON.stringify(parsedGeocodeResult, null, 4));
+						var addressToField = ( parsedGeocodeResult.street_number ? parsedGeocodeResult.street_number + ', ' : '' ) + parsedGeocodeResult.route;
+						$('#{{ form.adresse.vars.id }}').val(addressToField);
+						//$('#callback_result').html(parsedGeocodeResult.street_number + ', ' +parsedGeocodeResult.route);
+					},
+				  elements: {
+					//map								: '',
+					postal_code						: '#{{ form.codePostal.vars.id }}',
+					administrative_area_level_1		: '#{{ form.region.vars.id }}',
+				   // locality						: '#locality',
+					country							: '#{{ form.pays.vars.id }}',
+					//route							: '#sdz_blogbundle_service_adresse',
+					locality						: '#{{ form.ville.vars.id }}',
+					target_field					: false,
+				  },
+			});
 
 			$('.typeahead-compte').typeahead({
 				order: "desc",

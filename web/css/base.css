@@ -104,6 +104,15 @@ a.not-active {
     margin-top: 50px;
 }
 
+#login_form input[type=text],
+#login_form input[type=password] {
+    width: 300px;
+}
+
+#login-logo-wrapper{
+    margin-top: 20px;
+}
+
 .fos_user_resetting_reset {
     width: 300px;
     margin: auto;

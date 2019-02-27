@@ -1,25 +1,32 @@
 {% extends '::base.html.twig' %}
 
 {% block body %}
-        {% if app.request.hasPreviousSession %}
-            {% for type, messages in app.session.flashbag.all() %}
-                {% for message in messages %}
-                    <div class="flash-{{ type }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
+    {% if app.request.hasPreviousSession %}
+        {% for type, messages in app.session.flashbag.all() %}
+            {% for message in messages %}
+                <div class="flash-{{ type }}">
+                    {{ message }}
+                </div>
             {% endfor %}
-        {% endif %}
+        {% endfor %}
+    {% endif %}
 
 	<div class="container-fluid">
 
-    	<div class="row center">
+    	<div class="row center" id="login-logo-wrapper">
     		<div class="col-md-12">
+                <img src="{{ asset('images/assets/jaimegerer-logo-250.png') }}" alt="logo" title="J'aime Gérer" />
+                <hr />
+            </div>
+        </div>
 
-          <!-- xmas gif -->
-          {% if ("now"|date('md')) > 1212 and ("now"|date('md') < 1225) %}
-            <p><img src="{{ asset('images/assets/xmas_santa.gif') }}" alt="Le père Noël" title="Toute l'équipe de J'aime Gérer vous souhaite un joyeux Noël !" /></p>
-          {% endif %}
+        <div class="row center">
+            <div class="col-md-12">
+
+              <!-- xmas gif -->
+              {% if ("now"|date('md')) > 1212 and ("now"|date('md') < 1225) %}
+                <p><img src="{{ asset('images/assets/xmas_santa.gif') }}" alt="Le père Noël" title="Toute l'équipe de J'aime Gérer vous souhaite un joyeux Noël !" /></p>
+              {% endif %}
 
 	   	 		{% block fos_user_content %}{% endblock %}
 	   	 	</div>

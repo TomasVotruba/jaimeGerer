@@ -2,6 +2,9 @@
 <html>
     <head>
         <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
         <title>
             {% block title %}J'aime gérer{% endblock %}
         </title>
@@ -13,7 +16,8 @@
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/datatables/media/css/buttons.bootstrap.min.css') }}"/>
            
             <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.datetimepicker.css') }}"/>
-            <link rel="stylesheet" type="text/css" href="{{ asset('css/base.min.css') }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/base.css') }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/mobile.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/jquery-ui/jquery-ui.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/bootstrap3-editable/css/bootstrap-editable.css') }}" />
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/bootstrap-toggle/bootstrap-toggle.min.css') }}"/>
@@ -51,6 +55,9 @@
 
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+
+            <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyDMlvpPWy3tvNphauWPk3eHlgEw7uISW5k"></script>
+            <script type="text/javascript" src="{{ asset('js/jquery.ui.addresspicker.js') }}"></script>
 
             {% if hide_tiny is not defined or hide_tiny == false %}
                 {{ tinymce_init() }}
@@ -105,123 +112,127 @@
     </head>
 
     <body>
-        <div class="body-wrapper">
-        <div class="container-fluid">
+        {# <div class="body-wrapper"> #}
 
-            <div class="row" id="userbar">
-                <div class="col-xs-4">
-                    {% if app.request.attributes.get('_route') == 'homepage' %}
-                        <div id="menu-main">
-                            <a href="{{ path('homepage') }}">
-                                <img class="logo-top" src="{{ asset('images/assets/jaimegerer-logo-250.png') }}" alt="logo-jaimegerer"/>
-                            </a>
-                        </div>
-                    {% else %}
-                        {% if app.user is not null %}
-                            <div id="menu-secondary" hidden>
-                                <div id="menu-secondary-main">
-                                    <a href="{{ path('homepage') }}">
-                                        <img class="logo-visuel-top" src="{{ asset('images/assets/jaimegerer-logo-visuel.png') }}" alt="logo-jaimegerer"/>
-                                    </a>
-                                </div>
-                                <div id="menu-secondary-hover">
-                                    <a href="{{ path('crm_index') }}" class="active">
-                                        <img src="{{ asset('images/assets/commercial.png') }}" alt="CRM"/>
-                                    </a>
-                                    <a href="{{ path('emailing_index') }}" class="active">
-                                        <img src="{{ asset('images/assets/communication.png') }}" alt="Emailing"/>
-                                    </a>
-                                    <a href="{{ path('compta_index') }}" class="active">
-                                        <img src="{{ asset('images/assets/comptabilite.png') }}" alt="Comptabilité"/>
-                                    </a>
-                                    <a href="#" class="inactive">
-                                        <img src="{{ asset('images/assets/recrutement.png') }}" alt="Recrutement"/>
-                                    </a>
-                                    <a href="{{ path('ndf_liste') }}" class="active">
-                                        <img src="{{ asset('images/assets/ndf.png') }}" alt="Notes de frais"/>
-                                    </a>
-                                    {% if app.user.company.id == 1 %}
-                                        <a href="{{ path('social_index') }}" class="active">
-                                            <img src="{{ asset('images/assets/jaimenicomak.png') }}" alt="J\'aime {{ app.user.company.nom }}"/>
-                                        </a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        {% endif %}    
-                    {% endif %}
-                </div>
-                <div class="col-xs-7">
-                    <p id="login-info">
-                        {% if app.user is not null %}
-                            {{ app.user.username }}
-                            <br/>
-                            {% if app.user.company is not null %}
-                                <a href="" id="displayCredits">
-                                    Crédit :
-                                    {{ app.user.company.credits|number_format(2, ',') }}
-                                    €
+        {% if app.user is not null %}
+            <div class="container-fluid">
+
+                <div class="row" id="userbar">
+                    <div class="col-xs-8">
+                        {% if app.request.attributes.get('_route') == 'homepage' %}
+                            <div id="menu-main">
+                                <a href="{{ path('homepage') }}">
+                                    <img class="logo-top" src="{{ asset('images/assets/jaimegerer-logo-250.png') }}" alt="logo-jaimegerer"/>
                                 </a>
-                            {% endif %}
+                            </div>
+                        {% else %}
+                            {% if app.user is not null %}
+                                <div id="menu-secondary" hidden>
+                                    <div id="menu-secondary-main">
+                                        <a href="{{ path('homepage') }}">
+                                            <img class="logo-visuel-top" src="{{ asset('images/assets/jaimegerer-logo-visuel.png') }}" alt="logo-jaimegerer"/>
+                                        </a>
+                                    </div>
+                                    <div id="menu-secondary-hover">
+                                        <a href="{{ path('crm_index') }}" class="active">
+                                            <img src="{{ asset('images/assets/commercial.png') }}" alt="CRM"/>
+                                        </a>
+                                        <a href="{{ path('emailing_index') }}" class="active">
+                                            <img src="{{ asset('images/assets/communication.png') }}" alt="Emailing"/>
+                                        </a>
+                                        <a href="{{ path('compta_index') }}" class="active">
+                                            <img src="{{ asset('images/assets/comptabilite.png') }}" alt="Comptabilité"/>
+                                        </a>
+                                        <a href="#" class="inactive">
+                                            <img src="{{ asset('images/assets/recrutement.png') }}" alt="Recrutement"/>
+                                        </a>
+                                        <a href="{{ path('ndf_liste') }}" class="active">
+                                            <img src="{{ asset('images/assets/ndf.png') }}" alt="Notes de frais"/>
+                                        </a>
+                                        {% if app.user.company.id == 1 %}
+                                            <a href="{{ path('social_index') }}" class="active">
+                                                <img src="{{ asset('images/assets/jaimenicomak.png') }}" alt="J\'aime {{ app.user.company.nom }}"/>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}    
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-2">
+                        <p id="login-info">
+                            {% if app.user is not null %}
+                                {{ app.user.username }}
+                                <br/>
+                                {% if app.user.company is not null %}
+                                    <a href="" id="displayCredits">
+                                        Crédit :
+                                        {{ app.user.company.credits|number_format(2, ',') }}
+                                        €
+                                    </a>
+                                {% endif %}
+                             {% endif %}
                         </p>
                     </div>
-                    <div class="col-xs-1">
-                        <div id="dLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="{{ asset('images/assets/user.png') }}" alt="CRM" width="60"/></div>
-                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
+                    <div class="col-xs-2">
+                        {% if app.user is not null %}
+                            <div id="dLabel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="{{ asset('images/assets/user.png') }}" alt="CRM" width="60"/>
+                            </div>
+                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
 
-                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    <li>
+                                        <a href="{{ path('superadmin_stats') }}">Stats d'utilisation</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if (app.user.company is not null)
+                                    and is_granted('ROLE_ADMIN') %}
+                                    <li>
+                                        <a href="{{ path('admin_company_edit') }}">
+                                            {{ app.user.company.nom }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('admin_utilisateurs_liste') }}">
+                                            Utilisateurs
+                                        </a>
+                                    </li>
+                                {% endif %}
+
                                 <li>
-                                    <a href="{{ path('superadmin_stats') }}">Stats d'utilisation</a>
+                                    <a href="{{ path('fos_user_security_logout') }}">Déconnexion</a>
                                 </li>
-                            {% endif %}
-
-                            {% if (app.user.company is not null)
-                                and is_granted('ROLE_ADMIN') %}
-                                <li>
-                                    <a href="{{ path('admin_company_edit') }}">
-                                        {{ app.user.company.nom }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ path('admin_utilisateurs_liste') }}">
-                                        Utilisateurs
-                                    </a>
-                                </li>
-                            {% endif %}
-
-                            <li>
-                                <a href="{{ path('fos_user_security_logout') }}">Déconnexion</a>
-                            </li>
-                        </ul>
-
-                    {% else %}
-                        <a href="{{ path('fos_user_security_login') }}">- Connexion</a>
-                    {% endif %}
+                            </ul>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
+
         <div class="container-fluid full-height">
-
             {% block body %}{% endblock %}
+         </div> 
 
-            <!-- wrapper for modal -->
-            <div class="modal" id="modal" data-focus-on="input:first">
-                <div class="modal-dialog">
-                    <div class="modal-content"></div>
-                </div>
+         
+        {# </div> #}
+
+        <!-- wrapper for modal -->
+        <div class="modal" id="modal" data-focus-on="input:first">
+            <div class="modal-dialog">
+                <div class="modal-content"></div>
             </div>
+        </div>
 
-            <!-- wrapper for large modal -->
-            <div class="modal" id="modal-lg" data-focus-on="input:first">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content"></div>
-                </div>
+        <!-- wrapper for large modal -->
+        <div class="modal" id="modal-lg" data-focus-on="input:first">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content"></div>
             </div>
-
-            {% block additionalModals %}{% endblock %}
-
         </div>
-        </div>
+
+        {% block additionalModals %}{% endblock %}
 
     </body>
 

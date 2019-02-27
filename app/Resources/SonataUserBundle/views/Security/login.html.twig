@@ -6,7 +6,7 @@
 	     <div class="alert alert-danger">{{ error|trans({'Bad credentials': 'Mauvais login ou mot de passe'}) }}</div>
 	{% endif %}
 
-<form action="{{ path("fos_user_security_check") }}" method="post" >
+<form action="{{ path("fos_user_security_check") }}" method="post" id="login_form">
    
     <div class="form-group">
 		 <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
@@ -22,7 +22,7 @@
     	<label for="remember_me">Se souvenir de moi</label>
 	</div>
 	<div class="form-group">
-    	<input type="submit" id="_submit" name="_submit" value="Connexion" class="btn btn-success"/>
+    	<input type="submit" id="_submit" name="_submit" value="Connexion" class="btn btn-success btn-lg"/>
 	</div>
    </form>
    

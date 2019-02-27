@@ -52,8 +52,7 @@
 </div>
 {{ form_end(form) }}
 {% block additionalJS %}
-	<script src="//maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-	<script type="text/javascript" src="{{ asset('js/jquery.ui.addresspicker.js') }}"></script>
+	
 	<script type="text/javascript">
 		$(document).ready( function () {    
 			var addresspickerMap = $( "#{{ form.addressPicker.vars.id }}" ).addresspicker({
@@ -61,7 +60,6 @@
 								//console.log(parsedGeocodeResult);
 								//$('#callback_result').html(JSON.stringify(parsedGeocodeResult, null, 4));
 								var addressToField = ( parsedGeocodeResult.street_number ? parsedGeocodeResult.street_number + ', ' : '' ) + parsedGeocodeResult.route;
-								console.log(addressToField);
 								$('#{{ form.adresse.vars.id }}').val(addressToField);
 								//$('#callback_result').html(parsedGeocodeResult.street_number + ', ' +parsedGeocodeResult.route);
 							},

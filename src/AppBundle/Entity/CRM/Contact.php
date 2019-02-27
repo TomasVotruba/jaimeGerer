@@ -1227,6 +1227,11 @@ class Contact
     public function getOpenRate(){
 
         $nbCampagnes = count($this->campagneContacts);
+
+        if($nbCampagnes == 0){
+            return 0;
+        }
+
         $nbOpen = 0;
         
         foreach($this->campagneContacts as $campagneContact){
@@ -1241,6 +1246,10 @@ class Contact
     public function getClickRate(){
 
         $nbCampagnes = count($this->campagneContacts);
+        if($nbCampagnes == 0){
+            return 0;
+        }
+        
         $nbClick = 0;
             
         foreach($this->campagneContacts as $campagneContact){
