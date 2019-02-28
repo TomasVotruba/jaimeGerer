@@ -1,5 +1,10 @@
 @media (max-width:600px){
 	
+	.btn-block-mobile{
+		display: block;
+    	width: 100%;
+	}
+
 	#login_form input[type=text],
 	#login_form input[type=password] {
 	    line-height: 30px;
@@ -87,6 +92,22 @@
 		background: #FC5162;
 	}
 
+	#titre-mobile-wrapper.compta{
+		background: #F2835C;
+	}
+
+	#titre-mobile-wrapper.emailing{
+		background: #fb7155;
+	}
+
+	#titre-mobile-wrapper.ndf{
+		background: #fbb433;
+	}
+
+	#titre-mobile-wrapper.social{
+		background: #ec741b;
+	}
+
 	#mobile-bottom-menu{
 		background: #444141;
 		width: 100%;
@@ -118,6 +139,7 @@
 	#mobile-bottom-menu ul.dropdown-menu li{
 		padding: 10px 0 10px 0;
     	border-bottom: 1px solid #eee;
+    	z-index: 9999999;
 	}
 
 	#mobile-bottom-menu ul.dropdown-menu li a{

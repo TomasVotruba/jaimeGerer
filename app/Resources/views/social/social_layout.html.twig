@@ -5,10 +5,28 @@
 	<link rel="stylesheet" href="{{ asset('css/crm.css') }}" type="text/css" />
 {% endblock %}
 
+{% block mobiletitle %}
+    <div id="titre-mobile-wrapper" class="social">
+        <a href="{{ path('social_index') }}">
+            <img src="{{ asset('images/assets/jaimenicomak.png') }}" alt="logo social" />
+            <span class="title">J'aime {{ app.user.company.nom }}</span>
+        </a>
+    </div>
+{% endblock %}
+
+{% block mobile_menu_bottom_dropdown %}
+    <li role="presentation">
+    	<a href="{{ path('social_index') }}">
+            <span class="glyphicon glyphicon-heart menu-icon"></span>
+            J'aime {{ app.user.company.nom }}
+        </a>
+    </li>
+{% endblock %}
+
 {% block body %}
 	<div class="row full-height-minus-userbar">
-		<div class="col-xs-11 col-xs-offset-1 col fit wrap-content wrap-content-commercial">
-     		<div class="titre titre-social" >
+		<div class="col-xs-12 col-md-offset-1 col-md-11 fit wrap-content wrap-content-commercial">
+     		<div class="titre titre-social hidden-xs" >
 				<h1>J'aime {{ app.user.company.nom }}</h1>
 			</div>
 

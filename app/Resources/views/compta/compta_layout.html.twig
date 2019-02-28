@@ -5,10 +5,88 @@
     <link rel="stylesheet" href="{{ asset('css/compta.css') }}" type="text/css"/>
 {% endblock %}
 
+{% block mobiletitle %}
+    <div id="titre-mobile-wrapper" class="compta">
+        <a href="{{ path('compta_index') }}">
+            <img src="{{ asset('images/assets/comptabilite.png') }}" alt="logo compta" />
+            <span class="title">J'aime la compta</span>
+        </a>
+    </div>
+{% endblock %}
+
+{% block mobile_menu_bottom_dropdown %}
+    <li role="presentation">
+        <a href="{{ path('compta_compte_liste') }}">
+            <span class="glyphicon glyphicon-book menu-icon"></span>
+            Plan comptable
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('compta_facture_liste') }}">
+            <span class="glyphicon glyphicon-thumbs-up menu-icon"></span> 
+            Ventes
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('compta_depense_liste') }}">
+            <span class="glyphicon glyphicon-shopping-cart menu-icon"></span> 
+            Achats
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('compta_rapprochement_index') }}">
+            <span class="glyphicon glyphicon-piggy-bank menu-icon"></span> 
+            Banque
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('compta_avoir_liste', {'type' : 'CLIENT'}) }}">
+            <span class="glyphicon glyphicon-scissors menu-icon"></span> 
+            Avoirs
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('compta_remise_cheque_liste') }}">
+            <span class="glyphicon glyphicon-paperclip menu-icon"></span> 
+            Remises de chèque
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('ndf_liste_admin') }}">
+            <span class="glyphicon glyphicon-plane menu-icon"></span> 
+            Notes de frais
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('compta_contact_liste', {'type' : 'CLIENT'}) }}">
+            <span class="glyphicon glyphicon-user menu-icon"></span> 
+            Clients et fournisseurs
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('compta_compte_attente_index') }}">
+            <span class="glyphicon glyphicon-sunglasses menu-icon"></span> 
+            Star de la compta
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('compta_rapport_tableau_bord_index') }}">
+            <span class="glyphicon glyphicon-list-alt menu-icon"></span> 
+            Documents comptables
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('compta_settings_liste') }}">
+            <span class="glyphicon glyphicon-cog menu-icon"></span> 
+            Paramètres CRM
+        </a>
+    </li>
+{% endblock %}
+
 {% block body %}
 
     <div class="row full-height">
-        <div class="col-xs-1 aside full-height">
+        <div class="col-md-1 aside full-height hidden-xs">
             <ul>
                 <li id="link-compta">
                     <a href="{{ path('compta_index') }}">
@@ -85,8 +163,8 @@
             </ul>
         </div>
 
-        <div class="col-xs-11 fit wrap-content wrap-content-compta full-height">
-            <div class="titre titre-compta">
+        <div class="col-md-11 col-xs-12 fit wrap-content wrap-content-compta full-height">
+            <div class="titre titre-compta hidden-xs">
                 <h1>J'aime la compta</h1>
             </div>
             {% block content %}{% endblock %}

@@ -5,13 +5,36 @@
 	<link rel="stylesheet" href="{{ asset('css/ndf.css') }}" type="text/css" />
 {% endblock %}
 
+{% block mobiletitle %}
+    <div id="titre-mobile-wrapper" class="ndf">
+        <a href="{{ path('ndf_liste') }}">
+            <img src="{{ asset('images/assets/ndf.png') }}" alt="logo ndf" />
+            <span class="title">J'aime les notes de frais</span>
+        </a>
+    </div>
+{% endblock %}
+
+{% block mobile_menu_bottom_dropdown %}
+    <li role="presentation">
+    	<a href="{{ path('ndf_recus_liste') }}">
+            <span class="glyphicon glyphicon-duplicate menu-icon"></span>
+            Reçus
+        </a>
+    </li>
+	<li role="presentation">
+     	<a href="{{ path('ndf_liste') }}">
+            <span class="glyphicon glyphicon-piggy-bank menu-icon"></span>
+            Notes de frais
+        </a>
+    </li>
+{% endblock %}
 
 {% block body %}
 <div class="row full-height-minus-userbar">
-	<div class="col-md-1"></div>
-	<div class="col-md-10 wrap-content wrap-content-ndf">
+	<div class="col-md-1 hidden-xs"></div>
+	<div class="col-md-11 col-xs-12 wrap-content wrap-content-ndf">
 
-	    <div class="titre titre-ndf">
+	    <div class="titre titre-ndf hidden-xs">
 			<h1>J'aime les notes de frais</h1>
 		</div>
 
@@ -25,6 +48,5 @@
 	    {% endblock %}
 	
 	</div>
-	<div class="col-md-1"></div>
 </div>
 {% endblock %}

@@ -17,7 +17,7 @@
 {% block mobile_menu_bottom_dropdown %}
     <li role="presentation">
         <a href="{{ path('crm_contact_liste') }}">
-            <span class="menu-icon"><span class="glyphicon glyphicon-user menu-icon"></span>
+            <span class="glyphicon glyphicon-user menu-icon"></span>
             Contacts
         </a>
     </li>
@@ -62,19 +62,6 @@
 			<span class="glyphicon glyphicon-cog menu-icon"></span> 
 			Paramètres CRM
 		</a>
-    </li>
-{% endblock %}
-
-{% block mobile_menu_bottom %}
-    <li role="presentation">
-        <a href="{{ path('crm_contact_liste') }}">
-            <span class="menu-icon"><span class="glyphicon glyphicon-user"></span>
-        </a>
-    </li>
-    <li role="presentation">
-        <a href="{{ path('crm_action_commerciale_liste') }}">
-            <span class="menu-icon"><span class="glyphicon glyphicon-euro"></span>
-        </a>
     </li>
 {% endblock %}
 

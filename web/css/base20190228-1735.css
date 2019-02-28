@@ -371,11 +371,6 @@ tr th {
     color: #b0dbe9;
 }
 
-#userbar #user-icon{
-    min-height: 60px;
-    background-color: #fff;
-}
-
 #userbar #dLabel img {
     border-radius: 40px;
     border: solid #444141 0px;
@@ -637,7 +632,7 @@ label input[type="checkbox"][disabled] {
 }
 
 .titre-social {
-    background: #FC5162;
+    background: #ec741b;
 }
 
 .titre-social:before {

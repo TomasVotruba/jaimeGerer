@@ -7,20 +7,9 @@
 			<div class="page-head">
 				<h1>{{ random(['La compta c\'est génial', 'Plongeons dans les comptes', 'L\'organisation, c\'est ça le secret', 'Aujourd\'hui on est carré']) }} {{ app.user.firstname }} !</h1>
 				<p class="l">Faites votre compta avec le sourire !</p>
-				<div class="page-index-alert-box">
-					<div class="page-index-alert-box-normal">Version</br>
-						<span>Bêta</span>
-					</div>
-					<div class="page-index-alert-box-hover">
-	  				<a href="mailto:contact@jaime-gerer.com">
-					<img src="{{ asset('images/assets/fusee-trace.png') }}" alt="jaimegerer" width="50"/>
-						Donnez-nous votre avis
-					</a>
-					</div>
-				</div>
 			</div>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-4 col-xs-6">
 			<p>
 				<a href="{{ path('compta_facture_liste') }}">
 					<span class="glyphicon glyphicon-thumbs-up" style="font-size: 3em;"></span><br />
@@ -29,7 +18,7 @@
 			</p>
 		</div>
 
-		<div class="col-md-4">
+		<div class="col-md-4 col-xs-6">
 			<p>
 				<a href="{{ path('compta_depense_liste') }}">
 					<span class="glyphicon glyphicon-shopping-cart" style="font-size: 3em;"></span> <br />
@@ -38,7 +27,7 @@
 			</p>
 		</div>
 
-		<div class="col-md-4">
+		<div class="col-md-4 col-xs-6">
 			<p>
 				<a href="{{ path('compta_remise_cheque_liste' ) }}">
 					<span class="glyphicon glyphicon-paperclip" style="font-size: 3em;"></span> <br />
@@ -47,7 +36,7 @@
 			</p>
 		</div>
 
-		<div class="col-md-4">
+		<div class="col-md-4 col-xs-6">
 			<p>
 				 <a href="{{ path('compta_contact_liste', {'type' : 'CLIENT'} ) }}">
 					<span class="glyphicon glyphicon-user" style="font-size: 3em;"></span> <br />
@@ -56,7 +45,7 @@
 			</p>
 		</div>
 
-		<div class="col-md-4">
+		<div class="col-md-4 col-xs-6">
 			<p>
 				 <a href="{{ path('compta_avoir_liste', {'type' : 'CLIENT'} ) }}">
 					<span class="glyphicon glyphicon-scissors" style="font-size: 3em;"></span><br />
@@ -65,7 +54,7 @@
 			</p>
 		</div>
 
-		<div class="col-md-4">
+		<div class="col-md-4 col-xs-6">
 			<p>
 				<a href="{{ path('compta_rapport_tableau_bord_index' ) }}">
 					<span class="glyphicon glyphicon-list-alt" style="font-size: 3em;"></span><br />
@@ -76,12 +65,12 @@
 
 	</div>
 
-	<div class="row">
+	<div class="row hidden-xs">
 		<div class="col-md-12 center">
 			<h3>Chiffre d'affaire {{ 'now'|date('Y') }}</h3>
 		</div>
 	</div>
-	<div class="row spacer-top">
+	<div class="row spacer-top hidden-xs">
 		<div class="col-md-1"></div>
 		<div class="col-md-4">
 			<div id="chart_ca_analytique"></div>

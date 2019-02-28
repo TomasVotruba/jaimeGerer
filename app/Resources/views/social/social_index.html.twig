@@ -23,19 +23,19 @@
 		  		<div class="progress hidden">
 				  	<div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
 				</div>
-				<p>
-			  		<a class="btn btn-info" 
+				<div>
+			  		<a class="btn btn-info btn-block-mobile" 
 			  			href="{{ path('compta_course_ajouter') }}"
 			  			data-target="#modal" 
 			    		data-toggle="modal">
 			    		J'ai besoin de quelque chose
 			    	</a>
-			    	<a class="btn btn-primary"
+			    	<a class="btn btn-primary btn-block-mobile"
 			    		id="btn-acheter" 
 			  			href="#">
 			    		J'ai acheté les trucs cochés
 			    	</a>
-			    </p>
+				</div>
 		  	</div>
 		</div>
 	</div>
@@ -77,7 +77,7 @@
 		    	{% endfor %}
 		  	</div>
 		  	<div class="panel-footer">
-		  		<a class="btn btn-info" 
+		  		<a class="btn btn-info btn-block-mobile" 
 		  			href="{{ path('compta_merci_ajouter', {'type' : 'interne'} ) }}"
 		  			data-target="#modal" 
 		    		data-toggle="modal">
@@ -116,7 +116,7 @@
 		    	{% endfor %}
 		  	</div>
 		  	<div class="panel-footer">
-		  		<a class="btn btn-info" 
+		  		<a class="btn btn-info btn-block-mobile" 
 		  			href="{{ path('compta_merci_ajouter', {'type' : 'externe'} ) }}"
 		  			data-target="#modal" 
 		    		data-toggle="modal">
