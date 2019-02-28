@@ -1,0 +1,393 @@
+body{
+	background: rgba(242, 131, 92, 0.12) !important;
+}
+
+#crm_index{
+	text-align: center;
+}
+
+#crm_index a{
+	color:#FC5162;
+}
+
+.aside ul .current a{
+	color: #FC5162;
+}
+
+.aside ul li:hover a span{
+    color: #FC5162;
+}
+
+.tooltoop{
+    background: #FC5162;
+}
+
+.tooltoop:before{
+    border-right:8px solid #FC5162;
+}
+
+dt{
+	width: 150px;
+	float: left;
+}
+
+dd{
+	margin-bottom: 10px;
+}
+
+dd.list {
+	padding-left: 150px;
+	margin-bottom: 0;
+}
+
+#contact_details{
+	margin: 10px;
+	background-color: #eeeeee;
+	border-radius: 4px;
+	border: #dddddd 2px solid;
+}
+
+.group-btn a{
+	min-width: 100px;
+}
+
+.form-contact .row .col-md-6{
+	padding: 20px;
+}
+/*
+#wizard section:first-of-type .row .col-md-6{
+	padding: 0px !important;
+}
+*/
+#wizard section .row .col-md-6{
+	padding: 2px 20px !important;
+}
+#wizard section:first-of-type .form-group {
+    margin-bottom: 5px !important;
+}
+#wizard section:first-of-type .checkbox {
+    margin: 0px !important;
+}
+#settings_table{
+	width: 90%;
+}
+
+#settings_table tr{
+}
+
+#settings_table tr:nth-child(2n+1){
+	background-color: #EEEEEE;
+}
+
+#settings_table td{
+	padding: 5px;
+}
+
+#settings_table tr:last-child td:first-child{
+	text-align: center;
+}
+
+.settings-texte{
+	border: 1px solid #dddddd;
+	padding-bottom: 10px;
+}
+
+.settings-texte .valeur{
+	background-color: #eeeeee;
+	padding: 10px;
+}
+
+.settings-texte .form-group, .settings-texte textarea{
+	width: 100% !important;
+}
+
+.settings-table th{
+	background: #fc5061;
+}
+
+.settings-image img{
+	max-width: 150px;
+	max-height: 150px;
+}
+
+.contact-view-table tr td:first-child{
+	font-weight: bold;
+	width: 150px;
+}
+
+.contact-view-table tr td{
+	padding: 5px;
+	vertical-align: top;
+}
+
+.contact-view-table{
+	width: 100%;
+}
+
+.contact-view-table ul{
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.form-filter ul{
+	list-style-type: none;
+}
+
+.form-filter ul li{
+	margin-top: 10px;
+}
+
+
+.form-filter ul li a{
+	display: inline-block;
+}
+
+.form-filter .form-group select, .form-filter .form-group input{
+	margin-right: 10px;
+}
+
+input.filter{
+	margin-left: 10px;
+}
+
+
+table.htCore thead tr th:last-child {
+	background-color: #FFFFFF;
+	border: none;
+}
+
+table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.current{
+	background-color: #FFFFFF;
+	border: none;
+	vertical-align: middle;
+ }
+
+.produits, .repartitions, .sous-traitances, .repartitions-sous-traitants{
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.produit-collection{
+	margin-bottom: 10px;
+}
+
+.produit-collection table th{
+	text-align: center;
+}
+
+.produit-collection table td{
+	 padding: 5px;
+}
+
+.produit-collection table .produit-input-type{
+	width: 100px;
+}
+
+.produit-collection table .produit-input-nom{
+	width: 250px;
+}
+
+.produit-collection table .produit-input-number{
+	width: 100px;
+}
+
+ .produit-collection table.produit-input-button{
+	width: 50px;
+}
+
+.devis-sous-total, .devis-remise, .devis-taxe, .devis-taxe-percent, .devis-total-ht, .devis-total-ttc, .facture-sous-total, .facture-remise, .facture-taxe, .facture-taxe-percent, .facture-total-ht, .facture-total-ttc, .facturation-belgique{
+	width: 100px !important;
+}
+
+.devis-taxe-percent{
+	float: right !important;
+}
+
+#devis-calcul-wrapper, #facture-calcul-wrapper{
+	width: 880px;
+	text-align: right;
+}
+
+#devis-calcul-wrapper .form-group label, #devis-calcul-wrapper .form-group input, #devis-taxe-wrapper .form-group label, #devis-taxe-wrapper .form-group select, #facture-calcul-wrapper .form-group label, #facture-calcul-wrapper .form-group input, #facture-taxe-wrapper .form-group label, #facture-taxe-wrapper .form-group select{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#devis-calcul-wrapper .fc-taxe-hidden, #facture-calcul-wrapper .fc-taxe-hidden{
+	clear: both;
+}
+
+#devis-calcul-wrapper label, #facture-calcul-wrapper label{
+	margin-right: 5px;
+}
+
+#devis-calcul-wrapper .form-group:last-of-type, #facture-calcul-wrapper .form-group:last-of-type{
+	clear: both;
+}
+
+#devis-taxe-wrapper, #facture-taxe-wrapper, #totaux-wrapper-belgique{
+	clear: both;
+	float: right;
+}
+
+#devis-taxe-wrapper .form-group, #facture-taxe-wrapper .form-group, #totaux-wrapper-belgique .form-group{
+	display: inline-block;
+	vertical-align: bottom;
+	float:left;
+}
+
+#devis-taxe-wrapper .form-group div.input-group, #facture-taxe-wrapper .form-group div.input-group, #totaux-wrapper-belgique .form-group div.input-group{
+	padding-right: 5px;
+	width: 140px;
+}
+
+#devis-taxe-wrapper .form-group:first-of-type, #facture-taxe-wrapper .form-group:first-of-type, #totaux-wrapper-belgique .form-group:first-of-type{
+	display: inline;
+}
+
+#devis-taxe-wrapper .form-group:last-of-type, #facture-taxe-wrapper .form-group:last-of-type, #totaux-wrapper-belgique .form-group:last-of-type{
+	padding-top: 25px;
+	clear: none;
+}
+
+.produit-collection-voir table tr:nth-child(2){
+	border-bottom: 1px solid #DDDDDD;
+}
+
+.produit-collection-voir table td{
+	text-align: center;
+}
+
+.produit-collection-voir table td.produit-textarea{
+	text-align: left;
+	font-style: italic;
+}
+
+.devis-montant, .facture-montant{
+	width: 100px;
+	display: inline-block;
+}
+
+#devis-taxe-wrapper .devis-montant, #facture-taxe-wrapper .facture-montant{
+	width: 50px;
+}
+
+.devis-label, .facture-label{
+	display: inline-block;
+	font-weight: bold;
+	width: 500px;
+}
+
+.fc-taxe-hidden{
+	font-style: italic;
+	color: #EC741B;
+}
+
+.dataTable tr td{
+	 white-space: normal;
+	 width: 15%;
+}
+
+#table_opportunite_list.dataTable tr td{
+	width: 0 !important;
+}
+
+/**
+*CONTACTS
+**/
+
+#compte_details{
+	padding-top: 20px;
+	background: rgb(242, 240, 240);
+    padding: 20px;
+}
+
+#compte_details .group-btn{
+	padding-top: 20px;
+}
+
+/**
+* DEVIS
+**/
+.devis-filter {
+    margin-bottom:  20px;
+}
+#filter_dates .row {
+    margin-left:    0;
+    margin-right:   0;
+}
+#error_dates {
+    font-weight:    bold;
+    color:          red;
+    text-align:     center;
+}
+
+/**
+ * PROSPECTION
+ */
+#nbre_contact{
+	width: 50px;
+}
+ #phoningContacts hr{
+ 	margin-bottom: 0;
+ }
+ #phoningContacts{
+ 	height: 400px;
+     overflow-y: scroll;
+     width:100%;
+ }
+ #phoning-tentative, #phoning-derniere-tentative{
+ 	text-align:center;
+ 	padding : 15px 0;
+ }
+ #phoning-compte h2, #phoning-derniere-tentative h3, #phoning-tentative h3{
+ 	margin-top:5px;
+	color: #fc5162;
+	font-weight: bold;
+ }
+ #phoningContacts div{
+ 	cursor : pointer;
+ 	padding: 5px;
+	border-top: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+ }
+ #phoningContacts div:hover{
+ 	background-color: #eee !important;
+ }
+ #phoningContacts div.active{
+ 	background-color: #ddd;
+	font-weight: bold;
+ }
+
+ .telNumber{
+	 font-weight: bold;
+	 font-size: 1.5em;
+ }
+
+/**
+* RAPPORTS
+*/
+.btn-rapport-add-separateur{
+	margin-left: 10px;
+}
+
+/**
+*	HOMEPAGE
+**/
+.crm-homepage-block{
+	min-height: 200px;
+}
+
+#action-commerciale-filter-date label{
+	font-weight: normal;
+}
+
+.ul-details-compet-com{
+	list-style: none;
+}
+
+.ul-details-compet-com hr{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border-top: 1px solid #ddd;
+}
