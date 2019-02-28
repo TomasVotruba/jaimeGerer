@@ -17,7 +17,7 @@
            
             <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.datetimepicker.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('css/base20190228-1735.css') }}"/>
-            <link rel="stylesheet" type="text/css" href="{{ asset('css/mobile20190228-1735.css') }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/mobile20190228-1747.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/jquery-ui/jquery-ui.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/bootstrap3-editable/css/bootstrap-editable.css') }}" />
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/bootstrap-toggle/bootstrap-toggle.min.css') }}"/>
@@ -56,7 +56,7 @@
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
-            <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyDMlvpPWy3tvNphauWPk3eHlgEw7uISW5k"></script>
+            <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key={{ google_maps_api_key }}"></script>
             <script type="text/javascript" src="{{ asset('js/jquery.ui.addresspicker.js') }}"></script>
 
             {% if hide_tiny is not defined or hide_tiny == false %}
