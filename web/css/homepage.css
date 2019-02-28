@@ -41,7 +41,7 @@ recruter (jaune) = #FA8C4A
 }
 
 .wrap-index-alert-box-hover{
- display:none;
+ 	display:none;
 }
 /*
 .wrap-index-alert-box:hover{
@@ -104,6 +104,24 @@ tansition: all ease-in 0.5s;
 
 .main_menu li#compta:hover a{
 	color: #FA8C4A;
+	font-weight: bold;
+	transition : all ease-in 0.5s;
+}
+
+.main_menu li#emailing:hover a{
+	color: #fb7155;
+	font-weight: bold;
+	transition : all ease-in 0.5s;
+}
+
+.main_menu li#ndf:hover a{
+	color: #fbb433;
+	font-weight: bold;
+	transition : all ease-in 0.5s;
+}
+
+.main_menu li#social:hover a{
+	color: #6b1723;
 	font-weight: bold;
 	transition : all ease-in 0.5s;
 }

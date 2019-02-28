@@ -5,9 +5,82 @@
 	<link rel="stylesheet" href="{{ asset('css/crm.css') }}" type="text/css" />
 {% endblock %}
 
+{% block mobiletitle %}
+	<div id="titre-mobile-wrapper" class="crm">
+		<a href="{{ path('crm_index') }}">
+			<img src="{{ asset('images/assets/commercial.png') }}" alt="logo commercial" />
+			<span class="title">J'aime le commercial</span>
+		</a>
+	</div>
+{% endblock %}
+
+{% block mobile_menu_bottom_dropdown %}
+    <li role="presentation">
+        <a href="{{ path('crm_contact_liste') }}">
+            <span class="menu-icon"><span class="glyphicon glyphicon-user menu-icon"></span>
+            Contacts
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('crm_impulsion_liste') }}">
+			<span class="glyphicon glyphicon-time menu-icon"></span> 
+			Suivi
+		</a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('crm_action_commerciale_liste') }}">
+			<span class="glyphicon glyphicon-euro menu-icon"></span> 
+			Actions commerciales
+		</a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('crm_facture_liste') }}">
+			<span class="glyphicon glyphicon-piggy-bank menu-icon"></span> 
+			Factures
+		</a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('crm_rapport_liste', {'type' : 'contact'}) }}">
+			<span class="glyphicon glyphicon-list-alt menu-icon"></span> 
+			Rapports
+		</a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('crm_prospection_liste') }}">
+			<span class="glyphicon glyphicon-earphone menu-icon"></span> 
+			Prospection
+		</a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('crm_contactwebform_liste') }}">
+			<span class="glyphicon glyphicon-transfer menu-icon"></span> 
+			Formulaires web
+		</a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('crm_settings_liste') }}">
+			<span class="glyphicon glyphicon-cog menu-icon"></span> 
+			Paramètres CRM
+		</a>
+    </li>
+{% endblock %}
+
+{% block mobile_menu_bottom %}
+    <li role="presentation">
+        <a href="{{ path('crm_contact_liste') }}">
+            <span class="menu-icon"><span class="glyphicon glyphicon-user"></span>
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('crm_action_commerciale_liste') }}">
+            <span class="menu-icon"><span class="glyphicon glyphicon-euro"></span>
+        </a>
+    </li>
+{% endblock %}
+
 {% block body %}
 	<div class="row full-height-minus-userbar">
-		<div class="col-xs-1 aside full-height">
+		<div class="col-md-1 aside full-height hidden-xs" >
 	    	<ul>
 	    		<li id="link-crm">
 	    			<a href="{{ path('crm_index') }}">
@@ -33,12 +106,6 @@
 	    			</a>
 					<div class="tooltoop">Actions commerciales</div>
 	    		</li>
-	    	{# 	<li id="link-devis">
-	    			<a href="{{ path('crm_devis_liste') }}">
-	    				<span class="glyphicon glyphicon-euro" style="font-size: 2em;" ></span>
-	    			</a>
-					<div class="tooltoop">Devis</div>
-	    		</li> #}
 	    		<li id="link-facture">
 	    			<a href="{{ path('crm_facture_liste') }}">
 	    				<span class="glyphicon glyphicon-piggy-bank" style="font-size: 2em;"></span>
@@ -73,14 +140,15 @@
 	    	</ul>
 	    </div>
 
-    <div class="col-xs-11 fit wrap-content wrap-content-commercial">
-     <div class="titre titre-crm">
-			<h1 id="titre-outil">J'aime le commercial</h1>
-		</div>
-	    	{% block content %}
+	    <div class="col-md-11 col-xs-12 fit wrap-content wrap-content-commercial">
+	     	<div class="titre titre-crm hidden-xs">
+				<h1 id="titre-outil">J'aime le commercial</h1>
+			</div>
+		    	
+		    {% block content %}
 
-	    	{% endblock %}
-	    </div>
+		    {% endblock %}
+		</div>
 
 	</div>
 <link rel="stylesheet" type="text/css" href="{{ asset('lib/jquery-typeahead/dist/jquery.typeahead.min.css') }}">

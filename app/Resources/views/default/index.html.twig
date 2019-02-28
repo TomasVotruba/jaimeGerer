@@ -7,6 +7,12 @@
 
 
 {% block body %}
+<div class="row center" id="login-logo-wrapper">
+	<div class="col-md-12">
+        <img src="{{ asset('images/assets/jaimegerer-logo-250.png') }}" alt="logo" title="J'aime Gérer" />
+        <hr />
+    </div>
+</div>
 <div class="wrap-index">
 	<div class="row">
 		<div class="col-md-12 center">
@@ -48,7 +54,7 @@
 			    	</a>
 		    	</li>
 		    	{% if app.user.company.id == 1 %}
-			    	<li id="ndf" class="active">
+			    	<li id="social" class="active">
 			    		<a href="{{ path('social_index') }}">
 				    		<img src="{{ asset('images/assets/jaimenicomak.png') }}" alt="J'aime Nicomak" />
 				    		J'aime {{ app.user.company }}
