@@ -8,6 +8,7 @@
 	.btn-block-mobile{
 		display: block;
     	width: 100%;
+    	margin-bottom: 5px;
 	}
 
 	.center-mobile{
@@ -225,12 +226,18 @@
 	}
 
 	.fixed-top{
-		position: relative;
+		position: absolute;
+		width:100%;
+		box-shadow: none;
 	}
 
 
 	#contact-name{
-		float: none;
+		float: none !important;
+	}
+
+	.modal-dialog{
+		top: 60px;
 	}
 
 

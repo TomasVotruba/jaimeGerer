@@ -21,13 +21,13 @@
 
 		<div class="col-md-6 col-xs-12">
 		    <p class="group-btn">
-		    	<a href="{{ path('crm_contact_editer', {'id' : contact.id }) }}"  class="btn btn-warning">
+		    	<a href="{{ path('crm_contact_editer', {'id' : contact.id }) }}"  class="btn btn-warning btn-block-mobile">
 		    		<span class="glyphicon glyphicon-pencil"></span> Modifier
 		    	</a>
-		    	<a href="{{ path('crm_contact_supprimer', {'id' : contact.id }) }}"  class="btn btn-danger">
+		    	<a href="{{ path('crm_contact_supprimer', {'id' : contact.id }) }}"  class="btn btn-danger btn-block-mobile">
 		    		<span class="glyphicon glyphicon-trash"></span> Supprimer
 		    	</a>
-		    	<a href="{{ path('crm_contact_ecrire', {'id' : contact.id }) }}"  class="btn {% if contact.email is null %} btn-default not-active {% else %} btn-primary {% endif %}"  data-toggle="modal" data-target="#modal">
+		    	<a href="{{ path('crm_contact_ecrire', {'id' : contact.id }) }}"  class="btn {% if contact.email is null %} btn-default not-active {% else %} btn-primary {% endif %} btn-block-mobile"  data-toggle="modal" data-target="#modal">
 			    	<span class="glyphicon glyphicon-send"></span> Envoyer un message
 			    </a>
 			    <a href="{{ path('crm_contact_verifier_bounce', {'id' : contact.id, 'redirectToContact' : 1 }) }}"  class="hidden-xs btn {% if contact.email is null %} btn-default not-active {% else %} btn-info {% endif %}" >
@@ -208,7 +208,7 @@
 				    			{% if contact.telephoneFixe is empty %}
 						    		-
 						    	{% else %}
-						    		{{ contact.telephoneFixe }}
+						    		<a href="tel:{{ contact.telephoneFixe }}">{{ contact.telephoneFixe }}</a>
 						    	{% endif %}	
 					   	 	</td> 
 				   	 	</tr>
@@ -218,7 +218,7 @@
 				    			{% if contact.telephonePortable is empty %}
 						    		-
 						    	{% else %}
-						    		{{ contact.telephonePortable }}
+						    		<a href="tel:{{ contact.telephonePortable }}">{{ contact.telephonePortable }}</a>
 						    	{% endif %}	
 						    </td> 
 						 </tr>
@@ -228,7 +228,7 @@
 								{% if contact.telephoneAutres is empty %}
 									-
 								{% else %}
-									{{ contact.telephoneAutres }}
+									<a href="tel:{{ contact.telephoneAutres }}">{{ contact.telephoneAutres }}</a>
 								{% endif %}
 							</td>
 						</tr>
@@ -248,7 +248,7 @@
 								{% if contact.email is empty %}
 						    		-
 						    	{% else %}
-						    		{{ contact.email }}
+						    		<a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
 						    		{% if contact.isBounce %}
 										<span class="label label-danger">Bounce</span> 
 						    		{% elseif contact.isWarningBounce %}
@@ -263,7 +263,7 @@
 								{% if contact.email2 is empty %}
 									-
 								{% else %}
-									{{ contact.email2 }}
+									<a href="mailto:{{ contact.email2 }}">{{ contact.email2 }}</a>
 								{% endif %}
 							</td>
 						 </tr>
