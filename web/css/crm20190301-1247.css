@@ -110,7 +110,7 @@ dd.list {
 	max-height: 150px;
 }
 
-#contact-name{
+#contact-name, #compte-name{
 	float: left;
 }
 

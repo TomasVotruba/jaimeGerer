@@ -3,7 +3,7 @@
 {% block content %}
 
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-12 center-mobile">
 			<h1>Action commerciale</h1>
 		</div>
 	</div>
@@ -11,15 +11,15 @@
 	<div class="row">
 		<div class="col-md-12">
 		    <p class="group-btn">
-		    	<a href="{{ path('crm_action_commerciale_editer', {'id' : opportunite.id }) }}"  class="btn btn-warning">
+		    	<a href="{{ path('crm_action_commerciale_editer', {'id' : opportunite.id }) }}"  class="btn btn-warning btn-block-mobile">
 		    		<span class="glyphicon glyphicon-pencil"></span> Modifier
 		    	</a>  	
 
 		    	{% if opportunite.isLost() == false and opportunite.isWon() == false %}
-			    	<a href="{{ path('crm_action_commerciale_gagner', {'id' : opportunite.id }) }}" class="btn btn-success">
+			    	<a href="{{ path('crm_action_commerciale_gagner', {'id' : opportunite.id }) }}" class="btn btn-success btn-block-mobile">
 			    		<span class="glyphicon glyphicon-thumbs-up"></span> Marquer gagnée
 			    	</a> 
-			    	<a href="{{ path('crm_action_commerciale_perdre', {'id' : opportunite.id }) }}" class="btn btn-danger">
+			    	<a href="{{ path('crm_action_commerciale_perdre', {'id' : opportunite.id }) }}" class="btn btn-danger btn-block-mobile">
 			    		<span class="glyphicon glyphicon-thumbs-down"></span> Marquer perdue
 			    	</a> 
 		   		{% endif %} 
@@ -27,47 +27,47 @@
 		   		{% if opportunite.devis %}
 
 		   			{% if opportunite.isLost == false %}
-				    	<a href="{{ path('crm_action_commerciale_envoyer', {'id' : opportunite.id }) }}"  class="btn  {% if (opportunite.contact is null) %} btn-default not-active {% else %} {% if opportunite.devis.contact.email is null %} btn-default not-active {% else %} btn-primary {% endif %}{% endif %}"  data-toggle="modal" data-target="#modal" id="btn-send-devis">
+				    	<a href="{{ path('crm_action_commerciale_envoyer', {'id' : opportunite.id }) }}"  class="btn btn-block-mobile {% if (opportunite.contact is null) %} btn-default not-active {% else %} {% if opportunite.devis.contact.email is null %} btn-default not-active {% else %} btn-primary {% endif %}{% endif %}"  data-toggle="modal" data-target="#modal" id="btn-send-devis">
 					    	<span class="glyphicon glyphicon-send"></span> Envoyer le devis par email
 					    </a>
 				   {% endif %}
 
-				    <a href="{{ path('crm_action_commerciale_exporter', {'id' : opportunite.id }) }}"  class="btn btn-primary">
+				    <a href="{{ path('crm_action_commerciale_exporter', {'id' : opportunite.id }) }}"  class="btn btn-primary btn-block-mobile">
 		    			<span class="glyphicon glyphicon-floppy-disk"></span> Exporter le devis
 		    		</a>
 
 		    		{% if opportunite.isWon %}
 	    		    	{% if facture is null or facture|length == 0 %}
-	    			    	<a href="{{ path('crm_action_commerciale_convertir', {'id' : opportunite.id }) }}"  class="btn btn-primary" data-toggle="modal" data-target="#modal" id="btn-convertir-devis">
+	    			    	<a href="{{ path('crm_action_commerciale_convertir', {'id' : opportunite.id }) }}"  class="btn btn-primary btn-block-mobile" data-toggle="modal" data-target="#modal" id="btn-convertir-devis">
 	    			    		<span class="glyphicon glyphicon-check"></span> Convertir en facture
 	    			    	</a>
 	    		    	{% else %}
-	    			    	<a href="{{ path('crm_devis_convertir', {'id' : opportunite.devis.id }) }}"  class="btn btn-primary" data-toggle="modal" data-target="#modal"  id="btn-convertir-devis">
+	    			    	<a href="{{ path('crm_devis_convertir', {'id' : opportunite.devis.id }) }}"  class="btn btn-primary btn-block-mobile" data-toggle="modal" data-target="#modal"  id="btn-convertir-devis">
 	    			    		<span class="glyphicon glyphicon-check"></span> Ajouter une autre facture
 	    			    	</a>
 	    			    	{% if facture|length == 1 %}
-	    						<a href="{{ path('crm_facture_voir', {'id' : facture.0.id }) }}"  class="btn btn-primary">
+	    						<a href="{{ path('crm_facture_voir', {'id' : facture.0.id }) }}"  class="btn btn-primary btn-block-mobile">
 	    							<span class="glyphicon glyphicon-eye-open"></span> Voir la facture
 	    						</a>
 	    					{% elseif facture|length > 1 %}
-	    						<a href="{{ path('crm_factures_devis_liste', {'id' : opportunite.devis.id }) }}"  class="btn btn-primary">
+	    						<a href="{{ path('crm_factures_devis_liste', {'id' : opportunite.devis.id }) }}"  class="btn btn-primary btn-block-mobile">
 	    							<span class="glyphicon glyphicon-eye-open"></span> Voir les factures
 	    						</a>
 	    					{% endif %}
 	    		    	{% endif %}
 	    		    {% endif %}
 
-			    	<a href="{{ path('crm_devis_impulsion', {'id' : opportunite.devis.id }) }}"  class="btn  {% if (opportunite.devis.contact is null) %} btn-default not-active {% else %} {% if opportunite.devis.contact.email is null %} btn-default not-active {% else %} btn-primary {% endif %}{% endif %}"  data-toggle="modal" data-target="#modal">
+			    	<a href="{{ path('crm_devis_impulsion', {'id' : opportunite.devis.id }) }}"  class="btn hidden-xs {% if (opportunite.devis.contact is null) %} btn-default not-active {% else %} {% if opportunite.devis.contact.email is null %} btn-default not-active {% else %} btn-primary {% endif %}{% endif %}"  data-toggle="modal" data-target="#modal">
 				    	<span class="glyphicon glyphicon-time"></span> Ajouter un suivi
 				    </a>
 				    
 				{% endif %}
 
-				<a href="{{ path('crm_action_commerciale_dupliquer', {'id' : opportunite.id }) }}"  class="btn btn-primary">
+				<a href="{{ path('crm_action_commerciale_dupliquer', {'id' : opportunite.id }) }}"  class="btn btn-primary btn-block-mobile">
 		    		<span class="glyphicon glyphicon-duplicate"></span> Dupliquer
 		    	</a>
 
-		    	<a href="{{ path('crm_action_commerciale_supprimer', {'id' : opportunite.id }) }}"  class="btn btn-danger">
+		    	<a href="{{ path('crm_action_commerciale_supprimer', {'id' : opportunite.id }) }}"  class="btn btn-danger btn-block-mobile">
 		    		<span class="glyphicon glyphicon-trash"></span> Supprimer
 		    	</a>
 
@@ -85,8 +85,9 @@
     {% endif %}
 
      <div class="row" id="opportunite_details">
-	    	<div class="col-md-12">
-	    		<h2>{{ opportunite.nom }} - {{ opportunite.montant }} &euro;<br />
+	    	<div class="col-md-12 center-mobile">
+	    		<h2>{{ opportunite.nom }} <span class="hidden-xs">-</span> <span class="block-mobile">{{ opportunite.montant }} &euro;</span>
+	    		<br class="hidden-xs" />
     			{% if opportunite.isWon %}
     				<small class="green"><span class="glyphicon glyphicon-thumbs-up"></span> Action commerciale gagnée</small>
     			{% elseif opportunite.isLost %}
@@ -298,17 +299,19 @@
 		</div>
 		
 		{% if opportunite.devis %}
-			<div class="row">
+			<div class="row hidden-xs">
 		    	<div class="col-md-12 produit-collection produit-collection-voir">
-			    	<table>
+			    	<table >
 						<thead>
-								<th class="produit-input-type">Type</td>
-								<th class="produit-input-nom">Nom</td>
-								<th class="produit-input-number">Tarif unitaire (€)</td>
-								<th class="produit-input-number">Quantité</td>
-								<th class="produit-input-number">Montant (€)</td>
-								<th class="produit-input-number">Remise (€)</td>
-								<th class="produit-input-number">Total (€)</td>
+							<tr>
+								<th class="produit-input-type">Type</th>
+								<th class="produit-input-nom">Nom</th>
+								<th class="produit-input-number">Tarif unitaire (€)</th>
+								<th class="produit-input-number">Quantité</th>
+								<th class="produit-input-number">Montant (€)</th>
+								<th class="produit-input-number">Remise (€)</th>
+								<th class="produit-input-number">Total (€)</th>
+							</tr>
 						</thead>
 						<tbody>
 				    	{% for produit in opportunite.devis.produits %}
@@ -316,12 +319,21 @@
 				    	{% endfor %}
 				    	</tbody>
 				    </table>
+				    <hr />
 		    	</div>
 		    </div>
 
+		    <div class="row visible-xs">
+		    	<div class="col-md-12">
+				    {% for produit in opportunite.devis.produits %}
+						{{ include('crm/produit/crm_produit_voir_mobile.html.twig', { 'produit': produit }) }}
+			    	{% endfor %}
+			    </div>
+			</div>
+
 		    <div class="row">
-			    <div class="col-md-12" id="devis-calcul-wrapper">
-			    	<hr />
+			    <div class="col-md-12 col-xs-12" id="devis-calcul-wrapper">
+			    	
 			   		<div class="form-group">
 			   			<span class="devis-label">Sous total</span>
 			   			<span class="devis-montant">{{ opportunite.devis.sousTotal }} €</span>

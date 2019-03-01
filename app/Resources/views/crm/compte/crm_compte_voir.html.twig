@@ -2,38 +2,38 @@
 
 {% block content %}
 
-	<div class="row">
+	<div class="row hidden-xs">
 		<div class="col-md-12 bread-crumb-back">
 			<a href="{{ path('crm_compte_liste') }}" class="small">< Retour à la listes des organisations</a>
 		</div>
 	</div>
 
 		<div class="row" id="compte_details"> 	
-			<div class="col-md-6">
-		    		<h1 style="float:left;">{{ compte.nom }}
+			<div class="col-md-6 col-xs-12 center-mobile">
+		    		<h1 id="compte-name">{{ compte.nom }}
 					{% if compte.compteParent is not empty %}
 		    		<p class="l">Sous-entité de <a href="{{ path('crm_compte_voir', {'id' : compte.compteParent.id }) }}" class="small">{{ compte.compteParent }}</a></p>
 		    		{% endif %}
 		    		</h1>
 		    </div>
-			<div class="col-md-6">
+			<div class="col-md-6 col-xs-12">
 			    <p class="group-btn">
-			    	<a href="{{ path('crm_compte_editer', {'id' : compte.id }) }}"  class="btn btn-warning">
+			    	<a href="{{ path('crm_compte_editer', {'id' : compte.id }) }}"  class="btn btn-warning btn-block-mobile">
 			    		<span class="glyphicon glyphicon-pencil"></span> Modifier
 			    	</a>
-			    	<a href="{{ path('crm_compte_supprimer', {'id' : compte.id }) }}"  class="btn btn-danger">
+			    	<a href="{{ path('crm_compte_supprimer', {'id' : compte.id }) }}"  class="btn btn-danger btn-block-mobile">
 			    		<span class="glyphicon glyphicon-trash"></span> Supprimer
 			    	</a>
-				   	<a href="{{ path('crm_compte_verifier_bounce', {'id' : compte.id }) }}"  class="btn btn-info" >
+				   	<a href="{{ path('crm_compte_verifier_bounce', {'id' : compte.id }) }}"  class="btn btn-info hidden-xs" >
 				    	<span class="glyphicon glyphicon-check"></span> Vérifier adresses emails
 				    </a>
-			    	<a href="{{ path('crm_compte_fusionner', {'id' : compte.id }) }}"  class="btn btn-default"  data-toggle="modal" data-target="#modal">
+			    	<a href="{{ path('crm_compte_fusionner', {'id' : compte.id }) }}"  class="btn btn-default hidden-xs"  data-toggle="modal" data-target="#modal">
 				    	<span class="glyphicon glyphicon-transfer"></span> Fusionner
 				    </a>
 			    </p>
 		    </div>
 	    
-	     <div class="row">
+	     <div class="row hidden-xs">
 		    	<div class="col-md-12">
 		    		<p>
 		    			<a href="#contacts">Contacts de cette organisation</a> - 

@@ -9,14 +9,14 @@
 	</div>
 	<div class="row" id="compte_details">
 	    <div class="col-md-6 col-xs-12 center-mobile">
-	    		<h1 id="contact-name">{{ contact.prenom }} {{ contact.nom }}<br />
-		    		<small>
-		    			<strong><a href="{{ path('crm_compte_voir', {'id' : contact.compte.id }) }}">{{ contact.compte }}</a></strong>
-		    			{% if contact.titre is not empty %}
-					    	- {{ contact.titre }}
-					    {% endif %} 
-					</small>
-	    		</h1>	
+    		<h1 id="contact-name">{{ contact.prenom }} {{ contact.nom }}<br />
+	    		<small>
+	    			<strong><a href="{{ path('crm_compte_voir', {'id' : contact.compte.id }) }}">{{ contact.compte }}</a></strong>
+	    			{% if contact.titre is not empty %}
+				    	- {{ contact.titre }}
+				    {% endif %} 
+				</small>
+    		</h1>	
 	    </div>
 
 		<div class="col-md-6 col-xs-12">
@@ -49,8 +49,6 @@
     			<a href="#emailings">Historique des emailings</a>
     		</p>
 	    </div>
-
-	    
     </div>
 
     {% if contact.isBounce or contact.isWarningBounce %}
@@ -71,6 +69,7 @@
 	    	 		</a>
 	    	 	</p>
 	    	</div>
+	    </div>
 	{% endif %}
 
 	<div class="row">
@@ -87,405 +86,410 @@
 			{% endfor %}
 		</div>
 	</div>
-	    <div class="row">
-	    	<div class="col-md-12">
-	    		<hr />
-	    		<table class="contact-view-table">
-	    			<tbody>
-		    			<tr>
-		    				<td>
-		    					Gestionnaire du contact 
-		    				</td>
-		    				<td id="contact-user-gestion">
-					    		{{ contact.userGestion }}
-					    		{% if contact.userGestion.enabled == false %}
-					    			<a tabindex="0" role="button" data-toggle="popover" data-trigger="hover" title="Utilisateur inactif" data-content="Cet utilisateur est inactif. Vous devriez changer le gestionnaire du contact."><span class="glyphicon glyphicon-warning-sign red"></span></a>
-					    		{% endif %}
-					    		  <p>
-					    		  	<span class="glyphicon glyphicon-time"></span>
-									{% if impulsion is not null %}
-							    	 	<a href="{{ path('crm_impulsion_liste') }}">
-									    {% if impulsion.delaiUnit == "WEEK" %}
-					    					Toutes
-					    				{% else %}
-					    					Tous
-					    				{% endif %}
-					    				les {{ impulsion.delaiNum }}
-					    				{% if impulsion.delaiUnit == "DAY" %}
-					    					jours
-					    				{% elseif impulsion.delaiUnit == "WEEK" %}
-					    					semaines
-					    				{% else %}
-					    					mois
-					    				{% endif %}
-					    				</a>
-					    			{% else %}
-					    				Pas de suivi <a href="{{ path('crm_impulsion_ajouter', {'contact' : contact.id}) }}" class="bnt btn-xs btn-success">
-					    					<span class="glyphicon glyphicon-plus"></span> Ajouter
-					    				</a>
-								    {% endif %}
-							    </p>
-		    				</td>
-		    			</tr>
-		    		</tbody>
-		    	</table>
-		    	<hr />
-	    	</div>
+	    
+    <div class="row">
+    	<div class="col-md-12">
+    		<hr />
+    		<table class="contact-view-table">
+    			<tbody>
+	    			<tr>
+	    				<td>
+	    					Gestionnaire du contact 
+	    				</td>
+	    				<td id="contact-user-gestion">
+				    		{{ contact.userGestion }}
+				    		{% if contact.userGestion.enabled == false %}
+				    			<a tabindex="0" role="button" data-toggle="popover" data-trigger="hover" title="Utilisateur inactif" data-content="Cet utilisateur est inactif. Vous devriez changer le gestionnaire du contact."><span class="glyphicon glyphicon-warning-sign red"></span></a>
+				    		{% endif %}
+				    		  <p>
+				    		  	<span class="glyphicon glyphicon-time"></span>
+								{% if impulsion is not null %}
+						    	 	<a href="{{ path('crm_impulsion_liste') }}">
+								    {% if impulsion.delaiUnit == "WEEK" %}
+				    					Toutes
+				    				{% else %}
+				    					Tous
+				    				{% endif %}
+				    				les {{ impulsion.delaiNum }}
+				    				{% if impulsion.delaiUnit == "DAY" %}
+				    					jours
+				    				{% elseif impulsion.delaiUnit == "WEEK" %}
+				    					semaines
+				    				{% else %}
+				    					mois
+				    				{% endif %}
+				    				</a>
+				    			{% else %}
+				    				Pas de suivi <a href="{{ path('crm_impulsion_ajouter', {'contact' : contact.id}) }}" class="bnt btn-xs btn-success">
+				    					<span class="glyphicon glyphicon-plus"></span> Ajouter
+				    				</a>
+							    {% endif %}
+						    </p>
+	    				</td>
+	    			</tr>
+	    		</tbody>
+	    	</table>
+	    	<hr />
+    	</div>
+	</div>
+
+	<div class="row">
+    	<div class="col-md-6">
+    		<table class="contact-view-table">
+    			<tbody>
+	    			<tr>
+	    				<td>
+	    					Adresse 
+	    				</td>
+	    				<td id="contact-adresse">
+	    					{% if contact.adresse is empty %}
+				    			-
+				    		{% else %}
+				    			{{ contact.adresse }}
+				    		{% endif %}
+	    				</td>
+	    			</tr>
+	    			<tr>
+	    				<td>
+	    					Code postal 
+	    				</td>
+	    				<td>
+	    					{% if contact.codePostal is empty %}
+				    			-
+				    		{% else %}
+				    			{{ contact.codePostal }}
+				    		{% endif %}
+	    				</td>
+	    			</tr>
+	    			<tr>
+	    				<td>
+	    					Ville 
+	    				</td>
+	    				<td>
+	    					{% if contact.ville is empty %}
+				    			-
+				    		{% else %}
+				    			{{ contact.ville }}
+				    		{% endif %}
+	    				</td>
+	    			</tr>
+	    			<tr>
+	    				<td>
+	    					Région 
+	    				</td>
+	    				<td>
+	    					{% if contact.region is empty %}
+				    			-
+				    		{% else %}
+				    			{{ contact.region }}
+				    		{% endif %}
+	    				</td>
+	    			</tr>
+	    			<tr>
+	    				<td>
+	    					Pays 
+	    				</td>
+	    				<td>
+	    					{% if contact.pays is empty %}
+				    			-
+				    		{% else %}
+				    			{{ contact.pays }}
+				    		{% endif %}
+	    				</td>
+	    			</tr>
+    			</tbody>
+    		</table>
+    	</div>
+    	<div class="col-md-6">
+    		<table class="contact-view-table">
+    			<tbody>
+	    			<tr>
+	    				<td>Téléphone fixe</td>  
+		    			<td id="contact-tel-fixe">
+			    			{% if contact.telephoneFixe is empty %}
+					    		-
+					    	{% else %}
+					    		<a href="tel:{{ contact.telephoneFixe }}">{{ contact.telephoneFixe }}</a>
+					    	{% endif %}	
+				   	 	</td> 
+			   	 	</tr>
+			   	 	<tr>
+			    		<td>Tél. portable pro</td>  
+			    		<td>
+			    			{% if contact.telephonePortable is empty %}
+					    		-
+					    	{% else %}
+					    		<a href="tel:{{ contact.telephonePortable }}">{{ contact.telephonePortable }}</a>
+					    	{% endif %}	
+					    </td> 
+					 </tr>
+					<tr>
+						<td>Tél. (autre)</td>
+						<td>
+							{% if contact.telephoneAutres is empty %}
+								-
+							{% else %}
+								<a href="tel:{{ contact.telephoneAutres }}">{{ contact.telephoneAutres }}</a>
+							{% endif %}
+						</td>
+					</tr>
+					 <tr>
+					 	<td>Fax</td>  
+			    		<td>
+			    			{% if contact.fax is empty %}
+					    		-
+					    	{% else %}
+					    		{{ contact.fax }}
+					    	{% endif %}
+					    </td> 
+					 </tr>
+					 <tr>
+					 	<td>Email</td>  
+			    		<td>
+							{% if contact.email is empty %}
+					    		-
+					    	{% else %}
+					    		<a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+					    		{% if contact.isBounce %}
+									<span class="label label-danger">Bounce</span> 
+					    		{% elseif contact.isWarningBounce %}
+									<span class="label label-warning">Bounce Potentiel</span> 
+								{% endif %}
+					    	{% endif %}	    	
+					    </td>
+					 </tr>
+					 <tr>
+						<td>Email 2</td>
+						<td>
+							{% if contact.email2 is empty %}
+								-
+							{% else %}
+								<a href="mailto:{{ contact.email2 }}">{{ contact.email2 }}</a>
+							{% endif %}
+						</td>
+					 </tr>
+	    		</tbody>
+	    	</table>  	
+    	</div>
+   </div>
+
+    <div class="row">
+    	<div class="col-md-12">
+    		<hr />
+    	</div>
+    </div>
+
+    <div class="row">
+    	<div class="col-md-6">
+     		<table class="contact-view-table">
+    			<tbody>
+    				<tr>
+						<td>Secteur d'activité</td>
+						<td id="contact-secteur">
+							<ul>
+								{% for secteur in contact.settings if secteur.parametre == 'SECTEUR' %}
+									<li>{{ secteur.valeur }}</li>
+								{% endfor %}
+							</ul>
+						</td>
+					</tr>
+			    		<td>Thèmes d'intérêt</td> 
+			    		<td id="contact-themes-interet">
+			    			<ul>
+			    			{% for theme in contact.settings if theme.parametre == 'THEME_INTERET' %}
+			    				<li>{{ theme.valeur }}</li>
+			    			{% endfor %}
+			    			</ul>
+			    		</td>
+	    			</tr>
+	    			<tr>
+		    			<td>Services d'intérêt</td>  
+		    			<td id="contact-services-interet">
+			    			<ul>
+			    			{% for service in contact.settings if service.parametre == 'SERVICE_INTERET' %}
+			    				<li>{{ service.valeur }}</li>
+			    			{% endfor %} 
+			    			</ul>
+		    			</td>
+		    		</tr>
+		    		
+		    	</tbody>
+		    </table>
 		</div>
-		<div class="row">
-	    	<div class="col-md-6">
-	    		<table class="contact-view-table">
-	    			<tbody>
-		    			<tr>
-		    				<td>
-		    					Adresse 
-		    				</td>
-		    				<td id="contact-adresse">
-		    					{% if contact.adresse is empty %}
-					    			-
-					    		{% else %}
-					    			{{ contact.adresse }}
-					    		{% endif %}
-		    				</td>
-		    			</tr>
-		    			<tr>
-		    				<td>
-		    					Code postal 
-		    				</td>
-		    				<td>
-		    					{% if contact.codePostal is empty %}
-					    			-
-					    		{% else %}
-					    			{{ contact.codePostal }}
-					    		{% endif %}
-		    				</td>
-		    			</tr>
-		    			<tr>
-		    				<td>
-		    					Ville 
-		    				</td>
-		    				<td>
-		    					{% if contact.ville is empty %}
-					    			-
-					    		{% else %}
-					    			{{ contact.ville }}
-					    		{% endif %}
-		    				</td>
-		    			</tr>
-		    			<tr>
-		    				<td>
-		    					Région 
-		    				</td>
-		    				<td>
-		    					{% if contact.region is empty %}
-					    			-
-					    		{% else %}
-					    			{{ contact.region }}
-					    		{% endif %}
-		    				</td>
-		    			</tr>
-		    			<tr>
-		    				<td>
-		    					Pays 
-		    				</td>
-		    				<td>
-		    					{% if contact.pays is empty %}
-					    			-
-					    		{% else %}
-					    			{{ contact.pays }}
-					    		{% endif %}
-		    				</td>
-		    			</tr>
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    	<div class="col-md-6">
-	    		<table class="contact-view-table">
-	    			<tbody>
-		    			<tr>
-		    				<td>Téléphone fixe</td>  
-			    			<td id="contact-tel-fixe">
-				    			{% if contact.telephoneFixe is empty %}
-						    		-
-						    	{% else %}
-						    		<a href="tel:{{ contact.telephoneFixe }}">{{ contact.telephoneFixe }}</a>
-						    	{% endif %}	
-					   	 	</td> 
-				   	 	</tr>
-				   	 	<tr>
-				    		<td>Tél. portable pro</td>  
-				    		<td>
-				    			{% if contact.telephonePortable is empty %}
-						    		-
-						    	{% else %}
-						    		<a href="tel:{{ contact.telephonePortable }}">{{ contact.telephonePortable }}</a>
-						    	{% endif %}	
-						    </td> 
-						 </tr>
-						<tr>
-							<td>Tél. (autre)</td>
-							<td>
-								{% if contact.telephoneAutres is empty %}
-									-
-								{% else %}
-									<a href="tel:{{ contact.telephoneAutres }}">{{ contact.telephoneAutres }}</a>
-								{% endif %}
-							</td>
-						</tr>
-						 <tr>
-						 	<td>Fax</td>  
-				    		<td>
-				    			{% if contact.fax is empty %}
-						    		-
-						    	{% else %}
-						    		{{ contact.fax }}
-						    	{% endif %}
-						    </td> 
-						 </tr>
-						 <tr>
-						 	<td>Email</td>  
-				    		<td>
-								{% if contact.email is empty %}
-						    		-
-						    	{% else %}
-						    		<a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
-						    		{% if contact.isBounce %}
-										<span class="label label-danger">Bounce</span> 
-						    		{% elseif contact.isWarningBounce %}
-										<span class="label label-warning">Bounce Potentiel</span> 
-									{% endif %}
-						    	{% endif %}	    	
-						    </td>
-						 </tr>
-						 <tr>
-							<td>Email 2</td>
-							<td>
-								{% if contact.email2 is empty %}
-									-
-								{% else %}
-									<a href="mailto:{{ contact.email2 }}">{{ contact.email2 }}</a>
-								{% endif %}
-							</td>
-						 </tr>
-		    		</tbody>
-		    	</table>  	
-	    	</div>
-	   </div>
-	    <div class="row">
-	    	<div class="col-md-12">
-	    		<hr />
-	    	</div>
-	    </div>
-	    <div class="row">
-	    	<div class="col-md-6">
-	     		<table class="contact-view-table">
-	    			<tbody>
-	    				<tr>
-							<td>Secteur d'activité</td>
-							<td id="contact-secteur">
-								<ul>
-									{% for secteur in contact.settings if secteur.parametre == 'SECTEUR' %}
-										<li>{{ secteur.valeur }}</li>
-									{% endfor %}
-								</ul>
-							</td>
-						</tr>
-				    		<td>Thèmes d'intérêt</td> 
-				    		<td id="contact-themes-interet">
-				    			<ul>
-				    			{% for theme in contact.settings if theme.parametre == 'THEME_INTERET' %}
-				    				<li>{{ theme.valeur }}</li>
-				    			{% endfor %}
-				    			</ul>
-				    		</td>
-		    			</tr>
-		    			<tr>
-			    			<td>Services d'intérêt</td>  
-			    			<td id="contact-services-interet">
-				    			<ul>
-				    			{% for service in contact.settings if service.parametre == 'SERVICE_INTERET' %}
-				    				<li>{{ service.valeur }}</li>
-				    			{% endfor %} 
-				    			</ul>
-			    			</td>
-			    		</tr>
+		<div class="col-md-6">
+	    	<table class="contact-view-table">
+	    		<tbody>
+	    			<tr>
+			    		<td>Type de relation commerciale</td>  
+						<td id="contact-type">
+							<ul>
+							{% for type in contact.settings if type.parametre == 'TYPE' %}
+			    				<li>{{ type.valeur }}</li>  				
+			    			{% endfor %}  
+			    			</ul>
+			    		</td>
+			    	</tr>
+			    	<tr>
+			    		<td>Réseau</td>  
+			    		<td id="contact-reseau">
 			    		
-			    	</tbody>
-			    </table>
-			</div>
-			<div class="col-md-6">
-		    	<table class="contact-view-table">
-		    		<tbody>
-		    			<tr>
-				    		<td>Type de relation commerciale</td>  
-							<td id="contact-type">
-								<ul>
-								{% for type in contact.settings if type.parametre == 'TYPE' %}
-				    				<li>{{ type.valeur }}</li>  				
-				    			{% endfor %}  
-				    			</ul>
-				    		</td>
-				    	</tr>
-				    	<tr>
-				    		<td>Réseau</td>  
-				    		<td id="contact-reseau">
-				    		
-				    			{% if contact.reseau is empty %}
-						    		-
-						    	{% else %}
-									{{ contact.reseau.valeur }}
-						    	{% endif %}
-				    		</td> 
-				    	</tr>
-				    	<tr>
-				    		<td>Origine :</td>  
-				    		<td id="contact-origine">
-				    			{% for type in contact.settings if type.parametre == 'TYPE' %}
-				    			
-				    			{% endfor %}
-				    			{% if contact.origine is empty %}
-						    		-
-						    	{% else %}
-									{{ contact.origine.valeur }}	
-						    	{% endif %}
-				    		</td>
-				    	</tr>
-				    	
-				    </tbody>
-	    		</table>
-	    	</div>
-		</div>
+			    			{% if contact.reseau is empty %}
+					    		-
+					    	{% else %}
+								{{ contact.reseau.valeur }}
+					    	{% endif %}
+			    		</td> 
+			    	</tr>
+			    	<tr>
+			    		<td>Origine :</td>  
+			    		<td id="contact-origine">
+			    			{% for type in contact.settings if type.parametre == 'TYPE' %}
+			    			
+			    			{% endfor %}
+			    			{% if contact.origine is empty %}
+					    		-
+					    	{% else %}
+								{{ contact.origine.valeur }}	
+					    	{% endif %}
+			    		</td>
+			    	</tr>
+			    	
+			    </tbody>
+    		</table>
+    	</div>
+	</div>
 
-		 <div class="row">
-	    	<div class="col-md-12">
-	    		<hr />
-	    	</div>
+	 <div class="row">
+    	<div class="col-md-12">
+    		<hr />
+    	</div>
+    </div>
+
+	<div class="row">
+    	<div class="col-md-6">
+     		<table class="contact-view-table">
+		    	<tbody>
+		    		<tr>
+			    		<td>Newsletter</td>  
+			    		<td id="contact-newsletter">
+							{% if contact.newsletter == true %}
+					    		<span class="glyphicon glyphicon-ok"></span>
+					    	{% endif %}	    	
+					    </td> 
+					</tr>
+		    		<tr>
+			    		<td>Carte de voeux</td>  
+			    		<td id="contact-carte-voeux">
+							{% if contact.carteVoeux == true %}
+					    		<span class="glyphicon glyphicon-ok"></span>
+					    	{% endif %}	    	
+					    </td> 
+					</tr>
+		    	</tbody>
+		    </table>
 	    </div>
-
-		<div class="row">
-	    	<div class="col-md-6">
-	     		<table class="contact-view-table">
-			    	<tbody>
-    		    		<tr>
-    			    		<td>Newsletter</td>  
-    			    		<td id="contact-newsletter">
-    							{% if contact.newsletter == true %}
-    					    		<span class="glyphicon glyphicon-ok"></span>
-    					    	{% endif %}	    	
-    					    </td> 
-    					</tr>
-    		    		<tr>
-    			    		<td>Carte de voeux</td>  
-    			    		<td id="contact-carte-voeux">
-    							{% if contact.carteVoeux == true %}
-    					    		<span class="glyphicon glyphicon-ok"></span>
-    					    	{% endif %}	    	
-    					    </td> 
-    					</tr>
-			    	</tbody>
-			    </table>
-		    </div>
-		    <div class="col-md-6">
-	     		<table class="contact-view-table">
-			    	<tbody>
-			    		<tr>
-    			    		<td>Ne pas envoyer newsletter</td>  
-    			    		<td>
-    							{% if contact.rejetNewsletter == true %}
-    					    		<span class="glyphicon glyphicon-ok"></span>
-    					    	{% endif %}	    	
-    					    </td> 
-    					</tr>
-    		    		<tr>
-    			    		<td>Ne pas envoyer emailings</td>  
-    			    		<td>
-    							{% if contact.rejetEmail == true %}
-    					    		<span class="glyphicon glyphicon-ok"></span>
-    					    	{% endif %}	    	
-    					    </td> 
-    					</tr>
-			    	</tbody>
-			    </table>
-		    </div>
-	   </div>
-
-	    <div class="row">
-	    	<div class="col-md-12">
-	    		<hr />
-	    	</div>
+	    <div class="col-md-6">
+     		<table class="contact-view-table">
+		    	<tbody>
+		    		<tr>
+			    		<td>Ne pas envoyer newsletter</td>  
+			    		<td>
+							{% if contact.rejetNewsletter == true %}
+					    		<span class="glyphicon glyphicon-ok"></span>
+					    	{% endif %}	    	
+					    </td> 
+					</tr>
+		    		<tr>
+			    		<td>Ne pas envoyer emailings</td>  
+			    		<td>
+							{% if contact.rejetEmail == true %}
+					    		<span class="glyphicon glyphicon-ok"></span>
+					    	{% endif %}	    	
+					    </td> 
+					</tr>
+		    	</tbody>
+		    </table>
 	    </div>
+   </div>
 
-	   <div class="row">
-	    	<div class="col-md-12">
-	    		<hr />
-	    		<table class="contact-view-table">
-	    			<tbody>
-	    				<tr>
-				    		<td>Description</td> 
-				    		<td>
-				    			{% if contact.description is empty %}
-						    		-
-						    	{% else %}
-									{{ contact.description|raw }}	
-						    	{% endif %}
-				    		</td> 
-			    		</tr>
-		    		</tbody>
-		    	</table> 
-		    	<hr />
-	    	</div>
-	  </div>
-	   <div class="row">
-	    	<div class="col-md-6">
-	     		<table class="contact-view-table">
-	     			<tbody>
-	     				<tr>
-	     					<td>Créé le</td>  
-				    		<td>
-				    			{{ contact.dateCreation|date("d/m/Y") }}
-				    		</td> 
-	     				</tr>
-	     				<tr>
-	     					<td>Par</td>  
-		    				<td>
-								{{ contact.userCreation }}
-							</td>
-	     				
-	     				</tr>
-	     			</tbody>
-		    	</table>
-		    </div>
-		    <div class="col-md-6">
-		    	<table class="contact-view-table">
-		    		<tbody>
-	     				<tr>
-				    		<td>Modifié le</td>  
-				    		<td id="contact-date-edition">
-				    			{% if contact.dateEdition is empty %}
-						    		Jamais
-						    	{% else %}
-									{{ contact.dateEdition|date("d/m/Y") }}	
-						    	{% endif %}
-				    		</td> 
-			    		</tr>
-			    		<tr>
-		    			{% if contact.userEdition is not empty %}
-				    		<td>Par</td>  
-		    				<td id="contact-user-edition">
-								{{ contact.userEdition }}
-							</td>
-				    	{% endif %}
-			    		</tr>
-			    	</tbody>
-	    		</table>
-	    	</div>
-	   </div>
+    <div class="row">
+    	<div class="col-md-12">
+    		<hr />
+    	</div>
+    </div>
 
-	  {{ include('crm/opportunite/crm_opportunite_liste_part.html.twig', {'arr_opportunites': arr_opportunites, 'div_id': 'table_opportunites', 'id_to_use': contact.id, 'id_origine_type': 'contact'}) }}
-	  {{ include('crm/devis/crm_devis_liste_part.html.twig', {'arr_devis': arr_devis, 'div_id': 'table_devis'}) }}
-	  {{ include('crm/facture/crm_facture_liste_part.html.twig', {'arr_facture': arr_factures, 'div_id': 'table_factures'}) }}
-  	  {{ include('crm/priseContact/crm_prise_contact_liste_part.html.twig', {'contact': contact, 'div_id': 'table_prises_contact'}) }}
-  	  {{ include('emailing/contact/emailing_liste_part.html.twig', {'contact': contact, 'div_id': 'table_emailing'}) }}
+   <div class="row">
+    	<div class="col-md-12">
+    		<hr />
+    		<table class="contact-view-table">
+    			<tbody>
+    				<tr>
+			    		<td>Description</td> 
+			    		<td>
+			    			{% if contact.description is empty %}
+					    		-
+					    	{% else %}
+								{{ contact.description|raw }}	
+					    	{% endif %}
+			    		</td> 
+		    		</tr>
+	    		</tbody>
+	    	</table> 
+	    	<hr />
+    	</div>
+  </div>
+
+   <div class="row">
+    	<div class="col-md-6">
+     		<table class="contact-view-table">
+     			<tbody>
+     				<tr>
+     					<td>Créé le</td>  
+			    		<td>
+			    			{{ contact.dateCreation|date("d/m/Y") }}
+			    		</td> 
+     				</tr>
+     				<tr>
+     					<td>Par</td>  
+	    				<td>
+							{{ contact.userCreation }}
+						</td>
+     				
+     				</tr>
+     			</tbody>
+	    	</table>
+	    </div>
+	    <div class="col-md-6">
+	    	<table class="contact-view-table">
+	    		<tbody>
+     				<tr>
+			    		<td>Modifié le</td>  
+			    		<td id="contact-date-edition">
+			    			{% if contact.dateEdition is empty %}
+					    		Jamais
+					    	{% else %}
+								{{ contact.dateEdition|date("d/m/Y") }}	
+					    	{% endif %}
+			    		</td> 
+		    		</tr>
+		    		<tr>
+	    			{% if contact.userEdition is not empty %}
+			    		<td>Par</td>  
+	    				<td id="contact-user-edition">
+							{{ contact.userEdition }}
+						</td>
+			    	{% endif %}
+		    		</tr>
+		    	</tbody>
+    		</table>
+    	</div>
+   </div>
+
+  	{{ include('crm/opportunite/crm_opportunite_liste_part.html.twig', {'arr_opportunites': arr_opportunites, 'div_id': 'table_opportunites', 'id_to_use': contact.id, 'id_origine_type': 'contact'}) }}
+  	{{ include('crm/devis/crm_devis_liste_part.html.twig', {'arr_devis': arr_devis, 'div_id': 'table_devis'}) }}
+  	{{ include('crm/facture/crm_facture_liste_part.html.twig', {'arr_facture': arr_factures, 'div_id': 'table_factures'}) }}
+  	{{ include('crm/priseContact/crm_prise_contact_liste_part.html.twig', {'contact': contact, 'div_id': 'table_prises_contact'}) }}
+  	{{ include('emailing/contact/emailing_liste_part.html.twig', {'contact': contact, 'div_id': 'table_emailing'}) }}
 	  
 {% endblock %}
 {% block additionalModals %}
@@ -507,6 +511,7 @@
 			</div>
 		</div>
 	</div>
+	
 	<div id="ModalAlert" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalAlert" aria-hidden="true" data-focus-on="input:first">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -528,9 +533,9 @@
 <script>
 	/* Create a fixed menu on scroll for /voir */
 		$(document).ready(function() {
-		var positionElementInPage = $('#compte_details').offset().top;
-		$(window).scroll(
-			 function() {
+			var positionElementInPage = $('#compte_details').offset().top;
+			$(window).scroll(
+				function() {
 			        if ($(window).scrollTop() >= positionElementInPage) {
 			            // fixed
 			            $('#compte_details').addClass("fixed-top");
@@ -539,7 +544,7 @@
 			            $('#compte_details').removeClass("fixed-top");
 			        }
 			    }
-		);
+			);
 		});
 </script>
 

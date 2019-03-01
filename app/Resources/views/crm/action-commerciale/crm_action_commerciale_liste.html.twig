@@ -9,18 +9,18 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 center-mobile">
             <h1>Actions commerciales</h1>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12">
-                {% include 'crm/action-commerciale/crm_action_commerciale_submenu.html.twig' %}
+            {% include 'crm/action-commerciale/crm_action_commerciale_submenu.html.twig' %}
         </div>
     </div>
 
-    <div class="row" class="spacer-top">
+    <div class="row spacer-top hidden-xs">
         <div class="col-md-2"></div>
         <div class="col-md-4">
             <h3>Répartition par probabilité</h3>
@@ -33,7 +33,7 @@
         </div>
         <div class="col-md-2"></div>
     </div>
-    <div class="row">
+    <div class="row hidden-xs">
         <div class="col-md-2"></div>
         <div class="col-md-4">
             <h3>Répartition par type {{ 'now'|date('Y') }}</h3>
@@ -48,7 +48,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 center-mobile spacer-top">
             <p>
                 <a target='_blank' href="{{ path('crm_action_commerciale_ajouter') }}" class="btn btn-success">
                     <span class="glyphicon glyphicon-plus"></span>
@@ -59,7 +59,7 @@
     </div>
 
      <div  class="row well">
-        <div class="col-md-6" id="action-commerciale-filter-date">
+        <div class="col-md-6 col-xs-12" id="action-commerciale-filter-date">
             <p><strong>Date</strong></p>
             <input type="radio" name="filter_date" id="all" class="filter_date" value="{{ filterDateNone }}"
                    checked />
@@ -84,7 +84,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-xs-12 spacer-top-mobile">
             <p><strong>Etat</strong></p>
             <input type="radio" name="filtre_etat" value="all" class="filte" /> Toutes les lignes<br />
             <input type="radio" name="filtre_etat" value="ongoing" class="filte" /> En cours<br />
@@ -92,7 +92,7 @@
             <input type="radio" name="filtre_etat" value="lost" class="filte" /> Perdues<br />
           
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-xs-12 spacer-top-mobile">
             <p><strong>Gestionnaire de projet</strong></p>
             <select class="form-control" id="select-gestionnaire">
                 <option value="all">Tous</option>
@@ -111,13 +111,13 @@
                 <tr>
                     <th class="col-md-3">Objet</th>
                     <th class="col-md-1">Date</th>
-                    <th class="col-md-1">Numéro du devis</th>
-                    <th class="col-md-1">Bon de commande</th>
+                    <th class="col-md-1 hidden-xs">Numéro du devis</th>
+                    <th class="col-md-1 hidden-xs">Bon de commande</th>
                     <th class="col-md-1">Montant</th>
                     <th class="col-md-2">Organisation</th>
-                    <th class="col-md-1 center">AO</th>
-                    <th class="col-md-1 center">Etat</th>
-                    <th class="col-md-1 center">Actions</th>
+                    <th class="col-md-1 center hidden-xs">AO</th>
+                    <th class="col-md-1 center hidden-xs">Etat</th>
+                    <th class="col-md-1 center hidden-xs">Actions</th>
                 </tr>
                 </thead>
             </table>
@@ -203,17 +203,19 @@
                     }, {
                         "data": "date"
                     }, {
-                        "data": "numero_devis"
+                        "data": "numero_devis", "class" : "hidden-xs"
                     },{
-                        "data": "bon_commande"
+                        "data": "bon_commande", "class" : "hidden-xs"
                     },{
                         "data": "montant"
                     }, {
                         "data": "compte"
                     }, {
-                        "data": "appelOffre"
+                        "data": "appelOffre", "class" : "hidden-xs"
                     }, {
-                        "data": "etat"
+                        "data": "etat", "class" : "hidden-xs"
+                    }, {
+                        "class" : "hidden-xs"
                     }
                 ],
                 "columnDefs": [

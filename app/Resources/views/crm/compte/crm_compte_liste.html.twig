@@ -2,7 +2,7 @@
 
 {% block content %}
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-12 center-mobile">
 			<h1>Organisations</h1>
 		</div>
 	</div>
@@ -14,7 +14,7 @@
 	</div>
 
 	<div class="row spacer-top">
-		<div class="col-md-12">
+		<div class="col-md-12 center-mobile">
 			<p>
 				<a target='_blank' href="{{ path('crm_compte_ajouter') }}" class="btn btn-success">
 					<span class="glyphicon glyphicon-plus"></span> Ajouter
@@ -31,7 +31,7 @@
 					<th>Nom</th>
 					<th>Ville, région et pays</th>
 					<th>Téléphone</th>
-					<th>Actions</th>
+					<th clas="hidden-xs">Actions</th>
 				</tr>
 				</thead>
 
@@ -94,9 +94,8 @@
 							return s;
 						}
 					},
-					//{ "data": "ville" },
-					// { "data": "pays" },
 					{ "data": "telephone" },
+					{ "class": "hidden-xs" },
 				],
 				fnDrawCallback: function () {
 					$( 'a', this.fnGetNodes() ).tooltip( {
@@ -123,6 +122,20 @@
 							return '<a target="_blank" href="voir/'+row['id']+'">'+data+'</a>';
 						},
 						"targets": 0
+					},
+					{
+						// The `data` parameter refers to the data for the cell (defined by the
+						// `data` option, which defaults to the column being worked with, in
+						// this case `data: 0`.
+						"render": function ( data, type, row ) {
+							var s = '';
+							if(data){
+								s= '<a href="tel:'+row['telephone']+'">'+row['telephone']+'</a>';
+							}
+							
+							return s;
+						},
+						"targets": 2
 					},
 					{
 						// The `data` parameter refers to the data for the cell (defined by the

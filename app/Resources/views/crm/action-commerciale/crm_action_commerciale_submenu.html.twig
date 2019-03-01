@@ -1,5 +1,5 @@
 {% block submenu %}
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs nav-justified">
       	<li {% if app.request.pathInfo == "/crm/action-commerciale/liste/"  %} class="active" {% endif %}>
          	<a href="{{ path('crm_action_commerciale_liste') }}">Actions commerciales</a>
      	</li>

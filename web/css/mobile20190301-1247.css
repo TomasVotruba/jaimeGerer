@@ -22,6 +22,14 @@
 	    border-radius: 6px;
 	}
 
+	.spacer-top-mobile{
+		margin-top: 15px;
+	}
+
+	.block-mobile{
+		display: block;
+	}
+
 	#login_form input[type=text],
 	#login_form input[type=password] {
 	    line-height: 30px;
@@ -232,7 +240,7 @@
 	}
 
 
-	#contact-name{
+	#contact-name, #compte-name{
 		float: none !important;
 	}
 
@@ -240,5 +248,21 @@
 		top: 60px;
 	}
 
+	.produit-mobile{
+		margin-bottom: 30px;
+	}
+
+	#devis-calcul-wrapper, #facture-calcul-wrapper{
+		width: 100% !important;
+		text-align: left !important;
+	}
+
+	#devis-calcul-wrapper .form-group, #facture-calcul-wrapper .form-group{
+		margin-left: 30%;
+	}
+
+	.devis-label, .facture-label{
+		width: 100px !important;
+	}
 
 }

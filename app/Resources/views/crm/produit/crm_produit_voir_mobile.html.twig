@@ -1,0 +1,40 @@
+<div class="hidden-md">
+	<strong>{{ produit.type }} : {{ produit.nom }}</strong>
+</div>
+<div class="produit-row hidden-md">
+	<i class="s">{{ produit.description|raw }}</i>
+</div>
+<div class="hidden-md produit-mobile">
+	<table>
+		<thead>
+			<tr>
+				<th class="col-md-2">Tarif unitaire (€)</th>
+				<th class="col-md-2">Quantité</th>
+				<th class="col-md-2">Montant (€)</th>
+				<th class="col-md-2">Remise (€)</th>
+				<th class="col-md-2">Total (€)</th>
+			</tr>	
+		</thead>
+		<tbody>
+			<tr>
+				<td class="col-md-2">{{ produit.tarifUnitaire }}</td>
+				<td class="col-md-2">{{ produit.quantite }}</td>
+				<td class="col-md-2">
+					{{ produit.montant }}
+				</td>
+				<td class="col-md-2">
+					{% if produit.remise is null %}
+						-
+					{% else %}
+						{{ produit.remise }}
+					{% endif %}
+				</td>
+				<td class="col-md-2">
+					{{ produit.total }}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<hr />
+
