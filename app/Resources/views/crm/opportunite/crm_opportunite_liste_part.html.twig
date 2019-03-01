@@ -21,9 +21,9 @@
 				<tr>
 					<th>Nom</th>
 					<th>Montant</th>
-					<th>Probabilité</th>
+					<th class="hidden-xs">Probabilité</th>
 					<th>Date</th>
-					<th>Actions</th>
+					<th class="hidden-xs">Actions</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -35,13 +35,13 @@
 						<td>
 							{{ opportunite.montant }} &euro;
 						</td>
-						<td>
+						<td class="hidden-xs">
 							{{ opportunite.probabilite.valeur }}
 						</td>
 						<td>
 							{{ opportunite.date|date("d/m/Y") }}
 						</td>
-						<td>
+						<td class="hidden-xs">
 							<a target='_blank' href="{{ path('crm_action_commerciale_voir', {'id' : opportunite.id }) }}" class="btn btn-xs btn-info" ​data-toggle="tooltip-btn-xs" title="Voir">
 								<span class="glyphicon glyphicon-eye-open"></span>
 							</a>

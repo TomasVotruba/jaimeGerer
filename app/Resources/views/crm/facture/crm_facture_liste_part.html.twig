@@ -22,9 +22,9 @@
 					<th>Objet</th>
 					<th>Numéro de facture</th>
 					<th>Total</th>
-					<th>Date de création</th>
-					<th>Etat</th>
-					<th>Actions</th>
+					<th class="hidden-xs">Date de création</th>
+					<th class="hidden-xs">Etat</th>
+					<th class="hidden-xs">Actions</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -43,13 +43,13 @@
 							<i class="small">{{ facture.Totaux().TTC }} € TTC</i>
 						</td>
 
-						<td>
+						<td class="hidden-xs">
 							{{ facture.dateCreation|date('d/m/Y') }}
 						</td>
-						<td>
+						<td class="hidden-xs">
 							{{ facture.formattedEtat }}
 						</td>
-						<td>
+						<td class="hidden-xs">
 							<a target='_blank' href="{{ path('crm_facture_voir', {'id' : facture.id}) }}" class="btn btn-xs btn-info" ​data-toggle="tooltip-btn-xs" title="Voir">
 								<span class="glyphicon glyphicon-eye-open"></span>
 							</a>
@@ -85,9 +85,9 @@
 						<th>Objet</th>
 						<th>Numéro de facture</th>
 						<th>Total</th>
-						<th>Date de création</th>
-						<th>Etat</th>
-						<th>Actions</th>
+						<th class="hidden-xs">Date de création</th>
+						<th class="hidden-xs">Etat</th>
+						<th class="hidden-xs">Actions</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -106,13 +106,13 @@
 								<i class="small">{{ facture.Totaux().TTC }} € TTC</i>
 							</td>
 
-							<td>
+							<td class="hidden-xs">
 								{{ facture.dateCreation|date('d/m/Y') }}
 							</td>
-							<td>
+							<td class="hidden-xs">
 								{{ facture.formattedEtat }}
 							</td>
-							<td>
+							<td class="hidden-xs">
 								<a target='_blank' href="{{ path('crm_facture_voir', {'id' : facture.id}) }}" class="btn btn-xs btn-info" ​data-toggle="tooltip-btn-xs" title="Voir">
 									<span class="glyphicon glyphicon-eye-open"></span>
 								</a>

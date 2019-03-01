@@ -14,8 +14,8 @@
 				<tr>
 					<th>Contacté par</th>
 					<th>Date</th>
-					<th>Type</th>
-					<th>Infos</th>
+					<th class="hidden-xs">Type</th>
+					<th >Infos</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -27,7 +27,7 @@
 						<td>
 							{{ prise_contact.date|date('d/m/Y') }}
 						</td>
-						<td>
+						<td class="hidden-xs">
 							{% if prise_contact.type == "PHONE" %}
 								Téléphone
 							{% elseif prise_contact.type == "RDV" %}

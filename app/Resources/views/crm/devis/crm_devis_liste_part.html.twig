@@ -13,9 +13,9 @@
 					<th>Objet</th>
 					<th>Numéro de devis</th>
 					<th>Total</th>
-					<th>Date de création</th>
-					<th>Etat</th>
-					<th>Actions</th>
+					<th class="hidden-xs">Date de création</th>
+					<th class="hidden-xs">Etat</th>
+					<th class="hidden-xs">Actions</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -34,13 +34,13 @@
 							<i class="small">{{ devis.Totaux().TTC }} € TTC</i>
 						</td>
 
-						<td>
+						<td class="hidden-xs">
 							{{ devis.dateCreation|date('d/m/Y') }}
 						</td>
-						<td>
+						<td class="hidden-xs">
 							{{ devis.formattedEtat }}
 						</td>
-						<td>
+						<td class="hidden-xs">
 							<a target='_blank' href="{{ path('crm_devis_voir', {'id' : devis.id}) }}" class="btn btn-xs btn-info" ​data-toggle="tooltip-btn-xs" title="Voir">
 								<span class="glyphicon glyphicon-eye-open"></span>
 							</a>

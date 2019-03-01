@@ -16,8 +16,8 @@
 				<thead>
 				<tr>
 					<th>Campagne</th>
-					<th>Liste</th>
-					<th>Date d'envoi</th>
+					<th class="hidden-xs">Liste</th>
+					<th class="hidden-xs">Date d'envoi</th>
 					<th class="center">Ouverture</th>
 					<th class="center">Clic</th>
 				</tr>
@@ -36,10 +36,10 @@
 									<span class="label label-success">Envoyée</span>
 							{% endif %}
 						</td>
-						<td>
+						<td class="hidden-xs">
 							{{ campagneContact.campagne.nomRapport }}
 						</td>
-						<td>
+						<td class="hidden-xs">
 							{{ campagneContact.campagne.dateEnvoi ? campagneContact.campagne.dateEnvoi|date('d/m/Y') : '-' }}
 						</td>
 						<td class="center">

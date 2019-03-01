@@ -124,18 +124,19 @@
 						"render": function ( data, type, row ) {
 							var s="";
 							var br = false;
-							// if(data){
-							// 	s+=data;
-							// 	br = true;
-							// }
+
+							if(row['telephoneFixe']){
+								s+= '<a href="tel:'+row['telephoneFixe']+'">'+row['telephoneFixe']+'</a>';
+								br = true;
+							}
 
 							if(row['telephonePortable']){
-								s+= (br ? '<br />' : '') + row['telephonePortable'];
+								s+= (br ? '<br />' : '') + '<a href="tel:'+row['telephonePortable']+'">'+row['telephonePortable']+'</a>';
 								br = true;
 							}
 
 							if(row['email']){
-								s+= (br ? '<br />' : '') + row['email'];
+								s+= (br ? '<br />' : '') + '<a href="mailto:'+row['email']+'">'+row['email']+'</a>';
 								if(row['bounce'] == "BOUNCE"){
 									s+= " <span class='label label-danger'>Bounce</span>";
 								} else if(row['bounce'] == "WARNING"){
