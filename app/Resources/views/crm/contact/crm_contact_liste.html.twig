@@ -35,8 +35,8 @@
 					<th>Nom</th>
 					<th>Organisation et titre</th>
 					<th>Téléphone et email</th>
-					<th>Ville, région et pays</th>
-					<th>Actions</th>
+					<th class="hidden-xs">Ville, région et pays</th>
+					<th class="hidden-xs">Actions</th>
 				</tr>
 				</thead>
 
@@ -69,11 +69,11 @@
 					type: "post",  
 				},
 				"columns": [
-					{ "data": "nom" },
+					{ "data": "nom"},
 					{ "data": "compte_nom" },
 					{ "data": "telephoneFixe" },
-					{ "data": "email" },
-					{ "data": "region" },
+					{ "data": "region", "className" : "hidden-xs"  },
+					{ "className" : "hidden-xs"  },
 				],
 				fnDrawCallback: function () {
 					$( 'a', this.fnGetNodes() ).tooltip( {
@@ -124,10 +124,10 @@
 						"render": function ( data, type, row ) {
 							var s="";
 							var br = false;
-							if(data){
-								s+=data;
-								br = true;
-							}
+							// if(data){
+							// 	s+=data;
+							// 	br = true;
+							// }
 
 							if(row['telephonePortable']){
 								s+= (br ? '<br />' : '') + row['telephonePortable'];
@@ -152,7 +152,7 @@
 						// `data` option, which defaults to the column being worked with, in
 						// this case `data: 0`.
 						"render": function ( data, type, row ) {
-							var s="";
+							var s='';
 							var br = false;
 							if(data){
 								//s+=data;
@@ -172,7 +172,7 @@
 							if(row['pays']){
 								s+= (br ? '<br />' : '') + row['pays'];
 							}
-
+	
 							return s;
 						},
 						"targets": 3
