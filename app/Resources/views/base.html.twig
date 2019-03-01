@@ -16,17 +16,16 @@
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/datatables/media/css/buttons.bootstrap.min.css') }}"/>
            
             <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.datetimepicker.css') }}"/>
-            <link rel="stylesheet" type="text/css" href="{{ asset('css/base20190301-1247.css') }}"/>
-            <link rel="stylesheet" type="text/css" href="{{ asset('css/mobile20190301-1247.css') }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/base20190301-1739.css') }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/mobile20190301-1739.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/jquery-ui/jquery-ui.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/bootstrap3-editable/css/bootstrap-editable.css') }}" />
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/bootstrap-toggle/bootstrap-toggle.min.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/jquery-typeahead/dist/jquery.typeahead.min.css') }}">
-                <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css">
+            <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css">
 
             <!-- fonts -->
             <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
-
         {% endblock %}
 
         {% block javascripts %}
@@ -147,7 +146,7 @@
                                         <a href="#" class="inactive">
                                             <img src="{{ asset('images/assets/recrutement.png') }}" alt="Recrutement"/>
                                         </a>
-                                        <a href="{{ path('ndf_liste') }}" class="active">
+                                        <a href="{{ path('ndf_recus_liste') }}" class="active">
                                             <img src="{{ asset('images/assets/ndf.png') }}" alt="Notes de frais"/>
                                         </a>
                                         {% if app.user.company.id == 1 %}

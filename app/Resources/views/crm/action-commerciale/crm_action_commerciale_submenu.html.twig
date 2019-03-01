@@ -1,14 +1,14 @@
 {% block submenu %}
-    <ul class="nav nav-tabs nav-justified">
-      	<li {% if app.request.pathInfo == "/crm/action-commerciale/liste/"  %} class="active" {% endif %}>
+    <ul class="nav nav-tabs center-mobile">
+      	<li class=" col-xs-4 {% if app.request.pathInfo == "/crm/action-commerciale/liste/" %} active {% endif %}">
          	<a href="{{ path('crm_action_commerciale_liste') }}">Actions commerciales</a>
      	</li>
  
-      	<li {% if app.request.pathInfo == "/crm/bon_commande/liste"  %} class="active" {% endif %}>
+      	<li class=" col-xs-4 {% if app.request.pathInfo == "/crm/bon_commande/liste"  %} active {% endif %}">
         	<a href="{{ path('crm_bon_commande_liste') }}" >Bons de commande</a>
       	</li>
 
-       	<li {% if app.request.pathInfo == "/crm/competition-commerciale"  %} class="active" {% endif %}>
+       	<li class=" col-xs-4 {% if app.request.pathInfo == "/crm/competition-commerciale"  %} active {% endif %}"">
         	<a href="{{ path('crm_competition_commerciale') }}" >Compétition commerciale</a>
       	</li>
       

@@ -2,13 +2,13 @@
 	<link rel="stylesheet" href="{{ asset('lib/jquery-file-upload/css/jquery.fileupload.css') }}">
 {% endblock %}
 
-<div class="alert alert-info">
+<div class="alert alert-info center-mobile">
 	<span class="glyphicon glyphicon-info-sign"></span> La date de votre note de frais sera calculée automatiquement à partir de vos reçus.
 </div>
 
 {{ form_start(form) }}
 
-<div class="row">
+<div class="row hidden-xs">
 	<div class="col-md-12">
 		<hr />
 	</div>
@@ -34,35 +34,35 @@
 				</tr>
 			</thead>
 			<tfoot>
-		    <tr>
-		      <th colspan="2" class="align-right">Totaux</th>
-		      <td class="align-right">
-						<span class="total-ht">
-						{% if ndf is defined %}
-							{{ ndf.totalHT|number_format(2,',',' ') }}
-						{% else %}
-							0
-						{% endif %}
-					</span> €</td>
-		      <td class="align-right">
-						<span class="total-tva">
+			    <tr>
+			      <th colspan="2" class="align-right">Totaux</th>
+			      <td class="align-right">
+							<span class="total-ht">
 							{% if ndf is defined %}
-								{{ ndf.totalTVA|number_format(2,',',' ')}}
+								{{ ndf.totalHT|number_format(2,',',' ') }}
 							{% else %}
 								0
 							{% endif %}
 						</span> €</td>
-		      <td class="align-right">
-						<span class="total-ttc">
-							{% if ndf is defined %}
-								{{ ndf.totalTTC|number_format(2,',',' ') }}
-							{% else %}
-								0
-							{% endif %}
-						</span> €
-					</td>
-		    </tr>
-	  	</tfoot>
+			      <td class="align-right">
+							<span class="total-tva">
+								{% if ndf is defined %}
+									{{ ndf.totalTVA|number_format(2,',',' ')}}
+								{% else %}
+									0
+								{% endif %}
+							</span> €</td>
+			      <td class="align-right">
+							<span class="total-ttc">
+								{% if ndf is defined %}
+									{{ ndf.totalTTC|number_format(2,',',' ') }}
+								{% else %}
+									0
+								{% endif %}
+							</span> €
+						</td>
+			    </tr>
+	  		</tfoot>
 			<tbody class="selected-recus">
 				{% if ndf is defined %}
 					{% for recu in ndf.recus %}
@@ -83,65 +83,65 @@
 		</div>
 
 	</div>
+</div>
 
-	<div class="row">
-		<div class="col-md-12">
-			<hr />
-		</div>
+<div class="row hidden-xs">
+	<div class="col-md-12">
+		<hr />
 	</div>
+</div>
 
-	<div class="row">
-		<div class="col-md-12">
-			{{ form_row(form.signatureEmploye) }}
+<div class="row">
+	<div class="col-md-12">
+		{{ form_row(form.signatureEmploye) }}
 
-			{% if app.user.signature is not null %}
-				<p class="green"><span class="glyphicon glyphicon-ok"></span> Vous avez uploadé votre signature</p>
-			{% else %}
-				<div class="alert alert-warning">
-					<span class="glyphicon glyphicon-warning-sign"></span> Vous n'avez pas encore uploadé votre signature sur J'aime Gérer.
-				</div>
-			{% endif %}
-			<p>
-				<img id="signature-img" src="{{ app.request.schemeAndHttpHost }}/web/upload/signature/{{ app.user.id }}/{{ app.user.signature }}" alt="Signature" class="signature-ndf {% if app.user.signature is null %} hidden {% endif %}"/>
-			</p>
-				
-			<p class="red hidden" id="error-signature"></p>
-			<!-- The fileinput-button span is used to style the file input field as button -->
-	        <a class="btn btn-info btn-xs"><span class="fileinput-button">
-	        	Choisir un fichier
-	        	<!-- The file input field used as target for the file upload widget -->
-	        	<input class="fileupload-signature" type="file" name="files[]">
-		    </span></a>
-		    <i class="s">Formats acceptés : .jpg, .jpeg, .png, .bmp - Taille (en pixels) : entre 50x50 et 300x300 - Poids max 1 Mo</i>
-		    <!-- The progress bar -->
-		    <div id="progress-signature" class="progress hidden" style="width:250px; margin: auto; margin-bottom: 20px;">
-		        <div class="progress-bar progress-bar-info progress-bar-striped"></div>
-		    </div>
-
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-12">
-			<hr />
-		</div>
-	</div>
-
-
-	<div class="row">
-		<div class="col-md-6">
-			<div class="form-group center">
-				<p><strong><i>Vous souhaitez pouvoir modifier cette note de frais ultérieurement</i></strong></p>
-				{{ form_row(form.draft, {'attr' : {'class' : 'btn btn-success submit'} } ) }}
+		{% if app.user.signature is not null %}
+			<p class="green"><span class="glyphicon glyphicon-ok"></span> Vous avez uploadé votre signature</p>
+		{% else %}
+			<div class="alert alert-warning">
+				<span class="glyphicon glyphicon-warning-sign"></span> Vous n'avez pas encore uploadé votre signature sur J'aime Gérer.
 			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="form-group center">
-				<p><strong><i>Vous avez terminé cette note de frais</i></strong></p>
-				{{ form_row(form.validate, {'attr' : {'class' : 'btn btn-success submit'} } ) }}
-			</div>
+		{% endif %}
+		<p>
+			<img id="signature-img" src="{{ app.request.schemeAndHttpHost }}/web/upload/signature/{{ app.user.id }}/{{ app.user.signature }}" alt="Signature" class="signature-ndf {% if app.user.signature is null %} hidden {% endif %}"/>
+		</p>
+			
+		<p class="red hidden" id="error-signature"></p>
+		<!-- The fileinput-button span is used to style the file input field as button -->
+        <a class="btn btn-info btn-xs"><span class="fileinput-button">
+        	Choisir un fichier
+        	<!-- The file input field used as target for the file upload widget -->
+        	<input class="fileupload-signature" type="file" name="files[]">
+	    </span></a>
+	    <i class="s">Formats acceptés : .jpg, .jpeg, .png, .bmp - Taille (en pixels) : entre 50x50 et 300x300 - Poids max 1 Mo</i>
+	    <!-- The progress bar -->
+	    <div id="progress-signature" class="progress hidden" style="width:250px; margin: auto; margin-bottom: 20px;">
+	        <div class="progress-bar progress-bar-info progress-bar-striped"></div>
+	    </div>
+
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<hr />
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="form-group center">
+			<p><strong><i>Vous souhaitez pouvoir modifier cette note de frais ultérieurement</i></strong></p>
+			{{ form_row(form.draft, {'attr' : {'class' : 'btn btn-primary submit btn-block-mobile'} } ) }}
 		</div>
 	</div>
+	<div class="col-md-6">
+		<div class="form-group center">
+			<p><strong><i>Vous avez terminé cette note de frais</i></strong></p>
+			{{ form_row(form.validate, {'attr' : {'class' : 'btn btn-success submit btn-block-mobile'} } ) }}
+		</div>
+	</div>
+</div>
 
 {{ form_rest(form) }}
 {{ form_end(form) }}

@@ -1,10 +1,10 @@
 {% block submenu %}
-    <ul class="nav nav-tabs nav-justified">
- 	 <li {% if app.request.pathInfo == "/crm/contact/liste"  %}class=" active"{% endif %}>
-          <a href="{{ path('crm_contact_liste') }}" >Liste des contacts</a>
+    <ul class="nav nav-tabs center-mobile">
+ 	 <li class="col-xs-6 {% if app.request.pathInfo == "/crm/contact/liste" %} active {% endif %}">
+          <a href="{{ path('crm_contact_liste') }}" ><span class="glyphicon glyphicon-user"></span> Contacts</a>
       </li>
-      <li {% if app.request.pathInfo == "/crm/compte/liste"  %}class="active"{% endif %}>
-          <a href="{{ path('crm_compte_liste') }}" >Liste des organisations</a>
+      <li class="col-xs-6 {% if app.request.pathInfo == "/crm/compte/liste" %} active {% endif %}">
+          <a href="{{ path('crm_compte_liste') }}" ><span class="glyphicon glyphicon-briefcase"></span> Organisations</a>
       </li>   
     </ul>
 {% endblock %}

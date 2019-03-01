@@ -2,13 +2,13 @@
 
 {% block content %}
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-12 center-mobile">
 			<h1>Mes reçus</h1>
 		</div>
 	</div>
 
 	<div class="row spacer-top">	
-		<div class="col-md-12">
+		<div class="col-md-12 center-mobile">
 			<p>
 				<a class="btn btn-success" href="{{ path('ndf_recu_ajouter') }}">
 					<span class="glyphicon glyphicon-plus"></span> Ajouter un reçu
@@ -29,11 +29,11 @@
 						<th class="col-md-1">Montant HT</th>
 						<th class="col-md-1">Montant TVA</th>
 						<th class="col-md-1">Montant TTC</th>
-						<th class="col-md-2">Compte comptable</th>
-						<th class="col-md-1">Analytique</th>
-						<th class="col-md-1">Libelle</th>
-						<th class="col-md-1">Upload</th>
-						<th class="col-md-1">Actions</th>
+						<th class="col-md-2 hidden-xs">Compte comptable</th>
+						<th class="col-md-1 hidden-xs">Analytique</th>
+						<th class="col-md-1 hidden-xs">Libelle</th>
+						<th class="col-md-1 hidden-xs">Upload</th>
+						<th class="col-md-1 hidden-xs">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -45,7 +45,7 @@
 								<td>{{ recu.montantHT|number_format(2,',',' ') }} €</td>
 								<td>{{ recu.tva|number_format(2,',',' ') }} €</td>
 								<td>{{ recu.montantTTC|number_format(2,',',' ') }} €</td>
-								<td>
+								<td class="hidden-xs">
 									{% if recu.compteComptable is not null %}
 										{{ recu.compteComptable.nom }}
 									{% else %}
@@ -61,7 +61,7 @@
 										</p>
 									{% endif %}
 								</td>
-								<td>
+								<td class="hidden-xs">
 									{% if recu.analytique is not null %}
 										{{ recu.analytique.valeur }}
 									{% else %}
@@ -80,9 +80,9 @@
 							{% else %}
 								<td colspan="7" class="center"><i><span class="glyphicon glyphicon-warning-sign"></span> Ce reçu n'a pas encore été traité.</i></td>
 							{% endif %}
-							<td>{{ recu.libelle }}</td>
-							<td>Le {{ recu.dateCreation|date('d/m/Y') }}<br />par {{ recu.userCreation }}</td>
-							<td>
+							<td class="hidden-xs">{{ recu.libelle }}</td>
+							<td class="hidden-xs">Le {{ recu.dateCreation|date('d/m/Y') }}<br />par {{ recu.userCreation }}</td>
+							<td class="hidden-xs">
 								<a href="{{ path('ndf_recu_modifier', {'id' : recu.id }) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>
 								<a href="{{ path('ndf_recu_supprimer', {'id' : recu.id }) }}" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
 							</td>
