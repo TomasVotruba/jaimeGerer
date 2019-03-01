@@ -110,6 +110,10 @@ dd.list {
 	max-height: 150px;
 }
 
+#contact-name{
+	float: left;
+}
+
 .contact-view-table tr td:first-child{
 	font-weight: bold;
 	width: 150px;

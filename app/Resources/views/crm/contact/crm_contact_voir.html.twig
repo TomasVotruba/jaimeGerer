@@ -2,23 +2,24 @@
 
 {% block content %}
 
-	<div class="row">
+	<div class="row hidden-xs">
 		<div class="col-md-12 bread-crumb-back">
 		<a href="{{ path('crm_contact_liste') }}" class="small">< Retour à la listes des contacts</a>
 		</div>
 	</div>
 	<div class="row" id="compte_details">
-	    <div class="col-md-6">
-	    		<h1 style="float:left;">{{ contact.prenom }} {{ contact.nom }}
-	    		<a href="{{ path('crm_compte_voir', {'id' : contact.compte.id }) }}" class="small">( {{ contact.compte }} )</a>
-	    			{% if contact.titre is not empty %}
-				    	<span class="l"> - {{ contact.titre }}</span>
-				    {% endif %} 
-	    		</h1>
-	    			
+	    <div class="col-md-6 col-xs-12 center-mobile">
+	    		<h1 id="contact-name">{{ contact.prenom }} {{ contact.nom }}<br />
+		    		<small>
+		    			<strong><a href="{{ path('crm_compte_voir', {'id' : contact.compte.id }) }}">{{ contact.compte }}</a></strong>
+		    			{% if contact.titre is not empty %}
+					    	- {{ contact.titre }}
+					    {% endif %} 
+					</small>
+	    		</h1>	
 	    </div>
 
-		<div class="col-md-6">
+		<div class="col-md-6 col-xs-12">
 		    <p class="group-btn">
 		    	<a href="{{ path('crm_contact_editer', {'id' : contact.id }) }}"  class="btn btn-warning">
 		    		<span class="glyphicon glyphicon-pencil"></span> Modifier
@@ -29,17 +30,17 @@
 		    	<a href="{{ path('crm_contact_ecrire', {'id' : contact.id }) }}"  class="btn {% if contact.email is null %} btn-default not-active {% else %} btn-primary {% endif %}"  data-toggle="modal" data-target="#modal">
 			    	<span class="glyphicon glyphicon-send"></span> Envoyer un message
 			    </a>
-			    <a href="{{ path('crm_contact_verifier_bounce', {'id' : contact.id, 'redirectToContact' : 1 }) }}"  class="btn {% if contact.email is null %} btn-default not-active {% else %} btn-info {% endif %}" >
+			    <a href="{{ path('crm_contact_verifier_bounce', {'id' : contact.id, 'redirectToContact' : 1 }) }}"  class="hidden-xs btn {% if contact.email is null %} btn-default not-active {% else %} btn-info {% endif %}" >
 			    	<span class="glyphicon glyphicon-check"></span> Vérifier adresse email
 			    </a>
 			    {% if fusion %}
-			    	<a href="{{ path('crm_contact_fusionner', {'id' : contact.id }) }}"  class="btn btn-default"  data-toggle="modal" data-target="#modal">
+			    	<a href="{{ path('crm_contact_fusionner', {'id' : contact.id }) }}"  class="hidden-xs btn btn-default"  data-toggle="modal" data-target="#modal">
 				    	<span class="glyphicon glyphicon-transfer"></span> Fusionner
 				    </a>	
 			    {% endif %}
 		    </p>
 	    </div>
-	    <div class="col-md-12">
+	    <div class="col-md-12 hidden-xs">
     		<p>
     			<a href="#opportunites">Actions commerciales du contact</a> - 
     			<a href="#devis">Anciens devis du contact</a> - 
