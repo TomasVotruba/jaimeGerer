@@ -15,11 +15,11 @@
 
 	<div class="row spacer-top">
 		<div class="col-md-12">
-			<p>
-				<a target="_blank" href="{{ path('crm_contact_ajouter') }}" class="btn btn-success">
+			<p class="center-mobile">
+				<a target="_blank" href="{{ path('crm_contact_ajouter') }}" class="btn btn-success btn-lg-mobile">
 					<span class="glyphicon glyphicon-plus"></span> Ajouter
 				</a>
-				<a class="btn btn-info" target="_blank" href="{{ path('crm_contact_import_upload' )}}">
+				<a class="btn btn-info hidden-xs" target="_blank" href="{{ path('crm_contact_import_upload' )}}">
 					Importer des contacts
 				</a>
 			</p>
@@ -34,8 +34,8 @@
 				<tr>
 					<th>Nom</th>
 					<th>Organisation et titre</th>
-					<th>Ville, région et pays</th>
 					<th>Téléphone et email</th>
+					<th>Ville, région et pays</th>
 					<th>Actions</th>
 				</tr>
 				</thead>
@@ -57,25 +57,6 @@
 		$(document).ready( function () {
 			var table = $('#table_contact_list').DataTable({
 				"dom": 'T<"clear">lfrtip',
-				"oTableTools": {
-					"sSwfPath": "/web/lib/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-					"aButtons": [
-						{
-							"sExtends": "csv",
-							"sButtonText": "Excel",
-							"mColumns": [ 0, 1, 2, 3 ],
-							"sFileName": "contacts.csv"
-						},
-						{
-							"sExtends": "pdf",
-							"sButtonText": "PDF",
-							"mColumns": [ 0, 1, 2, 3 ],
-							"sFileName": "contacts.pdf",
-							"sTitle": "Contacts"
-						},
-
-					]
-				},
 				"iDisplayLength": 100,
 				"language" : {
 					"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"
@@ -84,15 +65,15 @@
 				"processing": true,
 				"serverSide": true,
 				"ajax":{
-					url : Routing.generate('crm_contact_liste_ajax'), // json datasource
-					type: "post",  // method  , by default get
+					url : Routing.generate('crm_contact_liste_ajax'),
+					type: "post",  
 				},
 				"columns": [
 					{ "data": "nom" },
 					{ "data": "compte_nom" },
-					{ "data": "region" },
 					{ "data": "telephoneFixe" },
 					{ "data": "email" },
+					{ "data": "region" },
 				],
 				fnDrawCallback: function () {
 					$( 'a', this.fnGetNodes() ).tooltip( {
@@ -144,36 +125,6 @@
 							var s="";
 							var br = false;
 							if(data){
-								//s+=data;
-								br = true;
-							}
-
-							if(row['ville']){
-								s+= row['ville'];
-								br = true;
-							}
-
-							if(row['region']){
-								s+= (br ? '<br />' : '') + row['region'];
-								br = true;
-							}
-
-							if(row['pays']){
-								s+= (br ? '<br />' : '') + row['pays'];
-							}
-
-							return s;
-						},
-						"targets": 2
-					},
-					{
-						// The `data` parameter refers to the data for the cell (defined by the
-						// `data` option, which defaults to the column being worked with, in
-						// this case `data: 0`.
-						"render": function ( data, type, row ) {
-							var s="";
-							var br = false;
-							if(data){
 								s+=data;
 								br = true;
 							}
@@ -190,6 +141,36 @@
 								} else if(row['bounce'] == "WARNING"){
 									s+= " <span class='label label-warning'>Bounce potentiel</span>";
 								}
+							}
+
+							return s;
+						},
+						"targets": 2
+					},
+					{
+						// The `data` parameter refers to the data for the cell (defined by the
+						// `data` option, which defaults to the column being worked with, in
+						// this case `data: 0`.
+						"render": function ( data, type, row ) {
+							var s="";
+							var br = false;
+							if(data){
+								//s+=data;
+								br = true;
+							}
+
+							if(row['ville']){
+								s+= row['ville'];
+								br = true;
+							}
+
+							if(row['region']){
+								s+= (br ? '<br />' : '') + row['region'];
+								br = true;
+							}
+
+							if(row['pays']){
+								s+= (br ? '<br />' : '') + row['pays'];
 							}
 
 							return s;

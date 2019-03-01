@@ -121,7 +121,7 @@ tansition: all ease-in 0.5s;
 }
 
 .main_menu li#social:hover a{
-	color: #6b1723;
+	color: #ec741b;
 	font-weight: bold;
 	transition : all ease-in 0.5s;
 }

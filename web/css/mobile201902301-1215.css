@@ -1,8 +1,24 @@
 @media (max-width:600px){
 	
+	.full-height{
+		height: initial;
+    	margin-bottom: 40px;
+	}
+
 	.btn-block-mobile{
 		display: block;
     	width: 100%;
+	}
+
+	.center-mobile{
+		text-align: center;
+	}
+
+	.btn-lg-mobile{
+	    padding: 10px 16px;
+	    font-size: 18px;
+	    line-height: 1.3333333;
+	    border-radius: 6px;
 	}
 
 	#login_form input[type=text],
@@ -27,6 +43,14 @@
 		width: 100% !important;
 		padding: 10px !important;
 		margin: 0 !important;
+	}
+
+	.wrap-index-head h1{
+		margin: 0;
+	}
+
+	.wrap-content{
+		padding: 15px;
 	}
 
 	h1{
@@ -150,6 +174,46 @@
 		height: 0 !important;
 	}
 
+	/***
+	* Datatables
+	***/
+
+	.table.dataTable{
+		width: 100% !important;
+	}
+
+	.dataTables_wrapper{
+		padding: 0 !important;
+		margin-top: 10px;
+	}
+
+	.dataTables_length, .DTTT_container, .dataTables_filter, .dataTables_dateRange{
+		float: none;
+		width: 100%;
+		min-height: 0;
+		padding: 20px 0 15px 0;
+
+	}
+
+	.dataTables_info{
+		font-size: 0.8em;
+	}
+
+	.dataTables_length{
+		display: none;
+	}
+
+	table.dataTable thead .sorting:after,
+	table.dataTable thead .sorting_asc:after,
+	table.dataTable thead .sorting_desc:after{
+		display: none;
+	}
+
+	table.dataTable thead>tr>th.sorting_asc, 
+	table.dataTable thead>tr>th.sorting_desc, 
+	table.dataTable thead>tr>th.sorting{
+		padding: 10px;
+	}
 
 
 }

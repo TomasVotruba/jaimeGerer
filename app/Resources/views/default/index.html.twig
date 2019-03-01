@@ -7,7 +7,7 @@
 
 
 {% block body %}
-<div class="row center" id="login-logo-wrapper">
+<div class="row center visible-xs" id="login-logo-wrapper" >
 	<div class="col-md-12">
         <img src="{{ asset('images/assets/jaimegerer-logo-250.png') }}" alt="logo" title="J'aime Gérer" />
         <hr />
@@ -17,8 +17,8 @@
 	<div class="row">
 		<div class="col-md-12 center">
 			<div class="wrap-index-head">
-				<h1>{{ random(['Hello', 'Coucou', 'Hola', 'Bienvenue', 'My dear', 'Hooo, mais c\'est', 'Hey', '22, v\'là', 'Bonjour', 'Hey', 'Ho,']) }} {{ app.user.firstname }} !</h1>
-				<p class="l">{{ random(['C\'est toi qui gère !', 'Te revoilà !', 'Je t\'ai manqué ?', 'A nous deux !', 'Go get \'em!', 'Quoi de neuf ?', 'Go go go!']) }}</p>
+				<h1>{{ random(['Hello', 'Coucou', 'Hola', 'Bienvenue', 'My dear', 'Hooo, mais c\'est', 'Hey', 'Bonjour', 'Hey', 'Ho,', 'Yo']) }} {{ app.user.firstname }} !</h1>
+				<p class="l">{{ random(['C\'est toi qui gère !', 'Te revoilà !', 'Je t\'ai manqué ?', 'A nous deux !', 'Go get \'em!', 'Quoi de neuf ?', 'On fait quoi aujourd\'hui ?', 'Welcome back !']) }}</p>
 			</div>
 		</div>
 	</div>
