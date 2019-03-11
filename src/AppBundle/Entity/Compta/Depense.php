@@ -29,7 +29,7 @@ class Depense
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="depenses")
      * @ORM\JoinColumn(nullable=true)
      */
     private $compte;

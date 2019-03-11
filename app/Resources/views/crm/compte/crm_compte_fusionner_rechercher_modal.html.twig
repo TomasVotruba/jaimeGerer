@@ -1,0 +1,74 @@
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Fusionner : "{{ compte.nom }}"</h3>
+</div>
+<div class="modal-body">
+    <h4>Rechercher une organisation à fusionner</h4>        
+    <input type="text" id="search-compte" class="form-control"/>
+    <br>
+    <div class="row">
+        <div id="search-compte-results" class="col-md-12">
+            {# ici seront affichés les résultats de la recherche de comptes à fusionner #}
+        </div>   
+    </div>
+    <br>
+    <div class="row">   
+        <div class="col-md-12">
+            <button id="next-step" style="display:none;" class="btn btn-success">Passer à l'étape suivante</button>
+        </div>
+    </div>        
+</div>
+
+<style>
+    #search-compte-results{
+        max-height: 400px;
+        overflow-y: auto;
+    }            
+</style>        
+        
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Search for some 'comptes' to merge
+        var ajaxSearch;
+        $('#search-compte').on('keyup', function () {
+            $('#next-step').hide();
+            if(ajaxSearch){
+                ajaxSearch.abort();
+            }
+            let search = $(this).val().trim();
+            if(search){
+                $('#search-compte-results').html('recherche...');
+                ajaxSearch = $.ajax({
+                    url: "{{ path('crm_compte_fusionner_rechercher', {'id' : compte.id}) }}",
+                    data: {'search' : search},
+                    success: function (data, status) {
+                        if(status === 'success'){
+                            $('#search-compte-results').html(data);
+                        }else{
+                            $('#search-compte-results').html('');
+                        }
+                    },
+                    error: function(){
+                        $('#search-compte-results').html('');
+                    }
+                });
+            }
+        });
+        
+        // Display the submit btn
+        $(document).on('change', 'input[name=compte-a-fusionner]', function(){
+            $('#next-step').show();
+        });
+        
+        // Open recapitulatif modal
+        $('#next-step').on('click', function(){
+            let idCompteB = $('input[name=compte-a-fusionner]:checked').val();
+            if(idCompteB){
+                $('#modal').toggle();
+                $('#fusionner-recapitulatif-modal').modal({
+                    remote: Routing.generate('crm_compte_fusionner_recapitulatif_modal', {'idCompteA' : {{ compte.id }}, 'idCompteB' : idCompteB})
+                });
+            }
+        });
+    });
+</script>

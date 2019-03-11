@@ -193,14 +193,14 @@ class DocumentPrix
     private $cgv;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="documentPrixs")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
      */
     private $compte;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact", inversedBy="documentsPrix")
      * @ORM\JoinColumn(nullable=true)
      */
     private $contact;
@@ -263,7 +263,7 @@ class DocumentPrix
    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="facture", cascade={"remove"}, orphanRemoval=true)
    */
   private $journalVentes;
-
+  
     /**
      * Get id
      *

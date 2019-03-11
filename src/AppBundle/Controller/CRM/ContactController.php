@@ -4,34 +4,23 @@ namespace AppBundle\Controller\CRM;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityRepository;
 
 use AppBundle\Entity\CRM\Compte;
 use AppBundle\Entity\CRM\Contact;
-use AppBundle\Entity\Settings;
-use AppBundle\Entity\Rapport;
 use AppBundle\Entity\CRM\PriseContact;
 
-use AppBundle\Form\CRM\CompteType;
-use AppBundle\Form\CRM\CompteFilterType;
-use AppBundle\Form\CRM\ContactFusionnerType;
-use AppBundle\Form\CRM\ContactFusionnerEtape2Type;
+use AppBundle\Entity\CRM\ContactRepository;
+
 use AppBundle\Form\CRM\ContactType;
-use AppBundle\Form\CRM\ContactImporterMappingType;
+use AppBundle\Form\CRM\ContactFusionnerType;
 
-use AppBundle\Form\SettingsType;
+use AppBundle\Service\CRM\ContactService;
 
-use libphonenumber\PhoneNumberFormat;
-
-use PHPExcel;
 use PHPExcel_IOFactory;
 
 class ContactController extends Controller
@@ -255,308 +244,75 @@ class ContactController extends Controller
 	}
 
 	/**
-	 * @Route("/crm/contact/fusionner/{id}", name="crm_contact_fusionner", options={"expose"=true})
+	 * @Route("/crm/contact/fusionner/{id}/rechercher/modal", name="crm_contact_fusionner_rechercher_modal", options={"expose"=true})
 	 */
-	public function contactFusionnerAction(Contact $contact)
+	public function contactFusionnerRechercherModalAction(Contact $contact)
 	{
-		$em = $this->getDoctrine()->getManager();
-		$request = $this->getRequest();
-		$new_contact = new Contact();
-		//~ $new_contact->setUserGestion($this->getUser());
-		$form = $this->createForm(
-				new ContactFusionnerType(
-						$this->getUser()->getId(),
-						$this->get('router'),
-						$request->get('id')
-				),
-				$new_contact
-		);
 
-		$form->handleRequest($request);
-
-		if ($form->isSubmitted() && $form->isValid() && 1==0) {
-
-			$new_contact->setDateCreation(new \DateTime(date('Y-m-d')));
-			$new_contact->setUserCreation($this->getUser());
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($new_contact);
-			$em->flush();
-
-			return $this->redirect($this->generateUrl(
-					'crm_contact_voir',
-					array('id' => $contact->getId())
-			));
-		}
-
-		return $this->render('crm/contact/crm_contact_fusionner.html.twig', array(
-				'form' => $form->createView(),
-				'contact' => $contact,
-				'step'	=> 'step1'
+		return $this->render('crm/contact/crm_contact_fusionner_rechercher_modal.html.twig', array(
+				'contact' 	=> $contact,
 		));
-	}
-
-	/**
-	 * @Route("/crm/contact/fusionner/etape2/{id}", name="crm_contact_fusionner_etape2", options={"expose"=true})
+	}    
+    
+    /**
+	 * @Route("/crm/contact/fusionner/{id}/rechercher", name="crm_contact_fusionner_rechercher", options={"expose"=true})
 	 */
-	public function contactFusionnerEtape2Action(Contact $contact)
+	public function contactFusionnerRechercherAjaxAction(Contact $contact, Request $request)
 	{
-		$em = $this->getDoctrine()->getManager();
-		$request = $this->getRequest();
-		//~ $contact = new Contact();
-		//~ $contact->setUserGestion($this->getUser());
-		$form = $this->createForm(
-				new ContactFusionnerType(
-						$this->getUser()->getId(),
-						$this->get('router'),
-						$request->get('id')
-				),
-				$contact
-		);
-
-		//~ $request = $this->getRequest();
-		$form->handleRequest($request);
-		//~ if ($form->isSubmitted() && $form->isValid()) {
-			//~ exit;
-			//~ $first_contact = new Contact();
-			$posts = $request->request->get($form->getName());
-			$repository = $em->getRepository('AppBundle:CRM\Contact');
-			$first_contact = $repository->findOneById($request->get('id'));
-			$second_contact = $repository->findOneById($posts['contact']);
-			$form = $this->createForm(
-					new ContactFusionnerEtape2Type(
-							$first_contact,
-							$second_contact,
-							$this->get('router')
-					),
-					$contact
-			);
-			//~ $contact->setDateCreation(new \DateTime(date('Y-m-d')));
-			//~ $contact->setUserCreation($this->getUser());
-			//~ $em = $this->getDoctrine()->getManager();
-			//~ $em->persist($contact);
-			//~ $em->flush();
-
-			return $this->render('crm/contact/crm_contact_fusionner_etape2.html.twig', array(
-					'form' => $form->createView(),
-					'contact' => $contact,
-					'step'	=> 'step2',
-					'first_contact' => $first_contact,
-					'second_contact' => $second_contact
-			));
-		//~ }
-
-		return $this->render('crm/contact/crm_contact_fusionner.html.twig', array(
-				'form' => $form->createView(),
-				'contact' => $contact,
-				'step'	=> 'step2'
-		));
+        $contacts = [];
+        if($request->get('search')){
+            /* @var $contactRepository ContactRepository */
+            $contactRepository = $this->getDoctrine()->getRepository(Contact::class);
+            $contacts = $contactRepository->findForMerge($this->getUser()->getCompany(), $contact, $request->get('search'));
+        }
+        
+        return $this->render('crm/contact/crm_contact_fusionner_rechercher_resultats.html.twig', array(
+           'contacts' => $contacts, 
+        ));
 	}
-
+    
 	/**
-	 * @Route("/crm/contact/fusionner/execution/{id}", name="crm_contact_fusionner_execution", options={"expose"=true})
-	 * @Method("POST")
-	 */
-	public function contactFusionnerExecutionAction(Contact $contact)
-	{
-		$em = $this->getDoctrine()->getManager();
-		//~ $contact->setUserGestion($this->getUser());
+     * @Route("/crm/contact/fusionner/recapitulatif/modal", name="crm_contact_fusionner_recapitulatif_modal", options={"expose"=true})
+     */
+    public function contactFusionnerRecapitulatifAction(Request $request)
+    {
+        if ((null !== $idContactA = $request->get('idContactA')) && (null !== $idContactB = $request->get('idContactB')) && (null !== $mode = $request->get('mode')) && in_array($mode, [ContactService::MERGE_MODE_DOUBLON, ContactService::MERGE_MODE_EVOLUTION])) {
+            /* @var $contactRepository ContactRepository */
+            $contactRepository = $this->getDoctrine()->getRepository(Contact::class);
+            $contactA = $contactRepository->find($idContactA);
+            $contactB = $contactRepository->find($idContactB);
+            // @TODO Quoi faire si un contact n'a pas de compte ? (vu avec Laura, ce n'est pas normal qu'il y ait des contacts sans comptes en base, en attendant que ce soit fixé je laisse le teste sur getCompte()
+            if ($contactA && $contactB && $contactA->getCompte() && $contactB->getCompte() && $contactA->getCompte()->getCompany() === $this->getUser()->getCompany() && $contactB->getCompte()->getCompany() === $this->getUser()->getCompany()) {
+                /* @var $contactService ContactService */
+                $contactService = $this->get('appbundle.crm_contact_service');
+                if ($contactService->canContactsBeMerged($contactA, $contactB, $mode)) {
+                    $contactFusionnerForm = $this->createForm(new ContactFusionnerType($contactA, $contactB));
+                    $contactFusionnerForm->handleRequest($request);
+                    if ($contactFusionnerForm->isSubmitted() && $contactFusionnerForm->isValid()) {
 
-		$request = $this->getRequest();
-		$posts = array_values($request->request->all());
+                        if ($contactService->mergeContacts($contactA, $contactB)) {
 
-		$repository = $em->getRepository('AppBundle:CRM\Contact');
-		$first_contact = $repository->findOneById($request->get('id'));
-		$second_contact = $repository->findOneById($posts[0]['second_contact_id']);
+                            return new JsonResponse(['success' => true], Response::HTTP_OK);
+                        } else {
 
+                            return new JsonResponse(['success' => false], Response::HTTP_INTERNAL_SERVER_ERROR);
+                        }
+                    }
+                }
 
-		$form = $this->createForm(
-				new ContactFusionnerEtape2Type(
-						$first_contact,
-						$second_contact,
-						$this->get('router')
-				),
-				$contact
-		);
+                return $this->render('crm/contact/crm_contact_fusionner_recap_modal.html.twig', [
+                        'contactFusionnerForm' => isset($contactFusionnerForm) ? $contactFusionnerForm->createView() : null,
+                        'mode' => $mode,
+                        'contactA' => $contactA,
+                        'contactB' => $contactB,
+                ]);
+            }
+        }
 
-		$form->handleRequest($request);
+        throw new NotFoundHttpException();
+    }
 
-		//~ if ($form->isSubmitted() && $form->isValid()) {
-			$champs = $em->getClassMetadata('AppBundle:CRM\Contact')->getFieldNames();
-			$contact->setDateEdition(new \DateTime(date('Y-m-d')));
-			$contact->setUserEdition($this->getUser());
-
-			// Temoin pour vérifier qu'au moins une donnée du contact2 est choisi => màj
-			$fusionner_contact = false;
-			$NewSettings = array();
-			$newEmail = $first_contact->getEmail();;
-			foreach( $posts[0] as $k=>$v )
-			{
-				if( is_array($v) )
-				{
-					if( $k == 'services_interet' || $k == 'types' || $k == 'themes_interet' )
-					{
-						foreach( $v as $key=>$value )
-						{
-							$NewSettings[] = $value;
-						}
-					}
-				}
-				else if( substr($v, -1) == 2 )
-				{
-					$fusionner_contact = true;
-
-					// information choisie est celle du contact 2, on controle le champ pour le setteur de la classe Contact
-					$champ = substr($v, 0, -1);
-					if( $champ == 'adresse' )
-					{
-						$contact->setAdresse($second_contact->getAdresse());
-						$contact->setCodePostal($second_contact->getCodePostal());
-						$contact->setVille($second_contact->getVille());
-						$contact->setRegion($second_contact->getRegion());
-						$contact->setPays($second_contact->getPays());
-					}
-					else if( $champ == 'userGestion' )
-					{
-						$contact->setUserGestion($second_contact->getUserGestion());
-					}
-					else if( $champ == 'reseau' )
-					{
-						$contact->setReseau($second_contact->getReseau());
-					}
-					else if( $champ == 'origine' )
-					{
-						$contact->setOrigine($second_contact->getOrigine());
-					}
-					else if( $champ == 'email' )
-					{
-						// L'email est unique, màj après suppression du contact
-						$newEmail = $second_contact->getEmail();
-					}
-					else if( in_array($champ, $champs) )
-					{
-						// Transfert de prénom => transfert de civilité
-						if( $champ == 'prenom' )
-						{
-							$contact->setCivilite($second_contact->getCivilite());
-						}
-						// Le champ existe dans la bdd, on màj
-						$methodSet = 'set'.ucfirst($champ);
-						$methodGet = 'get'.ucfirst($champ);
-						eval("\$var = \$second_contact->$methodGet();");
-						eval('$contact->$methodSet($var);');
-					}
-				}
-			}
-			//exit;
-			$NewSettings = array_unique($NewSettings);
-			$contact->removeSettings();
-			$second_contact->removeSettings();
-			$repositorySettings = $em->getRepository('AppBundle:Settings');
-			$ContactNewSettings = $repositorySettings->findBy(
-														array('id' =>  $NewSettings),
-														array('id' => 'DESC')
-													);
-			foreach( $ContactNewSettings as $Setting )
-			{
-				$contact->addSetting($Setting);
-			}
-
-			if( $fusionner_contact )
-			{
-				$em->persist($contact);
-				$em->flush();
-			}
-
-			// màj dans les tables : devis, factures, opportunités, impulsions
-			// devis etfactures
-			$repositoryDevis = $em->getRepository('AppBundle:CRM\DocumentPrix');
-			$Contact2Devis = $repositoryDevis->findBy(
-													array('contact' => $second_contact, 'type' => array('DEVIS', 'FACTURE') ),
-													array('id' => 'DESC')
-												);
-			foreach( $Contact2Devis as $Devis )
-			{
-				$Devis->setContact($first_contact);
-				$em->persist($Devis);
-			}
-
-			// opportunités
-			$repositoryOpportunite = $em->getRepository('AppBundle:CRM\Opportunite');
-			$Contact2Opportunite = $repositoryOpportunite->findBy(
-													array('contact' => $second_contact),
-													array('id' => 'DESC')
-												);
-			foreach( $Contact2Opportunite as $Opportunite )
-			{
-				$Opportunite->setContact($first_contact);
-				$em->persist($Opportunite);
-			}
-
-			// impulsions
-			$repositoryImpulsions = $em->getRepository('AppBundle:CRM\Impulsion');
-			$Contact2Impulsion = $repositoryImpulsions->findBy(
-													array('contact' => $second_contact),
-													array('id' => 'DESC')
-												);
-			foreach( $Contact2Impulsion as $Impulsion )
-			{
-				$Impulsion->setContact($first_contact);
-				$em->persist($Impulsion);
-			}
-
-			$em->flush();
-			$em->remove($second_contact);
-			$em->flush();
-			$contact->setEmail($newEmail);
-			$em->persist($contact);
-			$em->flush();
-			echo 1; exit;
-
-			return $this->redirect($this->generateUrl(
-					'crm_contact_voir',
-					array('id' => $contact->getId())
-			));
-		//~ }
-
-		return $this->render('crm/contact/crm_contact_fusionner_etape2.html.twig', array(
-				'form' => $form->createView(),
-				'contact' => $contact,
-				'step'	=> 'step2',
-				'first_contact' => $first_contact,
-				'second_contact' => $second_contact
-		));
-	}
-
-	/**
-	 * @Route("/crm/contact/get-contacts-fusionner/{contact_id}", name="crm_contact_get_liste_fusionner", defaults={"contact_id" = null})
-	 * @Route("/crm/contact/get-contacts-fusionner", name="crm_contact_get_liste_fusionner_default")
-	 */
-	public function contact_list_fusionnerAction($contact_id)
-	{
-		$request = $this->getRequest();
-		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
-		//~ if( is_null($compte_id) )
-			//~ $list = $repository->findByCompany($this->getUser()->getCompany());
-		//~ else
-			//~ $list = $repository->findAll($this->getUser()->getCompany(), $compte_id);
-		$contact = $repository->find($request->get('id'));
-		$list = $repository->findAllExcept( array($contact->getId()), $this->getUser()->getCompany(), $contact->getCompte() );
-
-		$res = array();
-		if( count($list) > 0 )
-		{
-			foreach ($list as $contact) {
-				$_res = array('id' => $contact->getId(), 'display' => $contact->getPrenom() ." ". $contact->getNom());
-				$res[] = $_res;
-			}
-		}
-
-		$response = new \Symfony\Component\HttpFoundation\Response(json_encode($res));
-		$response->headers->set('Content-Type', 'application/json');
-		return $response;
-	}
-
-	/**
+    /**
 	 * @Route("/crm/contact/editer/{id}", name="crm_contact_editer", options={"expose"=true})
 	 */
 	public function contactEditerAction(Contact $contact)

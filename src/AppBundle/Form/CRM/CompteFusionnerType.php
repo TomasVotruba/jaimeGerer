@@ -1,58 +1,113 @@
 <?php
-
 namespace AppBundle\Form\CRM;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Routing\Router;
-//~ use Symfony\Component\HttpFoundation\Request;
-//~ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Doctrine\ORM\EntityRepository;
-
-use libphonenumber\PhoneNumberFormat;
+use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use AppBundle\Entity\CRM\Compte;
+use AppBundle\Entity\Compta\CompteComptable;
+use AppBundle\Service\CRM\CompteService;
 
 class CompteFusionnerType extends AbstractType
 {
-	
-    /**
-     * @var Router
-     */
-    private $router;
-	protected $compteId;
-	protected $id_compte_fusion;
-	
-	public function __construct ($contactId = null, Router $router, $id_compte_fusion)
-	{
-		$this->contactId = $contactId;
-		$this->router = $router;
-		$this->id_compte_fusion = $id_compte_fusion;
-		//~ var_dump($this->request); exit;
-		//~ var_dump($this->id_contact_fusion); exit;
-	}
-	
+
+    protected $compteA;
+    protected $compteB;
+
+    public function __construct(Compte $compteA, Compte $compteB)
+    {
+        $this->compteA = $compteA;
+        $this->compteB = $compteB;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-           	->add('compte_name', 'text', array(
-           			'required' => true,
-           			'mapped' => false,
-           			'label' => 'Choisir une organisation',
-           			'attr' => array('class' => 'typeahead-compte')
-           	))
-           	->add('compte', 'hidden', array(
-           			'required' => true,
-           			'mapped' => false,
-           			'attr' => array('class' => 'entity-compte')
-           	))
-           	->setAction($this->router->generate('crm_compte_fusionner_etape2', array('id' => $this->id_compte_fusion) ));
-	
+        $this->builder = $builder;
+        // Same fields then into CompteService $fieldsToCheck. However, not got them from there as we not necessary add them all the same way
+        $this->addChoicesField('nom');
+        $this->addChoicesField('telephone');
+        $this->addChoicesField('adresse');
+        $this->addChoicesField('ville');
+        $this->addChoicesField('codePostal');
+        $this->addChoicesField('region');
+        $this->addChoicesField('pays');
+        $this->addChoicesField('url');
+        $this->addChoicesField('fax');
+        $this->addChoicesField('codeEvoliz');
+        $this->addChoicesField('priveOrPublic', 'priveOrPublicToString');
+
+        if ($this->doDisplayField('compteComptableClient')) {
+            $builder->add('compteComptableClientToKeep', EntityType::class, [
+                'mapped' => false,
+                'class' => CompteComptable::class,
+                'choice_label' => 'nom',
+                'expanded' => true,
+                'constraints' => new NotNull(),
+                'choices' => [
+                    $this->compteA->getCompteComptableClient(),
+                    $this->compteB->getCompteComptableClient(),
+                ],
+            ]);
+        }
+        if ($this->doDisplayField('compteComptableFournisseur')) {
+            $builder->add('compteComptableFournisseurToKeep', EntityType::class, [
+                'mapped' => false,
+                'class' => CompteComptable::class,
+                'choice_label' => 'nom',
+                'expanded' => true,
+                'constraints' => new NotNull(),
+                'choices' => [
+                    $this->compteA->getCompteComptableFournisseur(),
+                    $this->compteB->getCompteComptableFournisseur(),
+                ],
+            ]);
+        }
     }
-    
+
+    /**
+     * Add a field to the form, if required
+     * 
+     * @param string $field
+     * @param string $keyField
+     */
+    private function addChoicesField($field, $keyField = null)
+    {
+        if ($this->doDisplayField($field)) {
+            $method = 'get' . ucfirst($field);
+            $keyMethod = $keyField ? 'get' . ucfirst($keyField) : null;
+            if (!$keyMethod || !method_exists(Compte::class, $keyMethod)) {
+                $keyMethod = $method;
+            }
+            $this->builder->add($field, ChoiceType::class, [
+                'choices' => [
+                    $this->compteA->$keyMethod() => $this->compteA->$method(),
+                    $this->compteB->$keyMethod() => $this->compteB->$method(),
+                ],
+                'expanded' => true,
+                'constraints' => new NotNull(),
+            ]);
+        }
+    }
+
+    /**
+     * Return true if a given field must be displayed in the form
+     * 
+     * @param string $field
+     * 
+     * @return boolean
+     */
+    private function doDisplayField($field)
+    {
+        return CompteService::needToChooseField($this->compteA, $this->compteB, $field);
+    }
+
     /**
      * @param OptionsResolverInterface $resolver
      */

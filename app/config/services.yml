@@ -54,7 +54,7 @@ services:
         class: AppBundle\Service\CRM\ContactService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ "@doctrine.orm.entity_manager", "@request_stack", "%kernel.root_dir%", "@appbundle.zerobounce_api" ]
+        arguments: [ "@doctrine.orm.entity_manager", "@request_stack", "%kernel.root_dir%", "@appbundle.zerobounce_api", "@security.token_storage", "@logger"]
     appbundle.crm_prospection_service:
         class: AppBundle\Service\CRM\ProspectionService
         calls:
@@ -152,3 +152,6 @@ services:
         tags:
             - { name: console.command }
         arguments: [ "@doctrine.orm.entity_manager", "@appbundle.mailgun" ]
+    appbundle.crm_compte_service:
+        class: AppBundle\Service\CRM\CompteService
+        arguments: [ "@doctrine.orm.entity_manager", "@security.token_storage", "@logger"]

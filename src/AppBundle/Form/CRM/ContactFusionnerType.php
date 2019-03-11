@@ -3,32 +3,23 @@
 namespace AppBundle\Form\CRM;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Routing\Router;
-//~ use Symfony\Component\HttpFoundation\Request;
-//~ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Doctrine\ORM\EntityRepository;
-
-use libphonenumber\PhoneNumberFormat;
+use AppBundle\Entity\CRM\Contact;
+use AppBundle\Service\CRM\ContactService;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class ContactFusionnerType extends AbstractType
 {
 	
-    /**
-     * @var Router
-     */
-    private $router;
-	protected $contactId;
-	protected $id_contact_fusion;
-	
-	public function __construct ($contactId = null, Router $router, $id_contact_fusion)
+    protected $contactA;
+    protected $contactB;
+
+    public function __construct (Contact $contactA, Contact $contactB)
 	{
-		$this->contactId = $contactId;
-		$this->router = $router;
-		$this->id_contact_fusion = $id_contact_fusion;
-		//~ var_dump($this->request); exit;
-		//~ var_dump($this->id_contact_fusion); exit;
+        $this->contactA = $contactA;
+        $this->contactB = $contactB;
 	}
 	
     /**
@@ -37,27 +28,64 @@ class ContactFusionnerType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            //~ ->add('contact', 'shtumi_ajax_autocomplete', array(
-            		//~ 'entity_alias'=>'contacts',
-            		//~ 'required' => true,
-            		//~ 'label' => 'Choisir un contact',
-            		//~ 'mapped' => false
-           	//~ ))
-           	->add('contact_name', 'text', array(
-           			'required' => true,
-           			'mapped' => false,
-           			'label' => 'Choisir un contact',
-           			'attr' => array('class' => 'typeahead-contact')
-           	))
-           	->add('contact', 'hidden', array(
-           			'required' => true,
-           			'mapped' => false,
-           			'attr' => array('class' => 'entity-contact')
-           	))
-           	->setAction($this->router->generate('crm_contact_fusionner_etape2', array('id' => $this->id_contact_fusion) ));
-	
+        $this->builder = $builder;
+        // Same fields then into ContactService $fieldsToCheck. However, not got them from there as we not necessary add them all the same way
+        $this->addChoicesField('compte', 'nom');
+        $this->addChoicesField('prenom');
+        $this->addChoicesField('nom');
+        $this->addChoicesField('telephonePortable');
+        $this->addChoicesField('email');
+        $this->addChoicesField('email2');
+        $this->addChoicesField('adresse');
+        $this->addChoicesField('codePostal');
+        $this->addChoicesField('ville');
+        $this->addChoicesField('region');
+        $this->addChoicesField('pays');
+        $this->addChoicesField('titre');
+        $this->addChoicesField('fax');
+        $this->addChoicesField('telephoneFix');
+        $this->addChoicesField('telephoneAutres');
+        $this->addChoicesField('civilite');
+        $this->addChoicesField('reseau', 'valeur');
+        $this->addChoicesField('origine', 'valeur');
     }
+    
+    /**
+     * Add a field to the form, if required
+     * 
+     * @param string $field
+     * @param string $keyField
+     */
+    private function addChoicesField($field, $keyField = null)
+    {
+        if ($this->doDisplayField($field)) {
+            $method = 'get' . ucfirst($field);
+            $keyMethod = $keyField ? 'get' . ucfirst($keyField) : null;
+            if (!$keyMethod || !method_exists(Contact::class, $keyMethod)) {
+                $keyMethod = $method;
+            }
+            $this->builder->add($field, ChoiceType::class, [
+                'choices' => [
+                    $this->contactA->$keyMethod() => $this->contactA->$method(),
+                    $this->contactB->$keyMethod() => $this->contactB->$method(),
+                ],
+                'expanded' => true,
+                'constraints' => new NotNull(),
+            ]);
+        }
+    }
+
+    /**
+     * Return true if a given field must be displayed in the form
+     * 
+     * @param string $field
+     * 
+     * @return boolean
+     */
+    private function doDisplayField($field)
+    {
+        return ContactService::needToChooseField($this->contactA, $this->contactB, $field);
+    }    
     
     /**
      * @param OptionsResolverInterface $resolver
@@ -75,6 +103,6 @@ class ContactFusionnerType extends AbstractType
      */
     public function getName()
     {
-        return 'appbundle_crm_compte_fusionner';
+        return 'appbundle_crm_contact_fusionner';
     }
 }

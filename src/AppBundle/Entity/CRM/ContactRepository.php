@@ -3,6 +3,8 @@
 namespace AppBundle\Entity\CRM;
 
 use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\Company;
+use AppBundle\Entity\CRM\Contact;
 
 /**
  * ContactRepository
@@ -194,10 +196,13 @@ class ContactRepository extends EntityRepository
 		$qb = $this->createQueryBuilder('c')
 		->select('c.id', 'c.prenom', 'c.nom', 'co.nom as compte_nom', 'co.id as compte_id', 'c.titre', 'c.telephoneFixe', 'c.telephonePortable', 'c.email', 'c.ville', 'c.region', 'c.pays', 'c.bounce')
 		->leftJoin('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
+            
 		->where('co.company = :company')
         ->andWhere('c.isOnlyProspect = :isOnlyProspect')
+            
         ->setParameter('isOnlyProspect', false)
-		->setParameter('company', $company);
+		->setParameter('company', $company)
+            ;
 
 		if($search != ""){
 			$search = trim($search);
@@ -536,4 +541,30 @@ class ContactRepository extends EntityRepository
 
 		return $result;
 	}
+    
+    
+    /**
+     * Trouver des Contacts à fusionner
+     * 
+     * @param Company $company
+     * @param Contact $contact
+     * @param string $search
+     * @param string $orderBy
+     * @param string $dir 'DESC'|'ASC'
+     * 
+     * @return Contact[]
+     */
+	public function findForMerge(Company $company, Contact $contact, $search, $orderBy = null, $dir = 'DESC'){
+		$qb = $this->createQueryBuilder('c')
+            ->join('c.compte', 'co')
+            ->where('co.company = :company')
+            ->andWhere('c.nom LIKE :search OR c.prenom LIKE :search OR c.email LIKE :search')
+            ->andWhere('c != :contact')
+			->setParameters(['company' => $company, 'search' => '%'.$search.'%', 'contact' => $contact]);
+        if($orderBy){
+            $qb->addOrderBy($orderBy, $dir === 'DESC' ? $dir : 'ASC');
+        }
+
+		return $qb->getQuery()->getResult();
+	}     
 }

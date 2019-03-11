@@ -12,8 +12,14 @@ use Doctrine\Common\Collections\Criteria;
  * Contact
  *
  * @ORM\Entity(repositoryClass="AppBundle\Entity\CRM\ContactRepository")
- * @ORM\Table(name="contact") 
- * 
+ * @ORM\Table(
+ *      name="contact",
+ *      indexes={
+ *          @ORM\Index(name="idx_contact_nom", columns={"nom"}),
+ *          @ORM\Index(name="idx_contact_prenom", columns={"prenom"}),
+ *          @ORM\Index(name="idx_contact_email", columns={"email"})
+ *      }
+ * )
  */
 class Contact
 {
@@ -193,7 +199,7 @@ class Contact
     private $dateEdition;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="contacts")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\NotBlank()
      */
@@ -285,7 +291,20 @@ class Contact
     *
     */
     private $campagneContacts;
-
+    
+    /**
+     * @var DocumentPrix[]
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\DocumentPrix", mappedBy="contact")
+     */
+    private $documentsPrix;
+    
+    /**
+     * @var Opportunite[]
+     * 
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\Opportunite", mappedBy="contact")
+     */
+    private $opportunites;   
 
     /**
      * Set id
@@ -1258,8 +1277,75 @@ class Contact
             }
             
         }
+        
         return $nbClick / $nbCampagnes * 100 ;
     }
+    
+    /**
+     * Add documentsPrix
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $documentsPrix
+     * @return Contact
+     */
+    public function addDocumentsPrix(\AppBundle\Entity\CRM\DocumentPrix $documentsPrix)
+    {
+        $this->documentsPrix[] = $documentsPrix;
+        
+        return $this;
+    }
+    
+    /**
+     * Remove documentsPrix
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $documentsPrix
+     */
+    public function removeDocumentsPrix(\AppBundle\Entity\CRM\DocumentPrix $documentsPrix)
+    {
+        $this->documentsPrix->removeElement($documentsPrix);
+    }
+    
+    /**
+     * Get documentsPrix
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDocumentsPrix()
+    {
+        return $this->documentsPrix;
+    }
+    
+    /**
+     * Add opportunites
+     *
+     * @param \AppBundle\Entity\CRM\Opportunite $opportunites
+     * @return Contact
+     */
+    public function addOpportunite(\AppBundle\Entity\CRM\Opportunite $opportunites)
+    {
+        $this->opportunites[] = $opportunites;
+        
+        return $this;
+    }
+    
+    /**
+     * Remove opportunites
+     *
+     * @param \AppBundle\Entity\CRM\Opportunite $opportunites
+     */
+    public function removeOpportunite(\AppBundle\Entity\CRM\Opportunite $opportunites)
+    {
+        $this->opportunites->removeElement($opportunites);
+    }
+    
+    /**
+     * Get opportunites
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOpportunites()
+    {
+        return $this->opportunites;
+    }    
 }
 
 

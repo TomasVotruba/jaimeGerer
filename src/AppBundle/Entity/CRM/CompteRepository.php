@@ -3,6 +3,8 @@
 namespace AppBundle\Entity\CRM;
 
 use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\CRM\Compte;
+use AppBundle\Entity\Company;
 
 /**
  * CompteRepository
@@ -294,5 +296,29 @@ class CompteRepository extends EntityRepository
 
 		return $qb->getQuery()->getResult();
 	}
+    
+    /**
+     * Trouver des Comptes à fusionner
+     * 
+     * @param Company $company
+     * @param Compte $compte
+     * @param string $search
+     * @param string $orderBy
+     * @param string $dir 'DESC'|'ASC'
+     * 
+     * @return Compte[]
+     */
+	public function findForMerge(Company $company, Compte $compte, $search, $orderBy = null, $dir = 'DESC'){
+		$qb = $this->createQueryBuilder('c')
+			->where('c.company = :company')
+            ->andWhere('c.nom LIKE :search')
+            ->andWhere('c != :compte')
+			->setParameters(['company' => $company, 'search' => '%'.$search.'%', 'compte' => $compte]);
+        if($orderBy){
+            $qb->addOrderBy($orderBy, $dir === 'DESC' ? $dir : 'ASC');
+        }
+
+		return $qb->getQuery()->getResult();
+	}    
 
 }
