@@ -9,6 +9,8 @@ composer.lock
 composer.phar
 README.md
 web/upload/*
+*.orig
+**/Entity/*~
 Supprimerait .idea/
 Supprimerait app/cache/
 Supprimerait app/logs/

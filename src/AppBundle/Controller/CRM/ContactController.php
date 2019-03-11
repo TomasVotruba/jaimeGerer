@@ -286,7 +286,7 @@ class ContactController extends Controller
                 /* @var $contactService ContactService */
                 $contactService = $this->get('appbundle.crm_contact_service');
                 if ($contactService->canContactsBeMerged($contactA, $contactB, $mode)) {
-                    $contactFusionnerForm = $this->createForm(new ContactFusionnerType($contactA, $contactB));
+                    $contactFusionnerForm = $this->createForm(new ContactFusionnerType($contactA, $contactB), $contactA, []);
                     $contactFusionnerForm->handleRequest($request);
                     if ($contactFusionnerForm->isSubmitted() && $contactFusionnerForm->isValid()) {
 

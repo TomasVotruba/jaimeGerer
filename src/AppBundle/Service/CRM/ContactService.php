@@ -566,12 +566,12 @@ class ContactService extends ContainerAware
         $contactA->setNewsletter($contactA->getNewsletter() ?: $contactB->getRejetNewsletter());
         $contactA->setCarteVoeux($contactA->getCarteVoeux() ?: $contactB->getCarteVoeux());
         // Prises de contacts
-        foreach ($contactB->getPriseContacts() as $priseContact){
+        foreach ($contactB->getPriseContacts() as $priseContact) {
             $priseContact->setContact($contactA);
         }
         // Create Prises de contacts from DocumentsPrix / Opportunites belonging to contactB
         /* @var $documentPrix DocumentPrix */
-        foreach($contactB->getDocumentsPrix() as $documentPrix){
+        foreach ($contactB->getDocumentsPrix() as $documentPrix) {
             $newPriseContact = new PriseContact();
             $newPriseContact
                 ->setType($documentPrix->getType())
@@ -581,7 +581,7 @@ class ContactService extends ContainerAware
             $this->em->persist($newPriseContact);
         }
         /* @var $opportunite Opportunite */
-        foreach($contactB->getOpportunites() as $opportunite){
+        foreach ($contactB->getOpportunites() as $opportunite) {
             $newPriseContact = new PriseContact();
             $newPriseContact
                 ->setType($opportunite->getType())

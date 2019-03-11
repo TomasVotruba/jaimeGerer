@@ -4,11 +4,13 @@ namespace AppBundle\Form\CRM;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use AppBundle\Entity\CRM\Contact;
-use AppBundle\Service\CRM\ContactService;
 use Symfony\Component\Validator\Constraints\NotNull;
+use AppBundle\Entity\CRM\Contact;
+use AppBundle\Entity\CRM\Compte;
+use AppBundle\Service\CRM\ContactService;
 
 class ContactFusionnerType extends AbstractType
 {
@@ -30,7 +32,18 @@ class ContactFusionnerType extends AbstractType
     {
         $this->builder = $builder;
         // Same fields then into ContactService $fieldsToCheck. However, not got them from there as we not necessary add them all the same way
-        $this->addChoicesField('compte', 'nom');
+        if ($this->doDisplayField('compte')) {
+            $builder->add('compte', EntityType::class, [
+                'class' => Compte::class,
+                'choice_label' => 'nom',
+                'expanded' => true,
+                'constraints' => new NotNull(),
+                'choices' => [
+                    $this->contactA->getCompte(),
+                    $this->contactB->getCompte(),
+                ],
+            ]);
+        }        
         $this->addChoicesField('prenom');
         $this->addChoicesField('nom');
         $this->addChoicesField('telephonePortable');

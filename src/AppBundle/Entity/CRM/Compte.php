@@ -111,10 +111,15 @@ class Compte
     private $url;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="compteEnfants")
      * @ORM\JoinColumn(nullable=true)
      */
     private $compteParent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\Compte", mappedBy="compteParent")
+     */
+    private $compteEnfants;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
@@ -915,5 +920,38 @@ class Compte
     public function getDepenses()
     {
         return $this->depenses;
+    }
+
+    /**
+     * Add compteEnfants
+     *
+     * @param \AppBundle\Entity\CRM\Compte $compteEnfants
+     * @return Compte
+     */
+    public function addCompteEnfant(\AppBundle\Entity\CRM\Compte $compteEnfants)
+    {
+        $this->compteEnfants[] = $compteEnfants;
+
+        return $this;
+    }
+
+    /**
+     * Remove compteEnfants
+     *
+     * @param \AppBundle\Entity\CRM\Compte $compteEnfants
+     */
+    public function removeCompteEnfant(\AppBundle\Entity\CRM\Compte $compteEnfants)
+    {
+        $this->compteEnfants->removeElement($compteEnfants);
+    }
+
+    /**
+     * Get compteEnfants
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCompteEnfants()
+    {
+        return $this->compteEnfants;
     }
 }

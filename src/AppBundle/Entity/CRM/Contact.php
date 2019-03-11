@@ -12,14 +12,7 @@ use Doctrine\Common\Collections\Criteria;
  * Contact
  *
  * @ORM\Entity(repositoryClass="AppBundle\Entity\CRM\ContactRepository")
- * @ORM\Table(
- *      name="contact",
- *      indexes={
- *          @ORM\Index(name="idx_contact_nom", columns={"nom"}),
- *          @ORM\Index(name="idx_contact_prenom", columns={"prenom"}),
- *          @ORM\Index(name="idx_contact_email", columns={"email"})
- *      }
- * )
+ * @ORM\Table(name="contact")
  */
 class Contact
 {
@@ -742,7 +735,6 @@ class Contact
     	return $this;
     }
     
-
     /**
      * Set reseau
      *
