@@ -31,7 +31,7 @@
     $(document).ready(function () {
         // Search for some 'contacts' to merge
         var ajaxSearch;
-        $('#search-contact').on('keyup change', function () {
+        $('#search-contact').on('keyup', function () {
             $('.next-step').hide();
             if(ajaxSearch){
                 ajaxSearch.abort();

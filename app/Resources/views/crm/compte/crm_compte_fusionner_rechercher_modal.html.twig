@@ -30,7 +30,7 @@
     $(document).ready(function () {
         // Search for some 'comptes' to merge
         var ajaxSearch;
-        $('#search-compte').on('keyup change', function () {
+        $('#search-compte').on('keyup', function () {
             $('#next-step').hide();
             if(ajaxSearch){
                 ajaxSearch.abort();

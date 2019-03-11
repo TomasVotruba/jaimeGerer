@@ -652,7 +652,7 @@ class ContactService extends ContainerAware
                 return true;
             case self::MERGE_MODE_DOUBLON:
                 if ($contactA->getCompte() !== $contactB->getCompte()) {
-                    if (($contactA->getDocumentsPrix() || $contactA->getOpportunites()) && ($contactB->getDocumentsPrix() || $contactB->getOpportunites())) {
+                    if (($contactA->getDocumentsPrix()->count() > 0 || $contactA->getOpportunites()->count() > 0) && ($contactB->getDocumentsPrix()->count() > 0 || $contactB->getOpportunites()->count() > 0)) {
 
                         return false;
                     }
