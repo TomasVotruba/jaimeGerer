@@ -1007,3 +1007,8 @@ ul.checklist li:before {
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+.nav-tabs{
+    margin-top: 20px;
+    font-weight: bold;
+}

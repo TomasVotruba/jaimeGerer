@@ -265,4 +265,9 @@
 		width: 100px !important;
 	}
 
+	.nav-tabs{
+	    margin-top: 0px;
+	    font-weight: bold;
+	}
+
 }

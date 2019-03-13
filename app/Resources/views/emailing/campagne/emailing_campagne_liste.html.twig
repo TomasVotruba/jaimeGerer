@@ -24,7 +24,8 @@
 		    	<thead>        
 		    		<tr>            
 		    			<th>Nom</th>   
-		    			<th>Destinataires</th>         
+		    			<th>Destinataires</th>   
+		    			<th>Date d'envoi</th>      
 		    			<th>Création</th>
 		    			<th>Actions</th>         
 		    		</tr>    
@@ -75,6 +76,7 @@
 		            "columns": [
 	                   { "data": "nom" },
 	                   { "data": "nomRapport" },
+	                   { "data": "dateEnvoi" },
 	                   { "data": "dateCreation" },
 	                ],
 					fnDrawCallback: function () {
@@ -134,6 +136,26 @@
                        },
                        {
 						   "render": function ( data, type, row ) {
+							   	if(data == null){
+							   		return "";
+							   	}
+							   	
+							   	var d = data.date;
+							   	var arr = d.split("-");
+							   	var y = arr[0];
+							   	var m = arr[1];
+							   	var arrj = arr[2].split(" ");
+							   	var j = arrj[0];
+							   	var res = j+"/"+m+"/"+y;  
+							  
+							   	return res;
+							   	
+							   
+						   },
+                           "targets": 2
+                       },
+                       {
+						   "render": function ( data, type, row ) {
 							   var d = data.date;
 							   var arr = d.split("-");
 							   var y = arr[0];
@@ -144,7 +166,7 @@
 							  
 							   return 'Créée le '+res+' <br />par '+row['user'];
 						   },
-                           "targets": 2
+                           "targets": 3
                        },
                        {
                            // The `data` parameter refers to the data for the cell (defined by the
@@ -168,7 +190,7 @@
                                 return  s;
 
                            },
-                           "targets": 3
+                           "targets": 4
                        },
                        { "visible": false,  "targets": [ 'id' ] }
                    ]
