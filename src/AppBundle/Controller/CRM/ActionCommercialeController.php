@@ -512,6 +512,14 @@ class ActionCommercialeController extends Controller
 			if($devis){
 				$em->remove($devis);
 			}
+
+			if($actionCommerciale->getFichier()){
+				$wholePath = $this->getParameter('actions_commerciales_fichier_directory').DIRECTORY_SEPARATOR.$actionCommerciale->getFichier();
+				if(file_exists($wholePath)){
+					unlink($wholePath);
+				}
+			}
+			
 			
 			$em->remove($actionCommerciale);
 			$em->flush();
