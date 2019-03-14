@@ -207,7 +207,7 @@ class Opportunite
     private $tempsCommercial;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $fichier;
 
@@ -218,6 +218,7 @@ class Opportunite
     public function __construct()
     {
         $this->settings = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fichier = null;
     }
 
     /**
