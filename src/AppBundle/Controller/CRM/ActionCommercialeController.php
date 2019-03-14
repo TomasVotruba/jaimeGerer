@@ -297,7 +297,8 @@ class ActionCommercialeController extends Controller
 		}
 
 		return $this->render('crm/action-commerciale/crm_action_commerciale_ajouter.html.twig', array(
-			'form' => $form->createView()
+			'form' => $form->createView(),
+			'actionCommerciale' => $opportunite
 		));
 	}
 

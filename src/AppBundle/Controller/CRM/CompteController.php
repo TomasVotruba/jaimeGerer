@@ -619,15 +619,15 @@ class CompteController extends Controller
 
 		$response = new JsonResponse();
 		$response->setData(array(
-                'secteur' => $compte->getSecteurActivite(),
-				'adresse' => $compte->getAdresseFacturation()? $compte->getAdresseFacturation() : $compte->getAdresse(),
-				'codePostal' => $compte->getCodePostalFacturation() ? $compte->getCodePostalFacturation() : $compte->getCodePostal(),
-				'ville' => $compte->getVilleFacturation() ? $compte->getVilleFacturation() : $compte->getVille(),
-				'region' => $compte->getRegion(),
-				'pays' => $compte->getPaysFacturation() ? $compte->getPaysFacturation() : $compte->getPays(),
-				'telephone' => $compte->getTelephone(),
-				'fax' => $compte->getFax(),
-				'priveOrPublic' => $compte->getPriveOrPublic(),
+            'secteur' => $compte->getSecteurActivite(),
+			'adresse' => $compte->getAdresseFacturation()? $compte->getAdresseFacturation() : $compte->getAdresse(),
+			'codePostal' => $compte->getCodePostalFacturation() ? $compte->getCodePostalFacturation() : $compte->getCodePostal(),
+			'ville' => $compte->getVilleFacturation() ? $compte->getVilleFacturation() : $compte->getVille(),
+			'region' => $compte->getRegion(),
+			'pays' => $compte->getPaysFacturation() ? $compte->getPaysFacturation() : $compte->getPays(),
+			'telephone' => $compte->getTelephone(),
+			'fax' => $compte->getFax(),
+			'priveOrPublic' => $compte->getPriveOrPublic(),
 		));
 
 		return $response;
