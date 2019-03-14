@@ -370,6 +370,7 @@ class ActionCommercialeController extends Controller
 			$actionCommerciale->setContact($_contact->getId());
 		}
 
+		$oldFile = null;
 		if($actionCommerciale->getFichier()){
 			$oldFile = $actionCommerciale->getFichier();
 			$actionCommerciale->setFichier(
@@ -431,7 +432,11 @@ class ActionCommercialeController extends Controller
 			       	$actionCommerciale->setFichier($fileName);
 				}
 				if($oldFile){
-					unlink($this->getParameter('actions_commerciales_fichier_directory').DIRECTORY_SEPARATOR.$oldFile);
+					$wholePath = $this->getParameter('actions_commerciales_fichier_directory').DIRECTORY_SEPARATOR.$oldFile;
+					if(file_exists($wholePath)){
+						unlink($wholePath);
+					}
+					
 				}
 				
 			} else {
