@@ -51,19 +51,6 @@ class ActionCommercialeController extends Controller
 	 */
 	public function actionCommercialeListeAction()
 	{
-
-		$opportuniteService = $this->get('appbundle.crm_opportunite_service');
-		$dataTauxTransformation = $opportuniteService->getTauxTransformationData($this->getUser()->getCompany(), date('Y'));
-
-		$chartService = $this->get('appbundle.chart_service');
-		$chartTauxTransformation = $chartService->opportuniteTauxTransformationPieChart($dataTauxTransformation);
-
-		$dataChartActionsCoAnalytique = $opportuniteService->getDataChartActionsCoAnalytique($this->getUser()->getCompany(), date('Y'));		
-		$chartActionsCoAnalytique = $chartService->actionsCoAnalytique($dataChartActionsCoAnalytique);
-
-		$dataChartActionsCoRhoneAlpes = $opportuniteService->getDataChartActionsCoRhoneAlpes($this->getUser()->getCompany(), date('Y'));		
-		$chartActionsCoRhoneAlpes = $chartService->actionsCoRhoneAlpes($dataChartActionsCoRhoneAlpes);
-
 		$arr_gestionnaires = array();
 		$userRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:User');
 		$arr_gestionnaires = $userRepo->findBy(array(
@@ -73,9 +60,6 @@ class ActionCommercialeController extends Controller
 		));
 
 		return $this->render('crm/action-commerciale/crm_action_commerciale_liste.html.twig', array(
-			'chartTauxTransformation' => $chartTauxTransformation,
-			'chartActionsCoAnalytique' => $chartActionsCoAnalytique,
-			'chartActionsCoRhoneAlpes' => $chartActionsCoRhoneAlpes,
 			'arr_gestionnaires' => $arr_gestionnaires
 		));
 	}	
@@ -177,7 +161,32 @@ class ActionCommercialeController extends Controller
 		));
 
 		return $response;
+	}
 
+	/**
+	 * @Route("/crm/action-commerciale/reporting",
+	 *   name="crm_action_commerciale_reporting",
+	 *  )
+	 */
+	public function actionCommercialeReporting(){
+		$opportuniteService = $this->get('appbundle.crm_opportunite_service');
+		$dataTauxTransformation = $opportuniteService->getTauxTransformationData($this->getUser()->getCompany(), date('Y'));
+
+		$chartService = $this->get('appbundle.chart_service');
+		$chartTauxTransformation = $chartService->opportuniteTauxTransformationPieChart($dataTauxTransformation);
+
+		$dataChartActionsCoAnalytique = $opportuniteService->getDataChartActionsCoAnalytique($this->getUser()->getCompany(), date('Y'));		
+		$chartActionsCoAnalytique = $chartService->actionsCoAnalytique($dataChartActionsCoAnalytique);
+
+		$dataChartActionsCoRhoneAlpes = $opportuniteService->getDataChartActionsCoRhoneAlpes($this->getUser()->getCompany(), date('Y'));		
+		$chartActionsCoRhoneAlpes = $chartService->actionsCoRhoneAlpes($dataChartActionsCoRhoneAlpes);
+
+
+		return $this->render('crm/action-commerciale/crm_action_commerciale_reporting.html.twig', array(
+			'chartTauxTransformation' => $chartTauxTransformation,
+			'chartActionsCoAnalytique' => $chartActionsCoAnalytique,
+			'chartActionsCoRhoneAlpes' => $chartActionsCoRhoneAlpes,
+		));
 	}
 
 	/**
@@ -1040,6 +1049,8 @@ class ActionCommercialeController extends Controller
 				'devis' => $devis
 		));
 	}
+
+
 
 
 }
