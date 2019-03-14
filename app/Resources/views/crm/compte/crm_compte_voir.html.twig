@@ -153,38 +153,97 @@
 	    		<table class="contact-view-table">
 	    			<tbody>
 	    				<tr>
-				    		<td>Téléphone</td>  
-				    		<td>
-				    			{% if compte.telephone is empty %}
+	    					<td>Adresse (facturation)</td> 
+				    		<td id="compte-adresse">
+								{% if compte.adresseFacturation is empty %}
 						    		-
 						    	{% else %}
-						    		{{ compte.telephone }}
-						    	{% endif %}	
-						    </td> 
-						 </tr>
-						 <tr>
-						 	<td>Fax</td>  
-				    		<td>
-				    			{% if compte.fax is empty %}
-						    		-
-						    	{% else %}
-						    		{{ compte.fax }}
+						    		{{ compte.adresseFacturation }}
 						    	{% endif %}
-						    </td> 
-						 </tr>
-						 <tr>
-						 	<td>Site web</td>  
+				    		</td>
+	    				</tr>
+	    				<tr>
+	    					<td>Code postal (facturation)</td>
 				    		<td>
-								{% if compte.url is empty %}
+				    			{% if compte.codePostalFacturation is empty %}
 						    		-
 						    	{% else %}
-						    		<a href="{{ compte.url }}" target="_blank">{{ compte.url }}</a>
-						    	{% endif %}	    	
+						    		{{ compte.codePostalFacturation }}
+						    	{% endif %}
+				    		</td>
+	    				</tr>
+	    				<tr>
+	    					<td>Ville (facturation)</td> 
+				    		<td>
+				    			{% if compte.villeFacturation is empty %}
+						    		-
+						    	{% else %}
+						    		{{ compte.villeFacturation }}
+						    	{% endif %}
+				    		</td>
+	    				</tr>
+	    				<tr>
+	    					<td>Pays (facturation)</td> 
+				    		<td>
+				    			{% if compte.paysFacturation is empty %}
+						    		-
+						    	{% else %}
+						    		{{ compte.paysFacturation }}
+						    	{% endif %}
 						    </td>
-						 </tr>
+	    				</tr>
+	    			</tbody>
 	    		</table>
 	    	</div>
+
 	    </div>
+
+	     <div class="row">	
+	    	<div class="col-md-12">
+	    		<hr />
+	    	</div>
+	    </div>
+
+        <div class="row">
+        	<div class="col-md-6">
+        		<table class="contact-view-table">
+        			<tbody>
+        				<tr>
+    			    		<td>Téléphone</td>  
+    			    		<td>
+    			    			{% if compte.telephone is empty %}
+    					    		-
+    					    	{% else %}
+    					    		{{ compte.telephone }}
+    					    	{% endif %}	
+    					    </td> 
+    					 </tr>
+    					 <tr>
+    					 	<td>Fax</td>  
+    			    		<td>
+    			    			{% if compte.fax is empty %}
+    					    		-
+    					    	{% else %}
+    					    		{{ compte.fax }}
+    					    	{% endif %}
+    					    </td> 
+    					 </tr>
+    					 <tr>
+    					 	<td>Site web</td>  
+    			    		<td>
+    							{% if compte.url is empty %}
+    					    		-
+    					    	{% else %}
+    					    		<a href="{{ compte.url }}" target="_blank">{{ compte.url }}</a>
+    					    	{% endif %}	    	
+    					    </td>
+    					 </tr>
+    				</tbody>
+        		</table>
+        	</div>
+        </div>
+
+
 	    <div class="row">	
 	    	<div class="col-md-12">
 	    		<hr />
@@ -205,6 +264,8 @@
 		    	<hr />
 	    	</div>
 	    </div>
+
+
 	    <div class="row">
 	    	<div class="col-md-6">
 	     		<table class="contact-view-table">

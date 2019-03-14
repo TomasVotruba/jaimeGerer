@@ -182,9 +182,38 @@ class Compte
     /**
      * @var boolean
      *
-     * @ORM\Column(name="prive_or_public", type="string", length=6)
+     * @ORM\Column(name="prive_or_public", type="string", nullable=true)
      */
     private $priveOrPublic;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="adresse_facturation", type="string", length=255, nullable=true)
+     */
+    private $adresseFacturation;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ville_facturation", type="string", length=255, nullable=true)
+     */
+    private $villeFacturation;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code_postal_facturation", type="string", length=255, nullable=true)
+     */
+    private $codePostalFacturation;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pays_facturation", type="string", length=255, nullable=true)
+     */
+    private $paysFacturation;
 
     /**
      * Set id
@@ -710,5 +739,44 @@ class Compte
     public function getSecteurActivite()
     {
         return $this->secteurActivite;
+    }
+
+    /**
+     * Set priveOrPublic
+     *
+     * @param string $priveOrPublic
+     * @return Compte
+     */
+    public function setPriveOrPublic($priveOrPublic)
+    {
+        $this->priveOrPublic = $priveOrPublic;
+
+        return $this;
+    }
+
+    /**
+     * Get priveOrPublic
+     *
+     * @return string 
+     */
+    public function getPriveOrPublic()
+    {
+        return $this->priveOrPublic;
+    }
+
+    /**
+     * Get priveOrPublic as human readable string
+     *
+     * @return string 
+     */
+    public function getPriveOrPublicToString()
+    {
+        if($this->priveOrPublic == "PRIVE") {
+          return 'Privé';
+        } elseif($this->priveOrPublic == "PUBLIC")  {
+          return 'Public';
+        }
+
+        return 'N/A';
     }
 }

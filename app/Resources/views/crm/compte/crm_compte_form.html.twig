@@ -21,6 +21,7 @@
 		{{ form_row(form.addressPicker) }}
 	</div>
 	<div class="col-md-6">
+		{{ form_row(form.adresseFacturationDifferente) }}
 	</div>
 </div>
 <div class="row">
@@ -33,13 +34,19 @@
 		{{ form_row(form.updateContacts) }}
     </div>
     <div class="col-md-6">
-    	{{ form_row(form.telephone) }}
-    	{{ form_row(form.fax) }}
-    	{{ form_row(form.url) }}
-    </div> 
+    	<div class="hidden" id="wrapper-adresse-facturation">
+	    	{{ form_row(form.adresseFacturation) }}
+	    	{{ form_row(form.codePostalFacturation) }}
+	    	{{ form_row(form.villeFacturation) }}
+	    	{{ form_row(form.paysFacturation) }}
+	    </div> 
+	</div>
 </div>
 <div class="row">
 	<div class="col-md-12">
+		{{ form_row(form.telephone) }}
+    	{{ form_row(form.fax) }}
+    	{{ form_row(form.url) }}
 		<hr />
 	</div>
 </div>
@@ -54,7 +61,10 @@
 {% block additionalJS %}
 	
 	<script type="text/javascript">
-		$(document).ready( function () {    
+		$(document).ready( function () {   
+
+			toggleAdresseFacturation(); 
+
 			var addresspickerMap = $( "#{{ form.addressPicker.vars.id }}" ).addresspicker({
 			updateCallback: function(geocodeResult, parsedGeocodeResult){
 								//console.log(parsedGeocodeResult);
@@ -75,8 +85,21 @@
 			  },
 			});
 
+			$('.checkbox-adresse-facturation').change(function(e){
+				toggleAdresseFacturation();
+			});
+
+			function toggleAdresseFacturation(){
+				if($('.checkbox-adresse-facturation').prop('checked')){
+					$('#wrapper-adresse-facturation').removeClass("hidden");
+				} else {
+					$('#wrapper-adresse-facturation').addClass("hidden");
+				}
+			}
+
 		});
 		JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
+		
 	</script>
 	
 	<script src="{{ asset('js/error.js') }}"></script>

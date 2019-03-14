@@ -616,29 +616,18 @@ class CompteController extends Controller
 	 */
 	public function compteGetCoordonneesById(Compte $compte)
 	{
-		/*
-		$s_telephone = null;
-		if($compte->getTelephone()){
-			$s_telephone = $this->get('libphonenumber.phone_number_util')->format($compte->getTelephone(), 'INTERNATIONAL');
-		}
-
-		$s_fax = null;
-		if($compte->getFax()){
-			$s_fax = $this->get('libphonenumber.phone_number_util')->format($compte->getFax(), 'INTERNATIONAL');
-		}
-		*/
 
 		$response = new JsonResponse();
 		$response->setData(array(
                 'secteur' => $compte->getSecteurActivite(),
-				'adresse' => $compte->getAdresse(),
-				'codePostal' => $compte->getCodePostal(),
-				'ville' => $compte->getVille(),
+				'adresse' => $compte->getAdresseFacturation()? $compte->getAdresseFacturation() : $compte->getAdresse(),
+				'codePostal' => $compte->getCodePostalFacturation() ? $compte->getCodePostalFacturation() : $compte->getCodePostal(),
+				'ville' => $compte->getVilleFacturation() ? $compte->getVilleFacturation() : $compte->getVille(),
 				'region' => $compte->getRegion(),
-				'pays' => $compte->getPays(),
+				'pays' => $compte->getPaysFacturation() ? $compte->getPaysFacturation() : $compte->getPays(),
 				'telephone' => $compte->getTelephone(),
 				'fax' => $compte->getFax(),
-				'priveOrPublic' => $compte->getPriveOrPublic()
+				'priveOrPublic' => $compte->getPriveOrPublic(),
 		));
 
 		return $response;

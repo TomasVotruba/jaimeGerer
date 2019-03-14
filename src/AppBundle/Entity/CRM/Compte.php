@@ -187,6 +187,35 @@ class Compte
     private $priveOrPublic;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="adresse_facturation", type="string", length=255, nullable=true)
+     */
+    private $adresseFacturation;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ville_facturation", type="string", length=255, nullable=true)
+     */
+    private $villeFacturation;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code_postal_facturation", type="string", length=255, nullable=true)
+     */
+    private $codePostalFacturation;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pays_facturation", type="string", length=255, nullable=true)
+     */
+    private $paysFacturation;
+
+    /**
      * Set id
      *
      * @param int $id
@@ -749,5 +778,97 @@ class Compte
         }
 
         return 'N/A';
+    }
+
+    /**
+     * Set adresseFacturation
+     *
+     * @param string $adresseFacturation
+     * @return Compte
+     */
+    public function setAdresseFacturation($adresseFacturation)
+    {
+        $this->adresseFacturation = $adresseFacturation;
+
+        return $this;
+    }
+
+    /**
+     * Get adresseFacturation
+     *
+     * @return string 
+     */
+    public function getAdresseFacturation()
+    {
+        return $this->adresseFacturation;
+    }
+
+    /**
+     * Set villeFacturation
+     *
+     * @param string $villeFacturation
+     * @return Compte
+     */
+    public function setVilleFacturation($villeFacturation)
+    {
+        $this->villeFacturation = $villeFacturation;
+
+        return $this;
+    }
+
+    /**
+     * Get villeFacturation
+     *
+     * @return string 
+     */
+    public function getVilleFacturation()
+    {
+        return $this->villeFacturation;
+    }
+
+    /**
+     * Set codePostalFacturation
+     *
+     * @param string $codePostalFacturation
+     * @return Compte
+     */
+    public function setCodePostalFacturation($codePostalFacturation)
+    {
+        $this->codePostalFacturation = $codePostalFacturation;
+
+        return $this;
+    }
+
+    /**
+     * Get codePostalFacturation
+     *
+     * @return string 
+     */
+    public function getCodePostalFacturation()
+    {
+        return $this->codePostalFacturation;
+    }
+
+    /**
+     * Set paysFacturation
+     *
+     * @param string $paysFacturation
+     * @return Compte
+     */
+    public function setPaysFacturation($paysFacturation)
+    {
+        $this->paysFacturation = $paysFacturation;
+
+        return $this;
+    }
+
+    /**
+     * Get paysFacturation
+     *
+     * @return string 
+     */
+    public function getPaysFacturation()
+    {
+        return $this->paysFacturation;
     }
 }
