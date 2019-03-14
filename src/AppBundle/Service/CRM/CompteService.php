@@ -97,7 +97,7 @@ class CompteService
         }
         // Compte comptable fournisseur : Journal de ventes, achats, banque, operations diverses
         if($compteA->getCompteComptableFournisseur() && $compteB->getCompteComptableFournisseur() && $compteA->getCompteComptableFournisseur() !== $compteB->getCompteComptableFournisseur()){
-            if(!!$compteComptableFournisseurToKeep){
+            if(!$compteComptableFournisseurToKeep){
                 // Il faut selectionner un compte comptable fournisseur à garder
                 return false;
             }            
