@@ -152,3 +152,6 @@ services:
         tags:
             - { name: console.command }
         arguments: [ "@doctrine.orm.entity_manager", "@appbundle.mailgun" ]
+    appbundle.action_commerciale_file_uploader:
+        class: AppBundle\Service\CRM\ActionCommercialeFileUploader
+        arguments: ['%actions_commerciales_fichier_directory%']

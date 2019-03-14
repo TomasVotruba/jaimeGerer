@@ -38,9 +38,9 @@ class OpportuniteService extends ContainerAware {
         $arr_all = $repo->findForCompany($company);
         $arr_a_facturer = array();
         foreach($arr_all as $sousTraitance){
-          if($sousTraitance->getResteAFacturer() > 0){
-            $arr_a_facturer[$sousTraitance->getId()] = $sousTraitance;
-          }
+            if($sousTraitance->getResteAFacturer() > 0){
+                $arr_a_facturer[$sousTraitance->getId()] = $sousTraitance;
+            }
         }
         return $arr_a_facturer;
     }

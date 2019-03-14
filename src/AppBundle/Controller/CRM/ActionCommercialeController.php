@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\File;
 
 use AppBundle\Entity\CRM\Opportunite;
 use AppBundle\Entity\CRM\OpportuniteSousTraitance;
@@ -244,6 +246,17 @@ class ActionCommercialeController extends Controller
 
 			$opportunite->setDevis($devis);
 
+			$file = $opportunite->getFichier();
+			if($file){
+				try{
+					$fileName = $this->get('appbundle.action_commerciale_file_uploader')->upload($file, $this->getUser());
+				} catch(\Exception $e){
+					throw $e;
+				}
+		       	
+		       	$opportunite->setFichier($fileName);
+		    }
+
 			$em->persist($opportunite);
 
 			$devis = $devisService->createFromOpportunite($devis, $opportunite);
@@ -269,8 +282,8 @@ class ActionCommercialeController extends Controller
 			$em->flush();
 			
 			return $this->redirect($this->generateUrl(
-					'crm_action_commerciale_voir',
-					array('id' => $opportunite->getId())
+				'crm_action_commerciale_voir',
+				array('id' => $opportunite->getId())
 			));
 		}
 
@@ -357,6 +370,13 @@ class ActionCommercialeController extends Controller
 			$actionCommerciale->setContact($_contact->getId());
 		}
 
+		if($actionCommerciale->getFichier()){
+			$oldFile = $actionCommerciale->getFichier();
+			$actionCommerciale->setFichier(
+			    new File($this->getParameter('actions_commerciales_fichier_directory').'/'.$actionCommerciale->getFichier())
+			);
+		}
+
 		$form = $this->createForm(
 			new ActionCommercialeType(
 					$actionCommerciale->getUserGestion()->getId(),
@@ -377,7 +397,12 @@ class ActionCommercialeController extends Controller
 		} else {
 
 		}
-		
+
+		$form->add('updateFichier', 'hidden', array(
+			'mapped' => false,
+			'data' => $actionCommerciale->getFichier() == null ? 1:0,
+			'attr' => array('class' => 'updateFichierFlag')
+		));
 
 		$request = $this->getRequest();
 		$form->handleRequest($request);
@@ -394,6 +419,26 @@ class ActionCommercialeController extends Controller
 			$actionCommerciale->setDateEdition(new \DateTime(date('Y-m-d')));
 			$actionCommerciale->setUserEdition($this->getUser());
 			$actionCommerciale->setMontant($form->get('totalHT')->getData());
+
+			if($form->get('updateFichier')->getData() == 1){
+				$file = $actionCommerciale->getFichier();
+				if($file){
+					try{
+						$fileName = $this->get('appbundle.action_commerciale_file_uploader')->upload($file, $this->getUser());
+					} catch(\Exception $e){
+						throw $e;
+					}
+			       	$actionCommerciale->setFichier($fileName);
+				}
+				if($oldFile){
+					unlink($this->getParameter('actions_commerciales_fichier_directory').DIRECTORY_SEPARATOR.$oldFile);
+				}
+				
+			} else {
+
+				$actionCommerciale->setFichier($oldFile);
+			}
+
 			$em->persist($actionCommerciale);
 			$em->flush();
 
@@ -434,7 +479,8 @@ class ActionCommercialeController extends Controller
 		}
 
 		return $this->render('crm/action-commerciale/crm_action_commerciale_editer.html.twig', array(
-			'form' => $form->createView()
+			'form' => $form->createView(),
+			'actionCommerciale' => $actionCommerciale
 		));
 
 	}

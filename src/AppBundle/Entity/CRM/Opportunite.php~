@@ -14,29 +14,29 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Opportunite
 {
-  /**
-   * @var integer
-   *
-   * @ORM\Column(name="id", type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="AUTO")
-   */
-  private $id;
+    /**
+    * @var integer
+    *
+    * @ORM\Column(name="id", type="integer")
+    * @ORM\Id
+    * @ORM\GeneratedValue(strategy="AUTO")
+    */
+     private $id;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="nom", type="string", length=255)
-   * @Assert\NotBlank()
-   */
-  private $nom;
+    /**
+    * @var string
+    *
+    * @ORM\Column(name="nom", type="string", length=255)
+    * @Assert\NotBlank()
+    */
+    private $nom;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="montant", type="float")
-   */
-  private $montant;
+    /**
+    * @var string
+    *
+    * @ORM\Column(name="montant", type="float")
+    */
+    private $montant;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
@@ -65,19 +65,19 @@ class Opportunite
      */
     private $priveOrPublic;
 
-  /**
-   * @var \DateTime
-   *
-   * @ORM\Column(name="date_creation", type="date")
-   */
-  private $dateCreation;
+    /**
+    * @var \DateTime
+    *
+    * @ORM\Column(name="date_creation", type="date")
+    */
+    private $dateCreation;
 
-  /**
-   * @var \DateTime
-   *
-   * @ORM\Column(name="date_edition", type="date", nullable=true)
-   */
-  private $dateEdition;
+    /**
+    * @var \DateTime
+    *
+    * @ORM\Column(name="date_edition", type="date", nullable=true)
+    */
+    private $dateEdition;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
@@ -97,100 +97,100 @@ class Opportunite
 	 */
 	private $userGestion;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-   * @ORM\JoinColumn(nullable=true)
-   */
-  private $userCompetCom = null;
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $userCompetCom = null;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="type", type="string")
-   */
-  private $type;
+    /**
+    * @var string
+    *
+    * @ORM\Column(name="type", type="string")
+    */
+    private $type;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
-   * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-   */
-  private $origine;
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
+    * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+    */
+    private $origine;
 
-  /**
-   * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Settings", cascade={"persist"})
-   * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-   */
-  private $settings;
-
-
-  /**
-   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte")
-   * @ORM\JoinColumn(nullable=false)
-   * @Assert\NotBlank()
-   */
-  private $compte;
-
-  /**
-   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact")
-   * @ORM\JoinColumn(nullable=true)
-   */
-  private $contact;
-
-  /**
-  *
-  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\OpportuniteRepartition", mappedBy="opportunite", cascade={"persist", "remove"}, orphanRemoval=true)
-  * @ORM\OrderBy({"date" = "ASC"})
-  *
-  */
-  private $opportuniteRepartitions;
-
-  /**
-  *
-  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\OpportuniteSousTraitance", mappedBy="opportunite", cascade={"persist", "remove"}, orphanRemoval=true)
-  *
-  */
-  private $opportuniteSousTraitances;
+    /**
+    * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Settings", cascade={"persist"})
+    * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+    */
+    private $settings;
 
 
-  /**
-   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
-   * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-   */
-  private $analytique;
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte")
+    * @ORM\JoinColumn(nullable=false)
+    * @Assert\NotBlank()
+    */
+    private $compte;
 
-  /**
-   * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="opportunite")
-   * @ORM\JoinColumn(nullable=true)
-   */
-  private $devis;
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $contact;
 
-  /**
-   * @var \DateTime
-   *
-   * @ORM\Column(name="date", type="date")
-   */
-  private $date;
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\OpportuniteRepartition", mappedBy="opportunite", cascade={"persist", "remove"}, orphanRemoval=true)
+    * @ORM\OrderBy({"date" = "ASC"})
+    *
+    */
+    private $opportuniteRepartitions;
 
-  /**
-  *
-  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\BonCommande", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
-  *
-  */
-  private $bonsCommande;
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\OpportuniteSousTraitance", mappedBy="opportunite", cascade={"persist", "remove"}, orphanRemoval=true)
+    *
+    */
+    private $opportuniteSousTraitances;
 
-  /**
-  * @var boolean
-  *
-  * @ORM\Column(name="prescription", type="boolean", nullable=false)
-  */
-  private $prescription = false;
 
-  /**
-   * @var \DateTime
-   *
-   * @ORM\Column(name="date_won", type="date", nullable=true)
-   */
-  private $dateWon;
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
+    * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+    */
+    private $analytique;
+
+    /**
+    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="opportunite")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $devis;
+
+    /**
+    * @var \DateTime
+    *
+    * @ORM\Column(name="date", type="date")
+    */
+    private $date;
+
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\BonCommande", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+    *
+    */
+    private $bonsCommande;
+
+    /**
+    * @var boolean
+    *
+    * @ORM\Column(name="prescription", type="boolean", nullable=false)
+    */
+    private $prescription = false;
+
+    /**
+    * @var \DateTime
+    *
+    * @ORM\Column(name="date_won", type="date", nullable=true)
+    */
+    private $dateWon;
 
    /**
     * @var float
@@ -198,6 +198,21 @@ class Opportunite
     * @ORM\Column(name="remise", type="float", nullable=true)
     */
     private $remise;
+
+    /**
+    * @var float
+    *
+    * @ORM\Column(name="temps_commercial", type="float", nullable=true)
+    */
+    private $tempsCommercial;
+
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @Assert\File(mimeTypes={ "application/pdf" })
+     */
+    private $fichier;
+
 
     /**
     * Constructor
@@ -221,38 +236,38 @@ class Opportunite
     }
 
 
-  /**
-   * Get id
-   *
-   * @return integer
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
+    /**
+    * Get id
+    *
+    * @return integer
+    */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-  /**
-   * Set nom
-   *
-   * @param string $nom
-   * @return Opportunite
-   */
-  public function setNom($nom)
-  {
-      $this->nom = $nom;
+    /**
+    * Set nom
+    *
+    * @param string $nom
+    * @return Opportunite
+    */
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
 
-      return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Get nom
-   *
-   * @return string
-   */
-  public function getNom()
-  {
-      return $this->nom;
-  }
+    /**
+    * Get nom
+    *
+    * @return string
+    */
+    public function getNom()
+    {
+        return $this->nom;
+    }
 
 
 	/**
@@ -917,7 +932,7 @@ class Opportunite
     }
 
     public function getMontantInt(){
-        return intval($this->montant*100);
+        return intval(strval($this->montant*100));
     }
 
     /**
@@ -987,5 +1002,76 @@ class Opportunite
     public function getUserCompetCom()
     {
         return $this->userCompetCom;
+    }
+
+    /**
+     * Set remise
+     *
+     * @param float $remise
+     * @return Opportunite
+     */
+    public function setRemise($remise)
+    {
+        $this->remise = $remise;
+
+        return $this;
+    }
+
+    /**
+     * Get remise
+     *
+     * @return float 
+     */
+    public function getRemise()
+    {
+        return $this->remise;
+    }
+
+    /**
+     * Set tempsCommercial
+     *
+     * @param float $tempsCommercial
+     * @return Opportunite
+     */
+    public function setTempsCommercial($tempsCommercial)
+    {
+        $this->tempsCommercial = $tempsCommercial;
+
+        return $this;
+    }
+
+    /**
+     * Get tempsCommercial
+     *
+     * @return float 
+     */
+    public function getTempsCommercial()
+    {
+        return $this->tempsCommercial;
+    }
+
+
+
+    /**
+     * Set fichier
+     *
+     * @param string $fichier
+     * @return Opportunite
+     */
+    public function setFichier($fichier)
+    {
+        $this->fichier = $fichier;
+
+        return $this;
+    }
+
+    /**
+     * Get fichier
+     *
+     * @return string 
+     */
+    public function getFichier()
+    {
+        return $this->fichier;
     }
 }

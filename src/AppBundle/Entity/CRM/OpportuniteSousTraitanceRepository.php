@@ -20,6 +20,7 @@ class OpportuniteSousTraitanceRepository extends EntityRepository
       ->where('c.company = :company')
       ->andWhere('o.dateCreation >= :start')
       ->andWhere('o.dateCreation <= :end')
+      ->orderBy('s.sousTraitant', 'ASC')
       ->setParameter('company', $company)
       ->setParameter('start', $year.'-01-01')
       ->setParameter('end',  $year.'-12-31');
@@ -33,6 +34,7 @@ class OpportuniteSousTraitanceRepository extends EntityRepository
       ->innerJoin('s.opportunite', 'o')
       ->innerJoin('o.compte', 'c')
       ->where('c.company = :company')
+      ->orderBy('s.sousTraitant', 'ASC')
       ->setParameter('company', $company);
 
     return $qb->getQuery()->getResult();

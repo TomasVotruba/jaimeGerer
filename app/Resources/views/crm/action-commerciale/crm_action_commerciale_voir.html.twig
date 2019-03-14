@@ -297,6 +297,48 @@
 				<hr />
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="col-md-6">
+				<table  class="contact-view-table">
+					<tr>
+    					<td>Temps passé en commercial </td>
+			    		<td>
+			    			{% if opportunite.tempsCommercial %}
+								{{ opportunite.tempsCommercial }} heures
+			    			{% else %}
+			    				-
+			    			{% endif %}
+			    		</td>
+    				</tr>
+
+				</table>
+			</div>
+			<div class="col-md-6">
+				<table  class="contact-view-table">
+					<tr>
+						<td>Proposition commerciale</td>
+						<td>
+							{% if opportunite.fichier %}
+								<a href="{{ app.request.getSchemeAndHttpHost() }}/web/upload/crm/actions_commerciales_pj/{{ opportunite.fichier }}" target="_blank"> 
+									<figure class="fichier">
+									    <img src="{{ asset('images/assets/file.png') }}" alt="Fichier" />
+									    <figcaption>{{ opportunite.fichier }}</figcaption>
+									</figure>
+								</a>
+ 							{% endif %}
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+
+		<div class="row">
+			<div class="col-md-12">
+				<hr />
+			</div>
+		</div>
 		
 		{% if opportunite.devis %}
 			<div class="row hidden-xs">

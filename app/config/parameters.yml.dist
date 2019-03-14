@@ -24,3 +24,4 @@ parameters:
     topol_password: null
 
     google_maps_api_key: key
+    actions_commerciales_fichier_directory: '%kernel.root_dir%/../web/upload/crm/actions_commerciales_pj'
