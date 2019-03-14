@@ -152,9 +152,14 @@ class BonCommandeController extends Controller
 				} else {
 					$list[$i]['factures'] = array();
 					$list[$i]['factures_id'] = array();
+
 					foreach($bc->getFactures() as $facture ){
 						$list[$i]['factures'][] = $facture->getNum();
 						$list[$i]['factures_id'][]= $facture->getId();
+						$list[$i]['avoir'] = null;
+						foreach($facture->getAvoirs() as $avoir){
+							$list[$i]['avoir'].=$avoir->getNum().' ';
+						}
 					} 
 				}
 				

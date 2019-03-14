@@ -196,7 +196,12 @@
 						// this case `data: 0`.
 						"render": function ( data, type, row ) {
 							var url = Routing.generate('crm_facture_voir', {'id' : row['id']});
-							return '<a target="_blank" href="'+url+'">'+data+'</a>';
+							var s = '<a target="_blank" href="'+url+'">'+data+'</a>';
+							if (row['avoir'] != null) {
+                                s += "<br /><span class='s glyphicon glyphicon-scissors'></span> <span class='s'>Avoir " + row['avoir'] + "</span>";
+                            };
+                            return s;
+							
 						},
 						"targets": 0
 					},

@@ -187,21 +187,21 @@
                         "targets": 6
                     }
                 ],
-								fnDrawCallback: function () {
-								  $( 'a', this.fnGetNodes() ).tooltip( {
-									"delay": 0,
-									"track": true,
-									"fade": 250,
-									"tooltipClass": 'btn',
-								  } );
-								},
-								fnInitComplete: function () {
-								  $( 'a', this.fnGetNodes() ).tooltip( {
-									"delay": 0,
-									"track": true,
-									"fade": 250,
-									"tooltipClass": 'btn',
-								  } );
+				fnDrawCallback: function () {
+				  $( 'a', this.fnGetNodes() ).tooltip( {
+					"delay": 0,
+					"track": true,
+					"fade": 250,
+					"tooltipClass": 'btn',
+				  } );
+				},
+				fnInitComplete: function () {
+				  $( 'a', this.fnGetNodes() ).tooltip( {
+					"delay": 0,
+					"track": true,
+					"fade": 250,
+					"tooltipClass": 'btn',
+				  } );
                   $("#NodesToMove").detach()
                                    .removeClass("hidden")
                                    .appendTo('div.dataTables_dateRange');

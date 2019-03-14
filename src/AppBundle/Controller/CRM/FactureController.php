@@ -129,10 +129,9 @@ class FactureController extends Controller
 			$totaux = $facture->getTotaux();
 			$list[$i]['totaux'] = $totaux;
 
-			if(count($facture->getAvoirs()) != 0){
-				$list[$i]['avoir'] = true;
-			} else {
-				$list[$i]['avoir'] = false;
+			$list[$i]['avoir'] = null;
+			foreach($facture->getAvoirs() as $avoir){
+				$list[$i]['avoir'].=$avoir->getNum().' ';
 			}
 
 			$bonsCommande = "";

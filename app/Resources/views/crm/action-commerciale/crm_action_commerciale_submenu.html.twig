@@ -1,20 +1,19 @@
 {% block submenu %}
     <ul class="nav nav-tabs center-mobile center">
-      	<li class=" col-xs-4 col-md-3 {% if app.request.pathInfo == "/crm/action-commerciale/liste/" %} active {% endif %}">
+      	<li class=" col-xs-12 col-md-3 {% if app.request.pathInfo == "/crm/action-commerciale/liste/" %} active {% endif %}">
          	<a href="{{ path('crm_action_commerciale_liste') }}"><i class="fas fa-euro-sign"></i> Actions commerciales</a>
      	</li>
  
-      	<li class=" col-xs-4 col-md-3 {% if app.request.pathInfo == "/crm/bon_commande/liste"  %} active {% endif %}">
+      	<li class=" col-xs-12 col-md-3 {% if app.request.pathInfo == "/crm/bon_commande/liste"  %} active {% endif %}">
         	<a href="{{ path('crm_bon_commande_liste') }}"><i class="fas fa-file-contract"></i> Bons de commande</a>
       	</li>
 
-       	<li class=" col-xs-4 col-md-3 {% if app.request.pathInfo == "/crm/competition-commerciale"  %} active {% endif %}">
+       	<li class=" col-xs-12 col-md-3 {% if app.request.pathInfo == "/crm/competition-commerciale"  %} active {% endif %}">
         	<a href="{{ path('crm_competition_commerciale') }}"><i class="fas fa-trophy"></i> Compétition commerciale</a>
       	</li>
 
-        <li class=" col-xs-4 col-md-3 {% if app.request.pathInfo == "/crm/action-commerciale/reporting"  %} active {% endif %}">
+        <li class=" col-xs-12 col-md-3 {% if app.request.pathInfo == "/crm/action-commerciale/reporting"  %} active {% endif %}">
             <a href="{{ path('crm_action_commerciale_reporting') }}"><i class="fas fa-chart-pie"></i> Reporting</a>
         </li>
-      
     </ul>
 {% endblock %}
