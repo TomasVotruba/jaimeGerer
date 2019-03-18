@@ -44,114 +44,121 @@ class CompteService
         // Is the user allowed to merge A & B ?
         /* @var $user User */
         $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
-        if(!$user || $user->getCompany() !== $compteA->getCompany() || $user->getCompany() !== $compteB->getCompany()){
+        if (!$user || $user->getCompany() !== $compteA->getCompany() || $user->getCompany() !== $compteB->getCompany()) {
             // L'utilisateur n'a pa les droits de merger ces 2 comptes
             return false;
         }
         // Check params validity
-        if(!$this->checkMergeParams($compteA, $compteB)){
+        if (!$this->checkMergeParams($compteA, $compteB)) {
             // Il faut sélectionner les champs à garder
             return false;
         }
         // Description
         $userName = $user ? $user->getUsername() : 'Inconnu';
-        $compteA->setDescription($compteA->getDescription() . ' -- ' . $compteA->getNom() . ' fusionné avec ' . $compteB->getNom() . ' le ' . (new \DateTime())->format('d/m/Y') . ' par ' . $userName . ' -- ' .$compteB->getDescription());        
+        $compteA->setDescription($compteA->getDescription() . ' -- ' . $compteA->getNom() . ' fusionné avec ' . $compteB->getNom() . ' le ' . (new \DateTime())->format('d/m/Y') . ' par ' . $userName . ' -- ' . $compteB->getDescription());
         // Set data if missing
-        foreach ($this->fieldsToCheck as $field){
-            if(!self::needToChooseField($compteA, $compteB, $field)){
+        foreach ($this->fieldsToCheck as $field) {
+            if (!self::needToChooseField($compteA, $compteB, $field)) {
                 $getVal = 'get' . ucfirst($field);
                 $setVal = 'set' . ucfirst($field);
-                if($compteB->$getVal()){
+                if ($compteB->$getVal()) {
                     $compteA->$setVal($compteB->$getVal());
                 }
             }
         }
         // Modifié le / par
-        if($user){
+        if ($user) {
             $compteA->setUserEdition($user);
         }
         $compteA->setDateEdition(new \DateTime());
         // Compte comptable client : Journal de ventes, achats, banque, operations diverses
-        if($compteA->getCompteComptableClient() && $compteB->getCompteComptableClient() && $compteA->getCompteComptableClient() !== $compteB->getCompteComptableClient()){
-            if(!$compteComptableClientToKeep){
+        if ($compteA->getCompteComptableClient() && $compteB->getCompteComptableClient() && $compteA->getCompteComptableClient() !== $compteB->getCompteComptableClient()) {
+            if (!$compteComptableClientToKeep) {
                 // Il faut selectionner un compte comptable client à garder
                 return false;
             }
             $compteToCopyFrom = $compteComptableClientToKeep === $compteA->getCompteComptableClient() ? $compteB->getCompteComptableClient() : $compteA->getCompteComptableClient();
             // Journal de ventes
-            foreach ($compteToCopyFrom->getJournalVentes() as $journalVente){
+            foreach ($compteToCopyFrom->getJournalVentes() as $journalVente) {
                 $journalVente->setCompteComptable($compteA->getCompteComptableClient());
             }
             // Journal d'achats
-            foreach ($compteToCopyFrom->getJournalAchats() as $journalAchat){
+            foreach ($compteToCopyFrom->getJournalAchats() as $journalAchat) {
                 $journalAchat->setCompteComptable($compteA->getCompteComptableClient());
             }
             // Journal de banques
-            foreach ($compteToCopyFrom->getJournalBanque() as $journalBanque){
+            foreach ($compteToCopyFrom->getJournalBanque() as $journalBanque) {
                 $journalBanque->setCompteComptable($compteA->getCompteComptableClient());
             }
             // Opérations diverses
-            foreach ($compteToCopyFrom->getOperationsDiverses() as $operationDiverse){
+            foreach ($compteToCopyFrom->getOperationsDiverses() as $operationDiverse) {
                 $operationDiverse->setCompteComptable($compteA->getCompteComptableClient());
             }
         }
         // Compte comptable fournisseur : Journal de ventes, achats, banque, operations diverses
-        if($compteA->getCompteComptableFournisseur() && $compteB->getCompteComptableFournisseur() && $compteA->getCompteComptableFournisseur() !== $compteB->getCompteComptableFournisseur()){
-            if(!$compteComptableFournisseurToKeep){
+        if ($compteA->getCompteComptableFournisseur() && $compteB->getCompteComptableFournisseur() && $compteA->getCompteComptableFournisseur() !== $compteB->getCompteComptableFournisseur()) {
+            if (!$compteComptableFournisseurToKeep) {
                 // Il faut selectionner un compte comptable fournisseur à garder
                 return false;
-            }            
+            }
             $compteToCopyFrom = $compteComptableFournisseurToKeep === $compteA->getCompteComptableFournisseur() ? $compteB->getCompteComptableFournisseur() : $compteA->getCompteComptableFournisseur();
             // Journal de ventes
-            foreach ($compteToCopyFrom->getJournalVentes() as $journalVente){
+            foreach ($compteToCopyFrom->getJournalVentes() as $journalVente) {
                 $journalVente->setCompteComptable($compteA->getCompteComptableFournisseur());
             }
             // Journal d'achats
-            foreach ($compteToCopyFrom->getJournalAchats() as $journalAchat){
+            foreach ($compteToCopyFrom->getJournalAchats() as $journalAchat) {
                 $journalAchat->setCompteComptable($compteA->getCompteComptableFournisseur());
             }
             // Journal de banques
-            foreach ($compteToCopyFrom->getJournalBanque() as $journalBanque){
+            foreach ($compteToCopyFrom->getJournalBanque() as $journalBanque) {
                 $journalBanque->setCompteComptable($compteA->getCompteComptableFournisseur());
             }
             // Opérations diverses
-            foreach ($compteToCopyFrom->getOperationsDiverses() as $operationDiverse){
+            foreach ($compteToCopyFrom->getOperationsDiverses() as $operationDiverse) {
                 $operationDiverse->setCompteComptable($compteA->getCompteComptableFournisseur());
             }
+            // Contacts
+        }
+        // Contacts
+        foreach ($compteB->getContacts() as $contact) {
+            $contact->setCompte($compteA);
         }
         // Factures & Devis
-        foreach ($compteB->getDocumentPrixs() as $documentPrix){
+        foreach ($compteB->getDocumentPrixs() as $documentPrix) {
             $documentPrix->setCompte($compteA);
         }
         // Actions Commerciales
-        foreach ($compteB->getOpportunites() as $opportunite){
+        foreach ($compteB->getOpportunites() as $opportunite) {
             $opportunite->setCompte($compteA);
         }
         // Contacts
-        foreach ($compteB->getContacts() as $contact){
+        foreach ($compteB->getContacts() as $contact) {
             $contact->setCompte($compteA);
         }
         // Dépenses
-        foreach ($compteB->getDepenses() as $depense){
+        foreach ($compteB->getDepenses() as $depense) {
             $depense->setCompte($compteA);
-        }        
+        }
         // Si $compteB est parent d'autres comptes, changer ces relations
-        foreach ($compteB->getCompteEnfants() as $compteEnfant){
+        foreach ($compteB->getCompteEnfants() as $compteEnfant) {
             $compteEnfant->setCompteParent($compteA);
         }
         
-        try{
+        try {
             $this->em->beginTransaction();
             $this->em->flush();
+            $this->em->refresh($compteB);
             $this->em->remove($compteB);
             $this->em->flush();
             $this->em->commit();
-            
+
             return true;
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
+            
             $this->em->rollback();
             $this->logger->critical('Error while merging Comptes ' . $compteA->getId() . ' and ' . $compteB->getId() . ' : ' . $e->getMessage());
-            
+
             return false;
         }
     }
@@ -169,13 +176,13 @@ class CompteService
         foreach ($this->fieldsToCheck as $field) {
             if (self::needToChooseField($compteA, $compteB, $field)) {
                 $method = 'get' . ucfirst($field);
-                if(!$compteA->$method()){
-                    
+                if (!$compteA->$method()) {
+
                     return false;
                 }
             }
         }
-        
+
         return true;
     }
 

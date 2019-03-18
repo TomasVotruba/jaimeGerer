@@ -202,8 +202,8 @@ class CompteController extends Controller
                 if($compteFusionnerForm->isSubmitted() && $compteFusionnerForm->isValid()){
                     /* @var $compteService CompteService */
                     $compteService = $this->get('appbundle.crm_compte_service');
-                    $compteComptableClientToKeep = $compteFusionnerForm->has('_compteComptableClient') ? $compteFusionnerForm->get('_compteComptableClient')->getData() : null;
-                    $compteComptableFournisseurToKeep = $compteFusionnerForm->has('_compteComptableFournisseur') ? $compteFusionnerForm->get('_compteComptableFournisseur')->getData() : null;
+                    $compteComptableClientToKeep = $compteFusionnerForm->has('compteComptableClientToKeep') ? $compteFusionnerForm->get('compteComptableClientToKeep')->getData() : null;
+                    $compteComptableFournisseurToKeep = $compteFusionnerForm->has('compteComptableFournisseurToKeep') ? $compteFusionnerForm->get('compteComptableFournisseurToKeep')->getData() : null;
                     if($compteService->mergeComptes($compteA, $compteB, $compteComptableClientToKeep, $compteComptableFournisseurToKeep)){
                         
                         return new JsonResponse(['success' => true], Response::HTTP_OK);

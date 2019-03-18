@@ -192,7 +192,7 @@ class Contact
     private $dateEdition;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="contacts")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="contacts", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      * @Assert\NotBlank()
      */

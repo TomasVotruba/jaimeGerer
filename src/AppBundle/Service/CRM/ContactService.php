@@ -599,6 +599,7 @@ class ContactService extends ContainerAware
         try {
             $this->em->beginTransaction();
             $this->em->flush();
+            $this->em->refresh($contactB);
             $this->em->remove($contactB);
             $this->em->flush();
             $this->em->commit();
