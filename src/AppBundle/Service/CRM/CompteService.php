@@ -80,20 +80,21 @@ class CompteService
             $compteToCopyFrom = $compteComptableClientToKeep === $compteA->getCompteComptableClient() ? $compteB->getCompteComptableClient() : $compteA->getCompteComptableClient();
             // Journal de ventes
             foreach ($compteToCopyFrom->getJournalVentes() as $journalVente) {
-                $journalVente->setCompteComptable($compteA->getCompteComptableClient());
+                $journalVente->setCompteComptable($compteComptableClientToKeep);
             }
             // Journal d'achats
             foreach ($compteToCopyFrom->getJournalAchats() as $journalAchat) {
-                $journalAchat->setCompteComptable($compteA->getCompteComptableClient());
+                $journalAchat->setCompteComptable($compteComptableClientToKeep);
             }
             // Journal de banques
             foreach ($compteToCopyFrom->getJournalBanque() as $journalBanque) {
-                $journalBanque->setCompteComptable($compteA->getCompteComptableClient());
+                $journalBanque->setCompteComptable($compteComptableClientToKeep);
             }
             // Opérations diverses
             foreach ($compteToCopyFrom->getOperationsDiverses() as $operationDiverse) {
-                $operationDiverse->setCompteComptable($compteA->getCompteComptableClient());
+                $operationDiverse->setCompteComptable($compteComptableClientToKeep);
             }
+            $compteA->setCompteComptableClient($compteComptableClientToKeep);
         }
         // Compte comptable fournisseur : Journal de ventes, achats, banque, operations diverses
         if ($compteA->getCompteComptableFournisseur() && $compteB->getCompteComptableFournisseur() && $compteA->getCompteComptableFournisseur() !== $compteB->getCompteComptableFournisseur()) {
@@ -104,25 +105,21 @@ class CompteService
             $compteToCopyFrom = $compteComptableFournisseurToKeep === $compteA->getCompteComptableFournisseur() ? $compteB->getCompteComptableFournisseur() : $compteA->getCompteComptableFournisseur();
             // Journal de ventes
             foreach ($compteToCopyFrom->getJournalVentes() as $journalVente) {
-                $journalVente->setCompteComptable($compteA->getCompteComptableFournisseur());
+                $journalVente->setCompteComptable($compteComptableFournisseurToKeep);
             }
             // Journal d'achats
             foreach ($compteToCopyFrom->getJournalAchats() as $journalAchat) {
-                $journalAchat->setCompteComptable($compteA->getCompteComptableFournisseur());
+                $journalAchat->setCompteComptable($compteComptableFournisseurToKeep);
             }
             // Journal de banques
             foreach ($compteToCopyFrom->getJournalBanque() as $journalBanque) {
-                $journalBanque->setCompteComptable($compteA->getCompteComptableFournisseur());
+                $journalBanque->setCompteComptable($compteComptableFournisseurToKeep);
             }
             // Opérations diverses
             foreach ($compteToCopyFrom->getOperationsDiverses() as $operationDiverse) {
-                $operationDiverse->setCompteComptable($compteA->getCompteComptableFournisseur());
+                $operationDiverse->setCompteComptable($compteComptableFournisseurToKeep);
             }
-            // Contacts
-        }
-        // Contacts
-        foreach ($compteB->getContacts() as $contact) {
-            $contact->setCompte($compteA);
+            $compteA->setCompteComptableFournisseur($compteComptableFournisseurToKeep);
         }
         // Factures & Devis
         foreach ($compteB->getDocumentPrixs() as $documentPrix) {
@@ -144,7 +141,7 @@ class CompteService
         foreach ($compteB->getCompteEnfants() as $compteEnfant) {
             $compteEnfant->setCompteParent($compteA);
         }
-        
+
         try {
             $this->em->beginTransaction();
             $this->em->flush();
