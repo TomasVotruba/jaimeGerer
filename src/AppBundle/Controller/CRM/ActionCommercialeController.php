@@ -20,6 +20,7 @@ use AppBundle\Entity\CRM\Produit;
 use AppBundle\Entity\CRM\DocumentPrix;
 use AppBundle\Entity\Settings;
 use AppBundle\Entity\Rapport;
+use AppBundle\Entity\CRM\PlanPaiement;
 
 use AppBundle\Form\CRM\OpportuniteType;
 use AppBundle\Form\CRM\ActionCommercialeType;
@@ -30,6 +31,7 @@ use AppBundle\Form\CRM\OpportuniteFilterType;
 use AppBundle\Form\CRM\ContactType;
 use AppBundle\Form\SettingsType;
 use AppBundle\Form\CRM\OpportuniteWonBonCommandeType;
+use AppBundle\Form\CRM\OpportuniteWonPlanPaiementType;
 
 use \DateTime;
 
@@ -624,12 +626,69 @@ class ActionCommercialeController extends Controller
 				)));
 			}
 
-			return $this->redirect($this->generateUrl('crm_action_commerciale_gagner_repartition', array(
+			return $this->redirect($this->generateUrl('crm_action_commerciale_gagner_plan_paiement', array(
 				'id' => $actionCommerciale->getId()
 			)));
 		}
 
 		return $this->render('crm/action-commerciale/crm_action_commerciale_won_bon_commande.html.twig', array(
+			'actionCommerciale' => $actionCommerciale,
+			'form' => $form->createView(),
+			'edition' => $edition
+		));
+	}
+
+	/**
+	 * @Route("/crm/action-commerciale/gagner/plan-paiement/{id}/{edition}",
+	 *   name="crm_action_commerciale_gagner_plan_paiement",
+	 *   options={"expose"=true}
+	 * )
+	 */
+	public function actionCommercialeGagnerPlanPaiementAction(Opportunite $actionCommerciale, $edition = false)
+	{
+		$form = $this->createForm(
+			new OpportuniteWonPlanPaiementType(),
+			$actionCommerciale
+		);
+
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$em = $this->getDoctrine()->getManager();
+
+			$type = $form->get('type')->getData();
+			if('COMMANDE' == $type){
+				$planPaiement = new PlanPaiement();
+				$planPaiement->setPourcentage(100);
+				$planPaiement->setCommande(true);
+
+				$actionCommerciale->clearPlanPaiements();
+				$actionCommerciale->addPlanPaiement($planPaiement);
+			} elseif('FIN' == $type){
+				$planPaiement = new PlanPaiement();
+				$planPaiement->setPourcentage(100);
+				$planPaiement->setFinProjet(true);
+
+				$actionCommerciale->clearPlanPaiements();
+				$actionCommerciale->addPlanPaiement($planPaiement);
+			} 
+
+			$em->persist($actionCommerciale);
+			$em->flush();
+
+			if($edition){
+				return $this->redirect($this->generateUrl('crm_action_commerciale_voir', array(
+					'id' => $actionCommerciale->getId()
+				)));
+			}
+
+			return $this->redirect($this->generateUrl('crm_action_commerciale_gagner_repartition', array(
+				'id' => $actionCommerciale->getId()
+			)));
+		}
+
+		return $this->render('crm/action-commerciale/crm_action_commerciale_won_plan_paiement.html.twig', array(
 			'actionCommerciale' => $actionCommerciale,
 			'form' => $form->createView(),
 			'edition' => $edition
@@ -848,9 +907,26 @@ class ActionCommercialeController extends Controller
 
 			$form = $this->createFormBuilder()->getForm();
 
+			if(count($actionCommerciale->getPlanPaiements()) > 1 ){
+
+				$choices = array();
+				foreach($actionCommerciale->getPlanPaiements() as $planPaiement){
+					$choices[$planPaiement->getId()] = $planPaiement->__toString();
+				}
+
+				$form->add('planPaiement', 'choice', array(
+					'required' => true,
+					'label' => 'Quelles phases sont à facturer ?',
+					'choices' => $choices,
+					'multiple' => true,
+					'expanded' => true,
+					'required' => true
+				));
+			}
+
 			$form->add('objet', 'text', array(
 				'required' => true,
-				'label' => 'Objet',
+				'label' => 'Objet de la facture',
 				'data' => $devis->getObjet()
 			));
 

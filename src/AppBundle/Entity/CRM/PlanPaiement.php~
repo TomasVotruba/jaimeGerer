@@ -1,0 +1,179 @@
+<?php
+
+namespace AppBundle\Entity\CRM;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * PlanPaiement
+ *
+ * @ORM\Table(name="plan_paiement")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\CRM\PlanPaiementRepository")
+ */
+class PlanPaiement
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="pourcentage", type="integer")
+     */
+    private $pourcentage;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime", nullable=true)
+     */
+    private $date;
+
+     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Opportunite", inversedBy="planPaiements")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $actionCommerciale;
+
+     /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $facture;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="commande", type="boolean", nullable=false)
+     */
+    private $commande = false;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="fin_projet", type="boolean", nullable=false)
+     */
+    private $finProjet = false;
+
+
+
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set pourcentage
+     *
+     * @param integer $pourcentage
+     * @return PlanPaiement
+     */
+    public function setPourcentage($pourcentage)
+    {
+        $this->pourcentage = $pourcentage;
+
+        return $this;
+    }
+
+    /**
+     * Get pourcentage
+     *
+     * @return integer 
+     */
+    public function getPourcentage()
+    {
+        return $this->pourcentage;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     * @return PlanPaiement
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime 
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+
+    /**
+     * Set facture
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $facture
+     * @return PlanPaiement
+     */
+    public function setFacture(\AppBundle\Entity\CRM\DocumentPrix $facture)
+    {
+        $this->facture = $facture;
+
+        return $this;
+    }
+
+    /**
+     * Get facture
+     *
+     * @return \AppBundle\Entity\CRM\DocumentPrix 
+     */
+    public function getFacture()
+    {
+        return $this->facture;
+    }
+
+    /**
+     * Set actionCommerciale
+     *
+     * @param \AppBundle\Entity\CRM\Opportunite $actionCommerciale
+     * @return PlanPaiement
+     */
+    public function setActionCommerciale(\AppBundle\Entity\CRM\Opportunite $actionCommerciale)
+    {
+        $this->actionCommerciale = $actionCommerciale;
+
+        return $this;
+    }
+
+    /**
+     * Get actionCommerciale
+     *
+     * @return \AppBundle\Entity\CRM\Opportunite 
+     */
+    public function getActionCommerciale()
+    {
+        return $this->actionCommerciale;
+    }
+
+    public function __toString(){
+        return $this->date->format('d/m/Y').' : '.strval($this->pourcentage).'%';
+    }
+
+    public function getMontant(){
+        $montantActionCommerciale = $this->actionCommerciale->getMontant();
+        return $this->pourcentage/100*$montantActionCommerciale;
+    }
+}

@@ -211,6 +211,12 @@ class Opportunite
      */
     private $fichier;
 
+     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\PlanPaiement", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $planPaiements;
+
 
     /**
     * Constructor
@@ -218,6 +224,7 @@ class Opportunite
     public function __construct()
     {
         $this->settings = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->planPaiements = new \Doctrine\Common\Collections\ArrayCollection();
         $this->fichier = null;
     }
 
@@ -1072,5 +1079,71 @@ class Opportunite
     public function getFichier()
     {
         return $this->fichier;
+    }
+
+    /**
+     * Add planPaiements
+     *
+     * @param \AppBundle\Entity\CRM\PlanPaiement $planPaiements
+     * @return Opportunite
+     */
+    public function addPlanPaiement(\AppBundle\Entity\CRM\PlanPaiement $planPaiements)
+    {
+        $this->planPaiements[] = $planPaiements;
+        $planPaiements->setActionCommerciale($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove planPaiements
+     *
+     * @param \AppBundle\Entity\CRM\PlanPaiement $planPaiements
+     */
+    public function removePlanPaiement(\AppBundle\Entity\CRM\PlanPaiement $planPaiements)
+    {
+        $this->planPaiements->removeElement($planPaiements);
+    }
+
+    /**
+     * Clear planPaiements
+     */
+    public function clearPlanPaiements()
+    {
+        $this->planPaiements->clear();
+    }
+
+    /**
+     * Get planPaiements
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPlanPaiements()
+    {
+        return $this->planPaiements;
+    }
+
+    public function getPlansPaiementsCustom(){
+        $custom = array();
+        foreach($this->planPaiements as $plan){
+            if(false == $plan->getCommande() && false == $plan->getFinProjet()){
+                $custom[] = $plan;
+            }
+        }
+        return $custom;
+    }
+
+    public function getModePaiement(){
+        if(count($this->planPaiements)){
+            if(1 == count($this->planPaiements) && true == $this->planPaiements[0]->getCommande()){
+                return 'COMMANDE';
+            } else if (1 == count($this->planPaiements) && true == $this->planPaiements[0]->getFinProjet()){
+                return 'FIN';
+            } else {
+                return 'CUSTOM';
+            }
+
+        }
+        return null;
     }
 }

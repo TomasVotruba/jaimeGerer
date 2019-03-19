@@ -513,6 +513,36 @@
 				</div>
 			</div>
 
+			<div class="row">
+				<div class="col-md-12">
+					<hr />
+					<h3>Plan de paiement
+					<a class="btn btn-primary btn-xs" href=" {{ path('crm_action_commerciale_gagner_plan_paiement', {'id' : opportunite.id, 'edition' : true }) }} ">Modifer</a> 
+					</h3>
+					<table class="contact-view-table" id="table-bons-commande">
+						<tbody>
+						{% for planPaiement in opportunite.planPaiements %}
+							<tr>
+								<td>
+									{% if planPaiement.commande %}
+										A la commande
+									{% elseif planPaiement.finProjet %}
+										A la fin du projet
+									{% else %} 
+										{{ planPaiement.date|date('d/m/Y') }} 
+									{% endif %}
+								</td>
+								<td>
+									{{ planPaiement.pourcentage }} % ({{ planPaiement.montant|number_format(2,',',' ') }} €)
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+
 
 			<div class="row">
 				<div class="col-md-12">

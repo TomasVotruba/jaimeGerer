@@ -207,11 +207,15 @@ class Opportunite
     private $tempsCommercial;
 
     /**
-     * @ORM\Column(type="string")
-     *
-     * @Assert\File(mimeTypes={ "application/pdf" })
+     * @ORM\Column(type="string", nullable=true)
      */
     private $fichier;
+
+     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\PlanPaiement", mappedBy="actionCommerciale")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $planPaiements;
 
 
     /**
@@ -220,6 +224,8 @@ class Opportunite
     public function __construct()
     {
         $this->settings = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->planPaiements = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fichier = null;
     }
 
     /**

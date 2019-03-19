@@ -48,6 +48,7 @@ class BonCommande
      */
     private $factures;
 
+
     /**
      * Get id
      *
@@ -218,4 +219,6 @@ class BonCommande
     {
         return $this->factures;
     }
+
+   
 }

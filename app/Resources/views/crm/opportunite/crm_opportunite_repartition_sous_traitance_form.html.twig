@@ -7,7 +7,9 @@
 			{{ form_widget(form.date.year) }}
 		</div>
 		<div class="col-md-3 montant">
-				{{ form_widget(form.montantMonetaire) }}
+			<div class="input-group">
+				{{ form_widget(form.montantMonetaire) }}<div class="input-group-addon">€</div>
+			</div>
 		</div>
 		<div class="col-md-1">
 			<a href="#" class="btn btn-xs btn-danger remove-repartition-button"><span class="glyphicon glyphicon-minus"></span></a>
