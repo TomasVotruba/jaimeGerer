@@ -14,10 +14,10 @@
         </div>
     </div>
     
-    <div class="row spacer-top hidden-xs">
+    <div class="row spacer-top">
         <div class="col-md-2"></div>
         <div class="col-md-4">
-            <h3>Répartition par probabilité</h3>
+            <h3>Répartition par probabilité {{ 'now'|date('Y')-1 }}-{{ 'now'|date('Y') }}</h3>
             <div id="chartdiv" style="width: 600px; height: 300px; margin:auto;"></div>
         </div>
         <div class="col-md-1"></div>
@@ -27,7 +27,7 @@
         </div>
         <div class="col-md-2"></div>
     </div>
-    <div class="row hidden-xs">
+    <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-4">
             <h3>Répartition par type {{ 'now'|date('Y') }}</h3>
@@ -37,6 +37,19 @@
         <div class="col-md-4">
             <h3>Répartition par lieu {{ 'now'|date('Y') }}</h3>
             <div id="chart_actions_co_rhone_alpes"></div>
+        </div>
+         <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <h3>Répartition par type 3 derniers mois</h3>
+            <div id="chart_actions_co_analytique_3_mois"></div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <h3>Répartition par lieu 3 derniers mois</h3>
+            <div id="chart_actions_co_rhone_alpes_3_mois"></div>
         </div>
          <div class="col-md-2"></div>
     </div>
@@ -59,6 +72,8 @@
             {{ gc_draw(chartTauxTransformation, 'chart_taux_transformation_wrapper') }}
             {{ gc_draw(chartActionsCoAnalytique, 'chart_actions_co_analytique') }}
             {{ gc_draw(chartActionsCoRhoneAlpes, 'chart_actions_co_rhone_alpes') }}
+            {{ gc_draw(chartActionsCoAnalytique3Mois, 'chart_actions_co_analytique_3_mois') }}
+            {{ gc_draw(chartActionsCoRhoneAlpes3Mois, 'chart_actions_co_rhone_alpes_3_mois') }}
 
             AmCharts.ready(function() {
                 $.ajax({
@@ -67,7 +82,6 @@
                         handleDataFunnel(data);
                     }
                 });
-
             });
 
             function handleDataFunnel(data) {
@@ -77,19 +91,16 @@
                 chart.balloon.cornerRadius = 0;
                 chart.marginRight = 220;
                 chart.marginLeft = 15;
-                chart.labelPosition = "right";
                 chart.labelsEnabled = false;
                 chart.funnelAlpha = 0.9;
                 chart.valueField = "value";
                 chart.dataProvider = data;
                 chart.startX = 0;
                 chart.balloon.animationTime = 0.2;
-                chart.neckWidth = "40%";
+                chart.neckWidth = "50%";
                 chart.startAlpha = 0;
                 chart.neckHeight = "30%";
                 chart.balloonText = "Statut : [[title]]<br/>Total des montants : [[value]] &euro;";
-
-                chart.creditsPosition = "bottom-right";
 
                 var legend = new AmCharts.AmLegend();
                 legend.valueText = "";
@@ -99,7 +110,6 @@
                 chart.write("chartdiv");
                 $('a[title="JavaScript charts"]').addClass("hidden");
             }
-
         });
     </script>
 {% endblock %}

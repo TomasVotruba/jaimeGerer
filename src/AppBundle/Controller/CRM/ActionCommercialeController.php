@@ -182,11 +182,19 @@ class ActionCommercialeController extends Controller
 		$dataChartActionsCoRhoneAlpes = $opportuniteService->getDataChartActionsCoRhoneAlpes($this->getUser()->getCompany(), date('Y'));		
 		$chartActionsCoRhoneAlpes = $chartService->actionsCoRhoneAlpes($dataChartActionsCoRhoneAlpes);
 
+		$dataChartActionsCoAnalytique3Mois = $opportuniteService->getDataChartActionsCoAnalytique3Mois($this->getUser()->getCompany());		
+		$chartActionsCoAnalytique3Mois = $chartService->actionsCoAnalytique($dataChartActionsCoAnalytique3Mois);
+
+		$dataChartActionsCoRhoneAlpes3Mois = $opportuniteService->getDataChartActionsCoRhoneAlpes3Mois($this->getUser()->getCompany(), date('Y'));		
+		$chartActionsCoRhoneAlpes3Mois = $chartService->actionsCoRhoneAlpes($dataChartActionsCoRhoneAlpes3Mois);
+
 
 		return $this->render('crm/action-commerciale/crm_action_commerciale_reporting.html.twig', array(
 			'chartTauxTransformation' => $chartTauxTransformation,
 			'chartActionsCoAnalytique' => $chartActionsCoAnalytique,
 			'chartActionsCoRhoneAlpes' => $chartActionsCoRhoneAlpes,
+			'chartActionsCoAnalytique3Mois' => $chartActionsCoAnalytique3Mois,
+			'chartActionsCoRhoneAlpes3Mois' => $chartActionsCoRhoneAlpes3Mois,
 		));
 	}
 

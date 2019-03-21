@@ -650,7 +650,7 @@ class OpportuniteController extends Controller
 	    }
 
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Opportunite');
-		$arr_res = $repository->getChartData($this->getUser()->getCompany());
+		$arr_res = $repository->getFunnelChartData($this->getUser()->getCompany());
 		foreach ($arr_res as $result) {
 			$_statut = $result['probabilite'];
 			if($_statut != 'Gagné' && $_statut != 'Perdu'){

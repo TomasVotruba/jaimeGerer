@@ -250,4 +250,85 @@ class OpportuniteService extends ContainerAware {
         return $arr_total;
     }
 
+    public function getDataChartActionsCoAnalytique3Mois($company){
+
+        $settingsRepo = $this->em->getRepository('AppBundle:Settings');
+        $arr_analytiques = $settingsRepo->findBy(array(
+            'company' => $company,
+            'parametre' => 'analytique',
+            'module' => 'CRM'
+        ));
+
+        $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
+
+        $today = new \DateTime(date('Y-m-d'));
+        $threeMonthsAgo = new \DateTime(date("Y-m-d", strtotime("-3 months")));
+
+        $arr_opportunite = $opportuniteRepo->findBetweenDates($company, $threeMonthsAgo, $today);
+
+        $arr_total = array();
+        foreach($arr_analytiques as $analytique){
+            $arr_total[$analytique->getValeur()] = array(
+                'public' => 0,
+                'prive' => 0
+            );
+        }
+        
+        foreach($arr_opportunite as $opportunite){
+           
+            if($opportunite->isSecteurPublic()){
+                $arr_total[$opportunite->getAnalytique()->getValeur()]['public']+= $opportunite->getMontant();
+            } else {
+                $arr_total[$opportunite->getAnalytique()->getValeur()]['prive']+= $opportunite->getMontant();
+            }
+        }
+        return $arr_total;
+    }
+
+    public function getDataChartActionsCoRhoneAlpes3Mois($company, $year){
+
+        $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
+        
+        $today = new \DateTime(date('Y-m-d'));
+        $threeMonthsAgo = new \DateTime(date("Y-m-d", strtotime("-3 months")));
+
+        $arr_opportunite = $opportuniteRepo->findBetweenDates($company, $threeMonthsAgo, $today);
+
+        $arr_total = array();
+       
+        $arr_total['Rhône-Alpes'] = array(
+            'public' => 0,
+            'prive' => 0
+        );
+        $arr_total['Hors Rhône-Alpes'] = array(
+            'public' => 0,
+            'prive' => 0
+        );
+        
+        foreach($arr_opportunite as $opportunite){
+           
+            if( (substr($opportunite->getCompte()->getCodePostal(),0,2) === '73') ||
+                (substr($opportunite->getCompte()->getCodePostal(),0,2) === '38') ||
+                (substr($opportunite->getCompte()->getCodePostal(),0,2) === '74') ||
+                (substr($opportunite->getCompte()->getCodePostal(),0,2) === '69') ||
+                (substr($opportunite->getCompte()->getCodePostal(),0,2) === '01') ||
+                (substr($opportunite->getCompte()->getCodePostal(),0,2) === '26') ||
+                (substr($opportunite->getCompte()->getCodePostal(),0,2) === '07')
+            ){
+                if($opportunite->isSecteurPublic()){
+                    $arr_total['Rhône-Alpes']['public']+= $opportunite->getMontant();
+                } else {
+                    $arr_total['Rhône-Alpes']['prive']+= $opportunite->getMontant();
+                }
+            } else {
+                if($opportunite->isSecteurPublic()){
+                    $arr_total['Hors Rhône-Alpes']['public']+= $opportunite->getMontant();
+                } else {
+                    $arr_total['Hors Rhône-Alpes']['prive']+= $opportunite->getMontant();
+                }
+            }
+        }
+        return $arr_total;
+    }
+
 }
