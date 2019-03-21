@@ -641,19 +641,21 @@ class OpportuniteController extends Controller
 
 		$data = array();
 
-    if($type === 'funnel'){
-        foreach ($arr_keys as $key) {
-            if($key->getValeur() != "Gagné" && $key->getValeur() != 'Perdu'){
-                $data[$key->getValeur()] = array("title"=>$key->getValeur(), 'value'=>0);
-            }
-        }
-    }
+	    if($type === 'funnel'){
+	        foreach ($arr_keys as $key) {
+	            if($key->getValeur() != "Gagné" && $key->getValeur() != 'Perdu'){
+	                $data[$key->getValeur()] = array("title"=>$key->getValeur(), 'value'=>0);
+	            }
+	        }
+	    }
 
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Opportunite');
 		$arr_res = $repository->getChartData($this->getUser()->getCompany());
 		foreach ($arr_res as $result) {
 			$_statut = $result['probabilite'];
-			$data[$_statut]['value'] = $result['total'];
+			if($s_statut != 'Gagné' && $s_statut != 'Perdu'){
+				$data[$_statut]['value'] = $result['total'];
+			}
 		}
 
 		$encoders = array(new JsonEncoder());
