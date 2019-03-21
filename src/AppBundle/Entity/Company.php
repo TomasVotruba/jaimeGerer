@@ -143,6 +143,14 @@ class Company
      */
     private $zeroBounceApiKey;
 
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_nicomak", type="boolean", nullable=false)
+     */
+    private $isNicomak = false;
+
     /**
      * Set id
      *
@@ -636,5 +644,32 @@ class Company
     public function getZeroBounceApiKey()
     {
         return $this->zeroBounceApiKey;
+    }
+
+    /**
+     * Set isNicomak
+     *
+     * @param boolean $isNicomak
+     * @return Company
+     */
+    public function setIsNicomak($isNicomak)
+    {
+        $this->isNicomak = $isNicomak;
+
+        return $this;
+    }
+
+    /**
+     * Get isNicomak
+     *
+     * @return boolean 
+     */
+    public function getIsNicomak()
+    {
+        return $this->isNicomak;
+    }
+
+    public function isNicomak(){
+        return $this->isNicomak;
     }
 }

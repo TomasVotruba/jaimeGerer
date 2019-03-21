@@ -150,7 +150,7 @@
                                         <a href="{{ path('ndf_recus_liste') }}" class="active">
                                             <img src="{{ asset('images/assets/ndf.png') }}" alt="Notes de frais"/>
                                         </a>
-                                        {% if app.user.company.id == 1 %}
+                                        {% if app.user.company.isNicomak %}
                                             <a href="{{ path('social_index') }}" class="active">
                                                 <img src="{{ asset('images/assets/jaimenicomak-colors.png') }}" alt="J\'aime {{ app.user.company.nom }}"/>
                                             </a>

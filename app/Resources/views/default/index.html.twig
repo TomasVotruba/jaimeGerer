@@ -53,7 +53,7 @@
 			    		J'aime les notes de frais
 			    	</a>
 		    	</li>
-		    	{% if app.user.company.id == 1 %}
+		    	{% if app.user.company.isNicomak %}
 			    	<li id="social" class="active">
 			    		<a href="{{ path('social_index') }}">
 				    		<img src="{{ asset('images/assets/jaimenicomak-colors.png') }}" alt="J'aime Nicomak" />

@@ -16,6 +16,56 @@
 	<div class="row">
 		<div class="col-md-12 center">
 			<hr />
+			<h3 class="bold">ACTIONS RAPIDES</h3>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="center crm-homepage-block well">
+				<p>
+					<span class="glyphicon glyphicon-search xl"></span>
+				</p>
+				<p><strong>Je cherche les coordonnées de quelqu'un</strong></p>
+				<input type="text" placeholder="Nom" id="contact-search-input" />
+				<p class="spacer-top">
+					<a class="btn btn-info" id="contact-search-button">
+						Rechercher un contact
+					</a>
+				</p>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="center crm-homepage-block well">
+				<p>
+					<span class="glyphicon glyphicon-user xl"></span>
+				</p>
+				<p><strong>J'ai rencontré une nouvelle personne</strong></p>
+				<p>
+					<a class="btn btn-info" href="{{ path('crm_contact_ajouter') }}">
+						Ajouter un contact
+					</a>
+				</p>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="center crm-homepage-block well">
+				<p>
+					<span class="glyphicon glyphicon-euro xl"></span>
+				</p>
+				<p><strong>J'ai fait un rendez-vous commercial</strong></p>
+				<p>
+					<a class="btn btn-info" href="{{ path('crm_action_commerciale_ajouter') }}">
+						Créer une action commerciale
+					</a>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 center">
+			<hr />
 			<h3 class="bold">TODO LIST</h3>
 		</div>
 	</div>
@@ -75,56 +125,6 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-md-12 center">
-			<hr />
-			<h3 class="bold">ACTIONS RAPIDES</h3>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-4">
-			<div class="center crm-homepage-block well">
-				<p>
-					<span class="glyphicon glyphicon-search xl"></span>
-				</p>
-				<p><strong>Je cherche les coordonnées de quelqu'un</strong></p>
-				<input type="text" placeholder="Nom" id="contact-search-input" />
-				<p class="spacer-top">
-					<a class="btn btn-info" id="contact-search-button">
-						Rechercher un contact
-					</a>
-				</p>
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="center crm-homepage-block well">
-				<p>
-					<span class="glyphicon glyphicon-user xl"></span>
-				</p>
-				<p><strong>J'ai rencontré une nouvelle personne</strong></p>
-				<p>
-					<a class="btn btn-info" href="{{ path('crm_contact_ajouter') }}">
-						Ajouter un contact
-					</a>
-				</p>
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div class="center crm-homepage-block well">
-				<p>
-					<span class="glyphicon glyphicon-euro xl"></span>
-				</p>
-				<p><strong>J'ai fait un rendez-vous commercial</strong></p>
-				<p>
-					<a class="btn btn-info" href="{{ path('crm_action_commerciale_ajouter') }}">
-						Créer une action commerciale
-					</a>
-				</p>
-			</div>
-		</div>
-	</div>
-
 	<div class="row hidden-xs">
 		<div class="col-md-12 center">
 			<hr />
@@ -134,19 +134,19 @@
 	<div class="row hidden-xs">
 		<div class="col-md-4 center">
 			<div id="gauge_email"></div>
-			{% if app.user.company.id == 1 %}
+			{% if app.user.company.isNicomak %}
 				<a href="{{ path('crm_rapport_voir', {'id' : 416 }) }}" class="btn btn-xs btn-info">Rapport</a>
 			{% endif %}
 		</div>
 		<div class="col-md-4 center">
 			<div id="gauge_tel"></div>
-			{% if app.user.company.id == 1 %}
+			{% if app.user.company.isNicomak %}
 				<a href="{{ path('crm_rapport_voir', {'id' : 415 }) }}" class="btn btn-xs btn-info">Rapport</a>
 			{% endif %}
 		</div>
 		<div class="col-md-4 center">
 			<div id="gauge_bounce"></div>
-			{% if app.user.company.id == 1 %}
+			{% if app.user.company.isNicomak %}
 				<a href="{{ path('crm_rapport_voir', {'id' : 414 }) }}" class="btn btn-xs btn-info">Rapport</a>
 			{% endif %}
 		</div>

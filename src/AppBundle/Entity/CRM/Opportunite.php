@@ -519,7 +519,7 @@ class Opportunite
 	 */
 	public function removeSettings()
 	{
-		$this->settings = null;
+		$this->settings->clear();
 	}
 
 	/**
@@ -628,15 +628,7 @@ class Opportunite
     }
 
     public function getCa_attendu(){
-      $s_proba = $this->getProbabilite()->getValeur();
-      $arr_proba = explode('-', $s_proba);
-
-      $proba = 0;
-      if(count($arr_proba)){
-         $proba = str_replace('%', '', $arr_proba[1]);
-      }
-
-      return $this->getMontant()*($proba/100);
+        return 0;
     }
 
     public function win(){

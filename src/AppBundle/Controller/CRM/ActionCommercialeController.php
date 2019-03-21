@@ -133,7 +133,6 @@ class ActionCommercialeController extends Controller
 		for($i=0; $i<count($list); $i++){
 			$arr_o = $list[$i];
 			$opportunite = $repository->find($arr_o['id']);
-			$list[$i]['ca_attendu'] = $opportunite->getCa_attendu();
 			if($opportunite->getDevis()){
 				$list[$i]['numero_devis'] = $opportunite->getDevis()->getNum();	
 				$totaux = $opportunite->getDevis()->getTotaux();

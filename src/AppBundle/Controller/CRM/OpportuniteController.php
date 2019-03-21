@@ -80,16 +80,6 @@ class OpportuniteController extends Controller
 				$etat
 		);
 
-		for($i=0; $i<count($list); $i++){
-
-			$arr_o = $list[$i];
-
-			$opportunite = $repository->find($arr_o['id']);
-			$list[$i]['ca_attendu'] = $opportunite->getCa_attendu();
-
-		}
-
-
 		$response = new JsonResponse();
 		$response->setData(array(
 				'draw' => intval( $requestData->get('draw') ),
@@ -653,7 +643,7 @@ class OpportuniteController extends Controller
 
     if($type === 'funnel'){
         foreach ($arr_keys as $key) {
-            if($key->getValeur() != "ClosedWon - 100%"){
+            if($key->getValeur() != "Gagné" && $key->getValeur() != 'Perdu'){
                 $data[$key->getValeur()] = array("title"=>$key->getValeur(), 'value'=>0);
             }
         }

@@ -18,6 +18,20 @@ class OpportuniteService extends ContainerAware {
     public function win($opportunite){
 
         $opportunite->win();
+
+        if($opportunite->getCompte()->getCompany()->isNicomak()){
+            $settingsRepo = $this->em->getRepository('AppBundle:Settings');
+            $probabiliteGagne = $settingsRepo->findOneBy(array(
+                'company' => $opportunite->getUserCreation()->getCompany(),
+                'parametre' => 'OPPORTUNITE_STATUT',
+                'valeur' => 'Gagné'
+            ));
+
+            if($probabiliteGagne){
+                $opportunite->setProbabilite($probabiliteGagne);
+            }
+        }
+       
         $this->em->persist($opportunite);
         $this->em->flush();
 
@@ -29,6 +43,19 @@ class OpportuniteService extends ContainerAware {
         $opportunite->lose();
         $this->em->persist($opportunite);
         $this->em->flush();
+
+        if($opportunite->getCompte()->getCompany()->isNicomak()){
+            $settingsRepo = $this->em->getRepository('AppBundle:Settings');
+            $probabiliteGagne = $settingsRepo->findOneBy(array(
+                'company' => $opportunite->getUserCreation()->getCompany(),
+                'parametre' => 'OPPORTUNITE_STATUT',
+                'valeur' => 'Perdu'
+            ));
+
+            if($probabiliteGagne){
+                $opportunite->setProbabilite($probabiliteGagne);
+            }
+        }
 
         return $opportunite;
     }
