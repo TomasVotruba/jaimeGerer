@@ -67,7 +67,7 @@ a.help, .clickable {
 }
 
 .center {
-    text-align: center;
+    text-align: center !important;
 }
 
 .align-right {
@@ -80,6 +80,10 @@ a.help, .clickable {
 
 .align-bottom {
     vertical-align: bottom;
+}
+
+.bold{
+    font-weight: bold;
 }
 
 a.not-active {
@@ -393,11 +397,6 @@ tr th {
     margin: Opx;
 }
 
-.center {
-    text-align: center;
-}
-
-
 /**
 * LEFT COLUMN FOR MENU
 **/
@@ -549,7 +548,7 @@ label input[type="checkbox"][disabled] {
     transition: all ease 0.4s;
 }
 
-#crm_index p, #compta_index p {
+#compta_index p {
     margin-bottom: 40px;
 }
 
@@ -565,12 +564,12 @@ label input[type="checkbox"][disabled] {
     padding: 2% 10%;
 }
 
-#crm_index .text-accueil-outil {
-    padding: 20px;
-}
-
 .text-accueil-outil {
     padding: 50px;
+}
+
+#crm_index .text-accueil-outil {
+    padding: 20px 0 0 0;
 }
 
 .titre {
@@ -980,4 +979,14 @@ ul.checklist li:before {
 .nav-tabs{
     margin-top: 20px;
     font-weight: bold;
+}
+
+.todo-item{
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    display: flex;
+    align-items:center;
+    padding: 5px 0 5px 0;
+    background-color: #fff;
 }

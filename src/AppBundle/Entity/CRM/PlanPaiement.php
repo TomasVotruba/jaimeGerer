@@ -253,4 +253,10 @@ class PlanPaiement
     public function getPourcentageNumerique(){
         return $this->pourcentage/100;
     }
+
+    public function getRetard(){
+        $today = new \DateTime('today');
+        $diff = $today->diff($this->date)->format("%a");
+        return $diff;
+    }
 }

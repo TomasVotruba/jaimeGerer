@@ -3,24 +3,19 @@
 	<h3>Convertir en facture</h3>
 </div>
 <div class="modal-body">
-	<div class="center">
-		
-	</div>
-
-		{{ form_start(form, {'action': path('crm_action_commerciale_convertir', {'id' : actionCommerciale.id})} ) }}
-			<div class="row">
-				
-				<div class="col-md-12">
-					{{ form_errors(form) }}
-					{{ form_row(form.objet) }}
+	{{ form_start(form, {'action': path('crm_action_commerciale_convertir', {'id' : actionCommerciale.id})} ) }}
+		<div class="row">
+			
+			<div class="col-md-12">
+				{{ form_errors(form) }}
+				{{ form_row(form.objet) }}
+			</div>
+		</div>
+		<div class="row">   
+			<div class="col-md-12">
+					{{ form_rest(form) }}
 				</div>
 			</div>
-			<div class="row">   
-				<div class="col-md-12">
-						{{ form_rest(form) }}
-					</div>
-				</div>
-			</div>
-		{{ form_end(form) }}
-
+		</div>
+	{{ form_end(form) }}
 </div>

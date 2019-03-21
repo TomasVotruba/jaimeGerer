@@ -12,4 +12,38 @@ use Doctrine\ORM\EntityRepository;
  */
 class PlanPaiementRepository extends EntityRepository
 {
+
+	public function findToday($user){
+
+		$today = date('Y-m-d').'%';
+
+		$result = $this->createQueryBuilder('p')
+		->join('AppBundle:CRM\Opportunite', 'o', 'WITH', 'p.actionCommerciale = o.id')
+		->where('p.date LIKE :today')
+		->andWhere('o.userGestion = :user')
+		->andWhere('p.facture IS NULL')
+		->setParameter('today', $today)
+		->setParameter('user', $user)
+		->getQuery()
+		->getResult();
+
+		return $result;
+	}
+
+	public function findLate($user){
+
+		$today = date('Y-m-d').'%';
+
+		$result = $this->createQueryBuilder('p')
+		->join('AppBundle:CRM\Opportunite', 'o', 'WITH', 'p.actionCommerciale = o.id')
+		->where('p.date < :today')
+		->andWhere('o.userGestion = :user')
+		->andWhere('p.facture IS NULL')
+		->setParameter('today', $today)
+		->setParameter('user', $user)
+		->getQuery()
+		->getResult();
+
+		return $result;
+	}
 }
