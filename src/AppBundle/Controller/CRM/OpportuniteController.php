@@ -653,7 +653,7 @@ class OpportuniteController extends Controller
 		$arr_res = $repository->getChartData($this->getUser()->getCompany());
 		foreach ($arr_res as $result) {
 			$_statut = $result['probabilite'];
-			if($s_statut != 'Gagné' && $s_statut != 'Perdu'){
+			if($_statut != 'Gagné' && $_statut != 'Perdu'){
 				$data[$_statut]['value'] = $result['total'];
 			}
 		}
