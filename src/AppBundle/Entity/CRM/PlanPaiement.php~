@@ -61,6 +61,13 @@ class PlanPaiement
      */
     private $finProjet = false;
 
+    /**
+    * @var string
+    *
+    * @ORM\Column(name="nom", type="string", length=255, nullable=true)
+    */
+    private $nom;
+
 
 
 
@@ -175,5 +182,51 @@ class PlanPaiement
     public function getMontant(){
         $montantActionCommerciale = $this->actionCommerciale->getMontant();
         return $this->pourcentage/100*$montantActionCommerciale;
+    }
+
+    /**
+     * Set commande
+     *
+     * @param boolean $commande
+     * @return PlanPaiement
+     */
+    public function setCommande($commande)
+    {
+        $this->commande = $commande;
+
+        return $this;
+    }
+
+    /**
+     * Get commande
+     *
+     * @return boolean 
+     */
+    public function getCommande()
+    {
+        return $this->commande;
+    }
+
+    /**
+     * Set finProjet
+     *
+     * @param boolean $finProjet
+     * @return PlanPaiement
+     */
+    public function setFinProjet($finProjet)
+    {
+        $this->finProjet = $finProjet;
+
+        return $this;
+    }
+
+    /**
+     * Get finProjet
+     *
+     * @return boolean 
+     */
+    public function getFinProjet()
+    {
+        return $this->finProjet;
     }
 }

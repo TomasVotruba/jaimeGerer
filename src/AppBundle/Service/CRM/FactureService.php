@@ -5,6 +5,7 @@ namespace AppBundle\Service\CRM;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\CRM\DocumentPrix;
+use AppBundle\Entity\CRM\Produit;
 
 class FactureService extends ContainerAware {
 
@@ -44,6 +45,31 @@ class FactureService extends ContainerAware {
             }
         }
         return $arr_total;
+    }
+
+    public function createProduitFromPlanPaiement($planPaiement){
+
+        $produit = new Produit();
+        $produit->setNom($planPaiement->getNom());
+
+        $description = $planPaiement->getPourcentage().'% ';
+        if($planPaiement->getCommande()){
+            $description.='à la commande';
+        } else if ($planPaiement->getFinProjet()){
+            $description.='à la fin du projet';
+        } else {
+            $description.='au '.$planPaiement->getDate()->format('d/m/Y');
+        }
+        $description.=' d\'après devis';
+        $produit->setDescription($description);
+
+        $actionCommerciale = $planPaiement->getActionCommerciale();
+        $produit->setTarifUnitaire($actionCommerciale->getMontant());
+        $produit->setQuantite($planPaiement->getPourcentageNumerique());
+        $produit->setType($actionCommerciale->getAnalytique());
+
+        return $produit;
+
     }
 
     // public function getDataChartActionsCoRhoneAlpes($company, $year){

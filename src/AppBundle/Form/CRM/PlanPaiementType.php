@@ -20,6 +20,9 @@ class PlanPaiementType extends AbstractType
             ->add('pourcentage', 'integer', array(
                 'attr' => array('class' => 'percent')
             ))
+            ->add('nom', 'text', array(
+                
+            ))
             ->add('date', 'date', array('widget' => 'single_text',
                 'input' => 'datetime',
                 'format' => 'dd/MM/yyyy',

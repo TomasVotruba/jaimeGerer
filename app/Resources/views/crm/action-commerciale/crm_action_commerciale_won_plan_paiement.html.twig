@@ -39,12 +39,18 @@
     <div class="hidden" id="custom-wrapper">
 
 	    <div class="row">
-	        <div class="col-md-2">
-	            <strong>Date</strong>
-	        </div>
+            <div class="col-md-2">
+                <strong>Nom de la phase</strong>
+            </div>
+            <div class="col-md-2">
+                <strong>Date de facturation</strong>
+            </div>
 	        <div class="col-md-2">
 	            <strong>Pourcentage à facturer</strong>
 	        </div>
+            <div class="col-md-2">
+                <strong>Montant</strong>
+            </div>
 	    </div>
 
 	    <div class="row">
@@ -58,6 +64,11 @@
 					{% filter escape %}
 					    {{ include('crm/action-commerciale/crm_action_commerciale_plan_paiement_form.html.twig', { 'form':  form.planPaiements.vars.prototype }) }}
 				    {% endfilter %}">
+                    {% for repartitionField in form.planPaiements %}
+                        <li>
+                            {{ include('crm/action-commerciale/crm_action_commerciale_plan_paiement_form.html.twig', { 'form': repartitionField }) }}
+                        </li>
+                    {% endfor %}
 	            </ul>
 
 	        </div>
@@ -130,10 +141,6 @@
         indexNewCollectionRepartition = repartitionCollectionHolder.children().length;
 
         calculTotal();
-
-        {% if actionCommerciale.planPaiements|length == 0 %}
-            addRepartitionForm(repartitionCollectionHolder, $newRepartitionLi, false);
-        {% endif %}
 
         $addRepartitionLink.on('click', function(e) {
             // empêche le lien de créer un « # » dans l'URL
@@ -230,12 +237,15 @@
 
 		function toggleTypePaiement(){
 			selected = $("input[type='radio']:checked").val();
-			console.log(selected);
 			if( 'COMMANDE' == selected || 'FIN' == selected || null == selected){
 				$('#custom-wrapper').addClass('hidden');
 				$('button[type=submit]').addClass("btn-success").prop("disabled", false);
+                $('.produit-collection').remove();
 			} else {
 				$('#custom-wrapper').removeClass('hidden');
+                if(0 == $('.produit-collection').length){
+                    addRepartitionForm(repartitionCollectionHolder, $newRepartitionLi, false);
+                }
 			}
 		}
 

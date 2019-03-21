@@ -43,7 +43,7 @@ class PlanPaiement
 
      /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $facture;
 
@@ -61,8 +61,12 @@ class PlanPaiement
      */
     private $finProjet = false;
 
-
-
+    /**
+    * @var string
+    *
+    * @ORM\Column(name="nom", type="string", length=255, nullable=true)
+    */
+    private $nom;
 
 
     /**
@@ -169,7 +173,7 @@ class PlanPaiement
     }
 
     public function __toString(){
-        return $this->date->format('d/m/Y').' : '.strval($this->pourcentage).'%';
+        return $this->nom.' - '.$this->date->format('d/m/Y').' : '.strval($this->pourcentage).'%'.' ('.number_format($this->getMontant(), 2).' €)';
     }
 
     public function getMontant(){
@@ -221,5 +225,32 @@ class PlanPaiement
     public function getFinProjet()
     {
         return $this->finProjet;
+    }
+
+    /**
+     * Set nom
+     *
+     * @param string $nom
+     * @return PlanPaiement
+     */
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * Get nom
+     *
+     * @return string 
+     */
+    public function getNom()
+    {
+        return $this->nom;
+    }
+
+    public function getPourcentageNumerique(){
+        return $this->pourcentage/100;
     }
 }

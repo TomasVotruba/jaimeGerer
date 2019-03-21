@@ -214,6 +214,7 @@ class Opportunite
      /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\PlanPaiement", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\JoinColumn(nullable=true)
+     * @ORM\OrderBy({"date" = "ASC"})
      */
     private $planPaiements;
 
