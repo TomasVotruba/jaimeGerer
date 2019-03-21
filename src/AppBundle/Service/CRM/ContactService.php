@@ -549,7 +549,9 @@ class ContactService extends ContainerAware
         }
         // Description
         $userName = $user ? $user->getUsername() : 'Inconnu';
-        $contactA->setDescription($contactA->getDescription() . ' -- ' . $contactA->getNom() . ' fusionné avec ' . $contactB->getNom() . ' le ' . (new \DateTime())->format('d/m/Y') . ' par ' . $userName . ' -- ' . $contactB->getDescription());
+        $origContactAData = $this->em->getUnitOfWork()->getOriginalEntityData($contactA);
+        $origContactBData = $this->em->getUnitOfWork()->getOriginalEntityData($contactB);        
+        $contactA->setDescription($origContactAData['description'] . ' -- ' . $origContactAData['nom'] . ' fusionné avec ' . $origContactBData['nom'] . ' le ' . (new \DateTime())->format('d/m/Y') . ' par ' . $userName . ' -- ' . $origContactBData['description']);
         // Set data if missing
         foreach ($this->fieldsToCheck as $field) {
             if (!self::needToChooseField($contactA, $contactB, $field)) {

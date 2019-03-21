@@ -55,7 +55,9 @@ class CompteService
         }
         // Description
         $userName = $user ? $user->getUsername() : 'Inconnu';
-        $compteA->setDescription($compteA->getDescription() . ' -- ' . $compteA->getNom() . ' fusionné avec ' . $compteB->getNom() . ' le ' . (new \DateTime())->format('d/m/Y') . ' par ' . $userName . ' -- ' . $compteB->getDescription());
+        $origCompteAData = $this->em->getUnitOfWork()->getOriginalEntityData($compteA);
+        $origCompteBData = $this->em->getUnitOfWork()->getOriginalEntityData($compteB);
+        $compteA->setDescription($origCompteAData['description'] . ' -- ' . $origCompteAData['nom'] . ' fusionné avec ' . $origCompteBData['nom'] . ' le ' . (new \DateTime())->format('d/m/Y') . ' par ' . $userName . ' -- ' . $origCompteBData['description']);
         // Set data if missing
         foreach ($this->fieldsToCheck as $field) {
             if (!self::needToChooseField($compteA, $compteB, $field)) {
