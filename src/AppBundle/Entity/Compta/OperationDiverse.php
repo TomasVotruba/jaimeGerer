@@ -57,7 +57,7 @@ class OperationDiverse
     private $codeJournal;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\CompteComptable", inversedBy="operationsDiverses", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\CompteComptable", inversedBy="operationsDiverses")
      * @ORM\JoinColumn(nullable=false)
      */
     private $compteComptable;

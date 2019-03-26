@@ -80,10 +80,13 @@
     </div>
     <div class="row">
         <div class="col-md-6">
+            {{ form_row(form.nomFacturation) }}
             {{ form_row(form.adresse) }}
-            {{ form_row(form.codePostal) }}
+            {{ form_row(form.adresseLigne2) }}
+            
         </div>
         <div class="col-md-6">
+            {{ form_row(form.codePostal) }}
             {{ form_row(form.ville) }}
             {{ form_row(form.region) }}
             {{ form_row(form.pays) }}
@@ -514,9 +517,11 @@
 			function changeAddress() {
 				$.ajax({
 					type: "POST",
-					url: Routing.generate("crm_compte_get_coordonnees_by_id",{"id":$('.entity-compte').val()}),
+					url: Routing.generate( "crm_compte_get_coordonnees_facturation_by_id", {'id': $('.entity-compte').val()} ),
 					success: function(data) {
 						$(".input-adresse").val(data.adresse);
+                        $(".input-adresse-ligne2").val(data.adresseLigne2);
+                        $(".input-nom-facturation").val(data.nomFacturation);
 						$(".input-codepostal").val(data.codePostal);
 						$(".input-ville").val(data.ville);
 						$(".input-region").val(data.region);

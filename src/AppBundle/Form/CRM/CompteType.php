@@ -73,9 +73,17 @@ class CompteType extends AbstractType
             	'required' => false,
             	'label' => 'Pays'        	
             ))
+            ->add('nomFacturation', 'text', array(
+                'required' => false,
+                'label' => 'Nom (facturation)',
+            ))
             ->add('adresseFacturation', 'text', array(
                 'required' => false,
                 'label' => 'Adresse (facturation)',
+            ))
+            ->add('adresseFacturationLigne2', 'text', array(
+                'required' => false,
+                'label' => 'Adresse suite (facturation)',
             ))
             ->add('codePostalFacturation', 'text', array(
                 'required' => false,

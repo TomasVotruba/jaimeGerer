@@ -197,6 +197,7 @@ class JournalVentesController extends Controller
 		if($compteComptable == null){
 			$compteComptable = $compteAttente;
 		}
+
 		$ligne->setCompteComptable($compteComptable);
 		$em->persist($ligne);
 

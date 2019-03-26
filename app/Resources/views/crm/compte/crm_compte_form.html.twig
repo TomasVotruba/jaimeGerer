@@ -35,7 +35,9 @@
     </div>
     <div class="col-md-6">
     	<div class="hidden" id="wrapper-adresse-facturation">
+	    	{{ form_row(form.nomFacturation) }}
 	    	{{ form_row(form.adresseFacturation) }}
+	    	{{ form_row(form.adresseFacturationLigne2) }}
 	    	{{ form_row(form.codePostalFacturation) }}
 	    	{{ form_row(form.villeFacturation) }}
 	    	{{ form_row(form.paysFacturation) }}

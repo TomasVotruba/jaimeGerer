@@ -67,7 +67,7 @@ class JournalBanque
     private $nom;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\CompteComptable", inversedBy="journalBanque", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\CompteComptable", inversedBy="journalBanque")
      * @ORM\JoinColumn(nullable=false)
      */
     private $compteComptable;

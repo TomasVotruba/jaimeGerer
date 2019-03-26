@@ -174,7 +174,6 @@
                             {% endif %}
                         </td>
                     </tr>
-
                 </tbody>
             </table>
         </div>
@@ -191,10 +190,18 @@
                     <tr>
                         <td>Adresse</td>
                         <td>
+
                             {% if facture.adresse is empty %}
                                 -
                             {% else %}
+                                {% if facture.nomFacturation is not empty %}
+                                    {{ facture.nomFacturation }}<br />
+                                {% endif %}
                                 {{ facture.adresse }}
+                                {% if facture.adresseLigne2 is not empty %}
+                                    <br />
+                                    {{ facture.adresseLigne2 }}
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>
@@ -272,17 +279,16 @@
 
             {% if facture.hasTypeProduit("Panorama") %}
 
-						<div id="facture-taxe-wrapper" class="form-group">
-								<span class="facture-label">Facturation Belgique</span>
-								{% if facture.facturationBelgePercent is not null %}
-										<span class="facture-montant">{{ facture.facturationBelgePercent*100 }}%</span>
-										<span class="facture-montant">{{ facture.facturationBelge }}
-												€</span>
-								{% else %}
-										<span class="facture-montant">&nbsp;</span>
-										<span class="facture-montant">-</span>
-								{% endif %}
-						</div>
+				<div id="facture-taxe-wrapper" class="form-group">
+					<span class="facture-label">Facturation Belgique</span>
+					{% if facture.facturationBelgePercent is not null %}
+						<span class="facture-montant">{{ facture.facturationBelgePercent*100 }}%</span>
+						<span class="facture-montant">{{ facture.facturationBelge }} €</span>
+					{% else %}
+						<span class="facture-montant">&nbsp;</span>
+						<span class="facture-montant">-</span>
+					{% endif %}
+				</div>
 
             {% else %}
 
@@ -324,8 +330,8 @@
                     {% if facture.taxe is not null %}
                         Total TTC
                     {% elseif facture.hasTypeProduit("Panorama") %}
-											Total
-										{% else %}
+						Total
+					{% else %}
                         Total prix net
                     {% endif %}
                 </span>

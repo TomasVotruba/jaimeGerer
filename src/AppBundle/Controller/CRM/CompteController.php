@@ -451,7 +451,31 @@ class CompteController extends Controller
 		$response = new JsonResponse();
 		$response->setData(array(
             'secteur' => $compte->getSecteurActivite(),
+			'adresse' => $compte->getAdresse(),
+			'codePostal' => $compte->getCodePostal(),
+			'ville' => $compte->getVille(),
+			'region' => $compte->getRegion(),
+			'pays' => $compte->getPays(),
+			'telephone' => $compte->getTelephone(),
+			'fax' => $compte->getFax(),
+			'priveOrPublic' => $compte->getPriveOrPublic(),
+		));
+
+		return $response;
+	}
+
+	/**
+	 * @Route("/crm/compte/get_coordonnees_facturation_by_id/{id}", name="crm_compte_get_coordonnees_facturation_by_id", options={"expose"=true})
+	 */
+	public function compteGetCoordonneesFacturationById(Compte $compte)
+	{
+
+		$response = new JsonResponse();
+		$response->setData(array(
+            'secteur' => $compte->getSecteurActivite(),
 			'adresse' => $compte->getAdresseFacturation()? $compte->getAdresseFacturation() : $compte->getAdresse(),
+			'adresseLigne2' => $compte->getAdresseFacturationLigne2()? $compte->getAdresseFacturationLigne2() : '',
+			'nomFacturation' => $compte->getNomFacturation()? $compte->getNomFacturation() : '',
 			'codePostal' => $compte->getCodePostalFacturation() ? $compte->getCodePostalFacturation() : $compte->getCodePostal(),
 			'ville' => $compte->getVilleFacturation() ? $compte->getVilleFacturation() : $compte->getVille(),
 			'region' => $compte->getRegion(),

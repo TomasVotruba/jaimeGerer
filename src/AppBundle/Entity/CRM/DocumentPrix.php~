@@ -51,9 +51,23 @@ class DocumentPrix
     /**
      * @var string
      *
+     * @ORM\Column(name="nom_facturation", type="string", length=255, nullable=true)
+     */
+    private $nomFacturation;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="adresse", type="string", length=255, nullable=true)
      */
     private $adresse;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="adresse_ligne_2", type="string", length=255, nullable=true)
+     */
+    private $adresseLigne2;
 
     /**
      * @var string
@@ -193,14 +207,14 @@ class DocumentPrix
     private $cgv;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="documentPrixs")
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
      */
     private $compte;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact", inversedBy="documentsPrix")
      * @ORM\JoinColumn(nullable=true)
      */
     private $contact;
@@ -255,7 +269,7 @@ class DocumentPrix
 
    /**
     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\BonCommande", inversedBy="factures")
-    * @ORM\JoinColumn(nullable=true)
+    * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
     */
     private $bonCommande;
 
@@ -263,6 +277,38 @@ class DocumentPrix
    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="facture", cascade={"remove"}, orphanRemoval=true)
    */
   private $journalVentes;
+
+  /**
+   * Constructor
+   */
+    public function __construct($companyId=null, $type=null, $em=null)
+    {
+        $this->produits = new ArrayCollection();
+        $this->avoirs = new ArrayCollection();
+        $this->relances = new ArrayCollection();
+        $this->rapprochements = new ArrayCollection();
+
+        if($type!= null){
+            $this->type = $type;
+        }
+        if($this->cgv == null && $em!=null){
+            $settingsRepository = $em->getRepository('AppBundle:Settings');
+            $cgv = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'CGV_'.$this->type, 'company' => $companyId));
+
+            if($cgv){
+                $this->cgv = $cgv->getValeur();
+            }
+        }
+
+        if($this->dateCreation == null){
+            $this->dateCreation = new \DateTime(date('Y-m-d'));
+        }
+
+        if($this->dateValidite == null){
+            $this->dateValidite = new \DateTime(date('Y-m-d', strtotime("+1 month", strtotime(date('Y-m-d')))));
+        }
+
+    }
 
     /**
      * Get id
@@ -667,39 +713,7 @@ class DocumentPrix
     	return $this->num;
     }
 
-    /**
-     * Constructor
-     */
-    public function __construct($companyId=null, $type=null, $em=null)
-    {
-
-
-    	$this->produits = new ArrayCollection();
-    	$this->avoirs = new ArrayCollection();
-    	$this->relances = new ArrayCollection();
-    	$this->rapprochements = new ArrayCollection();
-
-    	if($type!= null){
-    		$this->type = $type;
-    	}
-    	if($this->cgv == null && $em!=null){
-    		$settingsRepository = $em->getRepository('AppBundle:Settings');
-    		$cgv = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'CGV_'.$this->type, 'company' => $companyId));
-
-    		if($cgv){
-    			$this->cgv = $cgv->getValeur();
-    		}
-    	}
-
-    	if($this->dateCreation == null){
-    		$this->dateCreation = new \DateTime(date('Y-m-d'));
-    	}
-
-    	if($this->dateValidite == null){
-    		$this->dateValidite = new \DateTime(date('Y-m-d', strtotime("+1 month", strtotime(date('Y-m-d')))));
-    	}
-
-    }
+    
 
     public function __toString()
     {
@@ -797,6 +811,10 @@ class DocumentPrix
         return $this->produits;
     }
 
+    public function clearProduits(){
+        $this->produits->clear();
+    }
+
     /**
      * Set taxePercent
      *
@@ -877,7 +895,7 @@ class DocumentPrix
             $totalTTC = $totalHT+$this->taxe;
         }
 
-        return intval($totalTTC*100);
+        return intval(strval($totalTTC*100));
     }
 
     public function getTotalHTMoinsAvoirs(){
@@ -903,7 +921,7 @@ class DocumentPrix
         foreach($this->rapprochements as $rapprochement){
             $total+= $rapprochement->getMouvementBancaire()->getMontant()*100;
         }
-        return intval($total);
+        return intval(strval($total));
     }
 
 
@@ -1411,55 +1429,6 @@ class DocumentPrix
         return $totalHT*$this->facturationBelgePercent;
     }
 
-    /**
-     * Add bonsCommande
-     *
-     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
-     * @return DocumentPrix
-     */
-    public function addBonsCommande(\AppBundle\Entity\CRM\BonCommande $bonsCommande)
-    {
-        $bonsCommande->setFacture($this);
-        $this->bonsCommande[] = $bonsCommande;
-
-        return $this;
-    }
-
-    /**
-     * Remove bonsCommande
-     *
-     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
-     */
-    public function removeBonsCommande(\AppBundle\Entity\CRM\BonCommande $bonsCommande)
-    {
-        $this->bonsCommande->removeElement($bonsCommande);
-    }
-
-    /**
-     * Remove bonsCommande
-     *
-     * @param \AppBundle\Entity\CRM\BonCommande $bonsCommande
-     */
-    public function removeAllBonsCommande()
-    {
-        foreach($this->bonsCommande as $bc){
-            $bc->setFactureNull(null);
-            $this->bonsCommande->removeElement($bc);
-        }
-    }
-
-    /**
-     * Get bonsCommande
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getBonsCommande()
-    {
-        if(count($this->bonsCommande) == 0){
-            return null;
-        }
-        return $this->bonsCommande;
-    }
 
     /**
      * Add journalVentes
@@ -1502,5 +1471,28 @@ class DocumentPrix
             }
         }
         return false;
+    }
+
+    /**
+     * Set bonCommande
+     *
+     * @param \AppBundle\Entity\CRM\BonCommande $bonCommande
+     * @return DocumentPrix
+     */
+    public function setBonCommande(\AppBundle\Entity\CRM\BonCommande $bonCommande = null)
+    {
+        $this->bonCommande = $bonCommande;
+
+        return $this;
+    }
+
+    /**
+     * Get bonCommande
+     *
+     * @return \AppBundle\Entity\CRM\BonCommande 
+     */
+    public function getBonCommande()
+    {
+        return $this->bonCommande;
     }
 }

@@ -51,9 +51,23 @@ class DocumentPrix
     /**
      * @var string
      *
+     * @ORM\Column(name="nom_facturation", type="string", length=255, nullable=true)
+     */
+    private $nomFacturation;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="adresse", type="string", length=255, nullable=true)
      */
     private $adresse;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="adresse_ligne_2", type="string", length=255, nullable=true)
+     */
+    private $adresseLigne2;
 
     /**
      * @var string
@@ -1480,5 +1494,51 @@ class DocumentPrix
     public function getBonCommande()
     {
         return $this->bonCommande;
+    }
+
+    /**
+     * Set nomFacturation
+     *
+     * @param string $nomFacturation
+     * @return DocumentPrix
+     */
+    public function setNomFacturation($nomFacturation)
+    {
+        $this->nomFacturation = $nomFacturation;
+
+        return $this;
+    }
+
+    /**
+     * Get nomFacturation
+     *
+     * @return string 
+     */
+    public function getNomFacturation()
+    {
+        return $this->nomFacturation;
+    }
+
+    /**
+     * Set adresseLigne2
+     *
+     * @param string $adresseLigne2
+     * @return DocumentPrix
+     */
+    public function setAdresseLigne2($adresseLigne2)
+    {
+        $this->adresseLigne2 = $adresseLigne2;
+
+        return $this;
+    }
+
+    /**
+     * Get adresseLigne2
+     *
+     * @return string 
+     */
+    public function getAdresseLigne2()
+    {
+        return $this->adresseLigne2;
     }
 }

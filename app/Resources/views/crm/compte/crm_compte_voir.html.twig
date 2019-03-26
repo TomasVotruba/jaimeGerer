@@ -158,7 +158,14 @@
 								{% if compte.adresseFacturation is empty %}
 						    		-
 						    	{% else %}
+						    		{% if compte.nomFacturation is not empty %}
+						    			{{ compte.nomFacturation }}<br />
+						    		{% endif %}
 						    		{{ compte.adresseFacturation }}
+						    		{% if compte.adresseFacturationLigne2 is not empty %}
+						    			<br />
+						    			{{ compte.adresseFacturationLigne2 }}
+						    		{% endif %}
 						    	{% endif %}
 				    		</td>
 	    				</tr>

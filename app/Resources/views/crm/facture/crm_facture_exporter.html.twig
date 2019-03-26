@@ -98,8 +98,22 @@
 
         <div id="destinataire">
             <p>
-                {{ facture.compte }}<br/>
-                {{ facture.adresse }}<br/>
+                {% if facture.nomFacturation is not empty %}
+                    {{ facture.nomFacturation }}
+                {% else %}
+                    {{ facture.compte }}
+                {% endif %}
+                <br/>
+                {% if facture.adresse is empty %}
+                    -
+                {% else %}
+                    {{ facture.adresse }}
+                    {% if facture.adresseLigne2 is not empty %}
+                        <br />
+                        {{ facture.adresseLigne2 }}
+                    {% endif %}
+                {% endif %}
+                <br/>
                 {{ facture.codePostal }}
                 {{ facture.ville|upper }}<br/>
                 {{ facture.pays }}<br/>

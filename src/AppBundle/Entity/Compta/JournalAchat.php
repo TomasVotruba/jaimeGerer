@@ -43,7 +43,7 @@ class JournalAchat
     private $credit;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\CompteComptable", inversedBy="journalAchats", cascade={"all"})
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\CompteComptable", inversedBy="journalAchats")
      * @ORM\JoinColumn(nullable=false)
      */
     private $compteComptable;

@@ -211,13 +211,26 @@ class Compte
     */ 
     private $depenses;
     
-       
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nom_facturation", type="string", length=255, nullable=true)
+     */
+    private $nomFacturation;
+
      /**
      * @var string
      *
      * @ORM\Column(name="adresse_facturation", type="string", length=255, nullable=true)
      */
     private $adresseFacturation;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="adresse_facturation_ligne_2", type="string", length=255, nullable=true)
+     */
+    private $adresseFacturationLigne2;
 
     /**
      * @var string
@@ -1072,5 +1085,68 @@ class Compte
     public function getPaysFacturation()
     {
         return $this->paysFacturation;
+    }
+
+    /**
+     * Set nomFacturation
+     *
+     * @param string $nomFacturation
+     * @return Compte
+     */
+    public function setNomFacturation($nomFacturation)
+    {
+        $this->nomFacturation = $nomFacturation;
+
+        return $this;
+    }
+
+    /**
+     * Get nomFacturation
+     *
+     * @return string 
+     */
+    public function getNomFacturation()
+    {
+        return $this->nomFacturation;
+    }
+
+    /**
+     * Set adresseFacturationLigne2
+     *
+     * @param string $adresseFacturationLigne2
+     * @return Compte
+     */
+    public function setAdresseFacturationLigne2($adresseFacturationLigne2)
+    {
+        $this->adresseFacturationLigne2 = $adresseFacturationLigne2;
+
+        return $this;
+    }
+
+    /**
+     * Get adresseFacturationLigne2
+     *
+     * @return string 
+     */
+    public function getAdresseFacturationLigne2()
+    {
+        return $this->adresseFacturationLigne2;
+    }
+
+    public function getAdresseFacturationComplete(){
+
+        $adresse = '';
+        if($this->nomFacturation){
+            $adresse.= $this->nomFacturation.'<br />';
+        }
+        if($this->adresseFacturation){
+            $adresse.= $this->adresseFacturation;
+        }
+         if($this->adresseFacturationLigne2){
+            $adresse.= '<br />'.$this->adresseFacturationLigne2;
+        }
+
+        return $adresse;
+
     }
 }
