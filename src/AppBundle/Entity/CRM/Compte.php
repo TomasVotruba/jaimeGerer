@@ -981,4 +981,96 @@ class Compte
     {
         return $this->compteEnfants;
     }
+
+    /**
+     * Set adresseFacturation
+     *
+     * @param string $adresseFacturation
+     * @return Compte
+     */
+    public function setAdresseFacturation($adresseFacturation)
+    {
+        $this->adresseFacturation = $adresseFacturation;
+
+        return $this;
+    }
+
+    /**
+     * Get adresseFacturation
+     *
+     * @return string 
+     */
+    public function getAdresseFacturation()
+    {
+        return $this->adresseFacturation;
+    }
+
+    /**
+     * Set villeFacturation
+     *
+     * @param string $villeFacturation
+     * @return Compte
+     */
+    public function setVilleFacturation($villeFacturation)
+    {
+        $this->villeFacturation = $villeFacturation;
+
+        return $this;
+    }
+
+    /**
+     * Get villeFacturation
+     *
+     * @return string 
+     */
+    public function getVilleFacturation()
+    {
+        return $this->villeFacturation;
+    }
+
+    /**
+     * Set codePostalFacturation
+     *
+     * @param string $codePostalFacturation
+     * @return Compte
+     */
+    public function setCodePostalFacturation($codePostalFacturation)
+    {
+        $this->codePostalFacturation = $codePostalFacturation;
+
+        return $this;
+    }
+
+    /**
+     * Get codePostalFacturation
+     *
+     * @return string 
+     */
+    public function getCodePostalFacturation()
+    {
+        return $this->codePostalFacturation;
+    }
+
+    /**
+     * Set paysFacturation
+     *
+     * @param string $paysFacturation
+     * @return Compte
+     */
+    public function setPaysFacturation($paysFacturation)
+    {
+        $this->paysFacturation = $paysFacturation;
+
+        return $this;
+    }
+
+    /**
+     * Get paysFacturation
+     *
+     * @return string 
+     */
+    public function getPaysFacturation()
+    {
+        return $this->paysFacturation;
+    }
 }

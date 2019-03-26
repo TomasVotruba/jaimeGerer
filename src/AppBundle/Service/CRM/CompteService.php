@@ -54,7 +54,7 @@ class CompteService
             return false;
         }
         // Description
-        $userName = $user ? $user->getUsername() : 'Inconnu';
+        $userName = $user ? $user->__toString() : 'Inconnu';
         $origCompteAData = $this->em->getUnitOfWork()->getOriginalEntityData($compteA);
         $origCompteBData = $this->em->getUnitOfWork()->getOriginalEntityData($compteB);
         $compteA->setDescription($origCompteAData['description'] . ' -- ' . $origCompteAData['nom'] . ' fusionné avec ' . $origCompteBData['nom'] . ' le ' . (new \DateTime())->format('d/m/Y') . ' par ' . $userName . ' -- ' . $origCompteBData['description']);

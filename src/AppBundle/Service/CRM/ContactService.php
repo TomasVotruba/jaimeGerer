@@ -548,7 +548,7 @@ class ContactService extends ContainerAware
             return false;
         }
         // Description
-        $userName = $user ? $user->getUsername() : 'Inconnu';
+        $userName = $user ? $user->__toString() : 'Inconnu';
         $origContactAData = $this->em->getUnitOfWork()->getOriginalEntityData($contactA);
         $origContactBData = $this->em->getUnitOfWork()->getOriginalEntityData($contactB);        
         $contactA->setDescription($origContactAData['description'] . ' -- ' . $origContactAData['nom'] . ' fusionné avec ' . $origContactBData['nom'] . ' le ' . (new \DateTime())->format('d/m/Y') . ' par ' . $userName . ' -- ' . $origContactBData['description']);

@@ -211,7 +211,8 @@ class Compte
     */ 
     private $depenses;
     
-    /*
+       
+     /**
      * @var string
      *
      * @ORM\Column(name="adresse_facturation", type="string", length=255, nullable=true)
@@ -240,7 +241,6 @@ class Compte
      */
     private $paysFacturation;
 
-
     /**
      * Constructor
      */
@@ -249,7 +249,7 @@ class Compte
         $this->documentPrixs = new \Doctrine\Common\Collections\ArrayCollection();
         $this->opportunites = new \Doctrine\Common\Collections\ArrayCollection();
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
-    }  
+    } 
 
     /**
      * Set id
@@ -815,7 +815,7 @@ class Compte
 
         return 'N/A';
     }
-<<<<<<< HEAD
+
     
     /**
      * Add documentPrix
@@ -862,7 +862,6 @@ class Compte
         $opportunite->setCompte($this);
         $this->opportunites[] = $opportunite;
 
-        return $this;
     }
 
     /**
@@ -895,7 +894,6 @@ class Compte
     {
         $contact->setCompte($this);
         $this->contacts[] = $contact;
-
         return $this;
     }
 
@@ -929,7 +927,6 @@ class Compte
     {
         $depense->setCompte($this);
         $this->depenses[] = $depense;
-
         return $this;
     }
 
@@ -952,6 +949,36 @@ class Compte
     {
         return $this->depenses;
     }
-=======
->>>>>>> master
+
+    /**
+     * Add compteEnfants
+     *
+     * @param \AppBundle\Entity\CRM\Compte $compteEnfants
+     * @return Compte
+     */
+    public function addCompteEnfant(\AppBundle\Entity\CRM\Compte $compteEnfants)
+    {
+        $this->compteEnfants[] = $compteEnfants;
+        return $this;
+    }
+
+    /**
+     * Remove compteEnfants
+     *
+     * @param \AppBundle\Entity\CRM\Compte $compteEnfants
+     */
+    public function removeCompteEnfant(\AppBundle\Entity\CRM\Compte $compteEnfants)
+    {
+        $this->compteEnfants->removeElement($compteEnfants);
+    }
+
+    /**
+     * Get compteEnfants
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCompteEnfants()
+    {
+        return $this->compteEnfants;
+    }
 }
