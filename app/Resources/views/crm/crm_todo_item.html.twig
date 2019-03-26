@@ -1,0 +1,17 @@
+<div class="todo-item row">
+	<div class="todo-info col-md-11">
+		<span class="label label-warning">FACTURER</span>
+		{% if type == 'late' %}
+			<span class="label label-danger">{{ todo.retard }} jours de retard !</span>
+		{% endif %}
+
+		<br />
+		<strong>{{ todo.actionCommerciale.compte.nom }}</strong><br />
+		{{ todo.actionCommerciale.nom }} : {{ todo.nom }} 
+	</div>
+	<div class="todo-action col-md-1">
+		<a href="{{ path('crm_action_commerciale_voir', {'id' : todo.actionCommerciale.id }) }}" class="btn btn-primary btn-xs">
+			<span class="glyphicon glyphicon-eye-open"></span>
+		</a>
+	</div>
+</div>

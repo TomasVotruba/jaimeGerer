@@ -131,15 +131,22 @@ class OpportuniteRepository extends EntityRepository
 		return $qb->getQuery()->getSingleScalarResult();
 	}
 
-	public function getChartData($company){
+	public function getFunnelChartData($company){
+
+		$thisYear = date('Y');
+		$lastYear = $thisYear-1;
+
 		$result = $this->createQueryBuilder('o')
 			->select('s.valeur as probabilite, SUM(o.montant) as total')
 			->innerJoin('o.compte', 'c')
 			->innerJoin('o.probabilite', 's')
 			->where('c.company = :company')
 			->andWhere('o.etat = :ongoing')
+			->andWhere('o.date LIKE :thisYear or o.date LIKE :lastYear')
 			->setParameter('company', $company)
 			->setParameter('ongoing', 'ONGOING')
+			->setParameter('thisYear', $thisYear.'%')
+			->setParameter('lastYear',  $lastYear.'%')
 			->groupBy('o.probabilite')
 			->getQuery()->getResult();
 
@@ -402,6 +409,20 @@ class OpportuniteRepository extends EntityRepository
 		->setParameter('start', $startDate)
 		->setParameter('end', $endDate)
 		->setParameter('won', 'WON');
+
+		return $qb->getQuery()->getResult();
+	}
+
+	public function findBetweenDates($company, $startDate, $endDate){
+
+		$qb = $this->createQueryBuilder('o')
+		->innerJoin('o.compte', 'c')
+		->where('c.company = :company')
+		->andWhere('o.date >= :start')
+		->andWhere('o.date <= :end')
+		->setParameter('company', $company)
+		->setParameter('start', $startDate)
+		->setParameter('end', $endDate);
 
 		return $qb->getQuery()->getResult();
 	}

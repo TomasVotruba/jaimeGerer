@@ -36,13 +36,13 @@
 		    			<span class="glyphicon glyphicon-floppy-disk"></span> Exporter le devis
 		    		</a>
 
-		    		{% if opportunite.isWon %}
+		    		{% if opportunite.isWon and opportunite.totalBonsCommande == opportunite.montantInt %}
 	    		    	{% if facture is null or facture|length == 0 %}
 	    			    	<a href="{{ path('crm_action_commerciale_convertir', {'id' : opportunite.id }) }}"  class="btn btn-primary btn-block-mobile" data-toggle="modal" data-target="#modal" id="btn-convertir-devis">
 	    			    		<span class="glyphicon glyphicon-check"></span> Convertir en facture
 	    			    	</a>
 	    		    	{% else %}
-	    			    	<a href="{{ path('crm_devis_convertir', {'id' : opportunite.devis.id }) }}"  class="btn btn-primary btn-block-mobile" data-toggle="modal" data-target="#modal"  id="btn-convertir-devis">
+	    			    	<a href="{{ path('crm_action_commerciale_convertir', {'id' : opportunite.id }) }}"  class="btn btn-primary btn-block-mobile" data-toggle="modal" data-target="#modal"  id="btn-convertir-devis">
 	    			    		<span class="glyphicon glyphicon-check"></span> Ajouter une autre facture
 	    			    	</a>
 	    			    	{% if facture|length == 1 %}
@@ -86,7 +86,7 @@
 
      <div class="row" id="opportunite_details">
 	    	<div class="col-md-12 center-mobile">
-	    		<h2>{{ opportunite.nom }} <span class="hidden-xs">-</span> <span class="block-mobile">{{ opportunite.montant }} &euro;</span>
+	    		<h2>{{ opportunite.nom }} <span class="hidden-xs">-</span> <span class="block-mobile">{{ opportunite.montant|number_format(2, ',', ' ') }} &euro;</span>
 	    		<br class="hidden-xs" />
     			{% if opportunite.isWon %}
     				<small class="green"><span class="glyphicon glyphicon-thumbs-up"></span> Action commerciale gagnée</small>
@@ -297,6 +297,48 @@
 				<hr />
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="col-md-6">
+				<table  class="contact-view-table">
+					<tr>
+    					<td>Temps passé en commercial </td>
+			    		<td>
+			    			{% if opportunite.tempsCommercial %}
+								{{ opportunite.tempsCommercial }} heures
+			    			{% else %}
+			    				-
+			    			{% endif %}
+			    		</td>
+    				</tr>
+
+				</table>
+			</div>
+			<div class="col-md-6">
+				<table  class="contact-view-table">
+					<tr>
+						<td>Proposition commerciale</td>
+						<td>
+							{% if opportunite.fichier %}
+								<a href="{{ app.request.getSchemeAndHttpHost() }}/web/upload/crm/actions_commerciales_pj/{{ opportunite.fichier }}" target="_blank"> 
+									<figure class="fichier">
+									    <img src="{{ asset('images/assets/file.png') }}" alt="Fichier" />
+									    <figcaption>{{ opportunite.fichier }}</figcaption>
+									</figure>
+								</a>
+ 							{% endif %}
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+
+		<div class="row">
+			<div class="col-md-12">
+				<hr />
+			</div>
+		</div>
 		
 		{% if opportunite.devis %}
 			<div class="row hidden-xs">
@@ -336,13 +378,13 @@
 			    	
 			   		<div class="form-group">
 			   			<span class="devis-label">Sous total</span>
-			   			<span class="devis-montant">{{ opportunite.devis.sousTotal }} €</span>
+			   			<span class="devis-montant">{{ opportunite.devis.sousTotal|number_format(2, ',', ' ') }} €</span>
 			   		</div>
 			    	<div class="form-group">
 			    		<span class="devis-label">Remise</span>
 			    		<span class="devis-montant">
 			    			{% if opportunite.remise is not null %}
-			    				{{ opportunite.remise }} €
+			    				{{ opportunite.remise|number_format(2, ',', ' ') }} €
 			    			{% else %}
 			    				-
 			    			{% endif %}
@@ -350,7 +392,7 @@
 			    	</div>
 			    	<div class="form-group">
 			    		<span class="devis-label">Total HT</span>
-			    		<span class="devis-montant" id="total-ht">{{ opportunite.devis.totalHT }} €</span>
+			    		<span class="devis-montant" id="total-ht">{{ opportunite.devis.totalHT|number_format(2, ',', ' ') }} €</span>
 			    	</div>
 					<div class="form-group">
 						<span class="devis-label">TVA en %</span>
@@ -367,7 +409,7 @@
 						<span class="devis-label">TVA en €</span>
 						{% if opportunite.devis.taxe is not null %}
 							<span class="devis-montant" id="total-tax-montant">
-								{{ opportunite.devis.taxe }} €
+								{{ opportunite.devis.taxe|number_format(2, ',', ' ') }} €
 							</span>
 						{% else %}
 							<span class="devis-montant">&nbsp;</span>
@@ -378,7 +420,7 @@
 			   	 		<span class="devis-label">
 			   	 			{% if opportunite.devis.taxe is not null %} Total TTC {% else %} Total prix net {% endif %}
 			   	 		</span>
-			   	 		<span class="devis-montant" id="total-ttc">{{ opportunite.devis.totalTTC }} €</span>
+			   	 		<span class="devis-montant" id="total-ttc">{{ opportunite.devis.totalTTC|number_format(2, ',', ' ') }} €</span>
 			   	 	</div>
 			    </div>
 			</div>
@@ -462,6 +504,73 @@
 								<td> {{ bonCommande.num }} </td>
 								<td>
 									{{ bonCommande.montantMonetaire|number_format(2, ',', ' ') }} €
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<hr />
+					<h3>Plan de paiement
+					<a class="btn btn-primary btn-xs" href=" {{ path('crm_action_commerciale_gagner_plan_paiement', {'id' : opportunite.id, 'edition' : true }) }} ">Modifer</a> 
+					</h3>
+					<table class="contact-view-table" id="plan-paiement-table">
+						<thead>
+							<tr>
+								<th>Nom de la phase</th>
+								<th>Date de facturation</th>
+								<th>Pourcentage à facturer</th>
+								<th>Montant</th>
+								<th>Facture</th>
+							</tr>
+						</thead>
+						<tbody>
+						{% for planPaiement in opportunite.planPaiements %}
+							<tr>
+								<td>
+									{{ planPaiement.nom }} 
+								</td>
+								<td>
+									{% if planPaiement.commande %}
+										A la commande
+									{% elseif planPaiement.finProjet %}
+										A la fin du projet
+									{% else %} 
+										{{ planPaiement.date|date('d/m/Y') }} 
+									{% endif %}
+								</td>
+								<td>
+									{{ planPaiement.pourcentage }} %
+								</td>
+								<td>
+									{{ planPaiement.montant|number_format(2,',',' ') }} €
+								</td>
+								<td>
+									{% if planPaiement.facture %}
+										<span class="green glyphicon glyphicon-ok" title="Facturé"></span>&nbsp;
+										<a href="{{ path('crm_facture_voir', {'id' : planPaiement.facture.id } ) }}">{{ planPaiement.facture.num }}</a>
+									{% elseif planPaiement.finProjet or planPaiement.date|date('Ymd') > "now"|date('Ymd') %}
+										<span class="orange glyphicon glyphicon-time" title="Pas encore facturée"></span> 
+										<i>Pas encore facturé</i>
+										&nbsp;
+										<a class="btn btn-xs btn-primary" href="{{ path('crm_action_commerciale_convertir', {'id' : opportunite.id, 'planPaiementId' : planPaiement.id }) }}" data-toggle="modal" data-target="#modal">
+											Facturer
+										</a>
+									{% else %}
+										<strong>
+											<span class="red glyphicon glyphicon-warning-sign" title="Facture en retard"></span> 
+											<span class="red">RETARD</span>
+										</strong>
+										&nbsp;
+										<a class="btn btn-xs btn-primary" href="{{ path('crm_action_commerciale_convertir', {'id' : opportunite.id, 'planPaiementId' : planPaiement.id }) }}" data-toggle="modal" data-target="#modal">
+											Facturer
+										</a>
+									{% endif %}
 								</td>
 							</tr>
 						{% endfor %}

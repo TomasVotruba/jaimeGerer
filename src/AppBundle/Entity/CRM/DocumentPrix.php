@@ -263,7 +263,39 @@ class DocumentPrix
    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="facture", cascade={"remove"}, orphanRemoval=true)
    */
   private $journalVentes;
-  
+
+  /**
+   * Constructor
+   */
+    public function __construct($companyId=null, $type=null, $em=null)
+    {
+        $this->produits = new ArrayCollection();
+        $this->avoirs = new ArrayCollection();
+        $this->relances = new ArrayCollection();
+        $this->rapprochements = new ArrayCollection();
+
+        if($type!= null){
+            $this->type = $type;
+        }
+        if($this->cgv == null && $em!=null){
+            $settingsRepository = $em->getRepository('AppBundle:Settings');
+            $cgv = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'CGV_'.$this->type, 'company' => $companyId));
+
+            if($cgv){
+                $this->cgv = $cgv->getValeur();
+            }
+        }
+
+        if($this->dateCreation == null){
+            $this->dateCreation = new \DateTime(date('Y-m-d'));
+        }
+
+        if($this->dateValidite == null){
+            $this->dateValidite = new \DateTime(date('Y-m-d', strtotime("+1 month", strtotime(date('Y-m-d')))));
+        }
+
+    }
+
     /**
      * Get id
      *
@@ -667,39 +699,7 @@ class DocumentPrix
     	return $this->num;
     }
 
-    /**
-     * Constructor
-     */
-    public function __construct($companyId=null, $type=null, $em=null)
-    {
-
-
-    	$this->produits = new ArrayCollection();
-    	$this->avoirs = new ArrayCollection();
-    	$this->relances = new ArrayCollection();
-    	$this->rapprochements = new ArrayCollection();
-
-    	if($type!= null){
-    		$this->type = $type;
-    	}
-    	if($this->cgv == null && $em!=null){
-    		$settingsRepository = $em->getRepository('AppBundle:Settings');
-    		$cgv = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'CGV_'.$this->type, 'company' => $companyId));
-
-    		if($cgv){
-    			$this->cgv = $cgv->getValeur();
-    		}
-    	}
-
-    	if($this->dateCreation == null){
-    		$this->dateCreation = new \DateTime(date('Y-m-d'));
-    	}
-
-    	if($this->dateValidite == null){
-    		$this->dateValidite = new \DateTime(date('Y-m-d', strtotime("+1 month", strtotime(date('Y-m-d')))));
-    	}
-
-    }
+    
 
     public function __toString()
     {
@@ -795,6 +795,10 @@ class DocumentPrix
     public function getProduits()
     {
         return $this->produits;
+    }
+
+    public function clearProduits(){
+        $this->produits->clear();
     }
 
     /**

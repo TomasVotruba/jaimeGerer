@@ -1,0 +1,25 @@
+<div class="produit-collection row">
+		<div class="col-md-2">
+			<div class="form-group">
+				{{ form_widget(form.nom) }}
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="form-group">
+		    	{{ form_widget(form.date) }}
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="input-group">
+				{{ form_widget(form.pourcentage) }}<div class="input-group-addon">%</div>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="input-group">
+				{{ form_widget(form.montant) }}<div class="input-group-addon">€</div>
+			</div>
+		</div>
+		<div class="col-md-1">
+			<a href="#" class="btn btn-xs btn-danger remove-button"><span class="glyphicon glyphicon-minus"></span></a>
+		</div>
+</div>

@@ -32,27 +32,18 @@ class CompteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
+        $compte = $builder->getData();
+
         $builder
             ->add('nom', 'text', array(
         		'label' => 'Nom de l\'organisation'
-        		//~ 'attr'   =>  array(
-					//~ 'data-validation-engine' => "validate[required,custom[email]]",
-					//~ 'data-errormessage-value-missing' => "Email is required!" ,
-					//~ 'data-errormessage-custom-error' => "Let me give you a hint: someone@nowhere.com" ,
-					//~ 'data-errormessage' => "This is the fall-back error message."
-					//~ 'class' => 'form-control validate[required]'
-				//~ )
         	))
             ->add('telephone','text', array(
             	'required' => false,
-            	//'default_region' => 'FR',
-            	//'format' => PhoneNumberFormat::INTERNATIONAL,
             	'label' => 'Téléphone'
         	))
             ->add('fax', 'text', array(
             	'required' => false,
-            //	'default_region' => 'FR',
-            //	'format' => PhoneNumberFormat::INTERNATIONAL,
             	'label' => 'Fax'
         	))
             ->add('url', 'url', array(
@@ -82,16 +73,25 @@ class CompteType extends AbstractType
             	'required' => false,
             	'label' => 'Pays'        	
             ))
+            ->add('adresseFacturation', 'text', array(
+                'required' => false,
+                'label' => 'Adresse (facturation)',
+            ))
+            ->add('codePostalFacturation', 'text', array(
+                'required' => false,
+                'label' => 'Code postal (facturation)',
+            ))
+            ->add('villeFacturation', 'text', array(
+                'required' => false,
+                'label' => 'Ville (facturation)',
+            ))
+            ->add('paysFacturation', 'text', array(
+                'required' => false,
+                'label' => 'Pays (facturation)' ,        
+            ))
             ->add('description', 'textarea', array(
             	'required' => false,
             	'label' => 'Description'
-        		//~ 'attr'   =>  array(
-					//~ 'data-validation-engine' => "validate[required]",
-					//~ 'data-errormessage-value-missing' => "Email is required!" ,
-					//~ 'data-errormessage-custom-error' => "Let me give you a hint: someone@nowhere.com" ,
-					//~ 'data-errormessage' => "This is the fall-back error message."
-					//~ 'class' => 'form-control validate[required]'
-				//~ )
         	))
             ->add('compteParent', 'shtumi_ajax_autocomplete', array(
             		'entity_alias'=>'comptes',
@@ -133,6 +133,13 @@ class CompteType extends AbstractType
                 'label' => 'Mettre à jour les contacts avec la nouvelle adresse',
                 'mapped' => false,
                 'required' => false
+            ))
+            ->add('adresseFacturationDifferente', 'checkbox', array(
+                'label' => 'Adresse de facturation différente',
+                'mapped' => false,
+                'required' => false,
+                'attr' => array('class' => 'checkbox-adresse-facturation'),
+                'data' => $compte->getAdresseFacturation()?true:false
             ))
             ->add('priveOrPublic', 'choice', array(
                 'label' => 'Privé ou public ?',

@@ -1,0 +1,255 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+    <div class="row">
+        <h1>Action commerciale gagnée :
+            {{ actionCommerciale }}
+            <br/>
+            <small>Félicitations !</small>
+        </h1>
+    </div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<hr />
+				 <h2>Montant HT de l'action commerciale :
+	                {{ actionCommerciale.montant|number_format(2,',',' ') }}
+	                €
+	            </h2>
+			</div>
+		</div>
+
+    <div class="row">
+        <div class="col-md-12">
+			<hr />
+            <h2>Plan de paiement</h2>
+            <strong>A quel moment et en combien de fois le client va-t-il payer ?</strong>
+        </div>
+    </div>
+
+
+   {{ form_start(form, {'action': path('crm_action_commerciale_gagner_plan_paiement', {'id' : actionCommerciale.id, 'edition' : edition }), 'method': 'POST'}) }}
+
+    <div class="row">
+     	<div class="col-md-12">
+       		{{ form_row(form.type) }}
+        </div>
+    </div>
+
+    <div class="hidden" id="custom-wrapper">
+
+	    <div class="row">
+            <div class="col-md-2">
+                <strong>Nom de la phase</strong>
+            </div>
+            <div class="col-md-2">
+                <strong>Date de facturation</strong>
+            </div>
+	        <div class="col-md-2">
+	            <strong>Pourcentage à facturer</strong>
+	        </div>
+            <div class="col-md-2">
+                <strong>Montant</strong>
+            </div>
+	    </div>
+
+	    <div class="row">
+
+	        <div class="col-md-12">
+
+	            <ul
+	                class="repartitions"
+	                id="collectionContainer"
+	                data-prototype="
+					{% filter escape %}
+					    {{ include('crm/action-commerciale/crm_action_commerciale_plan_paiement_form.html.twig', { 'form':  form.planPaiements.vars.prototype }) }}
+				    {% endfilter %}">
+                    {% for repartitionField in form.planPaiements %}
+                        <li>
+                            {{ include('crm/action-commerciale/crm_action_commerciale_plan_paiement_form.html.twig', { 'form': repartitionField }) }}
+                        </li>
+                    {% endfor %}
+	            </ul>
+
+	        </div>
+	    </div>
+
+	    <div class="row">
+	        <div class="col-md-4 align-right">
+	        	<strong>Total réparti :</strong>
+	            <strong>
+	                <span class="total">0</span>% 
+	            </strong>
+	            (<span class="total-euro">0</span> €)
+	            <span class="glyphicon glyphicon-ok green ok-sign hidden"></span>
+
+	        </div>
+	    </div>
+	    <div class="row">
+	        <div class="col-md-2"></div>
+	        <div class="col-md-2 feedback-total red align-right"></div>
+	    </div>
+	</div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr/>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-1">
+            <a class="btn" href="{{ path('crm_action_commerciale_liste') }}">
+                <span class="glyphicon glyphicon-chevron-left"></span>Annuler
+            </a>
+        </div>
+        <div class="col-md-1">
+            {{ form_row(form.submit)  }}
+        </div>
+    </div>
+
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+{{ parent() }}
+
+<script src="{{ asset('js/accounting.min.js') }}"></script>
+<script type="text/javascript">
+	
+	var montantActionCommerciale = "{{ actionCommerciale.montant }}";
+
+    var $addRepartitionLink = $('<a href="#" class="add_repartition_link btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"></span> Ajouter un paiement</a>');
+    var $newRepartitionLi = $('<li></li>').append($addRepartitionLink);
+
+    $(document).ready(function() {
+    	
+    	toggleTypePaiement();
+
+    	$('.type-select').change(function(e){
+			toggleTypePaiement();
+    	});
+
+        var repartitionCollectionHolder = $('ul.repartitions');
+        repartitionCollectionHolder.append($newRepartitionLi);
+        indexNewCollectionRepartition = repartitionCollectionHolder.children().length;
+
+        calculTotal();
+
+        $addRepartitionLink.on('click', function(e) {
+            // empêche le lien de créer un « # » dans l'URL
+            e.preventDefault();
+            // ajoute un nouveau formulaire tag
+            addRepartitionForm(repartitionCollectionHolder, $newRepartitionLi, false);
+
+        });
+
+        $('.percent').change(function() {
+            calculTotal();
+        });
+
+        $('.remove-button').on('click', function(e) {
+            // empêche le lien de créer un « # » dans l'URL
+            e.preventDefault();
+            $(this).parents('li').remove();
+            calculTotal();
+        });
+
+
+        function addRepartitionForm(repartitionCollectionHolder, $newRepartitionLi, ExecTinymceCommand) {
+            var prototype = repartitionCollectionHolder.attr('data-prototype');
+
+            indexNewCollectionRepartition++;
+            var newForm = prototype.replace(/__name__/g, indexNewCollectionRepartition);
+
+            var $newFormLi = $('<li></li>').append(newForm);
+            $newRepartitionLi.before($newFormLi);
+
+            $('.remove-button').unbind('click');
+            $('.remove-button').on('click', function(e) {
+                // empêche le lien de créer un « # » dans l'URL
+                e.preventDefault();
+                $(this).parents('li').remove();
+                 calculTotal();
+            });
+
+            $('.percent').change(function() {
+                calculTotal($(this));
+            });
+
+            $(".dateInput").datepicker({
+				dateFormat: 'dd/mm/yy',
+				firstDay:1
+			});
+        }
+
+        function calculTotal()
+        {
+
+            var total = 0;
+            $.each($('.percent'), function(index, value) {
+                var val = $(value).val();
+                total+= parseFloat(val);
+
+                var montant = val/100*montantActionCommerciale;
+            	$(this).parents('.produit-collection').find('.montant-euro').val(montant.toFixed(2));
+            });
+
+            $('.total').text(total);
+
+            var totalEuro = total/100*montantActionCommerciale;
+            $('.total-euro').text(totalEuro.toFixed(2));
+
+            if (total == 100 ) {
+
+                $('.feedback-total').addClass("hidden");
+                $('.ok-sign').removeClass("hidden");
+                $('button[type=submit]').addClass("btn-success").prop("disabled", false);
+
+            } else {
+
+            	selected = $("input[type='radio']:checked").val();
+            	if( 'CUSTOM' == selected ){
+                	$('button[type=submit]').removeClass("btn-success").prop('disabled', true);
+                }
+
+                if (total < 100) {
+
+                    var reste = 100 - total;
+                    $('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Encore " + reste + "% à répartir").removeClass("hidden");
+                    $('.ok-sign').addClass("hidden");
+                } else if (total > 100) {
+
+                    var trop = total - 100;
+                    $('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> " + trop + "% en trop").removeClass("hidden");
+                    $('.ok-sign').addClass("hidden");
+                }
+
+
+            }
+        }
+
+		function toggleTypePaiement(){
+			selected = $("input[type='radio']:checked").val();
+			if( 'COMMANDE' == selected || 'FIN' == selected || null == selected){
+				$('#custom-wrapper').addClass('hidden');
+				$('button[type=submit]').addClass("btn-success").prop("disabled", false);
+                $('.produit-collection').remove();
+			} else {
+				$('#custom-wrapper').removeClass('hidden');
+                if(0 == $('.produit-collection').length){
+                    addRepartitionForm(repartitionCollectionHolder, $newRepartitionLi, false);
+                }
+			}
+		}
+
+    });
+</script>
+{% endblock %}

@@ -14,29 +14,29 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Opportunite
 {
-  /**
-   * @var integer
-   *
-   * @ORM\Column(name="id", type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="AUTO")
-   */
-  private $id;
+    /**
+    * @var integer
+    *
+    * @ORM\Column(name="id", type="integer")
+    * @ORM\Id
+    * @ORM\GeneratedValue(strategy="AUTO")
+    */
+     private $id;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="nom", type="string", length=255)
-   * @Assert\NotBlank()
-   */
-  private $nom;
+    /**
+    * @var string
+    *
+    * @ORM\Column(name="nom", type="string", length=255)
+    * @Assert\NotBlank()
+    */
+    private $nom;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="montant", type="float")
-   */
-  private $montant;
+    /**
+    * @var string
+    *
+    * @ORM\Column(name="montant", type="float")
+    */
+    private $montant;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
@@ -65,19 +65,19 @@ class Opportunite
      */
     private $priveOrPublic;
 
-  /**
-   * @var \DateTime
-   *
-   * @ORM\Column(name="date_creation", type="date")
-   */
-  private $dateCreation;
+    /**
+    * @var \DateTime
+    *
+    * @ORM\Column(name="date_creation", type="date")
+    */
+    private $dateCreation;
 
-  /**
-   * @var \DateTime
-   *
-   * @ORM\Column(name="date_edition", type="date", nullable=true)
-   */
-  private $dateEdition;
+    /**
+    * @var \DateTime
+    *
+    * @ORM\Column(name="date_edition", type="date", nullable=true)
+    */
+    private $dateEdition;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
@@ -97,99 +97,101 @@ class Opportunite
 	 */
 	private $userGestion;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-   * @ORM\JoinColumn(nullable=true)
-   */
-  private $userCompetCom = null;
 
-  /**
-   * @var string
-   *
-   * @ORM\Column(name="type", type="string")
-   */
-  private $type;
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $userCompetCom = null;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
-   * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-   */
-  private $origine;
+    /**
+    * @var string
+    *
+    * @ORM\Column(name="type", type="string")
+    */
+    private $type;
 
-  /**
-   * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Settings", cascade={"persist"})
-   * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-   */
-  private $settings;
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
+    * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+    */
+    private $origine;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="opportunites")
-   * @ORM\JoinColumn(nullable=false)
-   * @Assert\NotBlank()
-   */
-  private $compte;
-
-  /**
-   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact", inversedBy="opportunites")
-   * @ORM\JoinColumn(nullable=true)
-   */
-  private $contact;
-
-  /**
-  *
-  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\OpportuniteRepartition", mappedBy="opportunite", cascade={"persist", "remove"}, orphanRemoval=true)
-  * @ORM\OrderBy({"date" = "ASC"})
-  *
-  */
-  private $opportuniteRepartitions;
-
-  /**
-  *
-  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\OpportuniteSousTraitance", mappedBy="opportunite", cascade={"persist", "remove"}, orphanRemoval=true)
-  *
-  */
-  private $opportuniteSousTraitances;
+    /**
+    * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Settings", cascade={"persist"})
+    * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+    */
+    private $settings;
 
 
-  /**
-   * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
-   * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-   */
-  private $analytique;
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte")
+    * @ORM\JoinColumn(nullable=false)
+    * @Assert\NotBlank()
+    */
+    private $compte;
 
-  /**
-   * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="opportunite")
-   * @ORM\JoinColumn(nullable=true)
-   */
-  private $devis;
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $contact;
 
-  /**
-   * @var \DateTime
-   *
-   * @ORM\Column(name="date", type="date")
-   */
-  private $date;
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\OpportuniteRepartition", mappedBy="opportunite", cascade={"persist", "remove"}, orphanRemoval=true)
+    * @ORM\OrderBy({"date" = "ASC"})
+    *
+    */
+    private $opportuniteRepartitions;
 
-  /**
-  *
-  * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\BonCommande", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
-  *
-  */
-  private $bonsCommande;
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\OpportuniteSousTraitance", mappedBy="opportunite", cascade={"persist", "remove"}, orphanRemoval=true)
+    *
+    */
+    private $opportuniteSousTraitances;
 
-  /**
-  * @var boolean
-  *
-  * @ORM\Column(name="prescription", type="boolean", nullable=false)
-  */
-  private $prescription = false;
 
-  /**
-   * @var \DateTime
-   *
-   * @ORM\Column(name="date_won", type="date", nullable=true)
-   */
-  private $dateWon;
+    /**
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
+    * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+    */
+    private $analytique;
+
+    /**
+    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="opportunite")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $devis;
+
+    /**
+    * @var \DateTime
+    *
+    * @ORM\Column(name="date", type="date")
+    */
+    private $date;
+
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\BonCommande", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+    *
+    */
+    private $bonsCommande;
+
+    /**
+    * @var boolean
+    *
+    * @ORM\Column(name="prescription", type="boolean", nullable=false)
+    */
+    private $prescription = false;
+
+    /**
+    * @var \DateTime
+    *
+    * @ORM\Column(name="date_won", type="date", nullable=true)
+    */
+    private $dateWon;
 
    /**
     * @var float
@@ -199,11 +201,33 @@ class Opportunite
     private $remise;
 
     /**
+    * @var float
+    *
+    * @ORM\Column(name="temps_commercial", type="float", nullable=true)
+    */
+    private $tempsCommercial;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $fichier;
+
+     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\PlanPaiement", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OrderBy({"date" = "ASC"})
+     */
+    private $planPaiements;
+
+
+    /**
     * Constructor
     */
     public function __construct()
     {
         $this->settings = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->planPaiements = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->fichier = null;
     }
 
     /**
@@ -220,38 +244,38 @@ class Opportunite
     }
 
 
-  /**
-   * Get id
-   *
-   * @return integer
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
+    /**
+    * Get id
+    *
+    * @return integer
+    */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-  /**
-   * Set nom
-   *
-   * @param string $nom
-   * @return Opportunite
-   */
-  public function setNom($nom)
-  {
-      $this->nom = $nom;
+    /**
+    * Set nom
+    *
+    * @param string $nom
+    * @return Opportunite
+    */
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
 
-      return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * Get nom
-   *
-   * @return string
-   */
-  public function getNom()
-  {
-      return $this->nom;
-  }
+    /**
+    * Get nom
+    *
+    * @return string
+    */
+    public function getNom()
+    {
+        return $this->nom;
+    }
 
 
 	/**
@@ -496,7 +520,7 @@ class Opportunite
 	 */
 	public function removeSettings()
 	{
-		$this->settings = null;
+		$this->settings->clear();
 	}
 
 	/**
@@ -605,15 +629,7 @@ class Opportunite
     }
 
     public function getCa_attendu(){
-      $s_proba = $this->getProbabilite()->getValeur();
-      $arr_proba = explode('-', $s_proba);
-
-      $proba = 0;
-      if(count($arr_proba)){
-         $proba = str_replace('%', '', $arr_proba[1]);
-      }
-
-      return $this->getMontant()*($proba/100);
+        return 0;
     }
 
     public function win(){
@@ -1009,5 +1025,119 @@ class Opportunite
     public function getRemise()
     {
         return $this->remise;
+    }
+
+    /**
+     * Set tempsCommercial
+     *
+     * @param float $tempsCommercial
+     * @return Opportunite
+     */
+    public function setTempsCommercial($tempsCommercial)
+    {
+        $this->tempsCommercial = $tempsCommercial;
+
+        return $this;
+    }
+
+    /**
+     * Get tempsCommercial
+     *
+     * @return float 
+     */
+    public function getTempsCommercial()
+    {
+        return $this->tempsCommercial;
+    }
+
+
+
+    /**
+     * Set fichier
+     *
+     * @param string $fichier
+     * @return Opportunite
+     */
+    public function setFichier($fichier)
+    {
+        $this->fichier = $fichier;
+
+        return $this;
+    }
+
+    /**
+     * Get fichier
+     *
+     * @return string 
+     */
+    public function getFichier()
+    {
+        return $this->fichier;
+    }
+
+    /**
+     * Add planPaiements
+     *
+     * @param \AppBundle\Entity\CRM\PlanPaiement $planPaiements
+     * @return Opportunite
+     */
+    public function addPlanPaiement(\AppBundle\Entity\CRM\PlanPaiement $planPaiements)
+    {
+        $this->planPaiements[] = $planPaiements;
+        $planPaiements->setActionCommerciale($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove planPaiements
+     *
+     * @param \AppBundle\Entity\CRM\PlanPaiement $planPaiements
+     */
+    public function removePlanPaiement(\AppBundle\Entity\CRM\PlanPaiement $planPaiements)
+    {
+        $this->planPaiements->removeElement($planPaiements);
+    }
+
+    /**
+     * Clear planPaiements
+     */
+    public function clearPlanPaiements()
+    {
+        $this->planPaiements->clear();
+    }
+
+    /**
+     * Get planPaiements
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPlanPaiements()
+    {
+        return $this->planPaiements;
+    }
+
+    public function getPlansPaiementsCustom(){
+        $custom = array();
+        foreach($this->planPaiements as $plan){
+            if(false == $plan->getCommande() && false == $plan->getFinProjet()){
+                $custom[] = $plan;
+            }
+        }
+        return $custom;
+    }
+
+    public function getModePaiement(){
+        if(count($this->planPaiements)){
+            if(1 == count($this->planPaiements) && true == $this->planPaiements[0]->getCommande()){
+                return 'COMMANDE';
+            } else if (1 == count($this->planPaiements) && true == $this->planPaiements[0]->getFinProjet()){
+                return 'FIN';
+            } else {
+                return 'CUSTOM';
+            }
+
+        }
+        return null;
     }
 }

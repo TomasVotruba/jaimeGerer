@@ -30,7 +30,7 @@ class SousTraitanceRepartitionType extends AbstractType
           ))
           ->add('montantMonetaire', 'number', array(
               'required' => true,
-              'attr' => array('class' => 'align-right')
+              'attr' => array('class' => 'align-right montant')
           ))
         ;
     }

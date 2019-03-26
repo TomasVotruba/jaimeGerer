@@ -21,38 +21,36 @@ use Swift_Attachment;
 class FactureController extends Controller
 {
 
-	/**
-	 * @Route("/compta/facture/analytique", name="compta_facture_analytique")
-	 */
-	public function factureAnalytique(){
-		$em = $this->getDoctrine()->getManager();
-		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
-		$analytiqueRepo =  $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
+	// /**
+	//  * @Route("/compta/facture/analytique", name="compta_facture_analytique")
+	//  */
+	// public function factureAnalytique(){
+	// 	$em = $this->getDoctrine()->getManager();
+	// 	$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
+	// 	$analytiqueRepo =  $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
 
-		$arr_factures= $repository->findForCompany($this->getUser()->getCompany(), 'FACTURE', true);
+	// 	$arr_factures= $repository->findForCompany($this->getUser()->getCompany(), 'FACTURE', true);
 
-		foreach($arr_factures as $facture){
+	// 	foreach($arr_factures as $facture){
 
-			if($facture->getAnalytique() == null){
-				$produit = $facture->getProduits()[0];
-				$type = $produit->getType()->getValeur();
-				echo $facture->getNum().'<br />';
-				echo $type.'<br />';
-				$analytique = $analytiqueRepo->findOneBy(array(
-					'module' => 'CRM',
-					'parametre' => 'ANALYTIQUE',
-					'company' => $this->getUser()->getCompany(),
-					'valeur' => $type
-				));
+	// 		if($facture->getAnalytique() == null){
+	// 			$produit = $facture->getProduits()[0];
+	// 			$type = $produit->getType()->getValeur();
+	// 			$analytique = $analytiqueRepo->findOneBy(array(
+	// 				'module' => 'CRM',
+	// 				'parametre' => 'ANALYTIQUE',
+	// 				'company' => $this->getUser()->getCompany(),
+	// 				'valeur' => $type
+	// 			));
 
-				$facture->setAnalytique($analytique);
-				$em->persist($facture);
+	// 			$facture->setAnalytique($analytique);
+	// 			$em->persist($facture);
 
-			}
-		}
-		$em->flush();
-		return 0;
-	}
+	// 		}
+	// 	}
+	// 	$em->flush();
+	// 	return 0;
+	// }
 
 	/**
 	 * @Route("/compta/facture/liste", name="compta_facture_liste")

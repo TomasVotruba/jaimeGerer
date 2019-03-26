@@ -152,9 +152,14 @@ class BonCommandeController extends Controller
 				} else {
 					$list[$i]['factures'] = array();
 					$list[$i]['factures_id'] = array();
+
 					foreach($bc->getFactures() as $facture ){
 						$list[$i]['factures'][] = $facture->getNum();
 						$list[$i]['factures_id'][]= $facture->getId();
+						$list[$i]['avoir'] = null;
+						foreach($facture->getAvoirs() as $avoir){
+							$list[$i]['avoir'].=$avoir->getNum().' ';
+						}
 					} 
 				}
 				
@@ -175,34 +180,34 @@ class BonCommandeController extends Controller
 	}
 
 
-	/**
-	 * @Route("/crm/bon-commande/init",
-	 *   name="crm_bon_commande_init",
-	 *   options={"expose"=true}
-	 * )
-	 */
-	public function init(){
+	// /**
+	//  * @Route("/crm/bon-commande/init",
+	//  *   name="crm_bon_commande_init",
+	//  *   options={"expose"=true}
+	//  * )
+	//  */
+	// public function init(){
 
-		$em  = $this->getDoctrine()->getManager();
-		$bonCommandeRepo = $em->getRepository('AppBundle:CRM\BonCommande');
-		$factureRepo = $em->getRepository('AppBundle:CRM\DocumentPrix');
+	// 	$em  = $this->getDoctrine()->getManager();
+	// 	$bonCommandeRepo = $em->getRepository('AppBundle:CRM\BonCommande');
+	// 	$factureRepo = $em->getRepository('AppBundle:CRM\DocumentPrix');
 
 
-		$all_bc = $bonCommandeRepo->findAll();
+	// 	$all_bc = $bonCommandeRepo->findAll();
 
-		foreach($all_bc as $bc){
-			if($bc->getFacture()){
-				$facture = $bc->getFacture();
-				$facture->setBonCommande($bc);
-				$em->persist($facture);
-			}
-		}
+	// 	foreach($all_bc as $bc){
+	// 		if($bc->getFacture()){
+	// 			$facture = $bc->getFacture();
+	// 			$facture->setBonCommande($bc);
+	// 			$em->persist($facture);
+	// 		}
+	// 	}
 
-		$em->flush();
+	// 	$em->flush();
 
-		return new Response();
+	// 	return new Response();
 
-	}
+	// }
 
 
 

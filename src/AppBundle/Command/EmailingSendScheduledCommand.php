@@ -36,12 +36,8 @@ class EmailingSendScheduledCommand extends ContainerAwareCommand
         $logger = $this->getContainer()->get('monolog.logger.cron_logger');
 
         $campagneRepo = $this->em->getRepository('AppBundle:Emailing\Campagne');
-        $today = date('Y-m-d');
-
-        $arr_campagnes = $campagneRepo->findBy(array(
-            'etat' => 'SCHEDULED',
-            'dateEnvoi' => \DateTime::createFromFormat('Y-m-d', $today)
-        ));
+        
+        $arr_campagnes = $campagneRepo->findScheduledForToday();
 
         $logger->info(count($arr_campagnes).' campagnes à envoyer à MailGun.');
 

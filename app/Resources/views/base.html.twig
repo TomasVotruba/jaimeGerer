@@ -16,7 +16,7 @@
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/datatables/media/css/buttons.bootstrap.min.css') }}"/>
            
             <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.datetimepicker.css') }}"/>
-            <link rel="stylesheet" type="text/css" href="{{ asset('css/base20190301-1739.css') }}"/>
+            <link rel="stylesheet" type="text/css" href="{{ asset('css/base20190314-1500.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('css/mobile20190301-1739.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/jquery-ui/jquery-ui.css') }}"/>
             <link rel="stylesheet" type="text/css" href="{{ asset('lib/bootstrap3-editable/css/bootstrap-editable.css') }}" />
@@ -26,6 +26,7 @@
 
             <!-- fonts -->
             <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         {% endblock %}
 
         {% block javascripts %}
@@ -149,7 +150,7 @@
                                         <a href="{{ path('ndf_recus_liste') }}" class="active">
                                             <img src="{{ asset('images/assets/ndf.png') }}" alt="Notes de frais"/>
                                         </a>
-                                        {% if app.user.company.id == 1 %}
+                                        {% if app.user.company.isNicomak %}
                                             <a href="{{ path('social_index') }}" class="active">
                                                 <img src="{{ asset('images/assets/jaimenicomak-colors.png') }}" alt="J\'aime {{ app.user.company.nom }}"/>
                                             </a>

@@ -30,7 +30,7 @@
 
     <div class="row">
         <div class="col-md-12">
-						<hr />
+			<hr />
             <h2>Ajouter un sous-traitant</h2>
         </div>
     </div>
@@ -54,11 +54,11 @@
             {{ form_row(form.typeForfait) }}
         </div>
 
-        <div class="montant-global col-md-3 hidden">
-            {{ form_row(form.montantGlobalMonetaire) }}
+        <div class="montant-global col-md-2 hidden">
+	        {{ form_row(form.montantGlobalMonetaire) }}
         </div>
 
-        <div class="col-md-3 tarif-jour hidden">
+        <div class="col-md-2 tarif-jour hidden">
             {{ form_row(form.tarifJourMonetaire) }}
         </div>
 
@@ -203,6 +203,8 @@
 						totalSousTraitant = $('.tarif-jour').find('input').val() * $('.nb-jours').find('input').val();
 					}
 
+					console.log(totalSousTraitant);
+
 					$('.total-sous-traitant').text(accounting.formatMoney(totalSousTraitant, {
 							symbol: "€",
 							format: "%v %s",
@@ -211,7 +213,11 @@
 							precision: 2
 					}));
 
+
+
 					totalSousTraitance = parseFloat("{{ actionCommerciale.montantMonetaireSousTraitance }}") + parseFloat(totalSousTraitant);
+
+					console.log(totalSousTraitance);
 					$('.total-sous-traitance').text(accounting.formatMoney(totalSousTraitance, {
 							symbol: "€",
 							format: "%v %s",
@@ -311,9 +317,9 @@
 	            });
 
 				$('.montant').change(function() {
-					var val = $(this).find('input').val();
+					var val = $(this).val();
 					val = val.replace(",", ".");
-					$(this).find('input').val(val);
+					$(this).val(val);
 
 					calculTotalRepartition();
 				});

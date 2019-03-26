@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormEvents;
 use libphonenumber\PhoneNumberFormat;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class ActionCommercialeType extends AbstractType
 {
@@ -260,6 +261,14 @@ class ActionCommercialeType extends AbstractType
                 'label' => 'Commentaire',
                 'mapped' => false,
                 'data' => $this->devis->getDescription() ? $this->devis->getDescription() : 'Les frais de déplacement, hébergement et restauration seront ajoutés en sus sur présentation de justificatifs.'
+            ))
+            ->add('tempsCommercial', 'number', array(
+                'required' => false,
+                'label' => 'Temps passé en commercial'
+            ))
+            ->add('fichier', FileType::class, array(
+                'label' => 'Proposition commerciale',
+                'required' => false
             ))
         ;
     }

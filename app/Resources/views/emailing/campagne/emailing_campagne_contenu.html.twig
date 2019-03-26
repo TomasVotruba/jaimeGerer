@@ -21,7 +21,7 @@
 	              	<span class="glyphicon glyphicon-info-sign"></span>
 	              	Vous pouvez créer votre template HTML sur 
 	              	<a class="alert-link" href="https://topol.io/" target="_blank">Topol</a>.
-	              	{% if app.user.company.id == 1 %}
+	              	{% if app.user.company.isNicomak %}
 	              		<ul>
 	              			<li>Login : {{ topol_login }}</li>
 	              			<li>Mot de passe : {{ topol_password }}</li>

@@ -26,7 +26,7 @@ class CampagneRepository extends EntityRepository
 	
 	public function findForList($company, $length, $start, $search){
 		$qb = $this->createQueryBuilder('c')
-			->select('DISTINCT(c.id) as id', 'c.nom', 'c.dateCreation', 'c.objet', 'c.nomRapport', 'CONCAT(u.firstname,\' \',u.lastname) as user', 'c.etat')
+			->select('DISTINCT(c.id) as id', 'c.nom', 'c.dateCreation', 'c.objet', 'c.nomRapport', 'CONCAT(u.firstname,\' \',u.lastname) as user', 'c.etat', 'c.dateEnvoi')
 			->leftJoin('AppBundle\Entity\User', 'u', 'WITH', 'u.id = c.userCreation')
 			->where('u.company = :company')
 			->setParameter('company', $company);
@@ -98,9 +98,27 @@ class CampagneRepository extends EntityRepository
 		
 	public function findAllExcept($id = 0){
 
-		$qb = $this->createQueryBuilder('u');
-		$qb->where('u.id != :identifier')
+		$qb = $this->createQueryBuilder('c');
+		$qb->where('c.id != :identifier')
 		   ->setParameter('identifier', $id);
+
+		return $qb->getQuery()
+			  ->getResult();
+	}
+
+	public function findScheduledForToday(){
+
+		$qb = $this->createQueryBuilder('c');
+
+		$today = date('Y-m-d');
+		$tomorrow = date("Y-m-d", strtotime("+1 day"));
+
+		$qb->where('c.etat = :scheduled')
+			->andWhere('c.dateEnvoi >= :today')
+			->andWhere('c.dateEnvoi < :tomorrow')
+		   	->setParameter('scheduled', 'SCHEDULED')
+		   	->setParameter('today', \DateTime::createFromFormat('Y-m-d', $today) )
+		   	->setParameter('tomorrow', \DateTime::createFromFormat('Y-m-d', $tomorrow) );
 
 		return $qb->getQuery()
 			  ->getResult();

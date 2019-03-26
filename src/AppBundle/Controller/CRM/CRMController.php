@@ -32,11 +32,24 @@ class CRMController extends Controller
 		$nbNoTel = $contactRepository->countNoTel($this->getUser()->getCompany());
 		$nbBounce = $contactRepository->countBounce($this->getUser()->getCompany());
 
+		$todoList = array(
+			'today' => array(),
+			'week' => array(),
+			'late' => array(),
+		);
+		$planPaiementRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\PlanPaiement');
+		$arr_planPaiementToday = $planPaiementRepository->findToday($this->getUser());
+		$arr_planPaiementLate = $planPaiementRepository->findLate($this->getUser());
+
+		$todoList['today'] = $arr_planPaiementToday;
+		$todoList['late'] = $arr_planPaiementLate;
+
 		return $this->render('crm/crm_index.html.twig', array(
 			'nbContacts' => $nbContacts,
 			'nbNoEmail' => $nbNoEmail,
 			'nbNoTel' => $nbNoTel,
-			'nbBounce' => $nbBounce
+			'nbBounce' => $nbBounce,
+			'todoList' => $todoList
 		));
 	}
 

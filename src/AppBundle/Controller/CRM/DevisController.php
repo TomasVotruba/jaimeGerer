@@ -632,43 +632,43 @@ class DevisController extends Controller
 		));
 	}
 
-	/**
-	 * @Route("/crm/devis/dupliquer/{id}",
-	 *   name="crm_devis_dupliquer",
-	 *   options={"expose"=true}
-	 * )
-	 */
-	public function devisDupliquerAction(DocumentPrix $devis)
-	{
-		$em = $this->getDoctrine()->getManager();
-		$newDevis = clone $devis;
-		$newDevis->setUserCreation($this->getUser());
-		$newDevis->setObjet('COPIE '.$devis->getObjet());
+	// /**
+	//  * @Route("/crm/devis/dupliquer/{id}",
+	//  *   name="crm_devis_dupliquer",
+	//  *   options={"expose"=true}
+	//  * )
+	//  */
+	// public function devisDupliquerAction(DocumentPrix $devis)
+	// {
+	// 	$em = $this->getDoctrine()->getManager();
+	// 	$newDevis = clone $devis;
+	// 	$newDevis->setUserCreation($this->getUser());
+	// 	$newDevis->setObjet('COPIE '.$devis->getObjet());
 
-		$settingsRepository = $em->getRepository('AppBundle:Settings');
-		$settingsNum = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'NUMERO_DEVIS', 'company'=>$this->getUser()->getCompany()));
-		$currentNum = $settingsNum->getValeur();
+	// 	$settingsRepository = $em->getRepository('AppBundle:Settings');
+	// 	$settingsNum = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'NUMERO_DEVIS', 'company'=>$this->getUser()->getCompany()));
+	// 	$currentNum = $settingsNum->getValeur();
 
-		$prefixe = date('Y').'-';
-		if($currentNum < 10){
-			$prefixe.='00';
-		} else if ($currentNum < 100){
-			$prefixe.='0';
-		}
-		$newDevis->setNum($prefixe.$currentNum);
+	// 	$prefixe = date('Y').'-';
+	// 	if($currentNum < 10){
+	// 		$prefixe.='00';
+	// 	} else if ($currentNum < 100){
+	// 		$prefixe.='0';
+	// 	}
+	// 	$newDevis->setNum($prefixe.$currentNum);
 
-		$currentNum++;
-		$settingsNum->setValeur($currentNum);
-		$em->persist($settingsNum);
+	// 	$currentNum++;
+	// 	$settingsNum->setValeur($currentNum);
+	// 	$em->persist($settingsNum);
 
-		$em->persist($newDevis);
-		$em->flush();
+	// 	$em->persist($newDevis);
+	// 	$em->flush();
 
-		return $this->redirect($this->generateUrl(
-				'crm_devis_voir',
-				array('id' => $newDevis->getId())
-		));
-	}
+	// 	return $this->redirect($this->generateUrl(
+	// 			'crm_devis_voir',
+	// 			array('id' => $newDevis->getId())
+	// 	));
+	// }
 
 	/**
 	 * @Route("/crm/devis/gagner/{id}",

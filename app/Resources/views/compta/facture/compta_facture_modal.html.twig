@@ -30,7 +30,14 @@
 				<td>
 					<p>
 						<strong>N° de facture : {{ facture.num }}</strong><br />
-						N° bon de commande {{ app.user.company }} : {{ facture.numBCInterne }}<br />
+						N° bon de commande {{ app.user.company }} : 
+						{% if facture.numBCInterne is not null %}
+						    {{ facture.numBCInterne }}
+						{% endif %}
+						{% if facture.bonCommande is not null %}
+						    {{ facture.bonCommande.num }}
+						{% endif %}
+						<br />
 						{% if facture.numBCClient is not null %}
 							N° bon de commande {{ facture.compte }} : {{ facture.numBCClient }}
 						{% endif %}

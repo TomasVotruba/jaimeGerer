@@ -155,3 +155,6 @@ services:
     appbundle.crm_compte_service:
         class: AppBundle\Service\CRM\CompteService
         arguments: [ "@doctrine.orm.entity_manager", "@security.token_storage", "@logger"]
+    appbundle.action_commerciale_file_uploader:
+        class: AppBundle\Service\CRM\ActionCommercialeFileUploader
+        arguments: ['%actions_commerciales_fichier_directory%']

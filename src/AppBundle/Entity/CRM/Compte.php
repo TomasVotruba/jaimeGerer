@@ -211,6 +211,36 @@ class Compte
     */ 
     private $depenses;
     
+       
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="adresse_facturation", type="string", length=255, nullable=true)
+     */
+    private $adresseFacturation;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ville_facturation", type="string", length=255, nullable=true)
+     */
+    private $villeFacturation;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="code_postal_facturation", type="string", length=255, nullable=true)
+     */
+    private $codePostalFacturation;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pays_facturation", type="string", length=255, nullable=true)
+     */
+    private $paysFacturation;
+
     /**
      * Constructor
      */
@@ -219,8 +249,8 @@ class Compte
         $this->documentPrixs = new \Doctrine\Common\Collections\ArrayCollection();
         $this->opportunites = new \Doctrine\Common\Collections\ArrayCollection();
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
-    }    
-    
+    } 
+
     /**
      * Set id
      *
@@ -785,6 +815,7 @@ class Compte
 
         return 'N/A';
     }
+
     
     /**
      * Add documentPrix
@@ -831,7 +862,6 @@ class Compte
         $opportunite->setCompte($this);
         $this->opportunites[] = $opportunite;
 
-        return $this;
     }
 
     /**
@@ -864,7 +894,6 @@ class Compte
     {
         $contact->setCompte($this);
         $this->contacts[] = $contact;
-
         return $this;
     }
 
@@ -898,7 +927,6 @@ class Compte
     {
         $depense->setCompte($this);
         $this->depenses[] = $depense;
-
         return $this;
     }
 
@@ -931,7 +959,6 @@ class Compte
     public function addCompteEnfant(\AppBundle\Entity\CRM\Compte $compteEnfants)
     {
         $this->compteEnfants[] = $compteEnfants;
-
         return $this;
     }
 

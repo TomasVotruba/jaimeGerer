@@ -1,24 +1,24 @@
 <tr>
 	<td class="produit-input-type">{{ produit.type }}</td>
 	<td class="produit-input-nom">{{ produit.nom }}</td>
-	<td class="produit-input-number">{{ produit.tarifUnitaire }}</td>
+	<td class="produit-input-number">{{ produit.tarifUnitaire|number_format(2, ',', ' ') }}</td>
 	<td class="produit-input-number">{{ produit.quantite }}</td>
 	<td class="produit-input-number">
-		{{ produit.montant }}
+		{{ produit.montant|number_format(2, ',', ' ') }}
 	</td>
 	<td class="produit-input-number">
 		{% if produit.remise is null %}
 			-
 		{% else %}
-			{{ produit.remise }}
+			{{ produit.remise|number_format(2, ',', ' ') }}
 		{% endif %}
 	</td>
 	<td class="produit-input-number">
-		{{ produit.total }}
+		{{ produit.total|number_format(2, ',', ' ') }}
 	</td>
 </tr>
 <tr class="produit-row">
 	<td colspan="2" class="produit-textarea">
-		{{ produit.description|raw }}
+		{{ produit.description|raw|nl2br }}
 	</td>
 </tr>

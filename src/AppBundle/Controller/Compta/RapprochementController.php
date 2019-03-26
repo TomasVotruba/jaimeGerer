@@ -271,7 +271,7 @@ class RapprochementController extends Controller
             $facture = $rapprochement->getFacture();
             $facture->setEtat("ENREGISTRE");
             $em->persist($facture);
-            foreach($depense->getJournalVentes() as $ligneJournal){
+            foreach($facture->getJournalVentes() as $ligneJournal){
                 $ligneJournal->setLettrage(null);
                 $em->persist($ligneJournal);
             }

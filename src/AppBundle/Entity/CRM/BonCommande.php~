@@ -41,17 +41,18 @@ class BonCommande
      */
     private $actionCommerciale;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="bonsCommande")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $facture;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\DocumentPrix", mappedBy="bonCommande")
      * @ORM\JoinColumn(nullable=true)
      */
     private $factures;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\PlanPaiement", mappedBy="bonCommande")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $planPaiements;
 
     /**
      * Get id
@@ -152,41 +153,7 @@ class BonCommande
         return $this->actionCommerciale;
     }
 
-    /**
-     * Set facture
-     *
-     * @param \AppBundle\Entity\CRM\DocumentPrix $facture
-     * @return BonCommande
-     */
-    public function setFacture(\AppBundle\Entity\CRM\DocumentPrix $facture)
-    {
-        $this->facture = $facture;
-
-        return $this;
-    }
-
-    /**
-     * Set facture as null
-     *
-     * @return BonCommande
-     */
-    public function setFactureNull()
-    {
-        $this->facture = null;
-
-        return $this;
-    }
-
-    /**
-     * Get facture
-     *
-     * @return \AppBundle\Entity\CRM\DocumentPrix 
-     */
-    public function getFacture()
-    {
-        return $this->facture;
-    }
-
+   
     /**
      * Get total facture
      *
@@ -194,10 +161,12 @@ class BonCommande
      */
     public function getTotalFacture()
     {
-        if($this->facture){
-            return intval($this->facture->getTotalHT()*100);
+        $montant = 0;
+        foreach($this->factures as $facture){
+    
+                $montant+= intval(strval($facture->getTotalHTMoinsAvoirs()*100));
         }
-        return 0;
+        return $montant;
        
     }
 
@@ -208,10 +177,52 @@ class BonCommande
      */
     public function getTotalFactureMonetaire()
     {
-        if($this->facture){
-            return $this->facture->getTotalHT();
+        $montant = 0;
+        foreach($this->factures as $facture){
+           $montant+= $facture->getTotalHTMoinsAvoirs();
         }
-        return 0;
+        return $montant;
        
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->factures = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->planPaiements = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add factures
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $factures
+     * @return BonCommande
+     */
+    public function addFacture(\AppBundle\Entity\CRM\DocumentPrix $factures)
+    {
+        $this->factures[] = $factures;
+
+        return $this;
+    }
+
+    /**
+     * Remove factures
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $factures
+     */
+    public function removeFacture(\AppBundle\Entity\CRM\DocumentPrix $factures)
+    {
+        $this->factures->removeElement($factures);
+    }
+
+    /**
+     * Get factures
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFactures()
+    {
+        return $this->factures;
     }
 }

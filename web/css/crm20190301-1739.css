@@ -395,3 +395,7 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 	margin-bottom: 10px;
 	border-top: 1px solid #ddd;
 }
+
+.input-group.temps-commercial{
+	width: 150px !important;
+}

@@ -20,44 +20,46 @@ class OpportuniteSousTraitanceType extends AbstractType
 
         $builder
             ->add('sousTraitant', 'text', array(
-              'label' => 'Nom du sous-traitant',
-              'required' => true
+                'label' => 'Nom du sous-traitant',
+                'required' => true
             ))
             ->add('typeForfait', 'choice', array(
-              'choices' => array(
-                'GLOBAL' => 'Forfait global',
-                'JOUR' => 'Forfait jour'
-              ),
-              'expanded' => true,
-              'multiple' => false,
-              'label' => 'Type de forfait',
-              'required' => true,
-              'attr' => array('class' => 'type-forfait')
+                'choices' => array(
+                    'GLOBAL' => 'Forfait global',
+                    'JOUR' => 'Forfait jour'
+                ),
+                'expanded' => true,
+                'multiple' => false,
+                'label' => 'Type de forfait',
+                'required' => true,
+                'attr' => array('class' => 'type-forfait')
             ))
             ->add('montantGlobalMonetaire', 'number', array(
-              'required' => false,
-              'label' => 'Montant du forfait',
+                'required' => false,
+                'label' => 'Montant du forfait',
+                'attr' => array('class' => 'montant')
             ))
             ->add('tarifJourMonetaire', 'number', array(
-              'required' => false,
-              'label' => 'Tarif par jour',
+                'required' => false,
+                'label' => 'Tarif par jour',
+                'attr' => array('class' => 'montant')
             ))
             ->add('nbJours', 'number', array(
-              'required' => false,
-              'label' => 'Nombre de jours',
+                'required' => false,
+                'label' => 'Nombre de jours',
+                'attr' => array('class' => 'montant')
             ))
             ->add('repartitions', 'collection', array(
-           			'type' => new SousTraitanceRepartitionType($opportuniteSousTraitance->getOpportunite()),
-           			'allow_add' => true,
-           			'allow_delete' => true,
-           			'by_reference' => false,
-								'label_attr' => array('class' => 'hidden')
+       			'type' => new SousTraitanceRepartitionType($opportuniteSousTraitance->getOpportunite()),
+       			'allow_add' => true,
+       			'allow_delete' => true,
+       			'by_reference' => false,
+				'label_attr' => array('class' => 'hidden')
            	))
             ->add('add', 'submit', array(
                 'label' => 'Ajouter un autre sous-traitant',
                 'attr' => array(
                   'class' => 'btn btn-info',
-
                 )
             ))
             ->add('submit', 'submit', array(

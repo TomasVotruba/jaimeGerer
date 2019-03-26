@@ -80,16 +80,6 @@ class OpportuniteController extends Controller
 				$etat
 		);
 
-		for($i=0; $i<count($list); $i++){
-
-			$arr_o = $list[$i];
-
-			$opportunite = $repository->find($arr_o['id']);
-			$list[$i]['ca_attendu'] = $opportunite->getCa_attendu();
-
-		}
-
-
 		$response = new JsonResponse();
 		$response->setData(array(
 				'draw' => intval( $requestData->get('draw') ),
@@ -651,19 +641,21 @@ class OpportuniteController extends Controller
 
 		$data = array();
 
-    if($type === 'funnel'){
-        foreach ($arr_keys as $key) {
-            if($key->getValeur() != "ClosedWon - 100%"){
-                $data[$key->getValeur()] = array("title"=>$key->getValeur(), 'value'=>0);
-            }
-        }
-    }
+	    if($type === 'funnel'){
+	        foreach ($arr_keys as $key) {
+	            if($key->getValeur() != "Gagné" && $key->getValeur() != 'Perdu'){
+	                $data[$key->getValeur()] = array("title"=>$key->getValeur(), 'value'=>0);
+	            }
+	        }
+	    }
 
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Opportunite');
-		$arr_res = $repository->getChartData($this->getUser()->getCompany());
+		$arr_res = $repository->getFunnelChartData($this->getUser()->getCompany());
 		foreach ($arr_res as $result) {
 			$_statut = $result['probabilite'];
-			$data[$_statut]['value'] = $result['total'];
+			if($_statut != 'Gagné' && $_statut != 'Perdu'){
+				$data[$_statut]['value'] = $result['total'];
+			}
 		}
 
 		$encoders = array(new JsonEncoder());

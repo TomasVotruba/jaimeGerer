@@ -35,6 +35,7 @@ twig:
       topol_login: '%topol_login%'
       topol_password: '%topol_password%'
       google_maps_api_key: '%google_maps_api_key%'
+      actions_commerciales_fichier_directory: '%actions_commerciales_fichier_directory%'
 
 # Assetic Configuration
 assetic:

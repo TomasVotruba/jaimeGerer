@@ -75,7 +75,7 @@ class NDFController extends Controller
 
 		$fc = null;
 
-		if($this->getUser()->getCompany()->getId() == 1){
+		if($this->getUser()->getCompany()->isNicomak()){
 			$fc = $em->getRepository('AppBundle:Settings')->findOneBy(array(
 				'company' => $this->getUser()->getCompany(),
 				'parametre' => 'analytique',

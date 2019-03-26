@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\File;
 
 use AppBundle\Entity\CRM\Opportunite;
 use AppBundle\Entity\CRM\OpportuniteSousTraitance;
@@ -18,6 +20,7 @@ use AppBundle\Entity\CRM\Produit;
 use AppBundle\Entity\CRM\DocumentPrix;
 use AppBundle\Entity\Settings;
 use AppBundle\Entity\Rapport;
+use AppBundle\Entity\CRM\PlanPaiement;
 
 use AppBundle\Form\CRM\OpportuniteType;
 use AppBundle\Form\CRM\ActionCommercialeType;
@@ -28,6 +31,7 @@ use AppBundle\Form\CRM\OpportuniteFilterType;
 use AppBundle\Form\CRM\ContactType;
 use AppBundle\Form\SettingsType;
 use AppBundle\Form\CRM\OpportuniteWonBonCommandeType;
+use AppBundle\Form\CRM\OpportuniteWonPlanPaiementType;
 
 use \DateTime;
 
@@ -49,19 +53,6 @@ class ActionCommercialeController extends Controller
 	 */
 	public function actionCommercialeListeAction()
 	{
-
-		$opportuniteService = $this->get('appbundle.crm_opportunite_service');
-		$dataTauxTransformation = $opportuniteService->getTauxTransformationData($this->getUser()->getCompany(), date('Y'));
-
-		$chartService = $this->get('appbundle.chart_service');
-		$chartTauxTransformation = $chartService->opportuniteTauxTransformationPieChart($dataTauxTransformation);
-
-		$dataChartActionsCoAnalytique = $opportuniteService->getDataChartActionsCoAnalytique($this->getUser()->getCompany(), date('Y'));		
-		$chartActionsCoAnalytique = $chartService->actionsCoAnalytique($dataChartActionsCoAnalytique);
-
-		$dataChartActionsCoRhoneAlpes = $opportuniteService->getDataChartActionsCoRhoneAlpes($this->getUser()->getCompany(), date('Y'));		
-		$chartActionsCoRhoneAlpes = $chartService->actionsCoRhoneAlpes($dataChartActionsCoRhoneAlpes);
-
 		$arr_gestionnaires = array();
 		$userRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:User');
 		$arr_gestionnaires = $userRepo->findBy(array(
@@ -71,9 +62,6 @@ class ActionCommercialeController extends Controller
 		));
 
 		return $this->render('crm/action-commerciale/crm_action_commerciale_liste.html.twig', array(
-			'chartTauxTransformation' => $chartTauxTransformation,
-			'chartActionsCoAnalytique' => $chartActionsCoAnalytique,
-			'chartActionsCoRhoneAlpes' => $chartActionsCoRhoneAlpes,
 			'arr_gestionnaires' => $arr_gestionnaires
 		));
 	}	
@@ -145,7 +133,6 @@ class ActionCommercialeController extends Controller
 		for($i=0; $i<count($list); $i++){
 			$arr_o = $list[$i];
 			$opportunite = $repository->find($arr_o['id']);
-			$list[$i]['ca_attendu'] = $opportunite->getCa_attendu();
 			if($opportunite->getDevis()){
 				$list[$i]['numero_devis'] = $opportunite->getDevis()->getNum();	
 				$totaux = $opportunite->getDevis()->getTotaux();
@@ -175,7 +162,40 @@ class ActionCommercialeController extends Controller
 		));
 
 		return $response;
+	}
 
+	/**
+	 * @Route("/crm/action-commerciale/reporting",
+	 *   name="crm_action_commerciale_reporting",
+	 *  )
+	 */
+	public function actionCommercialeReporting(){
+		$opportuniteService = $this->get('appbundle.crm_opportunite_service');
+		$dataTauxTransformation = $opportuniteService->getTauxTransformationData($this->getUser()->getCompany(), date('Y'));
+
+		$chartService = $this->get('appbundle.chart_service');
+		$chartTauxTransformation = $chartService->opportuniteTauxTransformationPieChart($dataTauxTransformation);
+
+		$dataChartActionsCoAnalytique = $opportuniteService->getDataChartActionsCoAnalytique($this->getUser()->getCompany(), date('Y'));		
+		$chartActionsCoAnalytique = $chartService->actionsCoAnalytique($dataChartActionsCoAnalytique);
+
+		$dataChartActionsCoRhoneAlpes = $opportuniteService->getDataChartActionsCoRhoneAlpes($this->getUser()->getCompany(), date('Y'));		
+		$chartActionsCoRhoneAlpes = $chartService->actionsCoRhoneAlpes($dataChartActionsCoRhoneAlpes);
+
+		$dataChartActionsCoAnalytique3Mois = $opportuniteService->getDataChartActionsCoAnalytique3Mois($this->getUser()->getCompany());		
+		$chartActionsCoAnalytique3Mois = $chartService->actionsCoAnalytique($dataChartActionsCoAnalytique3Mois);
+
+		$dataChartActionsCoRhoneAlpes3Mois = $opportuniteService->getDataChartActionsCoRhoneAlpes3Mois($this->getUser()->getCompany(), date('Y'));		
+		$chartActionsCoRhoneAlpes3Mois = $chartService->actionsCoRhoneAlpes($dataChartActionsCoRhoneAlpes3Mois);
+
+
+		return $this->render('crm/action-commerciale/crm_action_commerciale_reporting.html.twig', array(
+			'chartTauxTransformation' => $chartTauxTransformation,
+			'chartActionsCoAnalytique' => $chartActionsCoAnalytique,
+			'chartActionsCoRhoneAlpes' => $chartActionsCoRhoneAlpes,
+			'chartActionsCoAnalytique3Mois' => $chartActionsCoAnalytique3Mois,
+			'chartActionsCoRhoneAlpes3Mois' => $chartActionsCoRhoneAlpes3Mois,
+		));
 	}
 
 	/**
@@ -244,6 +264,17 @@ class ActionCommercialeController extends Controller
 
 			$opportunite->setDevis($devis);
 
+			$file = $opportunite->getFichier();
+			if($file){
+				try{
+					$fileName = $this->get('appbundle.action_commerciale_file_uploader')->upload($file, $this->getUser());
+				} catch(\Exception $e){
+					throw $e;
+				}
+		       	
+		       	$opportunite->setFichier($fileName);
+		    }
+
 			$em->persist($opportunite);
 
 			$devis = $devisService->createFromOpportunite($devis, $opportunite);
@@ -269,13 +300,14 @@ class ActionCommercialeController extends Controller
 			$em->flush();
 			
 			return $this->redirect($this->generateUrl(
-					'crm_action_commerciale_voir',
-					array('id' => $opportunite->getId())
+				'crm_action_commerciale_voir',
+				array('id' => $opportunite->getId())
 			));
 		}
 
 		return $this->render('crm/action-commerciale/crm_action_commerciale_ajouter.html.twig', array(
-			'form' => $form->createView()
+			'form' => $form->createView(),
+			'actionCommerciale' => $opportunite
 		));
 	}
 
@@ -357,6 +389,14 @@ class ActionCommercialeController extends Controller
 			$actionCommerciale->setContact($_contact->getId());
 		}
 
+		$oldFile = null;
+		if($actionCommerciale->getFichier()){
+			$oldFile = $actionCommerciale->getFichier();
+			$actionCommerciale->setFichier(
+			    new File($this->getParameter('actions_commerciales_fichier_directory').'/'.$actionCommerciale->getFichier())
+			);
+		}
+
 		$form = $this->createForm(
 			new ActionCommercialeType(
 					$actionCommerciale->getUserGestion()->getId(),
@@ -377,7 +417,12 @@ class ActionCommercialeController extends Controller
 		} else {
 
 		}
-		
+
+		$form->add('updateFichier', 'hidden', array(
+			'mapped' => false,
+			'data' => $actionCommerciale->getFichier() == null ? 1:0,
+			'attr' => array('class' => 'updateFichierFlag')
+		));
 
 		$request = $this->getRequest();
 		$form->handleRequest($request);
@@ -394,6 +439,30 @@ class ActionCommercialeController extends Controller
 			$actionCommerciale->setDateEdition(new \DateTime(date('Y-m-d')));
 			$actionCommerciale->setUserEdition($this->getUser());
 			$actionCommerciale->setMontant($form->get('totalHT')->getData());
+
+			if($form->get('updateFichier')->getData() == 1){
+				$file = $actionCommerciale->getFichier();
+				if($file){
+					try{
+						$fileName = $this->get('appbundle.action_commerciale_file_uploader')->upload($file, $this->getUser());
+					} catch(\Exception $e){
+						throw $e;
+					}
+			       	$actionCommerciale->setFichier($fileName);
+				}
+				if($oldFile){
+					$wholePath = $this->getParameter('actions_commerciales_fichier_directory').DIRECTORY_SEPARATOR.$oldFile;
+					if(file_exists($wholePath)){
+						unlink($wholePath);
+					}
+					
+				}
+				
+			} else {
+
+				$actionCommerciale->setFichier($oldFile);
+			}
+
 			$em->persist($actionCommerciale);
 			$em->flush();
 
@@ -434,7 +503,8 @@ class ActionCommercialeController extends Controller
 		}
 
 		return $this->render('crm/action-commerciale/crm_action_commerciale_editer.html.twig', array(
-			'form' => $form->createView()
+			'form' => $form->createView(),
+			'actionCommerciale' => $actionCommerciale
 		));
 
 	}
@@ -461,6 +531,14 @@ class ActionCommercialeController extends Controller
 			if($devis){
 				$em->remove($devis);
 			}
+
+			if($actionCommerciale->getFichier()){
+				$wholePath = $this->getParameter('actions_commerciales_fichier_directory').DIRECTORY_SEPARATOR.$actionCommerciale->getFichier();
+				if(file_exists($wholePath)){
+					unlink($wholePath);
+				}
+			}
+			
 			
 			$em->remove($actionCommerciale);
 			$em->flush();
@@ -555,12 +633,71 @@ class ActionCommercialeController extends Controller
 				)));
 			}
 
-			return $this->redirect($this->generateUrl('crm_action_commerciale_gagner_repartition', array(
+			return $this->redirect($this->generateUrl('crm_action_commerciale_gagner_plan_paiement', array(
 				'id' => $actionCommerciale->getId()
 			)));
 		}
 
 		return $this->render('crm/action-commerciale/crm_action_commerciale_won_bon_commande.html.twig', array(
+			'actionCommerciale' => $actionCommerciale,
+			'form' => $form->createView(),
+			'edition' => $edition
+		));
+	}
+
+	/**
+	 * @Route("/crm/action-commerciale/gagner/plan-paiement/{id}/{edition}",
+	 *   name="crm_action_commerciale_gagner_plan_paiement",
+	 *   options={"expose"=true}
+	 * )
+	 */
+	public function actionCommercialeGagnerPlanPaiementAction(Opportunite $actionCommerciale, $edition = false)
+	{
+		$form = $this->createForm(
+			new OpportuniteWonPlanPaiementType(),
+			$actionCommerciale
+		);
+
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$em = $this->getDoctrine()->getManager();
+
+			$type = $form->get('type')->getData();
+			if('COMMANDE' == $type){
+				$planPaiement = new PlanPaiement();
+				$planPaiement->setPourcentage(100);
+				$planPaiement->setCommande(true);
+				$planPaiement->setNom('Commande');
+
+				$actionCommerciale->clearPlanPaiements();
+				$actionCommerciale->addPlanPaiement($planPaiement);
+			} elseif('FIN' == $type){
+				$planPaiement = new PlanPaiement();
+				$planPaiement->setPourcentage(100);
+				$planPaiement->setFinProjet(true);
+				$planPaiement->setNom('Fin du projet');
+
+				$actionCommerciale->clearPlanPaiements();
+				$actionCommerciale->addPlanPaiement($planPaiement);
+			} 
+
+			$em->persist($actionCommerciale);
+			$em->flush();
+
+			if($edition){
+				return $this->redirect($this->generateUrl('crm_action_commerciale_voir', array(
+					'id' => $actionCommerciale->getId()
+				)));
+			}
+
+			return $this->redirect($this->generateUrl('crm_action_commerciale_gagner_repartition', array(
+				'id' => $actionCommerciale->getId()
+			)));
+		}
+
+		return $this->render('crm/action-commerciale/crm_action_commerciale_won_plan_paiement.html.twig', array(
 			'actionCommerciale' => $actionCommerciale,
 			'form' => $form->createView(),
 			'edition' => $edition
@@ -771,17 +908,37 @@ class ActionCommercialeController extends Controller
 	}
 
 		/**
-		 * @Route("/crm/action-commerciale/convertir/{id}", name="crm_action_commerciale_convertir")
+		 * @Route("/crm/action-commerciale/convertir/{id}/{planPaiementId}", name="crm_action_commerciale_convertir")
 		 */
-		public function actionCommercialeConvertirAction(Opportunite $actionCommerciale)
+		public function actionCommercialeConvertirAction(Opportunite $actionCommerciale, $planPaiementId = null)
 		{
 			$devis = $actionCommerciale->getDevis();
 
 			$form = $this->createFormBuilder()->getForm();
 
+			if(count($actionCommerciale->getPlanPaiements()) > 1 ){
+
+				$choices = array();
+				foreach($actionCommerciale->getPlanPaiements() as $planPaiement){
+					if( null == $planPaiement->getFacture() ){
+						$choices[$planPaiement->getId()] = $planPaiement->__toString();
+					}
+				}
+
+				$form->add('planPaiement', 'choice', array(
+					'required' => true,
+					'label' => 'Quelle phase facturez-vous ?',
+					'choices' => $choices,
+					'multiple' => false,
+					'expanded' => true,
+					'required' => true,
+					'data' => $planPaiementId
+				));
+			}
+
 			$form->add('objet', 'text', array(
 				'required' => true,
-				'label' => 'Objet',
+				'label' => 'Objet de la facture',
 				'data' => $devis->getObjet()
 			));
 
@@ -800,6 +957,7 @@ class ActionCommercialeController extends Controller
 				$facture = clone $devis;
 
 	            $devis->setEtat("WON");
+	            $em->persist($devis);
 
 				$settingsRepository = $em->getRepository('AppBundle:Settings');
 				$settingsNum = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'NUMERO_FACTURE', 'company'=>$this->getUser()->getCompany()));
@@ -810,6 +968,10 @@ class ActionCommercialeController extends Controller
 				$facture->setDevis($devis);
 				$facture->setDateCreation(new \DateTime(date('Y-m-d')));
 				$facture->setUserCreation($this->getUser());
+
+				if($facture->getCompte()->getAdresseFacturation()){
+
+				}
 
 				$settingsCGV = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'CGV_FACTURE', 'company'=>$this->getUser()->getCompany()));
 				$facture->setCgv($settingsCGV->getValeur());
@@ -829,6 +991,8 @@ class ActionCommercialeController extends Controller
 
 				$currentNum++;
 				$settingsNum->setValeur($currentNum);
+				$em->persist($settingsNum);
+
 
 	      		$settingsActivationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
 				$activationCompta = $settingsActivationRepo->findOneBy(array(
@@ -841,11 +1005,29 @@ class ActionCommercialeController extends Controller
 					$facture->setCompta(true);
 				}
 
-				$em->persist($facture);
-	      		$em->persist($devis);
-				$em->persist($settingsNum);
+				if(count($actionCommerciale->getPlanPaiements()) > 1 ){
 
-				$em->flush();
+					$planPaiementId = $form->get('planPaiement')->getData();
+					
+					if( $planPaiementId ){
+						$planPaiementRepo = $em->getRepository('AppBundle:CRM\PlanPaiement');
+						$planPaiement = $planPaiementRepo->find($planPaiementId);
+						
+						foreach($facture->getProduits() as $produit){
+							$em->remove($produit);
+						}
+						$facture->clearProduits();
+
+						$factureService = $this->get('appbundle.crm_facture_service');
+						$produit = $factureService->createProduitFromPlanPaiement($planPaiement);
+						$facture->addProduit($produit);
+
+						$planPaiement->setFacture($facture);
+						$em->persist($planPaiement);
+					}
+				}
+
+				$em->persist($facture);
 
 				if($activationCompta){
 
@@ -874,15 +1056,17 @@ class ActionCommercialeController extends Controller
 					$journalVenteService->journalVentesAjouterFactureAction(null, $facture);
 				}
 
+				$em->flush();
+
 				return $this->redirect($this->generateUrl(
-						'crm_facture_voir',
-						array('id' => $facture->getId())
+					'crm_facture_voir',
+					array('id' => $facture->getId())
 				));
 			} 
 
 			return $this->render('crm/action-commerciale/crm_action_commerciale_convertir.html.twig', array(
-					'form' 		=> $form->createView(),
-					'actionCommerciale'		=> $actionCommerciale
+				'form' 		=> $form->createView(),
+				'actionCommerciale'		=> $actionCommerciale
 			));
 		}
 
@@ -981,6 +1165,8 @@ class ActionCommercialeController extends Controller
 				'devis' => $devis
 		));
 	}
+
+
 
 
 }

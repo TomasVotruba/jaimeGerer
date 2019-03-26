@@ -1,9 +1,9 @@
 {% block submenu %}
-    <ul class="nav nav-tabs center-mobile">
- 	 <li class="col-xs-6 {% if app.request.pathInfo == "/crm/contact/liste" %} active {% endif %}">
+    <ul class="nav nav-tabs center-mobile center">
+ 	 <li class="col-xs-6 col-md-3 {% if app.request.pathInfo == "/crm/contact/liste" %} active {% endif %}">
           <a href="{{ path('crm_contact_liste') }}" ><span class="glyphicon glyphicon-user"></span> Contacts</a>
       </li>
-      <li class="col-xs-6 {% if app.request.pathInfo == "/crm/compte/liste" %} active {% endif %}">
+      <li class="col-xs-6 col-md-3  {% if app.request.pathInfo == "/crm/compte/liste" %} active {% endif %}">
           <a href="{{ path('crm_compte_liste') }}" ><span class="glyphicon glyphicon-briefcase"></span> Organisations</a>
       </li>   
     </ul>

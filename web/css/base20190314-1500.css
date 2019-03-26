@@ -67,7 +67,7 @@ a.help, .clickable {
 }
 
 .center {
-    text-align: center;
+    text-align: center !important;
 }
 
 .align-right {
@@ -80,6 +80,10 @@ a.help, .clickable {
 
 .align-bottom {
     vertical-align: bottom;
+}
+
+.bold{
+    font-weight: bold;
 }
 
 a.not-active {
@@ -159,6 +163,15 @@ body.modal-open .dateInput {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+figure.fichier{
+    display: inline-block;
+    text-align: center;
+}
+
+figure.fichier img {
+    vertical-align: top;
 }
 
 
@@ -384,11 +397,6 @@ tr th {
     margin: Opx;
 }
 
-.center {
-    text-align: center;
-}
-
-
 /**
 * LEFT COLUMN FOR MENU
 **/
@@ -540,7 +548,7 @@ label input[type="checkbox"][disabled] {
     transition: all ease 0.4s;
 }
 
-#crm_index p, #compta_index p {
+#compta_index p {
     margin-bottom: 40px;
 }
 
@@ -556,12 +564,12 @@ label input[type="checkbox"][disabled] {
     padding: 2% 10%;
 }
 
-#crm_index .text-accueil-outil {
-    padding: 20px;
-}
-
 .text-accueil-outil {
     padding: 50px;
+}
+
+#crm_index .text-accueil-outil {
+    padding: 20px 0 0 0;
 }
 
 .titre {
@@ -735,46 +743,6 @@ label input[type="checkbox"][disabled] {
 a {
     position: relative;
 }
-
-
-/* TEST
-.tooltoop-bottom{
-	opacity: 0;
-    position: absolute;
-    top: 0px;
-    left: -20%;
-    width:300px;
-    height: 0;
-    color:#FFF;
-    background: #444141;
-    z-index: 50;
-    padding: 5px 10px;
-    min-width: 20px;
-    border-radius: 4px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    text-align: center;
-}
-
-.tooltoop-bottom:before {
-	content:"";
-	position: absolute;
-    left: 50%;
-    top:-8px;
-	width: 0;
-	height: 0;
-	border-left: 8px solid transparent;
-	border-right: 8px solid transparent;
-	border-bottom:8px solid #444141;
-}
-
-a:hover>.tooltoop-bottom{
-   width:auto;
-   height: auto;
-   top: 50px;
-   opacity: 1;
-   transition: all ease 0.4s;
-}
-*/
 
 
 /*
@@ -1006,4 +974,19 @@ ul.checklist li:before {
 .tableau-merci hr, .tableau-courses hr{
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.nav-tabs{
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.todo-item{
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    display: flex;
+    align-items:center;
+    padding: 5px 0 5px 0;
+    background-color: #fff;
 }

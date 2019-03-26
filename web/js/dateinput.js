@@ -4,5 +4,5 @@ $(function(){
 		firstDay:1
 	});
 	
-	 $('[data-toggle="popover"]').popover()
+	$('[data-toggle="popover"]').popover()
 });
