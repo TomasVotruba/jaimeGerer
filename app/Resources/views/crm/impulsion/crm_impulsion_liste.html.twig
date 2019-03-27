@@ -14,9 +14,6 @@
 				<a target='_blank' href="{{ path('crm_impulsion_ajouter') }}" class="btn btn-success">
 					<span class="glyphicon glyphicon-plus"></span> Ajouter
 				</a>
-				<a  href="#" class="btn btn-danger">
-					<span class="glyphicon glyphicon-trash"></span> Supprimer
-				</a>
 			</p>
 		</div>
 	</div>
@@ -26,80 +23,69 @@
 			<table id="table_impulsion_list" class="table table-bordered table-striped">
 				<thead>
 				<tr>
-					<th>Nom du contact</th>
-					<th>Organisation</th>
-					<th>Titre</th>
-					<th>Dernière prise de contact</th>
+					<th>A contacter le</th>
 					<th>Contact</th>
-					<th>Timing</th>
+					<th>Organisation et titre</th>
+					<th>Coordonnées</th>
+					<th>Contacter par</th>
+					<th>Contacter pour</th>
 					<th>Actions</th>
 				</tr>
 				</thead>
 				<tbody>
 				{% for impulsion in list %}
-					<tr {% if impulsion.tempsRestant < 0 %} class="red" {% endif %}>
+					<tr>
+						<td>
+							{% if impulsion.retard > 0 %} 
+								<span class="label label-danger">{{ impulsion.retard }} jours de retard !</span><br />
+							{% endif %}
+							{{ impulsion.date|date('d/m/Y') }}
+						</td>
 						<td>
 							<a target='_blank' href="{{ path('crm_contact_voir', {'id' : impulsion.contact.id }) }}">{{ impulsion.contact }}</a>
 						</td>
 						<td>
-							<a target='_blank' href="{{ path('crm_compte_voir', {'id' : impulsion.contact.compte.id }) }}">{{ impulsion.contact.compte }}</a>
+							<a target='_blank' href="{{ path('crm_compte_voir', {'id' : impulsion.contact.compte.id }) }}">{{ impulsion.contact.compte }}</a><br />
+							<i>{{ impulsion.contact.titre }}</i>
 						</td>
 						<td>
-							{{ impulsion.contact.titre }}
-						</td>
-						<td>
-							{% for priseContact in impulsion.contact.priseContacts|slice(0,1) %}
-								{{ priseContact.date|date('d/m/Y') }} :
-								{% if priseContact.type == "PHONE" %}
-									Téléphone
-								{% elseif priseContact.type == "RDV" %}
-									Rendez-vous
-								{% elseif priseContact.type == "EMAIL" %}
-									Email
-								{% elseif priseContact.type == "LETTRE" %}
-									Lettre
-								{% elseif priseContact.type == "SOCIAL" %}
-									Réseaux sociaux
-								{% elseif priseContact.type == "DEVIS" %}
-									Envoi d'un devis
-								{% elseif priseContact.type == "FACTURE" %}
-									Envoi d'une facture
-								{% endif %} - 
-								{{ priseContact.description }}
-							{% endfor %}
-						</td>
-						<td>
-							{{ impulsion.contact.email }}
+							<a href="mailto:{{ impulsion.contact.email }}">{{ impulsion.contact.email }}</a>
 							<br/>
-							{{ impulsion.contact.telephoneFixe }}
+							<a href="tel:{{ impulsion.contact.telephoneFixe }}">{{ impulsion.contact.telephoneFixe }}</a>
+							
 							<br/>
-							{{ impulsion.contact.telephonePortable }}
+							<a href="tel:{{ impulsion.contact.telephonePortable }}">{{ impulsion.contact.telephonePortable }}</a>
 						</td>
 						<td>
-							<p>
-								<strong>Temps restant : </strong>
-								{{ impulsion.tempsRestant }} jours
-								<br />
-								jusqu'au {{ impulsion.echeance|date("d/m/Y") }}
-							</p>
-							<p>
-								<strong>Denier contact : </strong>
-								{% if impulsion.contact.priseContacts|length > 0 %}
-									{{ impulsion.contact.priseContacts[0].date|date("d/m/Y") }}
-								{% else %}
-									Jamais
-								{% endif %}
-							</p>
+							{{ impulsion.methodeContact }}
 						</td>
 						<td>
-							<a target='_blank' href="{{ path('crm_prise_contact_ajouter', {'id' : impulsion.contact.id, 'screen' : 'impulsion' }) }}" class="btn btn-xs btn-success"  data-toggle="modal" data-target="#modal_prise_contact">
+							{{ impulsion.infos }}
+						</td>
+						<td>
+							<a 
+								href="{{ path('crm_prise_contact_ajouter', {'id' : impulsion.contact.id, 'screen' : 'impulsion' }) }}" class="btn btn-xs btn-success"  
+								data-toggle="modal" 
+								data-target="#modal_prise_contact"
+							>
 								<span class="glyphicon glyphicon-ok"></span>
 							</a>
 
-							<a target='_blank' href="{{ path('crm_impulsion_editer', {'id' : impulsion.id }) }}" class="btn btn-xs btn-warning" ​data-toggle="tooltip-btn-xs" title="Editer">
+							<a 
+								href="{{ path('crm_impulsion_editer', {'id' : impulsion.id, 'screen' : 'impulsion' }) }}" 
+								class="btn btn-xs btn-warning" 
+								data-toggle="modal" 
+								data-target="#modal" 
+								title="Editer"
+							>
 								<span class="glyphicon glyphicon-pencil"></span>
 							</a>
-							<a target='_blank' href="{{ path('crm_impulsion_supprimer', {'id' : impulsion.id }) }}" class="btn btn-xs btn-danger"​data-toggle="tooltip-btn-xs" title="Supprimer">
+							<a 
+								href="{{ path('crm_impulsion_supprimer', {'id' : impulsion.id }) }}" 
+								class="btn btn-xs btn-danger"​
+								data-toggle="tooltip-btn-xs" 
+								title="Supprimer"
+							>
 								<span class="glyphicon glyphicon-trash"></span>
 							</a>
 						</td>
@@ -126,26 +112,7 @@
 		$(document).ready( function () {
 			$('#table_impulsion_list').DataTable({
 				"dom": 'T<"clear">lfrtip',
-				"order": [[ 5, "asc" ]],
-				"oTableTools": {
-					"sSwfPath": "/web/lib/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
-					"aButtons": [
-						{
-							"sExtends": "csv",
-							"sButtonText": "Excel",
-							"mColumns": [ 0, 1, 2, 3 ],
-							"sFileName": "impulsions.csv"
-						},
-						{
-							"sExtends": "pdf",
-							"sButtonText": "PDF",
-							"mColumns": [ 0, 1, 2, 3 ],
-							"sFileName": "impulsions.pdf",
-							"sTitle": "Impulsions"
-						},
-
-					]
-				},
+				"order": [[ 0, "desc" ]],
 				"language" : {
 					"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"
 				},

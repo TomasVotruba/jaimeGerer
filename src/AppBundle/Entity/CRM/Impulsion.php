@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Impulsion
  *
  * @ORM\Table(name="impulsion")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\CRM\ImpulsionRepository")
  */
 class Impulsion
 {
@@ -38,14 +38,14 @@ class Impulsion
     /**
      * @var integer
      *
-     * @ORM\Column(name="delaiNum", type="integer")
+     * @ORM\Column(name="delaiNum", type="integer", nullable=true)
      */
     private $delaiNum;
     
     /**
      * @var integer
      *
-     * @ORM\Column(name="delaiUnit", type="string", length=10)
+     * @ORM\Column(name="delaiUnit", type="string", length=10, nullable=true)
      */
     private $delaiUnit;
 
@@ -55,6 +55,33 @@ class Impulsion
      * @ORM\Column(name="date_creation", type="date")
      */
     private $dateCreation;
+
+     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime")
+     */
+    private $date;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="methodeContact", type="string", length=255)
+     */
+    private $methodeContact;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="infos", type="text")
+     */
+    private $infos;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\PriseContact")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    private $priseContact;
     
     /**
      * Get id
@@ -243,5 +270,108 @@ class Impulsion
     public function getDateCreation()
     {
         return $this->dateCreation;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     * @return Impulsion
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime 
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Set methodeContact
+     *
+     * @param string $methodeContact
+     * @return Impulsion
+     */
+    public function setMethodeContact($methodeContact)
+    {
+        $this->methodeContact = $methodeContact;
+
+        return $this;
+    }
+
+    /**
+     * Get methodeContact
+     *
+     * @return string 
+     */
+    public function getMethodeContact()
+    {
+        return $this->methodeContact;
+    }
+
+    /**
+     * Set infos
+     *
+     * @param string $infos
+     * @return Impulsion
+     */
+    public function setInfos($infos)
+    {
+        $this->infos = $infos;
+
+        return $this;
+    }
+
+    /**
+     * Get infos
+     *
+     * @return string 
+     */
+    public function getInfos()
+    {
+        return $this->infos;
+    }
+
+    public function getRetard(){
+
+        $today = new \DateTime('today');
+        $diff = $today->diff($this->date);
+
+        if($diff->format("%R%a") > 0){
+            return 0;
+        }
+        return $diff->format("%a");
+    }
+
+    /**
+     * Set priseContact
+     *
+     * @param \AppBundle\Entity\CRM\PriseContact $priseContact
+     * @return Impulsion
+     */
+    public function setPriseContact(\AppBundle\Entity\CRM\PriseContact $priseContact = null)
+    {
+        $this->priseContact = $priseContact;
+
+        return $this;
+    }
+
+    /**
+     * Get priseContact
+     *
+     * @return \AppBundle\Entity\CRM\PriseContact 
+     */
+    public function getPriseContact()
+    {
+        return $this->priseContact;
     }
 }

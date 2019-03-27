@@ -158,3 +158,8 @@ services:
     appbundle.action_commerciale_file_uploader:
         class: AppBundle\Service\CRM\ActionCommercialeFileUploader
         arguments: ['%actions_commerciales_fichier_directory%']
+    appbundle.crm_todolist_service:
+        class: AppBundle\Service\CRM\TodoListService
+        calls:
+            - [setContainer, ["@service_container"]]
+        arguments: [ "@doctrine.orm.entity_manager" ]

@@ -1,0 +1,32 @@
+<div class="todo-item row">
+	<div class="todo-info col-md-10">
+		
+		{% if 'late' == timespan %}
+			<span class="label label-danger">{{ impulsion.retard }} jours de retard !</span>
+		{% elseif 'week' == timespan %}
+			<span class="label label-default">{{ impulsion.date|date('d/m/Y') }}</span>
+		{% endif %}
+		<span class="label label-info">CONTACTER</span>
+		<strong>{{ impulsion.contact }} ({{ impulsion.contact.compte }})</strong>
+		<br />
+		{{ impulsion.methodeContact }} - {{ impulsion.infos }}
+	</div>
+	<div class="todo-action col-md-2 align-right">
+		<a 	href="{{ path('crm_impulsion_check', {'id' : impulsion.id, 'screen' : 'home' }) }}" 
+			class="btn btn-success btn-xs"
+			data-toggle="modal"
+			data-target="#modal"
+			title="J'ai contacté cette personne"
+		>
+			<span class="glyphicon glyphicon-check"></span>
+		</a>
+		<a 	href="{{ path('crm_impulsion_editer', {'id' : impulsion.id, 'screen' : 'home' }) }}" 
+			class="btn btn-info btn-xs"
+			data-toggle="modal"
+			data-target="#modal"
+			title="Modifier"
+		>
+			<span class="glyphicon glyphicon-pencil"></span>
+		</a>
+	</div>
+</div>

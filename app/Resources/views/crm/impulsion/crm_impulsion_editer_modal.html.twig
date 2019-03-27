@@ -1,0 +1,35 @@
+<div class="modal-header">
+	<a class="close" data-dismiss="modal">×</a>
+	<h3>Modifier un suivi</h3>
+</div>
+<div class="modal-body">
+	<div class="center">
+		{% include 'crm/impulsion/crm_impulsion_form.html.twig' with {'impulsion' : impulsion, 'screen' : screen } %}
+	</div>
+</div>
+
+
+{% block javascripts %}
+	<script src="{{ asset('js/error.js') }}"></script>
+	<script type="text/javascript">
+		$(document).ready( function () {
+			$('.typeahead-contact').typeahead({
+			    order: "desc",
+			    accent: true,
+			    source: {
+			        url: Routing.generate("crm_contact_impulsion_get_liste")
+			    },
+			    callback: {
+			        onClickAfter: function (node, a, item, event) {
+						$('.entity-contact').val(item.id);
+	          		}
+			    }
+			});
+		});
+		JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
+		$(".dateInput").datepicker({
+			dateFormat: 'dd/mm/yy',
+			firstDay:1
+		});
+	</script>
+{% endblock %}

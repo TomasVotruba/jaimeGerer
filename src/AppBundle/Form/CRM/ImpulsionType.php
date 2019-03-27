@@ -24,28 +24,11 @@ class ImpulsionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-    	
-    	$arr_delaiNum = array();
-    	for($i=1; $i<13; $i++){
-    		$arr_delaiNum[$i] = $i;
-    	}
-    	
-    	$arr_delaiUnit= array(
-    			'DAY' => 'jours', 
-    			'WEEK' => 'semaines', 
-    			'MONTH' => 'mois');
-    	
         $builder
-           	 ->add('contact_name', 'text', array(
-           			'required' => true,
-           			'mapped' => false,
-           			'label' => 'Contact',
-           			'attr' => array('class' => 'typeahead-contact'),
-           	))
             ->add('user', 'entity', array(
            			'class'=>'AppBundle:User',
            			'required' => true,
-           			'label' => 'Gestionnaire du suivi',
+           			'label_attr' => array('class' => 'hidden'),
            			'query_builder' => function (EntityRepository $er) {
            				return $er->createQueryBuilder('u')
            				->where('u.company = :company')
@@ -57,19 +40,32 @@ class ImpulsionType extends AbstractType
            				->setParameter('id', $this->userId);
            			},
            	))
+             ->add('contact_name', 'text', array(
+                    'required' => true,
+                    'mapped' => false,
+                    'label' => 'doit contacter',
+                    'attr' => array('class' => 'typeahead-contact'),
+            ))
            	->add('contact', 'hidden', array(
            			'required' => true,
            			'attr' => array('class' => 'entity-contact'),
            	))
-           	->add('delaiNum', 'integer', array(
-           		'label' => 'Contacter tous les',
-           		'required' => true,
-     		    ))
-           	->add('delaiUnit', 'choice', array(
-           			'choices' => $arr_delaiUnit,
-           			'label_attr' => array('class' => 'invisible'),
-           			'required' => true,
-           	));
+           	->add('date', 'date', array(
+                'widget' => 'single_text',
+                'label' => 'Le',
+                'input' => 'datetime',
+                'format' => 'dd/MM/yyyy',
+                'attr' => array('class' => 'dateInput'),
+                'required' => true,
+            ))
+           	->add('methodeContact', 'text', array(
+                'label' => 'par',
+                'required' => true
+            ))
+            ->add('infos', 'textarea', array(
+                'label' => 'au sujet de',
+                'required' => true
+            ));
     }
     
     /**

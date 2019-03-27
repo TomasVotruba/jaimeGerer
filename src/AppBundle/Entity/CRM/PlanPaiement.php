@@ -256,7 +256,11 @@ class PlanPaiement
 
     public function getRetard(){
         $today = new \DateTime('today');
-        $diff = $today->diff($this->date)->format("%a");
-        return $diff;
+        $diff = $today->diff($this->date);
+
+        if($diff->format("%R%a") > 0){
+            return 0;
+        }
+        return $diff->format("%a");
     }
 }

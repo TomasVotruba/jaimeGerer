@@ -14,14 +14,9 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-12 center">
-			<hr />
+		<div class="col-md-3 center">
 			<h3 class="bold">ACTIONS RAPIDES</h3>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-4">
+		
 			<div class="center crm-homepage-block well">
 				<p>
 					<span class="glyphicon glyphicon-search xl"></span>
@@ -34,8 +29,7 @@
 					</a>
 				</p>
 			</div>
-		</div>
-		<div class="col-md-4">
+		
 			<div class="center crm-homepage-block well">
 				<p>
 					<span class="glyphicon glyphicon-user xl"></span>
@@ -47,8 +41,7 @@
 					</a>
 				</p>
 			</div>
-		</div>
-		<div class="col-md-4">
+		
 			<div class="center crm-homepage-block well">
 				<p>
 					<span class="glyphicon glyphicon-euro xl"></span>
@@ -61,67 +54,48 @@
 				</p>
 			</div>
 		</div>
-	</div>
 
-	<div class="row">
-		<div class="col-md-12 center">
-			<hr />
-			<h3 class="bold">TODO LIST</h3>
-		</div>
-	</div>
+		<div class="col-md-9">
+			<h3 class="bold center">TODO LIST</h3>
 
-	<div class="row">
-		<div class="col-md-6">
-			<div class="center crm-homepage-block well">
-				<p>
-					<span class="glyphicon glyphicon-bell xl"></span>
-				</p>
-				<p><strong>Aujourd'hui</strong></p>
-				<div class="todo-list">
-					{% for todo in todoList.today %}
-						{{ include('crm/crm_todo_item.html.twig', {'todo' : todo, 'type' : 'today' }) }}
-					{% else %}
-						<p class="todo-item center bold green" style="display: block;">
-							Une journée tranquille <span class="glyphicon glyphicon-sunglasses"></span>
-						</p>
-					{% endfor %}
-				</div>
-			</div>
-		</div>
-
-		<div class="col-md-6">
-			<div class="center crm-homepage-block well">
-				<p>
-					<span class="glyphicon glyphicon-warning-sign xl"></span>
-				</p>
-				<p><strong>En retard</strong></p>
-				<div class="todo-list">
-					{% for todo in todoList.late %}
-						{{ include('crm/crm_todo_item.html.twig', {'todo' : todo, 'type' : 'late'  }) }}
-					{% else %}
-						<p class="todo-item center bold green" style="display: block;">
-							Tout est à jour <span class="glyphicon glyphicon-thumbs-up"></span>
-						</p>
-					{% endfor %}
-				</div>
-			</div>
-		</div>
-
-		<div class="col-md-6 col-md-offset-3">
-			<div class="center crm-homepage-block well">
-				<p>
-					<span class="glyphicon glyphicon-calendar xl"></span>
-				</p>
-				<p><strong>Cette semaine</strong></p>
-				{% for todo in todoList.week %}
-					{{ include('crm/crm_todo_item.html.twig', {'todo' : todo, 'type' : 'week'  }) }}
-				{% else %}
-					<p class="todo-item center bold green" style="display: block;">
-						On se la coule douce ? <span class="glyphicon glyphicon-glass"></span>
-					</p>
-				{% endfor %}
+			{% for timespan, arr_todo in todoList %}
 				
-			</div>
+					<div class="center crm-homepage-block well">
+						
+						{% if 'today' == timespan %}
+							<p>
+								<span class="glyphicon glyphicon-bell xl"></span>
+							</p>
+							<p><strong>Aujourd'hui</strong></p>
+						{% elseif 'week' == timespan %}
+							<p>
+								<span class="glyphicon glyphicon-calendar xl"></span>
+							</p>
+							<p><strong>Cette semaine</strong></p>
+						{% elseif 'late' == timespan %}	
+							<p>
+								<span class="glyphicon glyphicon-warning-sign xl"></span>
+							</p>
+							<p><strong>En retard</strong></p>
+						{% endif %}
+
+						<div class="todo-list">
+
+							{% for todo in arr_todo %}
+								{% if 'FACTURER' == todo.type %}
+									{{ include('crm/todo-list/crm_todo_item_facture.html.twig', {'todo' : todo.task, 'timespan' : timespan }) }}
+								{% elseif 'CONTACTER' == todo.type %}
+									{{ include('crm/todo-list/crm_todo_item_contact.html.twig', {'impulsion' : todo.task, 'timespan' : timespan  }) }}
+								{% endif %}
+							{% else %}
+								<p class="todo-item center bold green" style="display: block;">
+									Tout est à jour <span class="glyphicon glyphicon-thumbs-up"></span>
+								</p>
+							{% endfor %}
+
+						</div>
+					</div>
+			{% endfor %}
 		</div>
 	</div>
 

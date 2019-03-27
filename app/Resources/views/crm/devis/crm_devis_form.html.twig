@@ -104,16 +104,11 @@
 					url: Routing.generate("crm_compte_get_liste"),
 			    },
 			    callback: {
-			        onInit: function (node) {
-			            console.log('Typeahead Initiated on ' + node.selector);
-			        },
 			        onClickAfter: function (node, a, item, event) {
 						$('.entity-compte').val(item.id);
 						changeAddress();
 					}
-			    },
-			    debug: true
-
+			    }
 			});
 			$('.typeahead-compte').blur(function(){
 				$('div.typeahead-result', '#typeahead-container-contact').remove();
@@ -127,14 +122,8 @@
 						url: "/crm/contact/get-contacts"+ ($('.entity-compte').val() > 0 ? '/'+$('.entity-compte').val() : '')
 					},
 					callback: {
-						onInit: function (node) {
-							console.log('Typeahead Devis Initiated on ' + node.selector);
-							console.log($('.entity-compte').val());
-						},
 						onClickAfter: function (node, a, item, event) {
-							console.log('Typeahead Devis Click on ' + node.selector);
 							$('.entity-contact').val(item.id);
-
 						}
 					},
 					debug: true
@@ -153,14 +142,8 @@
 			        url: "/crm/contact/get-contacts"+ ($('.entity-compte').val() > 0 ? '/'+$('.entity-compte').val() : '')
 			    },
 			    callback: {
-			        onInit: function (node) {
-			            console.log('Typeahead Devis Initiated on ' + node.selector);
-			            console.log($('.entity-compte').val());
-			        },
 			        onClickAfter: function (node, a, item, event) {
-			        	console.log('Typeahead Devis Click on ' + node.selector);
 						$('.entity-contact').val(item.id);
-
 					}
 			    },
 			    debug: true
@@ -186,6 +169,5 @@
 		});
 
 	</script>
-
 
 {% endblock %}

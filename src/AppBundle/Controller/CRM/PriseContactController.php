@@ -67,5 +67,7 @@ class PriseContactController extends Controller
 		));
 	}
 
+	
+
 
 }

@@ -375,12 +375,6 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 	margin-left: 10px;
 }
 
-/**
-*	HOMEPAGE
-**/
-.crm-homepage-block{
-	min-height: 200px;
-}
 
 #action-commerciale-filter-date label{
 	font-weight: normal;
@@ -398,4 +392,11 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 
 .input-group.temps-commercial{
 	width: 150px !important;
+}
+
+.todo-list{
+	max-height: 200px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding-right: 10px;
 }

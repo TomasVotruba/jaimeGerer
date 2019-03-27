@@ -1,0 +1,20 @@
+<div class="todo-item row">
+	<div class="todo-info col-md-10">
+		{% if 'late' == timespan %}
+			<span class="label label-danger">{{ todo.retard }} jours de retard !</span>
+		{% elseif 'week' == timespan %}
+			<span class="label label-default">{{ todo.date|date('d/m/Y') }}</span>
+		{% endif %}
+		<span class="label label-warning">FACTURER</span>
+		<strong>{{ todo.actionCommerciale.compte.nom }}</strong>
+		<br />
+		{{ todo.actionCommerciale.nom }} : {{ todo.nom }} 
+	</div>
+	<div class="todo-action col-md-2 align-right">
+		<a 	href="{{ path('crm_action_commerciale_voir', {'id' : todo.actionCommerciale.id }) }}" 
+			class="btn btn-primary btn-xs"
+			title="Voir le plan de facturation">
+			<span class="glyphicon glyphicon-eye-open"></span>
+		</a>
+	</div>
+</div>

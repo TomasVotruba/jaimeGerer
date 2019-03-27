@@ -1,4 +1,4 @@
-{{ form_start(form, { 'attr': {'class': 'form-prise-contact'}, 'action': path('crm_prise_contact_ajouter', { 'id': contact.id, 'screen' : screen })}) }}
+{{ form_start(form, { 'attr': {'class': 'form-prise-contact'}, 'action': action }) }}
 	<div class="row">
 		<div class="col-md-6">
 			{{ form_errors(form) }}
@@ -19,18 +19,18 @@
     {{ form_end(form) }}
     
 <script type="text/javascript">
-$(function(){
-	$(".dateInput").datepicker({
-		dateFormat: 'dd/mm/yy',
-		firstDay:1
+	$(function(){
+		$(".dateInput").datepicker({
+			dateFormat: 'dd/mm/yy',
+			firstDay:1
+		});
 	});
-});
-		JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
-	</script>
+	JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
+</script>
 	
-	<script src="{{ asset('js/error.js') }}"></script>
-	<style>
-		#ui-datepicker-div {
-			z-index: 9999999999999999999999 !important;
-		}
-	</style>
+<script src="{{ asset('js/error.js') }}"></script>
+<style>
+	#ui-datepicker-div {
+		z-index: 999999999 !important;
+	}
+</style>

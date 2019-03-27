@@ -86,7 +86,6 @@ class ContactController extends Controller
 		));
 	}
 
-
 	/**
 	 * @Route("/crm/contact/voir/{id}", name="crm_contact_voir", options={"expose"=true})
 	 */
@@ -102,18 +101,26 @@ class ContactController extends Controller
 		$arr_factures = $docPrixRepository->findBy(array('contact' => $contact, 'type' => 'FACTURE'));
 		$arr_factures_orga = $docPrixRepository->findBy(array('compte' => $contact->getCompte()->getId(), 'type' => 'FACTURE'));
 
-		$impulsion = $impulsionRepository->findOneBy(array('contact' => $contact));
+		$impulsions = $impulsionRepository->findBy(
+			array(
+				'contact' => $contact,
+				'priseContact' => null
+			),
+			array(
+				'date' => 'ASC'
+			)
+		);
 
 		$fusion = $contactRepository->findBy(array('compte' => $contact->getCompte()));
 
 		return $this->render('crm/contact/crm_contact_voir.html.twig', array(
-				'contact' => $contact,
-				'arr_devis' => $arr_devis,
-				'arr_opportunites' => $arr_opportunites,
-				'arr_factures' => $arr_factures,
-                'arr_factures_orga' => $arr_factures_orga,
-				'impulsion' => $impulsion,
-				'fusion'	=> count($fusion) > 1 ? true : false
+			'contact' => $contact,
+			'arr_devis' => $arr_devis,
+			'arr_opportunites' => $arr_opportunites,
+			'arr_factures' => $arr_factures,
+            'arr_factures_orga' => $arr_factures_orga,
+			'impulsions' => $impulsions,
+			'fusion'	=> count($fusion) > 1 ? true : false
 		));
 	}
 

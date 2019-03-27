@@ -8,8 +8,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\CRM\Impulsion;
 use AppBundle\Entity\CRM\Compte;
 use AppBundle\Entity\CRM\Contact;
+use AppBundle\Entity\CRM\PriseContact;
 
 use AppBundle\Form\CRM\ImpulsionType;
+use AppBundle\Form\CRM\PriseContactType;
 
 class ImpulsionController extends Controller
 {
@@ -19,26 +21,20 @@ class ImpulsionController extends Controller
 	public function impulsionListeAction()
 	{
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Impulsion');
-		$list = $repository->findByUser($this->getUser());
+		$list = $repository->findBy(array(
+			'user' => $this->getUser(),
+			//'priseContact' => null
+		));
+
 		return $this->render('crm/impulsion/crm_impulsion_liste.html.twig', array(
-				'list' => $list
+			'list' => $list
 		));
 	}
 	
 	/**
-	 * @Route("/crm/impulsion/voir/{id}", name="crm_impulsion_voir")
+	 * @Route("/crm/impulsion/ajouter/{contact}/{screen}", name="crm_impulsion_ajouter")
 	 */
-	public function impulsionVoirAction(Impulsion $impulsion)
-	{
-		return $this->render('crm/impulsion/crm_impulsion_voir.html.twig', array(
-				'impulsion' => $impulsion
-		));
-	}
-	
-	/**
-	 * @Route("/crm/impulsion/ajouter/{contact}", name="crm_impulsion_ajouter")
-	 */
-	public function impulsionAjouterAction(Contact $contact = null)
+	public function impulsionAjouterAction(Contact $contact = null, $screen = null)
 	{
 		$em = $this->getDoctrine()->getManager();
 		$impulsion = new Impulsion();
@@ -49,9 +45,9 @@ class ImpulsionController extends Controller
 		}
 		
 		$form = $this->createForm(new ImpulsionType(
-						$impulsion->getUser()->getId(),
-						$this->getUser()->getCompany()->getId()
-				), $impulsion);
+				$impulsion->getUser()->getId(),
+				$this->getUser()->getCompany()->getId()
+		), $impulsion);
 		
 		if($contact){
 			$form->get('contact_name')->setData($contact->__toString());
@@ -71,31 +67,38 @@ class ImpulsionController extends Controller
 			
 			$em->persist($impulsion);
 			$em->flush();
+
+			if( 'contact' == $screen ){
+				return $this->redirect($this->generateUrl(
+					'crm_contact_voir', array(
+						'id' => $impulsion->getContact()->getId()
+					)
+				));
+			}
 	
-			return $this->redirect($this->generateUrl(
-					'crm_impulsion_voir',
-					array('id' => $impulsion->getId())
-			));
+			return $this->redirect($this->generateUrl('crm_impulsion_liste'));
 		}
 		
 		return $this->render('crm/impulsion/crm_impulsion_ajouter.html.twig', array(
-				'form' => $form->createView()
+			'form' => $form->createView(),
+			'action' => $this->generateUrl('crm_impulsion_ajouter', array(
+				'contact' => $contact, 'screen' => $screen
+			)),
 		));
 	}
 	
 	/**
-	 * @Route("/crm/impulsion/editer/{id}", name="crm_impulsion_editer")
+	 * @Route("/crm/impulsion/editer/{id}/{screen}", name="crm_impulsion_editer")
 	 */
-	public function impulsionEditerAction(Impulsion $impulsion)
+	public function impulsionEditerAction(Impulsion $impulsion, $screen)
 	{
 		$_contact = $impulsion->getContact();
 		$impulsion->setContact($_contact->getId());
 		
 		$form = $this->createForm(new ImpulsionType(
-						$impulsion->getUser()->getId(),
-						$this->getUser()->getCompany()->getId()
-				), $impulsion);
-		
+			$impulsion->getUser()->getId(),
+			$this->getUser()->getCompany()->getId()
+		), $impulsion);	
 		
 		$form->get('contact_name')->setData($_contact->__toString());
 	
@@ -110,14 +113,29 @@ class ImpulsionController extends Controller
 
 			$em->persist($impulsion);
 			$em->flush();
-	
-			return $this->redirect($this->generateUrl(
+
+			if($screen == 'impulsion'){
+				return $this->redirect($this->generateUrl(
 					'crm_impulsion_liste'
-			));
+				));
+			} else if($screen == 'home'){
+				return $this->redirect($this->generateUrl(
+					'crm_index'
+				));
+			} else {
+				return $this->redirect($this->generateUrl(
+					'crm_contact_voir',
+					array('id' => $contact->getId())
+				).'#prises_contact');
+			}
+	
 		}
 	
-		return $this->render('crm/impulsion/crm_impulsion_editer.html.twig', array(
-				'form' => $form->createView()
+		return $this->render('crm/impulsion/crm_impulsion_editer_modal.html.twig', array(
+			'form' => $form->createView(),
+			'screen' => $screen,
+			'impulsion' => $impulsion,
+			'action' => $this->generateUrl('crm_impulsion_editer', array('id' => $impulsion->getId(), 'screen' => $screen )),
 		));
 	}
 	
@@ -138,13 +156,13 @@ class ImpulsionController extends Controller
 			$em->flush();
 	
 			return $this->redirect($this->generateUrl(
-					'crm_impulsion_liste'
+				'crm_impulsion_liste'
 			));
 		}
 	
 		return $this->render('crm/impulsion/crm_impulsion_supprimer.html.twig', array(
-				'form' => $form->createView(),
-				'impulsion' => $impulsion
+			'form' => $form->createView(),
+			'impulsion' => $impulsion
 		));
 	}
 	
@@ -173,5 +191,54 @@ class ImpulsionController extends Controller
     	}
     	return ($a->getTempsRestant() < $b->getTempsRestant()) ? -1 : 1;
 	}
+
+	/**
+	 * @Route("/crm/impulsion/check/{id}/{screen}", name="crm_impulsion_check")
+	 */
+	public function impulsionCheckAction(Impulsion $impulsion, $screen)
+	{
+		$priseContact = new PriseContact();
+		$priseContact->setUser($this->getUser());
+		$priseContact->setContact($impulsion->getContact());
+		$form = $this->createForm(new PriseContactType(), $priseContact);
+	
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+	
+		if ($form->isSubmitted() && $form->isValid()) {
+			
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($priseContact);
+
+			$impulsion->setPriseContact($priseContact);
+			$em->persist($impulsion);
+
+			$em->flush();
+	
+			if($screen == 'impulsion'){
+				return $this->redirect($this->generateUrl(
+					'crm_impulsion_liste'
+				));
+			} else if($screen == 'home'){
+				return $this->redirect($this->generateUrl(
+					'crm_index'
+				));
+			} else {
+				return $this->redirect($this->generateUrl(
+					'crm_contact_voir',
+					array('id' => $contact->getId())
+				).'#prises_contact');
+			}
+
+		}
+	
+		return $this->render('crm/priseContact/crm_prise_contact_ajouter.html.twig', array(
+			'form' => $form->createView(),
+			'contact' => $priseContact->getContact(),
+			'screen' => $screen,
+			'action' => $this->generateUrl('crm_impulsion_check', array('id' => $impulsion->getId(), 'screen' => $screen))
+		));
+	}
+
 
 }

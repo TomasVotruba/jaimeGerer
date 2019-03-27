@@ -100,28 +100,21 @@
 				    			<a tabindex="0" role="button" data-toggle="popover" data-trigger="hover" title="Utilisateur inactif" data-content="Cet utilisateur est inactif. Vous devriez changer le gestionnaire du contact."><span class="glyphicon glyphicon-warning-sign red"></span></a>
 				    		{% endif %}
 				    		  <p>
-				    		  	<span class="glyphicon glyphicon-time"></span>
-								{% if impulsion is not null %}
-						    	 	<a href="{{ path('crm_impulsion_liste') }}">
-								    {% if impulsion.delaiUnit == "WEEK" %}
-				    					Toutes
-				    				{% else %}
-				    					Tous
-				    				{% endif %}
-				    				les {{ impulsion.delaiNum }}
-				    				{% if impulsion.delaiUnit == "DAY" %}
-				    					jours
-				    				{% elseif impulsion.delaiUnit == "WEEK" %}
-				    					semaines
-				    				{% else %}
-				    					mois
-				    				{% endif %}
-				    				</a>
+				    		  	
+								{% for impulsion in impulsions %}
+						    	 	<div>
+						    	 		<span class="glyphicon glyphicon-time"></span> 
+						    	 		A contacter le {{ impulsion.date|date('d/m/Y') }} par {{impulsion.methodeContact }} : {{ impulsion.infos }}
+						    	 		{% if impulsion.retard > 0 %}
+						    	 			<span class="label label-danger">{{ impulsion.retard }} jours de retard !</span>
+						    	 		{% endif %}
+						    	 	</div>
 				    			{% else %}
-				    				Pas de suivi <a href="{{ path('crm_impulsion_ajouter', {'contact' : contact.id}) }}" class="bnt btn-xs btn-success">
+				    				Pas de suivi <a href="{{ path('crm_impulsion_ajouter', {'contact' : contact.id, 'screen' : 'contact' }) }}" 
+				    				class="bnt btn-xs btn-success">
 				    					<span class="glyphicon glyphicon-plus"></span> Ajouter
 				    				</a>
-							    {% endif %}
+							    {% endfor %}
 						    </p>
 	    				</td>
 	    			</tr>

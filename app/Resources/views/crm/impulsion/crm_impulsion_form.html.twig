@@ -1,59 +1,73 @@
- {{ form_start(form) }}
+{{ form_start(form, {'attr' :  {'class': 'truc' }, 'action' :  action }) }}
 <div class="row">
-
-	<div class="col-md-3">
+	<div class="col-md-6 col-md-offset-3 center">
 		{{ form_row(form.user) }}
-	</div>
-	<div class="col-md-3">
-		 <div class="typeahead-container">
-	        <div class="typeahead-field">
-	        	<span class="typeahead-query">
-							{{ form_row(form.contact_name, {'attr' : {'class' : 'typeahead-contact'}}) }}
-							{{ form_row(form.contact) }}
-						</span>
-	        </div>
-	    </div>
-	</div>
-	<div class="col-md-3">
-		{{ form_row(form.delaiNum) }}
-	</div>
-	<div class="col-md-3">
-		{{ form_row(form.delaiUnit) }}
 	</div>
 </div>
 
 <div class="row">
-    <div class="col-md-12">
+	<div class="col-md-6 col-md-offset-3 center">
+		 <div class="typeahead-container">
+	        <div class="typeahead-field">
+	        	<span class="typeahead-query">
+					{{ form_row(form.contact_name, {'attr' : {'class' : 'typeahead-contact'}}) }}
+					{{ form_row(form.contact) }}
+				</span>
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6 col-md-offset-3 center">
+		{{ form_row(form.date) }}
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6 col-md-offset-3 center">
+		{{ form_row(form.methodeContact) }}
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6 col-md-offset-3 center">
+		{{ form_row(form.infos) }}
+	</div>
+</div>
+
+{{ form_widget(form._token) }}
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3 center">
 	   	 	<input type="submit" value="Enregistrer" class="btn btn-success" />
 	    </div>
     </div>
 </div>
+
 {{ form_end(form) }}
 
 {% block javascripts %}
-	<script type="text/javascript">
-	$(document).ready( function () {
-		$('.typeahead-contact').typeahead({
-		    order: "desc",
-		    accent: true,
-		    source: {
-		        url: Routing.generate("crm_contact_impulsion_get_liste")
-		    },
-		    callback: {
-		        onInit: function (node) {
-		            console.log('Typeahead Initiated on ' + node.selector);
-		        },
-		        onClickAfter: function (node, a, item, event) {
-		        	console.log('Typeahead Click on ' + node.selector);
-							$('.entity-contact').val(item.id);
-          }
-		    },
-		    debug: true
-
-		});
-	});
-		JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
-	</script>
-
 	<script src="{{ asset('js/error.js') }}"></script>
+	<script type="text/javascript">
+		$(document).ready( function () {
+			$('.typeahead-contact').typeahead({
+			    order: "desc",
+			    accent: true,
+			    source: {
+			        url: Routing.generate("crm_contact_impulsion_get_liste")
+			    },
+			    callback: {
+			        onClickAfter: function (node, a, item, event) {
+						$('.entity-contact').val(item.id);
+	          		}
+			    }
+			});
+		});
+		JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
+		$(".dateInput").datepicker({
+			dateFormat: 'dd/mm/yy',
+			firstDay:1
+		});
+	</script>
 {% endblock %}
