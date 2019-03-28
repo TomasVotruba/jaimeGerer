@@ -981,6 +981,13 @@ ul.checklist li:before {
     font-weight: bold;
 }
 
+.todo-list{
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+}
+
 .todo-item{
     text-align: left;
     border-bottom: 1px solid #ccc;

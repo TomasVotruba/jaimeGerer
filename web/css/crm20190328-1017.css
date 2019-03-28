@@ -394,9 +394,3 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 	width: 150px !important;
 }
 
-.todo-list{
-	max-height: 200px;
-	overflow-y: auto;
-	overflow-x: hidden;
-	padding-right: 10px;
-}
