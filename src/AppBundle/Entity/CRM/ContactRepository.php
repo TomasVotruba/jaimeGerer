@@ -1,4 +1,4 @@
-<?php
+createQueryAndGetResult<?php
 
 namespace AppBundle\Entity\CRM;
 
@@ -181,10 +181,11 @@ class ContactRepository extends EntityRepository
 	public function findAllNoImpulsion($company){
 
 	    $query = $this->createQueryBuilder('c');
-        $query->select('c.id, c.nom, c.prenom, co AS compte')
+        $query
             ->join('AppBundle\Entity\CRM\Compte', 'co', 'WITH', 'co.id = c.compte')
-            ->where('co.company = '.$company)
+            ->where('co.company = :company')
             ->andWhere('c.isOnlyProspect = :isOnlyProspect')
+            ->setParameter('company', $company)
             ->setParameter('isOnlyProspect', false);
 		$result = $query->getQuery()->getResult();
 
@@ -514,7 +515,7 @@ class ContactRepository extends EntityRepository
 			if($emailing == true){
 				$query->andWhere('c.bounce != :bounce')
 					->andWhere('c.email IS NOT NULL')
-					->andWhere('c.rejetEmail = :rejetEmail')
+					->andWhere('c.rejetEmail = :rejetEmail or c.rejetNewsletter = :rejetEmail')
 					->setParameter('bounce', 'BOUNCE')
 					->setParameter('rejetEmail', false);
 			}

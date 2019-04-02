@@ -72,6 +72,24 @@ class FactureService extends ContainerAware {
 
     }
 
+    public function createProduitsFrais($facture, $lignes){
+
+        foreach($facture->getProduits() as $produit){
+            $this->em->remove($produit);
+        }
+        $facture->clearProduits();
+
+        $produitRepo = $this->em->getRepository('AppBundle:CRM\Produit');
+        foreach($lignes as $ligneId){
+            $ligne = $produitRepo->find($ligneId);
+            $produit = clone($ligne);
+            $facture->addProduit($produit);
+        }
+
+        return $facture;
+
+    }
+
     // public function getDataChartActionsCoRhoneAlpes($company, $year){
 
     //     $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');

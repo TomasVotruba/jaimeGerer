@@ -49,10 +49,12 @@ class BonCommande
     private $factures;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\PlanPaiement", mappedBy="bonCommande")
-     * @ORM\JoinColumn(nullable=true)
+     * @var boolean
+     *
+     * @ORM\Column(name="frais_refacturables", type="boolean", nullable=false)
      */
-    private $planPaiements;
+    private $fraisRefacturables = false;
+
 
     /**
      * Get id
@@ -190,7 +192,6 @@ class BonCommande
     public function __construct()
     {
         $this->factures = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->planPaiements = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -225,4 +226,6 @@ class BonCommande
     {
         return $this->factures;
     }
+
+   
 }

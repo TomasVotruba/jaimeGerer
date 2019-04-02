@@ -75,7 +75,7 @@ class FactureType extends AbstractType
                 'data' => $adresse
         	))
            ->add('adresseLigne2', 'text', array(
-               'required' => true,
+               'required' => false,
                'label' => 'Adresse (suite)',
                'attr' => array('class' => 'input-adresse-ligne2'),
                'data' => $adresseLigne2
@@ -180,7 +180,8 @@ class FactureType extends AbstractType
        			'allow_add' => true,
        			'allow_delete' => true,
        			'by_reference' => false,
-       			'label_attr' => array('class' => 'hidden')
+       			'label_attr' => array('class' => 'hidden'),
+                'options' => array('type' => 'FACTURE')
            	))
            	->add('sousTotal', 'number', array(
        			'required' => false,
@@ -261,6 +262,18 @@ class FactureType extends AbstractType
                 'required' => true,
                 'attr' => array('class' => 'entity-bc'), 
                 'mapped' => false
+            ))
+            ->add('inclureFrais', 'checkbox', array(
+                'label' => ' ',
+                'required' => false,
+                'mapped' => false,
+                'attr' => array(
+                    'data-toggle' => 'toggle',
+                    'data-on' => 'Oui',
+                    'data-off' => 'Non',
+                    'data-onstyle' => 'success',
+                    'data-offstyle' => 'danger'
+                ),
             ))
         ;
 

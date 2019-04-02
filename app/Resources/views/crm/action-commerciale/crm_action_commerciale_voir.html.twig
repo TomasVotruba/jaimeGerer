@@ -498,12 +498,35 @@
 					<a class="btn btn-primary btn-xs" href=" {{ path('crm_action_commerciale_gagner_bon_commande', {'id' : opportunite.id, 'edition' : true }) }} ">Modifer</a> 
 					</h3>
 					<table class="contact-view-table" id="table-bons-commande">
+						<thead>
+							<tr>
+								<th>Numéro</th>
+								<th>Montant</th>
+								<th>Frais refacturables</th>
+								<th>Frais facturés</th>
+							</tr>
+						</thead>
 						<tbody>
+
 						{% for bonCommande in opportunite.bonsCommande %}
 							<tr>
-								<td> {{ bonCommande.num }} </td>
+								<td> 
+									{{ bonCommande.num }} 
+								</td>
 								<td>
 									{{ bonCommande.montantMonetaire|number_format(2, ',', ' ') }} €
+								</td>
+								<td>
+									{% if true == bonCommande.fraisRefacturables %}
+										<span class="glyphicon glyphicon-ok"></span>
+									{% endif %}
+								</td>
+								<td>
+									{% for facture in bonCommande.facturesFrais %}
+										<a href="{{ path('crm_facture_voir', {'id' : facture.id}) }}">{{ facture.num }}</a> : {{ facture.totalFrais }} € HT
+										<br />
+									{% endfor %}
+									<a href="{{ path('crm_action_commerciale_facturer_frais', {'id' : opportunite.id }) }}" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modal">Facturer les frais</a>
 								</td>
 							</tr>
 						{% endfor %}
@@ -517,7 +540,7 @@
 				<div class="col-md-12">
 					<hr />
 					<h3>Plan de paiement
-					<a class="btn btn-primary btn-xs" href=" {{ path('crm_action_commerciale_gagner_plan_paiement', {'id' : opportunite.id, 'edition' : true }) }} ">Modifer</a> 
+						<a class="btn btn-primary btn-xs" href=" {{ path('crm_action_commerciale_gagner_plan_paiement', {'id' : opportunite.id, 'edition' : true }) }} ">Modifer</a> 
 					</h3>
 					<table class="contact-view-table" id="plan-paiement-table">
 						<thead>

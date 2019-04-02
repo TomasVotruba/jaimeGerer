@@ -36,6 +36,8 @@
                     <th class="col-md-1">Montant</th>
                     <th class="col-md-1">Total facturé</th>
                     <th class="col-md-1 center">Factures</th>
+                    <th class="col-md-1 center">Frais refacturables</th>
+                    <th class="col-md-1 center">Factures de frais</th>
                 </tr>
                 </thead>
             </table>
@@ -88,6 +90,8 @@
                     { "data": "montant"},
                     { "data": "montant_facture"},
                     { "data": "factures"},
+                    { "data": "frais"},
+                    { "data": "factures_frais"},
                 ],
                 fnDrawCallback: function () {
                     $( 'a', this.fnGetNodes() ).tooltip( {
@@ -147,6 +151,34 @@
                         },
                         "targets": 5
                     },
+                    {
+                        "render": function ( data, type, row ) {
+                            if(data == true){
+                                return "<p class='center'><span class='glyphicon glyphicon-ok'></span></p>";
+                            }
+                            return "";
+                        },
+                        "targets": 6
+                    },
+                    {
+                        "render": function ( data, type, row ) {
+                            var content = "";
+                            if(data){
+                                for(var i =0; i<data.length; i++){
+                                    var url = Routing.generate('crm_facture_voir', {'id' : row.factures_frais_id[i] });
+                                    content+='<a target="_blank" href="'+url+'">'+data[i]+'</a>';
+                                    if (row['factures_frais_avoir'] != null) {
+                                        content+= "<br /><span class='s glyphicon glyphicon-scissors'></span> <span class='s'>Avoir " + row['avoir'] + "</span>";
+                                    };
+                                    content+='<br />';
+                                }
+                            }
+  
+                            return content;
+                            
+                        },
+                        "targets": 7
+                    }
                 ],
             });
 

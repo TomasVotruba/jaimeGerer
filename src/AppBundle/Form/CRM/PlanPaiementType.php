@@ -32,7 +32,6 @@ class PlanPaiementType extends AbstractType
             ))
             ->add('montant', 'text', array(
                 'mapped' => false,
-                'disabled' => true,
                 'attr' => array('class' => 'montant-euro')
             ));
         ;

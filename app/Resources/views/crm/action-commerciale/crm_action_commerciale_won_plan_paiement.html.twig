@@ -181,13 +181,35 @@
             });
 
             $('.percent').change(function() {
-                calculTotal($(this));
+                calculMontantFromPercent($(this));
+            });
+
+            $('.montant-euro').change(function() {
+                calculPercentFromMontant($(this));
             });
 
             $(".dateInput").datepicker({
 				dateFormat: 'dd/mm/yy',
 				firstDay:1
 			});
+        }
+
+        function calculMontantFromPercent(element){
+
+            var val = $(element).val();
+            var montant = val/100*montantActionCommerciale;
+            $(element).parents('.produit-collection').find('.montant-euro').val(montant.toFixed(2));
+        
+            calculTotal();
+        }
+
+        function calculPercentFromMontant(element){
+
+            var val = $(element).val();
+            var percent = val*100/montantActionCommerciale;
+            $(element).parents('.produit-collection').find('.percent').val(percent);
+
+            calculTotal();
         }
 
         function calculTotal()
@@ -197,9 +219,6 @@
             $.each($('.percent'), function(index, value) {
                 var val = $(value).val();
                 total+= parseFloat(val);
-
-                var montant = val/100*montantActionCommerciale;
-            	$(this).parents('.produit-collection').find('.montant-euro').val(montant.toFixed(2));
             });
 
             $('.total').text(total);

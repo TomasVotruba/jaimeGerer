@@ -82,7 +82,19 @@ class ProduitType extends AbstractType
             		'disabled' => true,
             		'attr' => array('class' => 'produit-total')
             ))
-        ;
+            ->add('frais', 'checkbox', array(
+                'label' => ' ',
+                'required' => false,
+                'attr' => array(
+                    'data-toggle' => 'toggle',
+                    'data-onstyle' => 'success',
+                    'data-offstyle' => 'danger',
+                    'data-on' => 'Oui',
+                    'data-off' => 'Non',
+                    'data-size' => 'mini',
+                    'class' => 'toggle-frais'
+                )
+            ));
     }
 
     /**
@@ -91,7 +103,8 @@ class ProduitType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\CRM\Produit'
+            'data_class' => 'AppBundle\Entity\CRM\Produit',
+            'type' => null
         ));
     }
 

@@ -10,10 +10,20 @@
     <div class="row">
         <div class="col-md-6">
             {{ form_row(form.nom) }}
-            {{ form_row(form.date) }}
+            {{ form_row(form.analytique) }}
         </div>
         <div class="col-md-6">
             {{ form_row(form.userGestion) }}
+        </div>
+    </div>
+
+    <hr />
+
+     <div class="row">
+        <div class="col-md-6">
+            {{ form_row(form.date) }}
+        </div>
+        <div class="col-md-6">
             {{ form_row(form.dateValidite) }}
         </div>
     </div>
@@ -47,6 +57,8 @@
         </div>
     </div>
 
+    <hr />
+
     <div class="row">
         <div class="col-md-6">
             {{ form_row(form.adresse) }}
@@ -65,16 +77,16 @@
 
        <div class="col-md-6">
             {{ form_row(form.type) }}
-            {{ form_row(form.analytique) }}
             {{ form_row(form.probabilite) }}
+            <strong>Appel d'offre</strong><br />
+            {{ form_widget(form.appelOffre) }}
         </div>
-
 
         <div class="col-md-6">
             {{ form_row(form.origine) }}
             {{ form_row(form.priveOrPublic) }}
-            {{ form_row(form.appelOffre) }}
-            {{ form_row(form.prescription) }}
+            <strong>Prescription</strong><br />
+            {{ form_widget(form.prescription) }}
         </div>
     </div>
 
@@ -153,25 +165,12 @@
 {% endblock %}
 
 {% block javascripts %}
+
 <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
 <script src="{{ asset('lib/jquery-file-upload/js/jquery.iframe-transport.js') }}"></script>
 <!-- The basic File Upload plugin -->
 <script src="{{ asset('lib/jquery-file-upload/js/jquery.fileupload.js') }}"></script>
 <script type="text/javascript">
-
-    // function calculateCA() {
-    //     var montant = $(".opp-montant").val();
-
-    //     montant = montant.replace(",", ".");
-    //     $(".opp-montant").val(montant);
-
-    //     var s_proba = $(".opp-probabilite option:selected").text();
-    //     var arr_proba = s_proba.split('-');
-    //     var proba = arr_proba[1].replace('%', '');
-    //     var caAttendu = montant * (proba / 100);
-    //     caAttendu = caAttendu.toFixed(2);
-    //     $(".opp-ca-attendu").val(caAttendu);
-    // }
 
     $(document).ready(function() {
 
@@ -179,6 +178,7 @@
         var $addProduitLink = $('<a href="#" class="add_produit_link btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"</a>');
         var $newProduitLi = $('<li></li>').append($addProduitLink);
 
+        $('[data-toggle="popover"]').popover({});
 
         $('.typeahead-compte').typeahead({
             order: "desc",
@@ -191,9 +191,7 @@
                     $('.entity-compte').val(item.id);
                     changeAddress();
                 }
-            },
-            debug: true
-
+            }
         });
 
         if($('.entity-compte').val() != "" && $('.entity-compte').val() != null){
@@ -207,9 +205,7 @@
                         onClickAfter: function(node, a, item, event) {
                             $('.entity-contact').val(item.id);
                         }
-                    },
-                    debug: true
-
+                    }
             });
         } else {
             $('.typeahead-contact').typeahead({
@@ -222,9 +218,7 @@
                     onClickAfter: function(node, a, item, event) {
                         $('.entity-contact').val(item.id);
                     }
-                },
-                debug: true
-
+                }
             });
 
         }
@@ -233,18 +227,16 @@
             $('div.typeahead-result', '#typeahead-container-contact').remove();
             $(".typeahead-contact").typeahead("destroy");
             $('.typeahead-contact').typeahead({
-                    order: "desc",
-                    accent: true,
-                    source: {
-                        url: Routing.generate("crm_contact_get_liste", {'compte_id' : $('.entity-compte').val() })
-                    },
-                    callback: {
-                        onClickAfter: function(node, a, item, event) {
-                            $('.entity-contact').val(item.id);
-                        }
-                    },
-                    debug: true
-
+                order: "desc",
+                accent: true,
+                source: {
+                    url: Routing.generate("crm_contact_get_liste", {'compte_id' : $('.entity-compte').val() })
+                },
+                callback: {
+                    onClickAfter: function(node, a, item, event) {
+                        $('.entity-contact').val(item.id);
+                    }
+                }
             });
         });
 
@@ -322,8 +314,6 @@
                 updateProduitType();
             });
             
-          //  addProduitFormDeleteLink($newFormLi);
-
             $('.select_action').unbind('change');
             $('.select_action').change(function() {
                 if($(this).val() == 'EMPTY' || $(this).val() == 'NOT_EMPTY'){
@@ -332,6 +322,9 @@
                     $(this).parent().next().find('.input_valeur').prop('disabled', false);
                 }
             });
+
+            $newFormLi.find('[data-toggle="toggle"]').bootstrapToggle();
+            $('[data-toggle="popover"]').popover({});
         }
 
         $('.remove-button').unbind('click');
@@ -476,9 +469,9 @@
             $('.devis-total-ttc').val(totalTTC.toFixed(2));
         }   
 
-        $("#{{ form.appelOffre.vars.id }}").change(function() {
-            $("#{{ form.contact.vars.id }}").attr("required", $(this).is(':checked'));
-            $("#{{ form.contact_name.vars.id }}").attr("required", $(this).is(':checked'));
+        $(".appel-offre-checkbox").change(function() {
+            $(".typeahead-contact").attr("required", !$(this).is(':checked'));
+            $(".entity-contact").attr("required", !$(this).is(':checked'));
         });
 
         $('#edit-fichier-btn').click(function(e){
@@ -509,16 +502,6 @@
             type: "POST",
             url: url,
             success: function(data) {
-                // if(data.secteur != ""){
-                //     var arr_childrens =  $(".input-secteur").children();
-                //     for(var i = 0; i < arr_childrens.length; i++){
-
-                //         if(arr_childrens[i].textContent  === data.secteur){
-                //             arr_childrens[i].setAttribute("selected","");
-                //         }
-
-                //     }
-                // }
                 $(".input-adresse").val(data.adresse);
                 $(".input-codepostal").val(data.codePostal);
                 $(".input-ville").val(data.ville);

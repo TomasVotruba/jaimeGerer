@@ -670,6 +670,7 @@ class ActionCommercialeController extends Controller
 				$planPaiement->setPourcentage(100);
 				$planPaiement->setCommande(true);
 				$planPaiement->setNom('Commande');
+				$planPaiement->setDate( $actionCommerciale->getDate() );
 
 				$actionCommerciale->clearPlanPaiements();
 				$actionCommerciale->addPlanPaiement($planPaiement);
@@ -907,24 +908,25 @@ class ActionCommercialeController extends Controller
 		));
 	}
 
-		/**
-		 * @Route("/crm/action-commerciale/convertir/{id}/{planPaiementId}", name="crm_action_commerciale_convertir")
-		 */
-		public function actionCommercialeConvertirAction(Opportunite $actionCommerciale, $planPaiementId = null)
-		{
-			$devis = $actionCommerciale->getDevis();
+	/**
+	 * @Route("/crm/action-commerciale/convertir/{id}/{planPaiementId}", name="crm_action_commerciale_convertir")
+	 */
+	public function actionCommercialeConvertirAction(Opportunite $actionCommerciale, $planPaiementId = null)
+	{
+		$devis = $actionCommerciale->getDevis();
 
-			$form = $this->createFormBuilder()->getForm();
+		$form = $this->createFormBuilder()->getForm();
 
-			if(count($actionCommerciale->getPlanPaiements()) > 1 ){
+		if(count($actionCommerciale->getPlanPaiements()) > 1 ){
 
-				$choices = array();
-				foreach($actionCommerciale->getPlanPaiements() as $planPaiement){
-					if( null == $planPaiement->getFacture() ){
-						$choices[$planPaiement->getId()] = $planPaiement->__toString();
-					}
+			$choices = array();
+			foreach($actionCommerciale->getPlanPaiements() as $planPaiement){
+				if( null == $planPaiement->getFacture() ){
+					$choices[$planPaiement->getId()] = $planPaiement->__toString();
 				}
+			}
 
+			if(count($choices)){
 				$form->add('planPaiement', 'choice', array(
 					'required' => true,
 					'label' => 'Quelle phase facturez-vous ?',
@@ -936,10 +938,183 @@ class ActionCommercialeController extends Controller
 				));
 			}
 
+		}
+
+		$form->add('objet', 'text', array(
+			'required' => true,
+			'label' => 'Objet de la facture',
+			'data' => $devis->getObjet()
+		));
+
+		$form->add('submit', 'submit', array(
+  		  'label' => 'Enregistrer',
+		  'attr' => array('class' => 'btn btn-success')
+		));
+
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$em = $this->getDoctrine()->getManager();
+			$data = $form->getData();
+			$facture = clone $devis;
+
+            $devis->setEtat("WON");
+            $em->persist($devis);
+
+			$settingsRepository = $em->getRepository('AppBundle:Settings');
+			$settingsNum = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'NUMERO_FACTURE', 'company'=>$this->getUser()->getCompany()));
+			$currentNum = $settingsNum->getValeur();
+
+			$facture->setType('FACTURE');
+			$facture->setObjet($data['objet']);
+			$facture->setDevis($devis);
+			$facture->setDateCreation(new \DateTime(date('Y-m-d')));
+			$facture->setUserCreation($this->getUser());
+
+			if($facture->getCompte()->getAdresseFacturation()){
+				$facture->setNomFacturation($facture->getCompte()->getNomFacturation());
+				$facture->setAdresse($facture->getCompte()->getAdresseFacturation());
+				$facture->setAdresseLigne2($facture->getCompte()->getAdresseFacturationLigne2());
+				$facture->setCodePostal($facture->getCompte()->getCodePostalFacturation());
+				$facture->setVille($facture->getCompte()->getVilleFacturation());
+				$facture->setRegion(null);
+				$facture->setPays($facture->getCompte()->getPaysFacturation());
+			}
+
+			$settingsCGV = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'CGV_FACTURE', 'company'=>$this->getUser()->getCompany()));
+			$facture->setCgv($settingsCGV->getValeur());
+
+			$prefixe = date('Y').'-';
+			if($currentNum < 10){
+				$prefixe.='00';
+			} else if ($currentNum < 100){
+				$prefixe.='0';
+			}
+			$facture->setNum($prefixe.$currentNum);
+			$em->persist($facture);
+
+			foreach($actionCommerciale->getBonsCommande() as $bonCommande){
+				$facture->setBonCommande($bonCommande);
+			}
+
+			$currentNum++;
+			$settingsNum->setValeur($currentNum);
+			$em->persist($settingsNum);
+
+
+      		$settingsActivationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
+			$activationCompta = $settingsActivationRepo->findOneBy(array(
+					'company' => $this->getUser()->getCompany(),
+					'outil' => 'COMPTA',
+			));
+			if(!$activationCompta){
+				$facture->setCompta(false);
+			} else{
+				$facture->setCompta(true);
+			}
+
+			if(count($actionCommerciale->getPlanPaiements()) > 1 ){
+
+				$planPaiementId = $form->get('planPaiement')->getData();
+				
+				if( $planPaiementId ){
+					$planPaiementRepo = $em->getRepository('AppBundle:CRM\PlanPaiement');
+					$planPaiement = $planPaiementRepo->find($planPaiementId);
+					
+					foreach($facture->getProduits() as $produit){
+						$em->remove($produit);
+					}
+					$facture->clearProduits();
+
+					$factureService = $this->get('appbundle.crm_facture_service');
+					$produit = $factureService->createProduitFromPlanPaiement($planPaiement);
+					$facture->addProduit($produit);
+
+					$planPaiement->setFacture($facture);
+					$em->persist($planPaiement);
+				}
+			}
+
+			$em->persist($facture);
+
+			if($activationCompta){
+
+				//si le compte comptable du client n'existe pas, on le créé
+				$compte = $facture->getCompte();
+				if($compte->getClient() == false || $compte->getCompteComptableClient() == null){
+
+					try {
+						$compteComptableService = $this->get('appbundle.compta_compte_comptable_service');
+						$compteComptable = $compteComptableService->createCompteComptableClient($compte);
+					} catch(\Exception $e){
+						return $this->redirect($this->generateUrl(
+							'crm_facture_creer_compte_comptable', 
+							array('id' => $facture->getId())
+						));
+					}
+
+					$compte->setClient(true);
+					$compte->setCompteComptableClient($compteComptable);
+					$em->persist($compte);
+					$em->flush();
+				}
+
+				//ecrire dans le journal de vente
+				$journalVenteService = $this->container->get('appbundle.compta_journal_ventes_controller');
+				$journalVenteService->journalVentesAjouterFactureAction(null, $facture);
+			}
+
+			$em->flush();
+
+			return $this->redirect($this->generateUrl(
+				'crm_facture_voir',
+				array('id' => $facture->getId())
+			));
+		} 
+
+		return $this->render('crm/action-commerciale/crm_action_commerciale_convertir.html.twig', array(
+			'form' 		=> $form->createView(),
+			'actionCommerciale'		=> $actionCommerciale
+		));
+	}
+
+		/**
+		 * @Route("/crm/action-commerciale/facturer-frais/{id}", name="crm_action_commerciale_facturer_frais")
+		 */
+		public function actionCommercialeFacturerFraisAction(Opportunite $actionCommerciale)
+		{
+			$devis = $actionCommerciale->getDevis();
+
+			$form = $this->createFormBuilder()->getForm();
+
+			if(count($actionCommerciale->getPlanPaiements()) > 1 ){
+
+				$choices = array();
+				foreach($devis->getProduits() as $produit){
+				    if(true === $produit->getFrais()){
+				        $choices[$produit->getId()] = $produit->__toString();
+				    }
+				}
+
+				if(count($choices)){
+					$form->add('lignes', 'choice', array(
+						'required' => true,
+						'label' => 'Quels frais facturez-vous ?',
+						'choices' => $choices,
+						'multiple' => true,
+						'expanded' => true,
+						'required' => true
+					));
+				}
+
+			}
+
 			$form->add('objet', 'text', array(
 				'required' => true,
 				'label' => 'Objet de la facture',
-				'data' => $devis->getObjet()
+				'data' => $devis->getObjet().' - Frais'
 			));
 
 			$form->add('submit', 'submit', array(
@@ -955,23 +1130,28 @@ class ActionCommercialeController extends Controller
 				$em = $this->getDoctrine()->getManager();
 				$data = $form->getData();
 				$facture = clone $devis;
+				$facture->setDevis($devis);
+				$facture->setObjet($data['objet']);
 
-	            $devis->setEtat("WON");
-	            $em->persist($devis);
+				if($facture->getCompte()->getAdresseFacturation()){
+					$facture->setNomFacturation($facture->getCompte()->getNomFacturation());
+					$facture->setAdresse($facture->getCompte()->getAdresseFacturation());
+					$facture->setAdresseLigne2($facture->getCompte()->getAdresseFacturationLigne2());
+					$facture->setCodePostal($facture->getCompte()->getCodePostalFacturation());
+					$facture->setVille($facture->getCompte()->getVilleFacturation());
+					$facture->setRegion(null);
+					$facture->setPays($facture->getCompte()->getPaysFacturation());
+				}
 
 				$settingsRepository = $em->getRepository('AppBundle:Settings');
 				$settingsNum = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'NUMERO_FACTURE', 'company'=>$this->getUser()->getCompany()));
 				$currentNum = $settingsNum->getValeur();
 
 				$facture->setType('FACTURE');
-				$facture->setObjet($data['objet']);
-				$facture->setDevis($devis);
+				
+				
 				$facture->setDateCreation(new \DateTime(date('Y-m-d')));
 				$facture->setUserCreation($this->getUser());
-
-				if($facture->getCompte()->getAdresseFacturation()){
-
-				}
 
 				$settingsCGV = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'CGV_FACTURE', 'company'=>$this->getUser()->getCompany()));
 				$facture->setCgv($settingsCGV->getValeur());
@@ -1005,28 +1185,9 @@ class ActionCommercialeController extends Controller
 					$facture->setCompta(true);
 				}
 
-				if(count($actionCommerciale->getPlanPaiements()) > 1 ){
-
-					$planPaiementId = $form->get('planPaiement')->getData();
-					
-					if( $planPaiementId ){
-						$planPaiementRepo = $em->getRepository('AppBundle:CRM\PlanPaiement');
-						$planPaiement = $planPaiementRepo->find($planPaiementId);
-						
-						foreach($facture->getProduits() as $produit){
-							$em->remove($produit);
-						}
-						$facture->clearProduits();
-
-						$factureService = $this->get('appbundle.crm_facture_service');
-						$produit = $factureService->createProduitFromPlanPaiement($planPaiement);
-						$facture->addProduit($produit);
-
-						$planPaiement->setFacture($facture);
-						$em->persist($planPaiement);
-					}
-				}
-
+				$factureService = $this->get('appbundle.crm_facture_service');
+				$factureService->createProduitsFrais($facture, $data['lignes']);
+		
 				$em->persist($facture);
 
 				if($activationCompta){
@@ -1064,7 +1225,7 @@ class ActionCommercialeController extends Controller
 				));
 			} 
 
-			return $this->render('crm/action-commerciale/crm_action_commerciale_convertir.html.twig', array(
+			return $this->render('crm/action-commerciale/crm_action_commerciale_facturer_frais.html.twig', array(
 				'form' 		=> $form->createView(),
 				'actionCommerciale'		=> $actionCommerciale
 			));

@@ -40,10 +40,10 @@ class PlanPaiementRepository extends EntityRepository
 
 
 		$result = $query
-		->setParameter('today', $today)
-		->setParameter('user', $user)
-		->getQuery()
-		->getResult();
+			->setParameter('today', $today)
+			->setParameter('user', $user)
+			->getQuery()
+			->getResult();
 
 		return $result;
 	}

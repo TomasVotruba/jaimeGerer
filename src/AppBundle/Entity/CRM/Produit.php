@@ -74,6 +74,17 @@ class Produit
      */
     private $type;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="frais", type="boolean", nullable=false)
+     */
+    private $frais = false;
+
+
+    public function __toString(){
+        return $this->nom.' : '.number_format($this->getTotal(), 2, ',', ' ').' €';
+    }
 
     /**
      * Get id
@@ -264,4 +275,27 @@ class Produit
 		return $this;
 	}
 	
+
+    /**
+     * Set frais
+     *
+     * @param boolean $frais
+     * @return Produit
+     */
+    public function setFrais($frais)
+    {
+        $this->frais = $frais;
+
+        return $this;
+    }
+
+    /**
+     * Get frais
+     *
+     * @return boolean 
+     */
+    public function getFrais()
+    {
+        return $this->frais;
+    }
 }

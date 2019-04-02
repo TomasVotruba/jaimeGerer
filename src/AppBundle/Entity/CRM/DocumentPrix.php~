@@ -261,22 +261,30 @@ class DocumentPrix
     private $compta;
 
     /**
-   * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Opportunite", mappedBy="devis")
-   * @ORM\JoinColumn(nullable=true)
-   */
-  private $opportunite;
+    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Opportunite", mappedBy="devis")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $opportunite;
 
 
-   /**
+    /**
     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\BonCommande", inversedBy="factures")
     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
     */
     private $bonCommande;
 
-  /**
-   * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="facture", cascade={"remove"}, orphanRemoval=true)
-   */
-  private $journalVentes;
+    /**
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="facture", cascade={"remove"}, orphanRemoval=true)
+    */
+    private $journalVentes;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="frais", type="boolean", nullable=false)
+     */
+    private $frais = false;
+
 
   /**
    * Constructor
@@ -1494,5 +1502,51 @@ class DocumentPrix
     public function getBonCommande()
     {
         return $this->bonCommande;
+    }
+
+    /**
+     * Set nomFacturation
+     *
+     * @param string $nomFacturation
+     * @return DocumentPrix
+     */
+    public function setNomFacturation($nomFacturation)
+    {
+        $this->nomFacturation = $nomFacturation;
+
+        return $this;
+    }
+
+    /**
+     * Get nomFacturation
+     *
+     * @return string 
+     */
+    public function getNomFacturation()
+    {
+        return $this->nomFacturation;
+    }
+
+    /**
+     * Set adresseLigne2
+     *
+     * @param string $adresseLigne2
+     * @return DocumentPrix
+     */
+    public function setAdresseLigne2($adresseLigne2)
+    {
+        $this->adresseLigne2 = $adresseLigne2;
+
+        return $this;
+    }
+
+    /**
+     * Get adresseLigne2
+     *
+     * @return string 
+     */
+    public function getAdresseLigne2()
+    {
+        return $this->adresseLigne2;
     }
 }

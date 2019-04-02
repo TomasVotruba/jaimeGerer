@@ -48,6 +48,20 @@ class BonCommande
      */
     private $factures;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="frais_refacturables", type="boolean", nullable=false)
+     */
+    private $fraisRefacturables = false;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->factures = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -158,8 +172,7 @@ class BonCommande
     {
         $montant = 0;
         foreach($this->factures as $facture){
-    
-                $montant+= intval(strval($facture->getTotalHTMoinsAvoirs()*100));
+            $montant+= intval(strval($facture->getTotalHTMoinsAvoirs()*100));
         }
         return $montant;
        
@@ -179,14 +192,7 @@ class BonCommande
         return $montant;
        
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->factures = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
+    
     /**
      * Add factures
      *
@@ -220,5 +226,59 @@ class BonCommande
         return $this->factures;
     }
 
-   
+
+    /**
+     * Set fraisRefacturables
+     *
+     * @param boolean $fraisRefacturables
+     * @return BonCommande
+     */
+    public function setFraisRefacturables($fraisRefacturables)
+    {
+        $this->fraisRefacturables = $fraisRefacturables;
+
+        return $this;
+    }
+
+    /**
+     * Get fraisRefacturables
+     *
+     * @return boolean 
+     */
+    public function getFraisRefacturables()
+    {
+        return $this->fraisRefacturables;
+    }
+
+    /**
+     * Get factures de frais
+     *
+     * @return \AppBundle\Entity\CRM\DocumentPrix 
+     */
+    public function getFacturesFrais()
+    {
+        $facturesFrais = array();
+        foreach($this->factures as $facture){
+            if($facture->hasFrais()){
+                $facturesFrais[] = $facture;
+            }
+        }
+        return $facturesFrais;
+       
+    }
+
+    public function getTotalFrais(){
+        $total = 0;
+        foreach($this->factures as $facture){
+            if($facture->hasFrais()){
+                $total+= $facture->getTotalFrais();
+            }
+        }
+        return $total;
+    }
+
+    public function addMontantMonetaire($toAdd){
+        $toAdd = $toAdd*100;
+        $this->montant= $this->montant+$toAdd;
+    }
 }

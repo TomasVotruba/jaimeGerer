@@ -179,7 +179,8 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 	text-align: center;
 }
 
-.produit-collection table td{
+.produit-collection table td,
+.produit-collection table th{
 	 padding: 5px;
 }
 

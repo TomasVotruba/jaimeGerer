@@ -2,6 +2,17 @@
 	<hr />
 	<table>
 		<thead>
+				<th>
+					<strong>Frais refacturables</strong>
+		            <a href="#"
+		                data-toggle="popover" 
+		                data-trigger="hover"
+		                data-placement="top"
+		                title="Frais refacturables" 
+		                data-content="Sélectionnez 'Oui' si cette ligne correspond à des frais à refacturer au client.">
+		                <span class="glyphicon glyphicon-question-sign"></span>
+		            </a>
+		        </th>
 				<th class="produit-input-type">{{ form_label(form.type) }}</td>
 				<th class="produit-input-nom">{{ form_label(form.nom) }}</td>
 				<th class="produit-input-number">{{ form_label(form.tarifUnitaire) }}</td>
@@ -9,10 +20,15 @@
 				<th class="produit-input-number">{{ form_label(form.montant) }}</td>
 				<th class="produit-input-number">{{ form_label(form.remise) }}</td>
 				<th class="produit-input-number">{{ form_label(form.total) }}</td>
+				
 				<th class="produit-input-button">&nbsp;</td>
 		</thead>
 		<tbody>
 			<tr>
+				
+				<td class="center">
+            		{{ form_widget(form.frais) }}
+				</td>
 				<td class="produit-input-type">{{ form_widget(form.type) }}</td>
 				<td class="produit-input-nom">{{ form_widget(form.nom) }}</td>
 				<td class="produit-input-number">{{ form_widget(form.tarifUnitaire) }}</td>
@@ -23,7 +39,7 @@
 				<td class="produit-input-button"><a href="#" class="btn btn-xs btn-danger remove-button"><span class="glyphicon glyphicon-minus"></span></a></td>
 			</tr>
 			<tr>
-				<td colspan="2" class="produit-textarea">
+				<td colspan="3" class="produit-textarea">
 					{{ form_row(form.description) }}
 				</td>
 			</tr>

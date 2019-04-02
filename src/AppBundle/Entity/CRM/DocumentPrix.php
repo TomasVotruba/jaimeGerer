@@ -261,22 +261,23 @@ class DocumentPrix
     private $compta;
 
     /**
-   * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Opportunite", mappedBy="devis")
-   * @ORM\JoinColumn(nullable=true)
-   */
-  private $opportunite;
+    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Opportunite", mappedBy="devis")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $opportunite;
 
 
-   /**
+    /**
     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\BonCommande", inversedBy="factures")
     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
     */
     private $bonCommande;
 
-  /**
-   * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="facture", cascade={"remove"}, orphanRemoval=true)
-   */
-  private $journalVentes;
+    /**
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\Compta\JournalVente", mappedBy="facture", cascade={"remove"}, orphanRemoval=true)
+    */
+    private $journalVentes;
+
 
   /**
    * Constructor
@@ -1541,4 +1542,26 @@ class DocumentPrix
     {
         return $this->adresseLigne2;
     }
+
+    public function hasFrais()
+    {
+        foreach($this->produits as $produit){
+            if(true === $produit->getFrais()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getTotalFrais()
+    {
+        $total = 0;
+        foreach($this->produits as $produit){
+            if(true === $produit->getFrais()){
+                $total+=$produit->getTotal();
+            }
+        }
+        return $total;
+    }
+
 }

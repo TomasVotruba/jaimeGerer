@@ -15,14 +15,25 @@ class BonCommandeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-          ->add('num', 'text', array(
-            'required' => true
-          ))
-          ->add('montantMonetaire', 'number', array(
-              'required' => true,
-              'attr' => array('class' => 'align-right')
-          ))
-        ;
+            ->add('num', 'text', array(
+                'required' => true
+            ))
+            ->add('montantMonetaire', 'number', array(
+                'required' => true,
+                'attr' => array('class' => 'align-right')
+            ))
+            ->add('fraisRefacturables', 'checkbox', array(
+                'label' => ' ',
+                'required' => false,
+                'attr' => array(
+                    'data-toggle' => 'toggle',
+                    'data-onstyle' => 'success',
+                    'data-offstyle' => 'danger',
+                    'data-size' => 'mini',
+                    'data-on' => 'Oui',
+                    'data-off' => 'Non'
+                )
+            ));
     }
 
     /**

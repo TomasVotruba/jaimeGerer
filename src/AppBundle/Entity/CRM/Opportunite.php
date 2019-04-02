@@ -1140,4 +1140,5 @@ class Opportunite
         }
         return null;
     }
+
 }

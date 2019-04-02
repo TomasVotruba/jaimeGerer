@@ -18,6 +18,13 @@
         </div>
         <div class="col-md-6"></div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+
     <div class="row">
         {% if action == "ajouter" %}
             <div class="col-md-4">
@@ -38,6 +45,13 @@
             {{ form_row(form.dateValidite) }}
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-4">
             <div class="typeahead-container">
@@ -56,6 +70,13 @@
             {{ form_row(form.devis) }}
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-6">
             <div class="typeahead-container">
@@ -78,6 +99,13 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-6">
             {{ form_row(form.nomFacturation) }}
@@ -132,13 +160,33 @@
             <hr/>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             {{ form_row(form.cgv) }}
             {{ form_row(form.description) }}
+        </div>
+    </div>
+
+    <div class="row hidden center" id="warning-wrapper">
+        <div class="col-md-12 well" >
+            <div id="warning-content">
+                <!-- filled by ajax -->
+            </div>
+            <p><strong>
+                Souhaitez-vous ajouter automatiquement les frais refacturable de cette facture au montant de l'action commerciale et du bon de commande ?
+            </strong></p>
+            {{ form_widget(form.inclureFrais) }}
+        </div>
+    </div>
+
+    
+    <div class="row">
+        <div class="col-md-12">
             <input type="submit" value="Enregistrer" class="btn btn-success" id="btn-submit-form" />
         </div>
     </div>
+
     {{ form_rest(form) }}
     {{ form_end(form) }}
 {% endblock %}
@@ -172,7 +220,6 @@
                     updateMontant(this);
                 });
             }
-
 
 			updateProduitType();
 
@@ -230,6 +277,12 @@
                 $('.produit-type').unbind('change');
                 $('.produit-type').change(function() {
                     updateProduitType();
+                });
+
+                $newFormLi.find('[data-toggle="toggle"]').bootstrapToggle();
+                $('[data-toggle="popover"]').popover({});
+                $('.toggle-frais').change(function(){
+                    loadWarning();
                 });
 
             }
@@ -382,7 +435,7 @@
 
                 updateTaxe();
 				if(hasPanorama){
-					  updateFacturationBelgique();
+					updateFacturationBelgique();
 				}
             }
 
@@ -442,7 +495,6 @@
 							changeAddress();
 						}
 					},
-					debug: true
 
 			});
 
@@ -455,9 +507,10 @@
                     callback: {
                         onClickAfter: function(node, a, item, event) {
                             $('.entity-bc').val(item.id);
+                            findCompteContactFromBC();
+                            loadWarning();
                         }
                     },
-                    debug: true
 
             });
 
@@ -474,7 +527,6 @@
                                 $('.entity-contact').val(item.id);
                             }
                         },
-                        debug: true
 
                 });
             } else {
@@ -489,7 +541,6 @@
                             $('.entity-contact').val(item.id);
                         }
                     },
-                    debug: true
 
                 });
 
@@ -509,7 +560,6 @@
 								$('.entity-contact').val(item.id);
 							}
 						},
-						debug: true
 
 				});
 			});
@@ -535,6 +585,54 @@
 			$("#changeDateBtn").click(function() {
 				$(".dateCreationInput").prop("disabled", false);
 			});
+
+            function findCompteContactFromBC(){
+                $.ajax({
+                    type: "POST",
+                    url: Routing.generate( "crm_bon_commande_get_compte_contact", {'id': $('.entity-bc').val()} ),
+                    success: function(data) {
+                        $('.entity-compte').val(data.compte_id);
+                        $('.typeahead-compte').val(data.compte_toString);
+                        $('.entity-contact').val(data.contact_id);
+                        $('.typeahead-contact').val(data.contact_toString);
+                        $('.facture-analytique').val(data.analytique);
+                        changeAddress();
+                    }
+                });
+            }
+
+            /**
+            *   Afficher le message d'avertissement et la checkbox des frais refacturables
+            *   si on est dans le cas d'un ajout, que le bon de commande a les frais refacturables
+            *   activés, et que la facture comporte des frais refacturables 
+            **/
+            function loadWarning(){
+                if(null == facture_id  || 0 ==  facture_id ){
+                    var bc_id = $('.entity-bc').val();
+
+                    var hasFrais = false;
+                    $.each($('.toggle-frais'), function( index, value ) {
+                        if( $(this).prop('checked') ){
+                            hasFrais = true;
+                        }
+                    });
+
+                    if(bc_id && hasFrais){
+                        $.ajax({
+                           type: "POST",
+                           url: Routing.generate( "crm_facture_form_frais_warning", {'bc_id': bc_id } ),
+                           success: function(data) {
+                               $('#warning-wrapper').removeClass('hidden');
+                               $('#warning-content').html(data);
+                           }
+                       });
+                    } else {
+                        $('#warning-wrapper').addClass('hidden');
+                        $('#warning-content').html('');
+                    }
+                }
+                
+            }
 
         });
     </script>

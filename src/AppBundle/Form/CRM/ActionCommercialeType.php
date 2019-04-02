@@ -81,7 +81,7 @@ class ActionCommercialeType extends AbstractType
                 'attr' => array('class' => 'entity-compte'),
             ))
             ->add('contact_name', 'text', array(
-                'required' => false,
+                'required' => true,
                 'mapped' => false,
                 'label' => 'Contact',
                 'attr' => array('class' => 'typeahead-contact', 'autocomplete' => 'off')
@@ -90,7 +90,7 @@ class ActionCommercialeType extends AbstractType
                 'required' => false,
                 'attr' => array('class' => 'entity-contact'),
             ))
-             ->add('adresse', 'text', array(
+            ->add('adresse', 'text', array(
                 'required' => true,
                 'label' => 'Adresse',
                 'attr' => array('class' => 'input-adresse'),
@@ -174,12 +174,29 @@ class ActionCommercialeType extends AbstractType
                 },
             ))
             ->add('appelOffre', 'checkbox', array(
-                'label' => 'Appel d\'offre',
+                'label' => ' ',
                 'required' => false,
+                'attr' => array(
+                    'class' => 'appel-offre-checkbox',
+                    'data-toggle' => 'toggle',
+                    'data-onstyle' => 'success',
+                    'data-offstyle' => 'danger',
+                    'data-on' => 'Oui',
+                    'data-off' => 'Non',
+                    'data-size' => 'mini'
+                )
             ))
              ->add('prescription', 'checkbox', array(
-                'label' => 'Prescription',
+                'label' => ' ',
                 'required' => false,
+                'attr' => array(
+                    'data-toggle' => 'toggle',
+                    'data-onstyle' => 'success',
+                    'data-offstyle' => 'danger',
+                    'data-on' => 'Oui',
+                    'data-off' => 'Non',
+                    'data-size' => 'mini'
+                )
             ))
             ->add('probabilite', 'entity', array(
                 'class'=>'AppBundle:Settings',

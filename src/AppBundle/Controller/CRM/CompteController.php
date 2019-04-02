@@ -78,6 +78,8 @@ class CompteController extends Controller
 	public function compteDatatablesAction(Compte $compte)
 	{
 	}
+
+	
 	/**
 	 * @Route("/crm/compte/voir/{id}", name="crm_compte_voir", options={"expose"=true})
 	 */
@@ -475,7 +477,7 @@ class CompteController extends Controller
             'secteur' => $compte->getSecteurActivite(),
 			'adresse' => $compte->getAdresseFacturation()? $compte->getAdresseFacturation() : $compte->getAdresse(),
 			'adresseLigne2' => $compte->getAdresseFacturationLigne2()? $compte->getAdresseFacturationLigne2() : '',
-			'nomFacturation' => $compte->getNomFacturation()? $compte->getNomFacturation() : '',
+			'nomFacturation' => $compte->getNomFacturation()? $compte->getNomFacturation() : $compte->getNom(),
 			'codePostal' => $compte->getCodePostalFacturation() ? $compte->getCodePostalFacturation() : $compte->getCodePostal(),
 			'ville' => $compte->getVilleFacturation() ? $compte->getVilleFacturation() : $compte->getVille(),
 			'region' => $compte->getRegion(),

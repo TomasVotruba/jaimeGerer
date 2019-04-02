@@ -82,6 +82,31 @@
             <table class="contact-view-table">
                 <tbody>
                     <tr>
+                        <td>Numéro de facture</td>
+                        <td id="facture-num">
+                            {{ facture.num }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Analytique</td>
+                        <td id="facture-analytique">
+                            {{ facture.analytique }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Etat</td>
+                        <td>
+                            {{ facture.formattedEtat }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-6">
+            <table class="contact-view-table">
+                <tbody>
+                    <tr>
                         <td>Gestionnaire de la facture</td>
                         <td>
                             {{ facture.userGestion }}
@@ -93,56 +118,27 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Numéro de facture</td>
-                        <td id="facture-num">
-                            {{ facture.num }}
-                        </td>
-                    </tr>
-                    <tr>
                         <td>Date de validité</td>
                         <td id="facture-date-validite">
                             {{ facture.dateValidite|date("d/m/Y") }}
                         </td>
                     </tr>
-                    <tr>
-                        <td>Etat</td>
-                        <td>
-                            {{ facture.formattedEtat }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Analytique</td>
-                        <td id="facture-analytique">
-                            {{ facture.analytique }}
-                        </td>
-                    </tr>
                 </tbody>
             </table>
         </div>
-        <div class="col-md-6">
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
             <table class="contact-view-table">
                 <tbody>
-                    <tr>
-                        <td>Organisation</td>
-                        <td id="facture-compte">
-                            <a href="{{ path('crm_compte_voir', {'id' : facture.compte.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
-                                {{ facture.compte  }}
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Contact</td>
-                        <td id="facture-contact">
-                            {% if facture.contact == null %}
-                                -
-                            {% else %}
-                                <a href="{{ path('crm_contact_voir', {'id' : facture.contact.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
-                                    {{ facture.contact  }}
-                                </a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
+                     <tr>
                         <td>Numéro de bon de commande interne</td>
                         <td id="facture-num-bc-interne">
                             {% if facture.bonCommande is not null %}
@@ -152,6 +148,12 @@
                             {% endif %}
                         </td>
                     </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <table class="contact-view-table">
+                <tbody>
                     <tr>
                         <td>Numéro de bon de commande client</td>
                         <td id="facture-num-bc-client">
@@ -162,6 +164,12 @@
                             {% endif %}
                         </td>
                     </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <table class="contact-view-table">
+                <tbody>
                     <tr>
                         <td>Numéro de devis</td>
                         <td id="facture-num-devis">
@@ -178,25 +186,72 @@
             </table>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <hr/>
         </div>
     </div>
+
+     <div class="row">
+        <div class="col-md-6">
+            <table class="contact-view-table">
+                <tbody>
+                     <tr>
+                         <td>Organisation</td>
+                        <td id="facture-compte">
+                            <a href="{{ path('crm_compte_voir', {'id' : facture.compte.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
+                                {{ facture.compte  }}
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <table class="contact-view-table">
+                <tbody>
+                    <tr>
+                        <td>Contact</td>
+                        <td id="facture-contact">
+                            {% if facture.contact == null %}
+                                -
+                            {% else %}
+                                <a href="{{ path('crm_contact_voir', {'id' : facture.contact.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
+                                    {{ facture.contact  }}
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr/>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-6">
             <table class="contact-view-table">
                 <tbody>
                     <tr>
+                        <td>Nom de l'organisation pour la facturation</td>
+                        <td>
+                            {% if facture.nomFacturation is not empty %}
+                                {{ facture.nomFacturation }}<br />
+                            {% endif %} 
+                        </td>
+                    </tr>
+                    <tr>
                         <td>Adresse</td>
                         <td>
-
                             {% if facture.adresse is empty %}
                                 -
                             {% else %}
-                                {% if facture.nomFacturation is not empty %}
-                                    {{ facture.nomFacturation }}<br />
-                                {% endif %}
                                 {{ facture.adresse }}
                                 {% if facture.adresseLigne2 is not empty %}
                                     <br />
@@ -205,6 +260,12 @@
                             {% endif %}
                         </td>
                     </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <table class="contact-view-table">
+                <tbody>
                     <tr>
                         <td>Code postal</td>
                         <td>
@@ -247,8 +308,8 @@
                     </tr>
                 </tbody>
             </table>
+
         </div>
-        <div class="col-md-6"></div>
     </div>
     <div class="row">
         <hr/>
@@ -265,7 +326,7 @@
                 </thead>
                 <tbody>
                     {% for produit in facture.produits %}
-                        {{ include('crm/produit/crm_produit_voir.html.twig', { 'produit': produit }) }}
+                        {{ include('crm/produit/crm_produit_voir.html.twig', { 'produit': produit, 'isFacture' : true }) }}
                     {% endfor %}
                 </tbody>
             </table>

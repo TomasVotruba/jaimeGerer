@@ -145,6 +145,7 @@ class BonCommandeController extends Controller
 				$list[$i]['action_commerciale'] = $bc->getActionCommerciale()->getId();
 				$list[$i]['montant'] = $bc->getMontantMonetaire();
 				$list[$i]['montant_facture'] = $bc->getTotalFactureMonetaire();
+				$list[$i]['frais'] = $bc->getFraisRefacturables();
 					
 				if(count($bc->getFactures()) == 0){
 					$list[$i]['factures'] = null;
@@ -154,11 +155,30 @@ class BonCommandeController extends Controller
 					$list[$i]['factures_id'] = array();
 
 					foreach($bc->getFactures() as $facture ){
-						$list[$i]['factures'][] = $facture->getNum();
-						$list[$i]['factures_id'][]= $facture->getId();
-						$list[$i]['avoir'] = null;
-						foreach($facture->getAvoirs() as $avoir){
-							$list[$i]['avoir'].=$avoir->getNum().' ';
+						if(false == $facture->hasFrais()){
+							$list[$i]['factures'][] = $facture->getNum();
+							$list[$i]['factures_id'][]= $facture->getId();
+							$list[$i]['avoir'] = null;
+							foreach($facture->getAvoirs() as $avoir){
+								$list[$i]['avoir'].=$avoir->getNum().' ';
+							}
+						}
+					} 
+				}
+
+				if(count($bc->getFacturesFrais()) == 0){
+					$list[$i]['factures_frais'] = null;
+					$list[$i]['factures_frais_id'] = null;
+				} else {
+					$list[$i]['factures_frais'] = array();
+					$list[$i]['factures_frais_id'] = array();
+
+					foreach($bc->getFacturesFrais() as $factureFrais ){
+						$list[$i]['factures_frais'][] = $factureFrais->getNum();
+						$list[$i]['factures_frais_id'][]= $factureFrais->getId();
+						$list[$i]['factures_frais_avoir'] = null;
+						foreach($factureFrais->getAvoirs() as $avoir){
+							$list[$i]['factures_frais_avoir'].=$avoir->getNum().' ';
 						}
 					} 
 				}
@@ -178,6 +198,27 @@ class BonCommandeController extends Controller
 		return $response;
 
 	}
+
+		/**
+		 * @Route("/crm/bon-commande/get_compte_contact/{id}", name="crm_bon_commande_get_compte_contact", options={"expose"=true})
+		 */
+		public function bonCommandeGetCompteContact($id)
+		{
+			$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\BonCommande');
+			$bc = $repository->find($id);
+		
+			$response = new JsonResponse();
+			$response->setData(array(
+	    		'compte_id' => $bc->getActionCommerciale()->getCompte()->getId(),
+	    		'compte_toString' => $bc->getActionCommerciale()->getCompte()->__toString(),
+				'contact_id' => $bc->getActionCommerciale()->getContact()->getId(),
+				'contact_toString' => $bc->getActionCommerciale()->getContact()->__toString(),
+				'analytique' => $bc->getActionCommerciale()->getAnalytique()->getId(),
+			));
+
+			return $response;
+
+		}
 
 
 	// /**

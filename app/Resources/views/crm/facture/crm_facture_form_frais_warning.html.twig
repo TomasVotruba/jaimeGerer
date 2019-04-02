@@ -1,0 +1,31 @@
+{% if bonCommande.actionCommerciale.devis.hasFrais %}
+
+    <p><strong>
+        <span class="glyphicon glyphicon-warning-sign"></span> Frais refacturables</strong><br />
+        L'action commerciale {{ bonCommande.actionCommerciale.nom }} liée au bon de commande {{ bonCommande.num }} comporte déjà des frais refacturables : 
+    </p>
+    <div class="row center">
+        <div class="col-md-12 produit-collection produit-collection-voir">
+            <table >
+                <thead>
+                    <tr>
+                        <th class="produit-input-type">Type</th>
+                        <th class="produit-input-nom">Nom</th>
+                        <th class="produit-input-number">Tarif unitaire (€)</th>
+                        <th class="produit-input-number">Quantité</th>
+                        <th class="produit-input-number">Montant (€)</th>
+                        <th class="produit-input-number">Remise (€)</th>
+                        <th class="produit-input-number">Total (€)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for produit in bonCommande.actionCommerciale.devis.produits if true == produit.frais %}
+                    {{ include('crm/produit/crm_produit_voir.html.twig', { 'produit': produit }) }}
+                {% endfor %}
+                </tbody>
+            </table>
+            <hr />
+        </div>
+    </div>
+
+{% endif %}

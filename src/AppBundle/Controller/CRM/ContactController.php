@@ -542,7 +542,7 @@ class ContactController extends Controller
 	public function contact_impulsion_listAction()
 	{
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Contact');
-		$list = $repository->findAllNoImpulsion($this->getUser()->getCompany()->getId());
+		$list = $repository->findByCompany($this->getUser()->getCompany()->getId());
 
 		$res = array();
 		foreach ($list as $contact) {

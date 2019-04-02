@@ -74,6 +74,13 @@ class Produit
      */
     private $type;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="frais", type="boolean", nullable=false)
+     */
+    private $frais = false;
+
 
     /**
      * Get id

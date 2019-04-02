@@ -1,0 +1,21 @@
+<div class="modal-header">
+	<a class="close" data-dismiss="modal">×</a>
+	<h3>Facturer les frais</h3>
+</div>
+<div class="modal-body">
+	{{ form_start(form, {'action': path('crm_action_commerciale_facturer_frais', {'id' : actionCommerciale.id})} ) }}
+		<div class="row">
+			
+			<div class="col-md-12">
+				{{ form_errors(form) }}
+				{{ form_row(form.objet) }}
+			</div>
+		</div>
+		<div class="row">   
+			<div class="col-md-12">
+					{{ form_rest(form) }}
+				</div>
+			</div>
+		</div>
+	{{ form_end(form) }}
+</div>

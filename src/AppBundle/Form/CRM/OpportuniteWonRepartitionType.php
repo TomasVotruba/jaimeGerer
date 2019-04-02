@@ -36,17 +36,17 @@ class OpportuniteWonRepartitionType extends AbstractType
            	));
 
         if( $this->isEdition == false ){
-          $builder->add('sousTraitance', 'checkbox', array(
-              'mapped' => false,
-              'label' => ' ',
-              'required' => false,
-              'attr' => array(
-                'data-toggle' => 'toggle',
-                'data-onstyle' => 'success',
-                'data-offstyle' => 'danger',
-                'data-on' => 'Oui',
-                'data-off' => 'Non'
-              ),
+            $builder->add('sousTraitance', 'checkbox', array(
+                'mapped' => false,
+                'label' => ' ',
+                'required' => false,
+                'attr' => array(
+                    'data-toggle' => 'toggle',
+                    'data-onstyle' => 'success',
+                    'data-offstyle' => 'danger',
+                    'data-on' => 'Oui',
+                    'data-off' => 'Non'
+                ),
             ));
         }
             

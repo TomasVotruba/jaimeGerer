@@ -228,6 +228,8 @@ class FactureController extends Controller
 			$form->get('contact_name')->setData($contact->__toString());
 		}
 
+
+
 		$request = $this->getRequest();
 		$form->handleRequest($request);
 
@@ -241,7 +243,7 @@ class FactureController extends Controller
 			$facture->setBonCommande($em->getRepository('AppBundle:CRM\BonCommande')->findOneById($form['bc_entity']->getData()));
 
 			$settingsRepository = $em->getRepository('AppBundle:Settings');
-			$settingsNum = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'NUMERO_FACTURE', 'company'=>$this->getUser()->getCompany()));
+			$settingsNum = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'NUMERO_FACTURE', 'company' => $this->getUser()->getCompany()));
 			$currentNum = $settingsNum->getValeur();
 
 			if($facture->getDateCreation() == null){
@@ -314,19 +316,51 @@ class FactureController extends Controller
 				$journalVenteService->journalVentesAjouterFactureAction(null, $facture);
 			}
 
+			//ajouter les frais refacturables au montant de l'action commerciale et du bon de commande
+			if($facture->hasFrais() && true === $form->get('inclureFrais')->getData()){
+				$actionCommerciale = $facture->getBonCommande()->getActionCommerciale();
+				$devis = $actionCommerciale->getDevis();
+				$bonCommande = $facture->getBonCommande();
+				foreach($facture->getProduits() as $ligne){
+					if(true === $ligne->getFrais()){
+						$ligneFrais = clone($ligne);
+						$devis->addProduit($ligneFrais);
+						$bonCommande->addMontantMonetaire($ligneFrais->getTotal());
+					}
+				}
+				$em->persist($devis);
+				$em->persist($bonCommande);
+				$actionCommerciale->setMontant($devis->getTotalHT());
+
+				$em->flush();
+			}
+
 			return $this->redirect($this->generateUrl(
-					'crm_facture_voir',
-					array('id' => $facture->getId())
+				'crm_facture_voir',
+				array('id' => $facture->getId())
 			));
 
 		}
 
 		return $this->render('crm/facture/crm_facture_ajouter.html.twig', array(
-				'form' => $form->createView(),
-				'facture' => $facture
+			'form' => $form->createView(),
+			'facture' => $facture
 		));
 	}
 
+	/**
+	 * @Route("/crm/facture/frais-warning/{bc_id}", name="crm_facture_form_frais_warning", options={"expose"=true})
+	 */
+	public function factureFormFraisWarning($bc_id)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$bcRepo = $em->getRepository('AppBundle:CRM\BonCommande');
+
+		$bc = $bcRepo->find($bc_id);
+		return $this->render('crm/facture/crm_facture_form_frais_warning.html.twig', array(
+			'bonCommande' => $bc
+		));
+	}
 
 	/**
 	 * @Route("/crm/facture/creer-compte-comptable/{id}", name="crm_facture_creer_compte_comptable")
@@ -1013,7 +1047,6 @@ class FactureController extends Controller
 
 		}
 
-
 		//set column width
 		foreach(range('A','H') as $col) {
     		$objPHPExcel->getActiveSheet()->getColumnDimension($col)->setAutoSize(true);
@@ -1030,5 +1063,7 @@ class FactureController extends Controller
 		exit();
 
 	}
+
+
 
 }
