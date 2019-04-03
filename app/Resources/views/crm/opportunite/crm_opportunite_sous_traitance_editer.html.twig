@@ -54,32 +54,56 @@
 
     <div class="row">
         <div class="col-md-12">
+            <p><strong>Les frais du sous-traitant sont-ils refacturables ?</strong></p>
+             {{ form_widget(form.fraisRefacturables) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
             <hr />
             <p><strong>Répartir le montant de ce sous-traitant : <span class="total-sous-traitant"></span></strong></p>
-            <ul
-                class="repartitions-sous-traitants"
-                id="collectionContainer"
-                data-prototype="
-             {% filter escape %}
-                  {{ include('crm/opportunite/crm_opportunite_repartition_sous_traitance_form.html.twig', { 'form':  form.repartitions.vars.prototype }) }}
-               {% endfilter %}">
-                {% for repartitionField in form.repartitions %}
-                    <li class="repartition">
-                        {{ include('crm/opportunite/crm_opportunite_repartition_sous_traitance_form.html.twig', { 'form': repartitionField }) }}
-                    </li>
-                {% endfor %}
-            </ul>
 
-            <p>
-                <a href="#" class="btn btn-xs btn-success add_repartition_sous_traitance_link">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    Ajouter un mois
-                </a>
-            </p>
 
         </div>
-
     </div>
+
+    <div class="produit-collection row">
+        <div class="col-md-1 center">
+            <strong>Mois</strong>
+        </div>
+        <div class="col-md-1 center">
+            <strong>Année</strong>
+        </div>
+        <div class="col-md-3 center">
+            <strong>Montant de la sous-traitance</strong>
+        </div>
+        <div class="col-md-3 frais center">
+            <strong>Frais à refacturer</strong>
+        </div>
+    </div>
+
+    <ul
+        class="repartitions-sous-traitants"
+        id="collectionContainer"
+        data-prototype="
+        {% filter escape %}
+          {{ include('crm/opportunite/crm_opportunite_repartition_sous_traitance_form.html.twig', { 'form':  form.repartitions.vars.prototype }) }}
+        {% endfilter %}">
+        {% for repartitionField in form.repartitions %}
+            <li class="repartition">
+                {{ include('crm/opportunite/crm_opportunite_repartition_sous_traitance_form.html.twig', { 'form': repartitionField }) }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <p>
+        <a href="#" class="btn btn-xs btn-success add_repartition_sous_traitance_link">
+            <span class="glyphicon glyphicon-plus"></span>
+            Ajouter un mois
+        </a>
+    </p>
+
     <div class="row">
         <div class="col-md-2 align-right">
             <strong>Total réparti :</strong>
@@ -140,151 +164,167 @@
 
         $(document).ready(function() {
 
-          if("{{ opportuniteSousTraitance.typeForfait }}" == 'GLOBAL'){
-              $('.montant-global').removeClass("hidden");
-              $('.tarif-jour').addClass("hidden");
-              $('.nb-jours').addClass("hidden");
 
-              //recalcule le total de la sous-traitance
-              calculTotalSousTraitant();
+             if($('.toggle-frais').prop('checked') == true){
+                    $('.frais').removeClass("hidden");
+                } else {
+                    $('.frais').addClass("hidden");
+                }
 
-          } else {
+            $('.toggle-frais').change(function(){
+                if($(this).prop('checked') == true){
+                    $('.frais').removeClass("hidden");
+                } else {
+                    $('.frais').addClass("hidden");
+                }
+            })
 
-            $('.montant-global').addClass("hidden");
-            $('.tarif-jour').removeClass("hidden");
-            $('.nb-jours').removeClass("hidden");
+            if("{{ opportuniteSousTraitance.typeForfait }}" == 'GLOBAL'){
+                $('.montant-global').removeClass("hidden");
+                $('.tarif-jour').addClass("hidden");
+                $('.nb-jours').addClass("hidden");
 
-            //recalcule le total de la sous-traitance
+                //recalcule le total de la sous-traitance
+                calculTotalSousTraitant();
+
+            } else {
+
+                $('.montant-global').addClass("hidden");
+                $('.tarif-jour').removeClass("hidden");
+                $('.nb-jours').removeClass("hidden");
+
+                //recalcule le total de la sous-traitance
+                calculTotalSousTraitant();
+            }
+			
             calculTotalSousTraitant();
-          }
+
+			/**
+			 * Affiche/masque les inputs en fonction du type de forfait
+			 */
+			$('.type-forfait').change(function(){
+
+				if($(this).find('input[type=radio]:checked').val() == 'GLOBAL'){
+						$('.montant-global').removeClass("hidden");
+						$('.tarif-jour').addClass("hidden");
+						$('.nb-jours').addClass("hidden");
+
+						//recalcule le total de la sous-traitance
+						calculTotalSousTraitant();
+
+				} else {
+
+					$('.montant-global').addClass("hidden");
+					$('.tarif-jour').removeClass("hidden");
+					$('.nb-jours').removeClass("hidden");
+
+					//recalcule le total de la sous-traitance
 					calculTotalSousTraitant();
+				}
 
-					/**
-					 * Affiche/masque les inputs en fonction du type de forfait
-					 */
-					$('.type-forfait').change(function(){
+			});
 
-						if($(this).find('input[type=radio]:checked').val() == 'GLOBAL'){
-								$('.montant-global').removeClass("hidden");
-								$('.tarif-jour').addClass("hidden");
-								$('.nb-jours').addClass("hidden");
+			/**
+			 * Recalcule le total de la sous-traitance lorsque les valeurs des inputs changent
+			 */
+			$('.montant-global').change(function(){
+				calculTotalSousTraitant();
+			});
+			$('.tarif-jour').change(function(){
+				calculTotalSousTraitant();
+			});
+			$('.nb-jours').change(function(){
+				calculTotalSousTraitant();
+			});
 
-								//recalcule le total de la sous-traitance
-								calculTotalSousTraitant();
+			/**
+			 * Calcule le montant total pour ce sous-traitant en fonction du type de forfait
+			 * et l'affiche dans le span .total-sous-traitant
+			 */
+			function calculTotalSousTraitant(){
 
-						} else {
-
-							$('.montant-global').addClass("hidden");
-							$('.tarif-jour').removeClass("hidden");
-							$('.nb-jours').removeClass("hidden");
-
-							//recalcule le total de la sous-traitance
-							calculTotalSousTraitant();
-						}
-
-					});
-
-					/**
-					 * Recalcule le total de la sous-traitance lorsque les valeurs des inputs changent
-					 */
-					$('.montant-global').change(function(){
-						calculTotalSousTraitant();
-					});
-					$('.tarif-jour').change(function(){
-						calculTotalSousTraitant();
-					});
-					$('.nb-jours').change(function(){
-						calculTotalSousTraitant();
-					});
-
-					/**
-					 * Calcule le montant total pour ce sous-traitant en fonction du type de forfait
-					 * et l'affiche dans le span .total-sous-traitant
-					 */
-					function calculTotalSousTraitant(){
-
-							if($('.type-forfait').find('input[type=radio]:checked').val() == 'GLOBAL'){
-								totalSousTraitant = $('.montant-global').find('input').val();
-							} else {
-								totalSousTraitant = $('.tarif-jour').find('input').val() * $('.nb-jours').find('input').val();
-							}
-
-							$('.total-sous-traitant').text(accounting.formatMoney(totalSousTraitant, {
-									symbol: "€",
-									format: "%v %s",
-									decimal: ",",
-									thousand: " ",
-									precision: 2
-							}));
-
-							totalSousTraitance = parseFloat("{{ opportuniteSousTraitance.opportunite.montantMonetaireSousTraitance }}") + parseFloat(totalSousTraitant);
-							$('.total-sous-traitance').text(accounting.formatMoney(totalSousTraitance, {
-									symbol: "€",
-									format: "%v %s",
-									decimal: ",",
-									thousand: " ",
-									precision: 2
-							}));
-
-							//recalcule la différence entre le total à répartir et le total réparti
-							calculTotalRepartition();
+					if($('.type-forfait').find('input[type=radio]:checked').val() == 'GLOBAL'){
+						totalSousTraitant = $('.montant-global').find('input').val();
+					} else {
+						totalSousTraitant = $('.tarif-jour').find('input').val() * $('.nb-jours').find('input').val();
 					}
 
-					/**
-					 * Calcul le total réparti, et le compare au total à répartir
-					 * Affiche un feedback adaptéé (ok, en trop, en moins)
-					 */
-					function calculTotalRepartition(){
+					$('.total-sous-traitant').text(accounting.formatMoney(totalSousTraitant, {
+							symbol: "€",
+							format: "%v %s",
+							decimal: ",",
+							thousand: " ",
+							precision: 2
+					}));
+
+					totalSousTraitance = parseFloat("{{ opportuniteSousTraitance.opportunite.montantMonetaireSousTraitance }}") + parseFloat(totalSousTraitant);
+					$('.total-sous-traitance').text(accounting.formatMoney(totalSousTraitance, {
+							symbol: "€",
+							format: "%v %s",
+							decimal: ",",
+							thousand: " ",
+							precision: 2
+					}));
+
+					//recalcule la différence entre le total à répartir et le total réparti
+					calculTotalRepartition();
+			}
+
+			/**
+			 * Calcul le total réparti, et le compare au total à répartir
+			 * Affiche un feedback adaptéé (ok, en trop, en moins)
+			 */
+			function calculTotalRepartition(){
 
 
-						var total = 0;
-						$.each($('.montant input'), function(index, value) {
-								var val = $(value).val();
-								total = +total + + val;
-						});
-						$('.total').text(accounting.formatMoney(total, {
-								symbol: "€",
-								format: "%v %s",
-								decimal: ",",
-								thousand: " ",
-								precision: 2
-						}));
+				var total = 0;
+				$.each($('.montant input'), function(index, value) {
+						var val = $(value).val();
+						total = +total + + val;
+				});
+				$('.total').text(accounting.formatMoney(total, {
+						symbol: "€",
+						format: "%v %s",
+						decimal: ",",
+						thousand: " ",
+						precision: 2
+				}));
 
-						if (total == totalSousTraitant) {
+				if (total == totalSousTraitant) {
 
-								$('.feedback-total').addClass("hidden");
-								$('.ok-sign').removeClass("hidden");
-								$('button[type=submit]').addClass("btn-success").prop("disabled", false);
+						$('.feedback-total').addClass("hidden");
+						$('.ok-sign').removeClass("hidden");
+						$('button[type=submit]').addClass("btn-success").prop("disabled", false);
 
-						} else {
+				} else {
 
-								$('button[type=submit]').removeClass("btn-success").prop('disabled', true);
+						$('button[type=submit]').removeClass("btn-success").prop('disabled', true);
 
-								if (total < totalSousTraitant) {
+						if (total < totalSousTraitant) {
 
-										var reste = totalSousTraitant - total;
-										$('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Encore " + accounting.formatMoney(reste, {
-												symbol: "€",
-												format: "%v %s",
-												decimal: ",",
-												thousand: " ",
-												precision: 2
-										}) + " à répartir").removeClass("hidden");
-										$('.ok-sign').addClass("hidden");
-								} else if (total > totalSousTraitant) {
+								var reste = totalSousTraitant - total;
+								$('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Encore " + accounting.formatMoney(reste, {
+										symbol: "€",
+										format: "%v %s",
+										decimal: ",",
+										thousand: " ",
+										precision: 2
+								}) + " à répartir").removeClass("hidden");
+								$('.ok-sign').addClass("hidden");
+						} else if (total > totalSousTraitant) {
 
-										var trop = total - totalSousTraitant;
-										$('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Vous avez réparti " + accounting.formatMoney(trop, {
-												symbol: "€",
-												format: "%v %s",
-												decimal: ",",
-												thousand: " ",
-												precision: 2
-										}) + " en trop").removeClass("hidden");
-										$('.ok-sign').addClass("hidden");
-								}
+								var trop = total - totalSousTraitant;
+								$('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Vous avez réparti " + accounting.formatMoney(trop, {
+										symbol: "€",
+										format: "%v %s",
+										decimal: ",",
+										thousand: " ",
+										precision: 2
+								}) + " en trop").removeClass("hidden");
+								$('.ok-sign').addClass("hidden");
 						}
-					}
+				}
+			}
 
             var repartitionSousTraitantsCollectionHolder = $('ul.repartitions-sous-traitants');
             repartitionSousTraitantsCollectionHolder.append($newRepartitionSousTraitantLi);
@@ -298,41 +338,40 @@
 
             });
 
-		        function addRepartitionForm(repartitionSousTraitantsCollectionHolder, $newRepartitionSousTraitantLi, ExecTinymceCommand) {
-		            var prototype = repartitionSousTraitantsCollectionHolder.attr('data-prototype');
+	        function addRepartitionForm(repartitionSousTraitantsCollectionHolder, $newRepartitionSousTraitantLi, ExecTinymceCommand) {
+	            var prototype = repartitionSousTraitantsCollectionHolder.attr('data-prototype');
 
-		            indexNewCollectionRepartitionSousTraitants++;
-		            var newForm = prototype.replace(/__name__/g, indexNewCollectionRepartitionSousTraitants);
+	            indexNewCollectionRepartitionSousTraitants++;
+	            var newForm = prototype.replace(/__name__/g, indexNewCollectionRepartitionSousTraitants);
 
-		            var $newFormLi = $('<li class="repartition"></li>').append(newForm);
-		            $newRepartitionSousTraitantLi.before($newFormLi);
+	            var $newFormLi = $('<li class="repartition"></li>').append(newForm);
+	            $newRepartitionSousTraitantLi.before($newFormLi);
 
-		            $('.remove-repartition-button').unbind('click');
-		            $('.remove-repartition-button').on('click', function(e) {
-		                // empêche le lien de créer un « # » dans l'URL
-		                e.preventDefault();
-		                $(this).parents('li.repartition').remove();
-		            });
+	            $('.remove-repartition-button').unbind('click');
+	            $('.remove-repartition-button').on('click', function(e) {
+	                // empêche le lien de créer un « # » dans l'URL
+	                e.preventDefault();
+	                $(this).parents('li.repartition').remove();
+	            });
 
-								$('.montant').change(function() {
-									var val = $(this).find('input').val();
-									val = val.replace(",", ".");
-									$(this).find('input').val(val);
+							$('.montant').change(function() {
+								var val = $(this).find('input').val();
+								val = val.replace(",", ".");
+								$(this).find('input').val(val);
 
-									calculTotalRepartition();
-								});
+								calculTotalRepartition();
+							});
 
-		        }
+	        }
 
             $('.montant').change(function() {
-              var val = $(this).find('input').val();
-              val = val.replace(",", ".");
-              $(this).find('input').val(val);
+                var val = $(this).find('input').val();
+                val = val.replace(",", ".");
+                $(this).find('input').val(val);
 
             	calculTotalRepartition();
 
             });
-
 
     	});
     </script>

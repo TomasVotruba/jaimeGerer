@@ -1,0 +1,57 @@
+<div class="produit-collection">
+    <hr />
+    <table>
+        <thead>
+                <th class="produit-input-type">{{ form_label(form.type) }}</td>
+                <th class="produit-input-nom">{{ form_label(form.nom) }}</td>
+                <th class="frais-input-number">{{ form_label(form.montantHT) }}</td>
+                <th class="frais-input-number">{{ form_label(form.tva) }}</td>
+                <th class="frais-input-number">{{ form_label(form.montantTTC) }}</td>
+                
+                <th class="produit-input-button">&nbsp;</td>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="produit-input-type">
+                    <div class="form-group">
+                        {{ form_widget(form.type) }}
+                    </div>
+                </td>
+                <td class="produit-input-nom">
+                    <div class="form-group">
+                        {{ form_widget(form.nom) }}
+                    <div class="form-group">
+                </td>
+                <td class="frais-input-number">
+                    <div class="form-group">
+                        <div class="input-group">
+                            {{ form_widget(form.montantHT) }}<div class="input-group-addon">€</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="frais-input-number">
+                    <div class="form-group">
+                        <div class="input-group">
+                            {{ form_widget(form.tva) }}<div class="input-group-addon">€</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="frais-input-number">
+                    <div class="form-group">
+                        <div class="input-group">
+                            {{ form_widget(form.montantTTC) }}<div class="input-group-addon">€</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="produit-input-button">
+                    <a href="#" class="btn btn-xs btn-danger remove-button"><span class="glyphicon glyphicon-minus"></span></a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="produit-textarea">
+                    {{ form_row(form.description) }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div> 

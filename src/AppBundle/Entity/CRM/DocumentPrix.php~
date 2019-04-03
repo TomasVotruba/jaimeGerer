@@ -278,12 +278,12 @@ class DocumentPrix
     */
     private $journalVentes;
 
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="frais", type="boolean", nullable=false)
-     */
-    private $frais = false;
+      /**
+    * @var boolean
+    *
+    * @ORM\Column(name="facture_frais", type="boolean", nullable=false)
+    */
+    private $factureFrais = false;
 
 
   /**
@@ -1549,4 +1549,26 @@ class DocumentPrix
     {
         return $this->adresseLigne2;
     }
+
+    public function hasFrais()
+    {
+        foreach($this->produits as $produit){
+            if(true === $produit->getFrais()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getTotalFrais()
+    {
+        $total = 0;
+        foreach($this->produits as $produit){
+            if(true === $produit->getFrais()){
+                $total+=$produit->getTotal();
+            }
+        }
+        return $total;
+    }
+
 }

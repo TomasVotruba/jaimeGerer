@@ -67,4 +67,26 @@ class BonCommandeRepository extends EntityRepository
 
 		return $qb->getQuery()->getSingleScalarResult();
 	}
+
+	public function search($company){
+
+		$qb = $this->createQueryBuilder('bc')
+			->leftJoin('AppBundle\Entity\CRM\Opportunite', 'o', 'WITH', 'o.id = bc.actionCommerciale')
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = o.compte')
+			->where('c.company = :company')
+			->andWhere('o.etat = :won')
+			->setParameter('company', $company)
+			->setParameter('won', 'WON');
+
+		// if($search != ""){
+		// 	$search = trim($search);
+		// 	$qb->andWhere('c.nom LIKE :search OR o.nom LIKE :search OR bc.num LIKE :search ')
+		// 	->setParameter('search', '%'.$search.'%');
+		// }
+		
+		$qb->addOrderBy('bc.num', 'DESC');
+
+		return $qb->getQuery()->getResult();
+
+	}
 }

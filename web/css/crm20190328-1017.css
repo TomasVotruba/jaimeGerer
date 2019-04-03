@@ -196,6 +196,10 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 	width: 100px;
 }
 
+.produit-collection table .frais-input-number{
+	width: 150px;
+}
+
  .produit-collection table.produit-input-button{
 	width: 50px;
 }
@@ -395,3 +399,6 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 	width: 150px !important;
 }
 
+.label-no-bold .checkbox label{
+	font-weight: normal;
+}

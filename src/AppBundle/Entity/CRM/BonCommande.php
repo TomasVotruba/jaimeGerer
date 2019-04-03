@@ -172,7 +172,9 @@ class BonCommande
     {
         $montant = 0;
         foreach($this->factures as $facture){
-            $montant+= intval(strval($facture->getTotalHTMoinsAvoirs()*100));
+            if(false == $facture->getFactureFrais()){
+                $montant+= intval(strval($facture->getTotalHTMoinsAvoirs()*100));
+            }
         }
         return $montant;
        
@@ -187,7 +189,9 @@ class BonCommande
     {
         $montant = 0;
         foreach($this->factures as $facture){
-           $montant+= $facture->getTotalHTMoinsAvoirs();
+            if(false == $facture->getFactureFrais()){
+                $montant+= $facture->getTotalHTMoinsAvoirs();
+            }
         }
         return $montant;
        
@@ -259,7 +263,7 @@ class BonCommande
     {
         $facturesFrais = array();
         foreach($this->factures as $facture){
-            if($facture->hasFrais()){
+            if(true === $facture->getFactureFrais()){
                 $facturesFrais[] = $facture;
             }
         }
@@ -270,8 +274,8 @@ class BonCommande
     public function getTotalFrais(){
         $total = 0;
         foreach($this->factures as $facture){
-            if($facture->hasFrais()){
-                $total+= $facture->getTotalFrais();
+            if(true === $facture->getFactureFrais()){
+                $total+= $facture->getTotalHT();
             }
         }
         return $total;

@@ -3,11 +3,7 @@
 {% block content %}
 
     <div class="row">
-        <h1>Action commerciale gagnée :
-            {{ actionCommerciale }}
-            <br/>
-            <small>Félicitations !</small>
-        </h1>
+        <h1>Modifier la sous-traitance</h1>
 
         <div class="alert alert-info alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -19,24 +15,10 @@
               <a class="alert-link" href="{{ path('compta_rapport_tableau_bord_index') }}">tableau de bord</a> dans <span class="jaimelacompta">J'aime la Compta</span>.
             </p>
         </div>
+
     </div>
 
-		<div class="row">
-			<div class="col-md-12">
-				<hr />
-				<h2>Montant total de la sous-traitance pour cette action commerciale : <span class="total-sous-traitance"></span></h2>
-			</div>
-		</div>
-
-    <div class="row">
-        <div class="col-md-12">
-			<hr />
-            <h2>Ajouter un sous-traitant</h2>
-        </div>
-    </div>
-
-
-    {{ form_start(form, {'action': path('crm_action_commerciale_gagner_sous_traitance', {'id' : actionCommerciale.id }), 'method': 'POST'}) }}
+    {{ form_start(form) }}
 
     <div class="row">
 
@@ -54,11 +36,11 @@
             {{ form_row(form.typeForfait) }}
         </div>
 
-        <div class="montant-global col-md-2 hidden">
-	        {{ form_row(form.montantGlobalMonetaire) }}
+        <div class="montant-global col-md-3 hidden">
+            {{ form_row(form.montantGlobalMonetaire) }}
         </div>
 
-        <div class="col-md-2 tarif-jour hidden">
+        <div class="col-md-3 tarif-jour hidden">
             {{ form_row(form.tarifJourMonetaire) }}
         </div>
 
@@ -66,99 +48,106 @@
             {{ form_row(form.nbJours) }}
         </div>
 
-		<div class="col-md-1"></div>
+        <div class="col-md-1"></div>
 
-    </div>
-
-    <div class="row">
-    	<div class="col-md-12">
-    		<p><strong>Les frais du sous-traitant sont-ils refacturables ?</strong></p>
-    		 {{ form_widget(form.fraisRefacturables) }}
-    	</div>
     </div>
 
     <div class="row">
         <div class="col-md-12">
-			<hr />
-			<p><strong>Répartir le montant de ce sous-traitant : <span class="total-sous-traitant"></span></strong></p>
+            <p><strong>Les frais du sous-traitant sont-ils refacturables ?</strong></p>
+             {{ form_widget(form.fraisRefacturables) }}
+        </div>
+    </div>
 
-		</div>
-	</div>
-	<div class="produit-collection row">
-	    <div class="col-md-2 center">
-	        <strong>Mois</strong>
-	    </div>
-	    <div class="col-md-2 center">
-	        <strong>Année</strong>
-	    </div>
-	    <div class="col-md-3 center">
-	        <strong>Montant de la sous-traitance</strong>
-	    </div>
-	    <div class="col-md-3 frais center hidden">
-	        <strong>Frais</strong>
-	    </div>
-	</div>
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+            <p><strong>Répartir le montant de ce sous-traitant : <span class="total-sous-traitant"></span></strong></p>
+        </div>
+    </div>
 
-        <ul
-            class="repartitions-sous-traitants"
-            id="collectionContainer"
-            data-prototype="
-			{% filter escape %}
-				{{ include('crm/action-commerciale/crm_action_commerciale_repartition_sous_traitance_form.html.twig', { 'form':  form.repartitions.vars.prototype }) }}
-			{% endfilter %}">
-            {% for repartitionField in form.repartitions %}
-                <li class="repartition">
-                    {{ include('crm/action-commerciale/crm_action_commerciale_repartition_sous_traitance_form.html.twig', { 'form': repartitionField }) }}
-                </li>
-            {% endfor %}
-        </ul>
+    <div class="produit-collection row">
+        <div class="col-md-2 center">
+            <strong>Mois</strong>
+        </div>
+        <div class="col-md-2 center">
+            <strong>Année</strong>
+        </div>
+        <div class="col-md-3 center">
+            <strong>Montant de la sous-traitance</strong>
+        </div>
+        <div class="col-md-3 frais center">
+            <strong>Frais</strong>
+        </div>
+    </div>
 
-        <p>
-            <a href="#" class="btn btn-xs btn-success add_repartition_sous_traitance_link">
-                <span class="glyphicon glyphicon-plus"></span>
-                Ajouter un mois
-            </a>
-        </p>
+    <ul
+        class="repartitions-sous-traitants"
+        id="collectionContainer"
+        data-prototype="
+     {% filter escape %}
+          {{ include('crm/action-commerciale/crm_action_commerciale_repartition_sous_traitance_form.html.twig', { 'form':  form.repartitions.vars.prototype }) }}
+       {% endfilter %}">
+        {% for repartitionField in form.repartitions %}
+            <li class="repartition">
+                {{ include('crm/action-commerciale/crm_action_commerciale_repartition_sous_traitance_form.html.twig', { 'form': repartitionField }) }}
+            </li>
+        {% endfor %}
+    </ul>
 
-		<div class="row">
+    <p>
+        <a href="#" class="btn btn-xs btn-success add_repartition_sous_traitance_link">
+            <span class="glyphicon glyphicon-plus"></span>
+            Ajouter un mois
+        </a>
+    </p>
+
+    <div class="row">
         <div class="col-md-2 align-right">
             <strong>Total réparti :</strong>
         </div>
         <div class="col-md-2 align-right">
-					<p>
+          <p>
             <strong>
                 <span class="total">0 €</span>
             </strong>
             <span class="glyphicon glyphicon-ok green ok-sign hidden"></span>
-					</p>
+          </p>
         </div>
     </div>
     <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-2">
-					<p class="feedback-total red align-right"></p>
-				</div>
+          <p class="feedback-total red align-right"></p>
+        </div>
     </div>
 
-		<div class="row">
-			<div class="col-md-12">
-				<hr />
-			</div>
-		</div>
+    <div class="row">
+      <div class="col-md-12">
+        <hr />
+      </div>
+    </div>
 
-		<div class="row">
-			<div class="col-md-3">
-				{{ form_row(form.add)}}
-			</div>
+    <div class="row">
+        <div class="col-md-1">
+          <p>
+            <a class="btn" href="{{ path('crm_opportunite_voir', {'id' : opportuniteSousTraitance.opportunite.id }) }}">
+                <span class="glyphicon glyphicon-chevron-left"></span>Annuler
+            </a>
+          </p>
+        </div>
+        <div class="col-md-1">
+            <input type="submit" value="Valider" class="btn btn-success" />
+        </div>
+    </div>
 
-			<div class="col-md-3">
-				{{ form_row(form.submit)}}
-			</div>
-		</div>
     {{ form_rest(form) }}
     {{ form_end(form) }}
 
+</div>
+
 {% endblock %}
+
 
 {% block javascripts %}
 
@@ -168,20 +157,38 @@
     <script type="text/javascript">
 
         var $newRepartitionSousTraitantLi = $('<li></li>');
-		var totalSousTraitant = 0;
-		var totalSousTraitance = parseFloat("{{ actionCommerciale.montantMonetaireSousTraitance }}");
+				var totalSousTraitant = 0;
+				var totalSousTraitance = parseFloat("{{ opportuniteSousTraitance.opportunite.montantMonetaireSousTraitance }}");
 
         $(document).ready(function() {
 
-        	$('.toggle-frais').change(function(){
-        	    if($(this).prop('checked') == true){
-        	        $('.frais').removeClass("hidden");
-        	    } else {
-        	        $('.frais').addClass("hidden");
-        	    }
-        	})
+            $('.toggle-frais').change(function(){
+                if($(this).prop('checked') == true){
+                    $('.frais').removeClass("hidden");
+                } else {
+                    $('.frais').addClass("hidden");
+                }
+            })
 
-			calculTotalSousTraitant();
+            if("{{ opportuniteSousTraitance.typeForfait }}" == 'GLOBAL'){
+                $('.montant-global').removeClass("hidden");
+                $('.tarif-jour').addClass("hidden");
+                $('.nb-jours').addClass("hidden");
+
+                //recalcule le total de la sous-traitance
+                calculTotalSousTraitant();
+
+            } else {
+
+                $('.montant-global').addClass("hidden");
+                $('.tarif-jour').removeClass("hidden");
+                $('.nb-jours').removeClass("hidden");
+
+                //recalcule le total de la sous-traitance
+                calculTotalSousTraitant();
+            }
+			
+            calculTotalSousTraitant();
 
 			/**
 			 * Affiche/masque les inputs en fonction du type de forfait
@@ -233,8 +240,6 @@
 						totalSousTraitant = $('.tarif-jour').find('input').val() * $('.nb-jours').find('input').val();
 					}
 
-					console.log(totalSousTraitant);
-
 					$('.total-sous-traitant').text(accounting.formatMoney(totalSousTraitant, {
 							symbol: "€",
 							format: "%v %s",
@@ -243,11 +248,7 @@
 							precision: 2
 					}));
 
-
-
-					totalSousTraitance = parseFloat("{{ actionCommerciale.montantMonetaireSousTraitance }}") + parseFloat(totalSousTraitant);
-
-					console.log(totalSousTraitance);
+					totalSousTraitance = parseFloat("{{ opportuniteSousTraitance.opportunite.montantMonetaireSousTraitance }}") + parseFloat(totalSousTraitant);
 					$('.total-sous-traitance').text(accounting.formatMoney(totalSousTraitance, {
 							symbol: "€",
 							format: "%v %s",
@@ -269,58 +270,56 @@
 
 				var total = 0;
 				$.each($('.montant input'), function(index, value) {
-					var val = $(value).val();
-					total = +total + + val;
+						var val = $(value).val();
+						total = +total + + val;
 				});
 				$('.total').text(accounting.formatMoney(total, {
-					symbol: "€",
-					format: "%v %s",
-					decimal: ",",
-					thousand: " ",
-					precision: 2
+						symbol: "€",
+						format: "%v %s",
+						decimal: ",",
+						thousand: " ",
+						precision: 2
 				}));
 
 				if (total == totalSousTraitant) {
 
-					$('.feedback-total').addClass("hidden");
-					$('.ok-sign').removeClass("hidden");
-					$('button[type=submit]').addClass("btn-success").prop("disabled", false);
+						$('.feedback-total').addClass("hidden");
+						$('.ok-sign').removeClass("hidden");
+						$('button[type=submit]').addClass("btn-success").prop("disabled", false);
 
 				} else {
 
-					$('button[type=submit]').removeClass("btn-success").prop('disabled', true);
+						$('button[type=submit]').removeClass("btn-success").prop('disabled', true);
 
-					if (total < totalSousTraitant) {
+						if (total < totalSousTraitant) {
 
-							var reste = totalSousTraitant - total;
-							$('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Encore " + accounting.formatMoney(reste, {
-									symbol: "€",
-									format: "%v %s",
-									decimal: ",",
-									thousand: " ",
-									precision: 2
-							}) + " à répartir").removeClass("hidden");
-							$('.ok-sign').addClass("hidden");
-					} else if (total > totalSousTraitant) {
+								var reste = totalSousTraitant - total;
+								$('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Encore " + accounting.formatMoney(reste, {
+										symbol: "€",
+										format: "%v %s",
+										decimal: ",",
+										thousand: " ",
+										precision: 2
+								}) + " à répartir").removeClass("hidden");
+								$('.ok-sign').addClass("hidden");
+						} else if (total > totalSousTraitant) {
 
-							var trop = total - totalSousTraitant;
-							$('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Vous avez réparti " + accounting.formatMoney(trop, {
-									symbol: "€",
-									format: "%v %s",
-									decimal: ",",
-									thousand: " ",
-									precision: 2
-							}) + " en trop").removeClass("hidden");
-							$('.ok-sign').addClass("hidden");
-					}
+								var trop = total - totalSousTraitant;
+								$('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Vous avez réparti " + accounting.formatMoney(trop, {
+										symbol: "€",
+										format: "%v %s",
+										decimal: ",",
+										thousand: " ",
+										precision: 2
+								}) + " en trop").removeClass("hidden");
+								$('.ok-sign').addClass("hidden");
+						}
 				}
 			}
 
             var repartitionSousTraitantsCollectionHolder = $('ul.repartitions-sous-traitants');
             repartitionSousTraitantsCollectionHolder.append($newRepartitionSousTraitantLi);
             indexNewCollectionRepartitionSousTraitants = repartitionSousTraitantsCollectionHolder.children().length;
-
-            addRepartitionForm(repartitionSousTraitantsCollectionHolder, $newRepartitionSousTraitantLi, false);
 
             $('.add_repartition_sous_traitance_link').on('click', function(e) {
                 // empêche le lien de créer un « # » dans l'URL
@@ -347,20 +346,29 @@
 	            });
 
 				$('.montant').change(function() {
-					var val = $(this).val();
+					var val = $(this).find('input').val();
 					val = val.replace(",", ".");
-					$(this).val(val);
+					$(this).find('input').val(val);
 
 					calculTotalRepartition();
 				});
 
-		    	if($('.toggle-frais').prop('checked') == true){
-			        $('.frais').removeClass("hidden");
-			    } else {
-			        $('.frais').addClass("hidden");
-			    }
+                if($('.toggle-frais').prop('checked') == true){
+                    $('.frais').removeClass("hidden");
+                } else {
+                    $('.frais').addClass("hidden");
+                }
 
 	        }
+
+            $('.montant').change(function() {
+                var val = $(this).find('input').val();
+                val = val.replace(",", ".");
+                $(this).find('input').val(val);
+
+            	calculTotalRepartition();
+
+            });
 
     	});
     </script>

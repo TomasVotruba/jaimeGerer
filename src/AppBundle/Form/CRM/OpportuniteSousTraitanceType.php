@@ -62,6 +62,18 @@ class OpportuniteSousTraitanceType extends AbstractType
                   'class' => 'btn btn-info',
                 )
             ))
+            ->add('fraisRefacturables', 'checkbox', array(
+                'label' => ' ',
+                'required' => false,
+                'attr' => array(
+                    'data-toggle' => 'toggle',
+                    'data-onstyle' => 'success',
+                    'data-offstyle' => 'danger',
+                    'data-on' => 'Oui',
+                    'data-off' => 'Non',
+                    'class' => 'toggle-frais'
+                )
+            ))
             ->add('submit', 'submit', array(
                 'label' => 'Terminer',
                 'attr' => array(

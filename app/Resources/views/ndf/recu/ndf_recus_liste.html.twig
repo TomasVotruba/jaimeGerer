@@ -25,14 +25,15 @@
 				<thead>
 					<tr>
 						<th class="col-md-1">Date</th>
-						<th class="col-md-2">Fournisseur</th>
+						<th class="col-md-1">Fournisseur</th>
 						<th class="col-md-1">Montant HT</th>
 						<th class="col-md-1">Montant TVA</th>
 						<th class="col-md-1">Montant TTC</th>
-						<th class="col-md-2 hidden-xs">Compte comptable</th>
+						<th class="col-md-1 hidden-xs">Compte comptable</th>
 						<th class="col-md-1 hidden-xs">Analytique</th>
-						<th class="col-md-1 hidden-xs">Libelle</th>
-						<th class="col-md-1 hidden-xs">Upload</th>
+						<th class="col-md-1 hidden-xs">Projet</th>
+						<th class="col-md-1 hidden-xs">Refacturable</th>
+						<th class="col-md-1 hidden-xs">Ajouté le</th>
 						<th class="col-md-1 hidden-xs">Actions</th>
 					</tr>
 				</thead>
@@ -67,11 +68,11 @@
 									{% else %}
 										<p class="center">
 											<a tabindex="0"
-												 role="button"
-												 data-toggle="popover"
-												 data-placement="top"
-												 data-trigger="hover"
-											   data-content="Cette valeur n'a pas pu être lue correctement.">
+												role="button"
+												data-toggle="popover"
+												data-placement="top"
+												data-trigger="hover"
+											    data-content="Cette valeur n'a pas pu être lue correctement.">
 												 <span class="glyphicon glyphicon-exclamation-sign red l"></span>
 											</a>
 										</p>
@@ -80,7 +81,18 @@
 							{% else %}
 								<td colspan="7" class="center"><i><span class="glyphicon glyphicon-warning-sign"></span> Ce reçu n'a pas encore été traité.</i></td>
 							{% endif %}
-							<td class="hidden-xs">{{ recu.libelle }}</td>
+							<td class="hidden-xs">
+								{% if recu.actionCommerciale %}
+									<a href="{{ path('crm_action_commerciale_voir', {'id' : recu.actionCommerciale.id }) }}">
+										{{ recu.actionCommerciale.compte.nom }} : {{ recu.actionCommerciale.nom }}
+									</a>
+								{% endif %}
+							</td>
+							<td class="hidden-xs center">
+								{% if recu.refacturable %}
+									<span class="glyphicon glyphicon-ok"></span>
+								{% endif %}
+							</td>
 							<td class="hidden-xs">Le {{ recu.dateCreation|date('d/m/Y') }}<br />par {{ recu.userCreation }}</td>
 							<td class="hidden-xs">
 								<a href="{{ path('ndf_recu_modifier', {'id' : recu.id }) }}" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>

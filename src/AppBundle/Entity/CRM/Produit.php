@@ -63,7 +63,7 @@ class Produit
     
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="produits")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      * @Assert\NotBlank()
      */
     private $documentPrix;
@@ -75,11 +75,22 @@ class Produit
     private $type;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="frais", type="boolean", nullable=false)
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Frais", inversedBy="produit")
+     * @ORM\JoinColumn(nullable=true)
      */
-    private $frais = false;
+    private $frais;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\NDF\Recu", inversedBy="produit")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $recu;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\SousTraitanceRepartition", inversedBy="produit")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $sousTraitanceRepartition;
 
 
     public function __toString(){
@@ -284,8 +295,8 @@ class Produit
      */
     public function setFrais($frais)
     {
+        $frais->setProduit($this);        
         $this->frais = $frais;
-
         return $this;
     }
 
@@ -297,5 +308,54 @@ class Produit
     public function getFrais()
     {
         return $this->frais;
+    }
+
+
+    /**
+     * Set recu
+     *
+     * @param \AppBundle\Entity\NDF\Recu $recu
+     * @return Produit
+     */
+    public function setRecu(\AppBundle\Entity\NDF\Recu $recu = null)
+    {
+        $recu->setProduit($this); 
+        $this->recu = $recu;
+
+        return $this;
+    }
+
+    /**
+     * Get recu
+     *
+     * @return \AppBundle\Entity\NDF\Recu 
+     */
+    public function getRecu()
+    {
+        return $this->recu;
+    }
+
+    /**
+     * Set sousTraitanceRepartition
+     *
+     * @param \AppBundle\Entity\CRM\SousTraitanceRepartition $sousTraitanceRepartition
+     * @return Produit
+     */
+    public function setSousTraitanceRepartition(\AppBundle\Entity\CRM\SousTraitanceRepartition $sousTraitanceRepartition = null)
+    {
+        $sousTraitanceRepartition->setProduit($this); 
+        $this->sousTraitanceRepartition = $sousTraitanceRepartition;
+
+        return $this;
+    }
+
+    /**
+     * Get sousTraitanceRepartition
+     *
+     * @return \AppBundle\Entity\CRM\SousTraitanceRepartition 
+     */
+    public function getSousTraitanceRepartition()
+    {
+        return $this->sousTraitanceRepartition;
     }
 }

@@ -4,18 +4,29 @@
 </div>
 <div class="modal-body">
 	{{ form_start(form, {'action': path('crm_action_commerciale_facturer_frais', {'id' : actionCommerciale.id})} ) }}
+	{{ form_errors(form) }}
 		<div class="row">
 			
 			<div class="col-md-12">
-				{{ form_errors(form) }}
+				
 				{{ form_row(form.objet) }}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 label-no-bold">
+				{{ form_label(form.frais) }}
+				{{ form_widget(form.frais) }}
+				{{ form_widget(form.recus) }}
+				{{ form_widget(form.sous_traitances) }}
 			</div>
 		</div>
 		<div class="row">   
 			<div class="col-md-12">
-					{{ form_rest(form) }}
+					{{ form_row(form._token) }}
+					{{ form_row(form.submit) }}
 				</div>
 			</div>
 		</div>
+	
 	{{ form_end(form) }}
 </div>

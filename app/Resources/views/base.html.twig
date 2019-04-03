@@ -57,7 +57,7 @@
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
 
-            <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key={{ google_maps_api_key }}"></script>
+            <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key={{ google_maps_api_key }}"></script>
             <script type="text/javascript" src="{{ asset('js/jquery.ui.addresspicker.js') }}"></script>
 
             {% if hide_tiny is not defined or hide_tiny == false %}

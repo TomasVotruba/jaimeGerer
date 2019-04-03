@@ -63,7 +63,7 @@ class Produit
     
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="produits")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      * @Assert\NotBlank()
      */
     private $documentPrix;
@@ -75,12 +75,30 @@ class Produit
     private $type;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="frais", type="boolean", nullable=false)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Frais")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @Assert\NotBlank()
      */
-    private $frais = false;
+    private $frais;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\NDF\Recu")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @Assert\NotBlank()
+     */
+    private $recu;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\SousTraitanceRepartition")
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @Assert\NotBlank()
+     */
+    private $sousTraitanceRepartition;
+
+
+    public function __toString(){
+        return $this->nom.' : '.number_format($this->getTotal(), 2, ',', ' ').' €';
+    }
 
     /**
      * Get id
@@ -271,4 +289,28 @@ class Produit
 		return $this;
 	}
 	
+
+    /**
+     * Set frais
+     *
+     * @param boolean $frais
+     * @return Produit
+     */
+    public function setFrais($frais)
+    {
+        $this->frais = $frais;
+
+        return $this;
+    }
+
+    /**
+     * Get frais
+     *
+     * @return boolean 
+     */
+    public function getFrais()
+    {
+        return $this->frais;
+    }
+
 }

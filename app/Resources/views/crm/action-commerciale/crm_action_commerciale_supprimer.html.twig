@@ -15,7 +15,7 @@
 	    	{{ form_start(form) }}
  			{{ form_widget(form) }}
 	   	 	
-	   	 	 <a class="btn" href="{{ path('crm_contact_liste') }}">
+	   	 	 <a class="btn" href="{{ path('crm_action_commerciale_voir', {'id' : actionCommerciale.id }) }}">
        			<span class="glyphicon glyphicon-chevron-left"></span>Annuler
     		</a>
 	   	 	<input type="submit" value="Supprimer" class="btn btn-danger" />

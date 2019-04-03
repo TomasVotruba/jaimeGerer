@@ -72,19 +72,66 @@ class FactureService extends ContainerAware {
 
     }
 
-    public function createProduitsFrais($facture, $lignes){
+    public function createProduitsFrais($facture, $lignes, $type){
 
-        foreach($facture->getProduits() as $produit){
-            $this->em->remove($produit);
-        }
-        $facture->clearProduits();
+        switch($type){
 
-        $produitRepo = $this->em->getRepository('AppBundle:CRM\Produit');
-        foreach($lignes as $ligneId){
-            $ligne = $produitRepo->find($ligneId);
-            $produit = clone($ligne);
-            $facture->addProduit($produit);
+            case 'frais':
+                foreach($lignes as $ligneId){
+
+                    $fraisRepo = $this->em->getRepository('AppBundle:CRM\Frais');
+                    $frais = $fraisRepo->find($ligneId);
+
+                    $produit = new Produit();
+                    $produit->setNom($frais->getNom());
+                    $produit->setDescription($frais->getDescription());
+                    $produit->setType($frais->getType());
+                    $produit->setTarifUnitaire($frais->getMontantHT());
+                    $produit->setQuantite(1);
+                    $produit->setFrais($frais);
+
+                    $facture->addProduit($produit);
+                }
+                break;
+
+            case 'recu':
+                foreach($lignes as $ligneId){
+
+                    $recuRepo = $this->em->getRepository('AppBundle:NDF\Recu');
+                    $recu = $recuRepo->find($ligneId);
+
+                    $produit = new Produit();
+                    $produit->setNom('Frais '.$recu->getUser()->__toString());
+                    $produit->setDescription($recu->getFournisseur());
+                    $produit->setType($recu->getAnalytique());
+                    $produit->setTarifUnitaire($recu->getMontantHT());
+                    $produit->setQuantite(1);
+                    $produit->setRecu($recu);
+
+                    $facture->addProduit($produit);
+                }
+                break;
+
+            case 'sousTraitance':
+                foreach($lignes as $ligneId){
+
+                    $sousTraitanceRepartitionRepo = $this->em->getRepository('AppBundle:CRM\SousTraitanceRepartition');
+                    $sousTraitanceRepartition = $sousTraitanceRepartitionRepo->find($ligneId);
+
+                    $produit = new Produit();
+                    $produit->setNom('Frais '.$sousTraitanceRepartition->getOpportuniteSousTraitance()->getSousTraitant());
+                    $produit->setDescription('Frais du mois de '.$sousTraitanceRepartition->getDate()->format('m/Y'));
+                    $produit->setType($facture->getAnalytique());
+                    $produit->setTarifUnitaire($sousTraitanceRepartition->getFraisMonetaire());
+                    $produit->setQuantite(1);
+                    $produit->setSousTraitanceRepartition($sousTraitanceRepartition);
+
+                    $facture->addProduit($produit);
+                }
+                break;
+
         }
+        
 
         return $facture;
 

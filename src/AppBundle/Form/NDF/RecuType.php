@@ -38,9 +38,29 @@ class RecuType extends AbstractType
               'label' => 'Fournisseur',
               'required' => true
             ))
-            ->add('libelle', 'text', array(
-              'label' => 'Projet ou libellé',
-              'required' => false
+            ->add('projet_name', 'text', array(
+                'required' => true,
+                'mapped' => false,
+                'label' => 'Projet (numéro de bon de commande, nom du projet ou du client)',
+                'attr' => array('class' => 'typeahead-projet')
+            ))
+            ->add('projet_entity', 'hidden', array(
+                'required' => true,
+                'attr' => array('class' => 'entity-projet'),
+                'mapped' => false
+            ))
+            ->add('refacturable', 'checkbox', array(
+                'label' => ' ',
+                'required' => false,
+                'attr' => array(
+                    'data-toggle' => 'toggle',
+                    'data-on' => 'Oui',
+                    'data-off' => 'Non',
+                    'data-onstyle' => 'success',
+                    'data-offstyle' => 'danger',
+                    'data-size' => 'small',
+                    'class' => 'toggle-refacturable'
+                ),
             ))
             ->add('montantHT', 'number', array(
                'required' => true,

@@ -278,6 +278,13 @@ class DocumentPrix
     */
     private $journalVentes;
 
+      /**
+    * @var boolean
+    *
+    * @ORM\Column(name="facture_frais", type="boolean", nullable=false)
+    */
+    private $factureFrais = false;
+
 
   /**
    * Constructor
@@ -837,6 +844,10 @@ class DocumentPrix
     public function getTaxePercent()
     {
         return $this->taxePercent;
+    }
+
+    public function calculateTaxe(){
+        $this->taxe = $this->getTotalHT()*$this->taxePercent;
     }
 
     public function getSousTotal(){
@@ -1564,4 +1575,27 @@ class DocumentPrix
         return $total;
     }
 
+
+    /**
+     * Set factureFrais
+     *
+     * @param boolean $factureFrais
+     * @return DocumentPrix
+     */
+    public function setFactureFrais($factureFrais)
+    {
+        $this->factureFrais = $factureFrais;
+
+        return $this;
+    }
+
+    /**
+     * Get factureFrais
+     *
+     * @return boolean 
+     */
+    public function getFactureFrais()
+    {
+        return $this->factureFrais;
+    }
 }

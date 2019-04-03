@@ -97,6 +97,7 @@ class Opportunite
 	 */
 	private $userGestion;
 
+
     /**
     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
     * @ORM\JoinColumn(nullable=true)
@@ -124,14 +125,14 @@ class Opportunite
 
 
     /**
-    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte")
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Compte", inversedBy="opportunites" )
     * @ORM\JoinColumn(nullable=false)
     * @Assert\NotBlank()
     */
     private $compte;
 
     /**
-    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact")
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Contact", inversedBy="opportunites")
     * @ORM\JoinColumn(nullable=true)
     */
     private $contact;
@@ -212,10 +213,25 @@ class Opportunite
     private $fichier;
 
      /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\PlanPaiement", mappedBy="actionCommerciale")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\PlanPaiement", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
      * @ORM\JoinColumn(nullable=true)
+     * @ORM\OrderBy({"date" = "ASC"})
      */
     private $planPaiements;
+
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\Frais", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+    *
+    */
+    private $frais;
+
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\NDF\Recu", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+    *
+    */
+    private $recus;
 
 
     /**
@@ -225,6 +241,8 @@ class Opportunite
     {
         $this->settings = new \Doctrine\Common\Collections\ArrayCollection();
         $this->planPaiements = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->frais = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->recus = new \Doctrine\Common\Collections\ArrayCollection();
         $this->fichier = null;
     }
 
@@ -518,7 +536,7 @@ class Opportunite
 	 */
 	public function removeSettings()
 	{
-		$this->settings = null;
+		$this->settings->clear();
 	}
 
 	/**
@@ -627,15 +645,7 @@ class Opportunite
     }
 
     public function getCa_attendu(){
-      $s_proba = $this->getProbabilite()->getValeur();
-      $arr_proba = explode('-', $s_proba);
-
-      $proba = 0;
-      if(count($arr_proba)){
-         $proba = str_replace('%', '', $arr_proba[1]);
-      }
-
-      return $this->getMontant()*($proba/100);
+        return 0;
     }
 
     public function win(){
@@ -1079,5 +1089,115 @@ class Opportunite
     public function getFichier()
     {
         return $this->fichier;
+    }
+
+    /**
+     * Add planPaiements
+     *
+     * @param \AppBundle\Entity\CRM\PlanPaiement $planPaiements
+     * @return Opportunite
+     */
+    public function addPlanPaiement(\AppBundle\Entity\CRM\PlanPaiement $planPaiements)
+    {
+        $this->planPaiements[] = $planPaiements;
+        $planPaiements->setActionCommerciale($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove planPaiements
+     *
+     * @param \AppBundle\Entity\CRM\PlanPaiement $planPaiements
+     */
+    public function removePlanPaiement(\AppBundle\Entity\CRM\PlanPaiement $planPaiements)
+    {
+        $this->planPaiements->removeElement($planPaiements);
+    }
+
+    /**
+     * Clear planPaiements
+     */
+    public function clearPlanPaiements()
+    {
+        $this->planPaiements->clear();
+    }
+
+    /**
+     * Get planPaiements
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPlanPaiements()
+    {
+        return $this->planPaiements;
+    }
+
+    public function getPlansPaiementsCustom(){
+        $custom = array();
+        foreach($this->planPaiements as $plan){
+            if(false == $plan->getCommande() && false == $plan->getFinProjet()){
+                $custom[] = $plan;
+            }
+        }
+        return $custom;
+    }
+
+    public function getModePaiement(){
+        if(count($this->planPaiements)){
+            if(1 == count($this->planPaiements) && true == $this->planPaiements[0]->getCommande()){
+                return 'COMMANDE';
+            } else if (1 == count($this->planPaiements) && true == $this->planPaiements[0]->getFinProjet()){
+                return 'FIN';
+            } else {
+                return 'CUSTOM';
+            }
+
+        }
+        return null;
+    }
+
+
+    /**
+     * Add frais
+     *
+     * @param \AppBundle\Entity\CRM\Frais $frais
+     * @return Opportunite
+     */
+    public function addFrai(\AppBundle\Entity\CRM\Frais $frais)
+    {
+        $frais->setActionCommerciale($this);
+        $this->frais[] = $frais;
+
+        return $this;
+    }
+
+    /**
+     * Remove frais
+     *
+     * @param \AppBundle\Entity\CRM\Frais $frais
+     */
+    public function removeFrai(\AppBundle\Entity\CRM\Frais $frais)
+    {
+        $this->frais->removeElement($frais);
+    }
+
+    /**
+     * Get frais
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFrais()
+    {
+        return $this->frais;
+    }
+
+    public function hasFraisRefacturables(){
+        foreach($this->bonsCommande as $bc){
+            if(true === $bc->getFraisRefacturables()){
+                return true;
+            }
+        }
+        return false;
     }
 }

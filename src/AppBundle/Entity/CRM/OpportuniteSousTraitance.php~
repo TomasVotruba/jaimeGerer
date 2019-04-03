@@ -75,6 +75,13 @@ class OpportuniteSousTraitance
     */
     private $repartitions;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="frais_refacturables", type="boolean", nullable=false)
+     */
+    private $fraisRefacturables = false;
+
 
     /**
      * Constructor
@@ -319,7 +326,7 @@ class OpportuniteSousTraitance
 
     public function getNomEtMontant(){
       return  $this->sousTraitant.' - '.
-              $this->opportunite->getCompte()->getNom().' : '.
+              $this->opportunite->getCompte()->getNom().' - '.$this->opportunite->getNom().' : '.
               $this->getMontantMonetaire().'€ (reste à facturer : '.
               $this->getResteAFacturer().' €)';
     }
@@ -356,5 +363,38 @@ class OpportuniteSousTraitance
     public function getRepartitions()
     {
         return $this->repartitions;
+    }
+
+    /**
+     * Add depenses
+     *
+     * @param \AppBundle\Entity\Compta\DepenseSousTraitance $depenses
+     * @return OpportuniteSousTraitance
+     */
+    public function addDepense(\AppBundle\Entity\Compta\DepenseSousTraitance $depenses)
+    {
+        $this->depenses[] = $depenses;
+
+        return $this;
+    }
+
+    /**
+     * Remove depenses
+     *
+     * @param \AppBundle\Entity\Compta\DepenseSousTraitance $depenses
+     */
+    public function removeDepense(\AppBundle\Entity\Compta\DepenseSousTraitance $depenses)
+    {
+        $this->depenses->removeElement($depenses);
+    }
+
+    /**
+     * Get depenses
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDepenses()
+    {
+        return $this->depenses;
     }
 }

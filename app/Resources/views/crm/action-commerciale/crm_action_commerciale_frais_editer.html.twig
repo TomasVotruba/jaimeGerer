@@ -1,0 +1,144 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Editer les frais de l'action commerciale {{ actionCommerciale.nom }}</h1>	
+		</div>
+	</div>
+
+	{{ form_start(form) }}
+	   
+
+	    <div class="row">
+	        <div class="col-md-12">
+	             <ul class="produits" id="collectionContainer" data-prototype="
+	             {% filter escape %}
+	                    {{ include('crm/action-commerciale/crm_action_commerciale_frais_form.html.twig', { 'form':  form.frais.vars.prototype }) }}
+	             {% endfilter %}">
+	             {% for fraisField in form.frais %}
+	                <li>
+	                    {{ include('crm/action-commerciale/crm_action_commerciale_frais_form.html.twig', { 'form': fraisField }) }}
+	                </li>
+	            {% endfor %}
+	            </ul>
+	        </div>
+	    </div>
+
+	    <div class="row">
+	        <div class="col-md-12">
+	            <input type="submit" value="Enregistrer" class="btn btn-success" onclick="return confirmationTVA()" id="btn-submit-form" />
+	        </div>
+	    </div>
+	</div>
+	{{ form_end(form) }}
+
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+
+	<script type="text/javascript">
+
+	    $(document).ready(function() {
+
+	        // ajoute un lien « add a produit »
+	        var $addProduitLink = $('<a href="#" class="add_produit_link btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"</a>');
+	        var $newProduitLi = $('<li></li>').append($addProduitLink);
+
+
+	        // Récupère le div qui contient la collection de tags
+	        var collectionHolder = $('ul.produits');
+	        // ajoute l'ancre « ajouter un tag » et li à la balise ul
+	        collectionHolder.append($newProduitLi);
+	        // Récupèrer le nombre de produits pour l'incrémenter et éviter le bug du jeu de suppression
+	        indexNewCollection = collectionHolder.children().length;
+
+	        $addProduitLink.on('click', function(e) {
+	            // empêche le lien de créer un « # » dans l'URL
+	            e.preventDefault();
+	            // ajoute un nouveau formulaire tag (voir le prochain bloc de code)
+	            addProduitForm(collectionHolder, $newProduitLi, true);
+
+	        });
+
+			addProduitForm(collectionHolder, $newProduitLi, false);
+
+	        function addProduitForm(collectionHolder, $newLinkLi, ExecTinymceCommand) {
+	            // Récupère l'élément ayant l'attribut data-prototype comme expliqué plus tôt
+	            var prototype = collectionHolder.attr('data-prototype');
+
+	            // Remplace '__name__' dans le HTML du prototype par un nombre basé sur
+	            // Toujours incrémenter pour éviter la duplication des noms/ids
+	            indexNewCollection++;   
+	            var newForm = prototype.replace(/__name__/g, indexNewCollection);
+
+	            // Affiche le formulaire dans la page dans un li, avant le lien "ajouter un tag"
+	            var $newFormLi = $('<li></li>').append(newForm);
+	            $newLinkLi.before($newFormLi);
+	            // Pour ne pas exécuter la commande dans la 1ère collection de l'ajout
+	            if( ExecTinymceCommand ) tinyMCE.execCommand("mceAddControl",false, $($newFormLi).find('textarea').attr("id"));
+
+	            $('.remove-button').on('click', function(e) {
+	                // empêche le lien de créer un « # » dans l'URL
+	                e.preventDefault();
+	                // supprime l'élément li pour le formulaire de tag
+	                $(this).parents('li').remove();
+	            });
+
+	           	$newFormLi.find('.montant-ht').change(function(){
+	            	updateMontants($newFormLi);
+	            });
+
+	            $newFormLi.find('.montant-tva').change(function(){
+	            	updateMontants($newFormLi);
+	            });
+
+	            $newFormLi.find('.montant-ttc').change(function(){
+	            	updateMontants($newFormLi);
+	            });
+
+	            $('.remove-button').on('click', function(e) {
+	            // empêche le lien de créer un « # » dans l'URL
+	            e.preventDefault();
+	            // supprime l'élément li pour le formulaire de tag
+	            $(this).parents('li').remove();
+	        });
+	            
+	        }
+
+	    });
+
+	    function updateMontants(li){
+
+	    	var ht = $(li).find('.montant-ht').val();
+	    	ht = ht.replace(",", ".");
+	    	$(li).find('.montant-ht').val(ht);
+
+	    	var tva = $(li).find('.montant-tva').val();
+	    	tva = tva.replace(",", ".");
+	    	$(li).find('.montant-tva').val(tva);
+
+	    	var ttc = $(li).find('.montant-ttc').val();
+	    	ttc = ttc.replace(",", ".");
+	    	$(li).find('.montant-ttc').val(ttc);
+
+	    	if(tva != 0){
+	    		if(ht != 0){
+	    			var ttc = +ht + +tva;
+	    			$(li).find('.montant-ttc').val(ttc.toFixed(2));
+	    		} else if (ttc != 0){
+	    			var ht = +ttc - +tva;
+	    			$(li).find('.montant-ht').val(ht.toFixed(2));
+	    		}
+	    		
+	    	} else if(ttc !=0 && ht !=0){
+	    		var tva = ttc-ht;
+	    		$(li).find('.montant-tva').val(tva.toFixed(2));
+	    	} 
+	    }
+	   
+	</script>
+{% endblock %}

@@ -132,7 +132,7 @@ class TableauBordService extends ContainerAware {
 
     $tableauPrevisonnel = $this->creerTableauPrevisionnel($year, $company);
     $tableauAccurate = $this->creerTableauAccurate($year, $company);
-    $tableauPredictif = $this->creerTableauPredictif($tableauPrevisonnel, $tableauAccurate);
+    $tableauPredictif = $this->creerTableauPredictif($tableauPrevisonnel, $tableauAccurate, $year);
 
     return array(
       'arr_prev' => $tableauPrevisonnel,
@@ -160,7 +160,7 @@ class TableauBordService extends ContainerAware {
 
     }
     $this->calculMargeBrute('prev');
-    $this->calculResultatExploitation('prev');
+    $this->calculResultatExploitation('prev', $year);
     $this->calculRatioResultatCA('prev');
 
     return $tableauPrevisonnel;
@@ -176,13 +176,13 @@ class TableauBordService extends ContainerAware {
     $tableauAccurate['dotation_amortissements'] = $this->creerTableauDotationAmortissementsAccurate($year, $company);
 
     $this->calculMargeBrute('accurate');
-    $this->calculResultatExploitation('accurate');
+    $this->calculResultatExploitation('accurate', $year);
     $this->calculRatioResultatCA('accurate');
 
     return $tableauAccurate;
   }
 
-  private function creerTableauPredictif($tableauPrevisonnel, $tableauAccurate){
+  private function creerTableauPredictif($tableauPrevisonnel, $tableauAccurate, $year){
     $tableauPredictif = array();
     $moisDebutPredictif = $this->getMoisDebutPredictif('n');
 
@@ -244,7 +244,7 @@ class TableauBordService extends ContainerAware {
     // }
 
     $this->calculMargeBrute('predictif');
-    $this->calculResultatExploitation('predictif');
+    $this->calculResultatExploitation('predictif', $year);
     $this->calculRatioResultatCA('predictif');
 
     return $tableauPredictif;
@@ -1145,7 +1145,7 @@ class TableauBordService extends ContainerAware {
 
   }
 
-    private function calculResultatExploitation($type){
+    private function calculResultatExploitation($type, $year){
     
         $cumul = 0;
         $moisDebutPredictif = $this->getMoisDebutPredictif();

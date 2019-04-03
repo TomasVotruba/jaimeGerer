@@ -150,15 +150,11 @@
 					url: "{{ path('crm_compte_get_liste') }}"
 				},
 				callback: {
-					onInit: function (node) {
-						console.log('Typeahead Initiated on ' + node.selector);
-					},
 					onClickAfter: function (node, a, item, event) {
 						$('.entity-compte').val(item.id);
 						changeAddress();
 					}
-				},
-				debug: true
+				}
 
 			});
 
@@ -193,12 +189,7 @@
 					$(".input-pays").val(data.pays);
 					$(".input-telephone").val(data.telephone);
 					$(".input-fax").val(data.fax);
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					console.log(jqXHR.status);
-					console.log(textStatus);
-					console.log(errorThrown);
-				},
+				}
 			});
 		}
 	</script>

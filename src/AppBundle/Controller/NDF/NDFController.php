@@ -100,6 +100,7 @@ class NDFController extends Controller
 
 		if ($form->isSubmitted() && $form->isValid()) {
 
+			$recu->setActionCommerciale($em->getRepository('AppBundle:CRM\Opportunite')->findOneById($form['projet_entity']->getData()));
 			$recu->setDateCreation(new \DateTime(date('Y-m-d')));
 			$recu->setUserCreation($this->getUser());
 			$recu->setUser($this->getUser());
@@ -162,11 +163,17 @@ class NDFController extends Controller
 
 		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId()), $recu);
 
+		if($recu->getActionCommerciale()){
+			$form->get('projet_name')->setData($recu->getActionCommerciale()->getNom());
+			$form->get('projet_entity')->setData($recu->getActionCommerciale()->getId());
+		}
+
+
 		$request = $this->getRequest();
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-
+			$recu->setActionCommerciale($em->getRepository('AppBundle:CRM\Opportunite')->findOneById($form['projet_entity']->getData()));
 			$recu->setDateEdition(new \DateTime(date('Y-m-d')));
 			$recu->setUserEdition($this->getUser());
 			$recu->setEtat('READ');

@@ -14,6 +14,25 @@
 </div>
 
 <div class="row">
+
+	<div class="col-md-6">
+		<div class="typeahead-container">
+		    <div class="typeahead-field">
+		        <span class="typeahead-query">
+		        	{{ form_row(form.projet_name) }}
+		            {{ form_row(form.projet_entity) }}
+		        </span>
+		    </div>
+		</div>
+		
+	</div>
+	<div class="col-md-6">
+		<strong>A refacturer au client</strong><br />
+		{{ form_widget(form.refacturable) }}
+	</div>
+</div>
+
+<div class="row">
 	<div class="col-md-6">
 		<div class="form-group">
 			{{ form_row(form.analytique) }}
@@ -27,13 +46,10 @@
 	</div>
 </div>
 
-<div class="row">
 
-	<div class="col-md-6">
-		{{ form_row(form.libelle) }}
-	</div>
-	<div class="col-md-3"></div>
-	<div class="col-md-3">
+<div class="row">
+	<hr />
+	<div class="col-md-3 col-md-offset-8">
 		<div class="form-group">
 			{{ form_row(form.montantHT) }}
 		</div>
@@ -50,7 +66,7 @@
 </div>	
 
 <div class="row">
-
+	<hr />
 	<div class="form-group center">
 		<div class="col-md-6">
 			{{ form_row(form.save, {'attr' : {'class' : 'btn btn-info'}}) }}
@@ -110,6 +126,27 @@
 					$('.montant-tva').val(tva.toFixed(2));
 				} 
 			}
+
+			$('.typeahead-projet').typeahead({
+				order: "desc",
+				accent: true,
+				source: {
+					url: Routing.generate('crm_bon_commande_search')
+				},
+				callback: {
+					onClickAfter: function (node, a, item, event) {
+						$('.entity-projet').val(item.id);
+						if(true === item.refacturable){
+							$('.toggle-refacturable').bootstrapToggle('enable');
+						} else {
+							$('.toggle-refacturable').bootstrapToggle('disable');
+						}
+						
+					}
+				},
+			});
+
+
 
 		});
 

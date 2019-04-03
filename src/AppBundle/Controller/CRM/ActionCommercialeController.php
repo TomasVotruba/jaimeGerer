@@ -32,6 +32,7 @@ use AppBundle\Form\CRM\ContactType;
 use AppBundle\Form\SettingsType;
 use AppBundle\Form\CRM\OpportuniteWonBonCommandeType;
 use AppBundle\Form\CRM\OpportuniteWonPlanPaiementType;
+use AppBundle\Form\CRM\ActionCommercialeFraisType;
 
 use \DateTime;
 
@@ -790,8 +791,8 @@ class ActionCommercialeController extends Controller
 		}
 
 		return $this->render('crm/action-commerciale/crm_action_commerciale_won_sous_traitance.html.twig', array(
-				'actionCommerciale' => $actionCommerciale,
-				'form' => $form->createView()
+			'actionCommerciale' => $actionCommerciale,
+			'form' => $form->createView()
 		));
 	}
 
@@ -819,13 +820,13 @@ class ActionCommercialeController extends Controller
 			$em->persist($sousTraitance);
 			$em->flush();
 
-			return $this->redirect($this->generateUrl('crm_opportunite_voir', array(
+			return $this->redirect($this->generateUrl('crm_action_commerciale_voir', array(
 				'id' => $sousTraitance->getOpportunite()->getId()
 			)));
 
 		}
 
-		return $this->render('crm/opportunite/crm_opportunite_sous_traitance_editer.html.twig', array(
+		return $this->render('crm/action-commerciale/crm_action_commerciale_sous_traitance_editer.html.twig', array(
 				'opportuniteSousTraitance' => $sousTraitance,
 				'form' => $form->createView()
 		));
@@ -1089,25 +1090,48 @@ class ActionCommercialeController extends Controller
 
 			$form = $this->createFormBuilder()->getForm();
 
-			if(count($actionCommerciale->getPlanPaiements()) > 1 ){
+			if($actionCommerciale->hasFraisRefacturables()){
 
-				$choices = array();
-				foreach($devis->getProduits() as $produit){
-				    if(true === $produit->getFrais()){
-				        $choices[$produit->getId()] = $produit->__toString();
-				    }
+				$arr_frais = array();
+				foreach($actionCommerciale->getFraisNonFactures() as $frais){
+				    $arr_frais[$frais->getId()] = $frais->__toString();
 				}
+				$form->add('frais', 'choice', array(
+					'required' => true,
+					'label' => 'Quels frais facturez-vous ?',
+					'choices' => $arr_frais,
+					'multiple' => true,
+					'expanded' => true,
+					'required' => true
+				));
+				
 
-				if(count($choices)){
-					$form->add('lignes', 'choice', array(
-						'required' => true,
-						'label' => 'Quels frais facturez-vous ?',
-						'choices' => $choices,
-						'multiple' => true,
-						'expanded' => true,
-						'required' => true
-					));
+				$arr_recus = array();
+				foreach($actionCommerciale->getRecusValidesNonFactures() as $recu){
+				    $arr_recus[$recu->getId()] = $recu->getLigneDepense()->getDepense()->getNoteFrais()->__toStringSansTotal().' - '.$recu->getFournisseur().' - '.$recu->getMontantHT().' € HT';
 				}
+				$form->add('recus', 'choice', array(
+					'required' => true,
+					'label' => ' ',
+					'choices' => $arr_recus,
+					'multiple' => true,
+					'expanded' => true,
+					'required' => true
+				));
+				
+
+				$arr_sous_traitances = array();
+				foreach($actionCommerciale->getFraisSousTraitantsNonFactures() as $fraisSousTraitance){
+				    $arr_sous_traitances[$fraisSousTraitance->getId()] = $fraisSousTraitance->getOpportuniteSousTraitance()->getSousTraitant().' - '.$fraisSousTraitance->getDate()->format('m/Y').' - '.$fraisSousTraitance->getFraisMonetaire().' €';
+				}
+				$form->add('sous_traitances', 'choice', array(
+					'required' => true,
+					'label' => ' ',
+					'choices' => $arr_sous_traitances,
+					'multiple' => true,
+					'expanded' => true,
+					'required' => true
+				));				
 
 			}
 
@@ -1132,6 +1156,7 @@ class ActionCommercialeController extends Controller
 				$facture = clone $devis;
 				$facture->setDevis($devis);
 				$facture->setObjet($data['objet']);
+				$facture->setFactureFrais(true);
 
 				if($facture->getCompte()->getAdresseFacturation()){
 					$facture->setNomFacturation($facture->getCompte()->getNomFacturation());
@@ -1185,8 +1210,16 @@ class ActionCommercialeController extends Controller
 					$facture->setCompta(true);
 				}
 
+				 foreach($facture->getProduits() as $produit){
+		            $em->remove($produit);
+		        }
+		        $facture->clearProduits();
 				$factureService = $this->get('appbundle.crm_facture_service');
-				$factureService->createProduitsFrais($facture, $data['lignes']);
+				$factureService->createProduitsFrais($facture, $data['frais'], 'frais');
+				$factureService->createProduitsFrais($facture, $data['recus'], 'recu');
+				$factureService->createProduitsFrais($facture, $data['sous_traitances'], 'sousTraitance');
+
+				$facture->calculateTaxe();
 		
 				$em->persist($facture);
 
@@ -1324,6 +1357,38 @@ class ActionCommercialeController extends Controller
 		return $this->render('crm/devis/crm_devis_envoyer.html.twig', array(
 				'form' => $form->createView(),
 				'devis' => $devis
+		));
+	}
+
+	/**
+	 * @Route("/crm/action-commerciale/frais/editer/{id}", name="crm_action_commerciale_frais_editer")
+	 */
+	public function actionCommercialeFraisModifierAction(Opportunite $actionCommerciale)
+	{
+		
+		$form = $this->createForm(
+			new ActionCommercialeFraisType($this->getUser()->getCompany()),
+			$actionCommerciale
+		);
+	
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+	
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($actionCommerciale);
+			$em->flush();
+
+			return $this->redirect($this->generateUrl(
+					'crm_action_commerciale_voir',
+					array('id' => $actionCommerciale->getId())
+			));
+		}
+
+		return $this->render('crm/action-commerciale/crm_action_commerciale_frais_editer.html.twig', array(
+			'form' => $form->createView(),
+			'actionCommerciale' => $actionCommerciale
 		));
 	}
 

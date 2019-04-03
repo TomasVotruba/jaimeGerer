@@ -129,12 +129,19 @@ class BonCommandeController extends Controller
 			$ok = false;
 			if(strtoupper($etat) == "ALL"){
 				$ok = true;
-			} else if( strtoupper($etat) == "OK" && $bc->getMontant() ==  $bc->getTotalFacture() ){
+			} else if( strtoupper($etat) == "OK" && ($bc->getMontant() ==  $bc->getTotalFacture() || $bc->getActionCommerciale()->getTotalFrais() == $bc->getActionCommerciale()->getTotalFraisFactures() ) ){
 				$ok = true;
-			} else if ( strtoupper($etat) == "CURRENT" && $bc->getMontant() > $bc->getTotalFacture() ){
+			} else if ( strtoupper($etat) == "CURRENT" && ($bc->getMontant() > $bc->getTotalFacture() || $bc->getActionCommerciale()->getTotalFrais() > $bc->getActionCommerciale()->getTotalFraisFactures() )){
 				$ok = true;
-			} else if ( strtoupper($etat) == 'KO' && $bc->getMontant() < $bc->getTotalFacture() ) {
+			} else if ( strtoupper($etat) == 'KO' && ($bc->getMontant() < $bc->getTotalFacture() || $bc->getActionCommerciale()->getTotalFrais() < $bc->getActionCommerciale()->getTotalFraisFactures() )) {
 				$ok = true;
+			}
+
+			if($bc->getNum() == "2019-zzz"){
+				dump($bc->getMontant());
+				dump($bc->getTotalFacture());
+				dump($bc->getActionCommerciale()->getTotalFrais());
+				dump($bc->getActionCommerciale()->getTotalFraisFactures());
 			}
 
 			if($ok){
@@ -146,6 +153,13 @@ class BonCommandeController extends Controller
 				$list[$i]['montant'] = $bc->getMontantMonetaire();
 				$list[$i]['montant_facture'] = $bc->getTotalFactureMonetaire();
 				$list[$i]['frais'] = $bc->getFraisRefacturables();
+				$list[$i]['frais_total'] = $bc->getActionCommerciale()->getTotalFrais();
+				if($bc->getFraisRefacturables()){
+					$list[$i]['frais_factures'] = $bc->getActionCommerciale()->getTotalFraisFactures();
+				} else {
+					$list[$i]['frais_factures'] = null;
+				}
+				
 					
 				if(count($bc->getFactures()) == 0){
 					$list[$i]['factures'] = null;
@@ -155,7 +169,7 @@ class BonCommandeController extends Controller
 					$list[$i]['factures_id'] = array();
 
 					foreach($bc->getFactures() as $facture ){
-						if(false == $facture->hasFrais()){
+						if(false == $facture->getFactureFrais()){
 							$list[$i]['factures'][] = $facture->getNum();
 							$list[$i]['factures_id'][]= $facture->getId();
 							$list[$i]['avoir'] = null;
@@ -199,26 +213,54 @@ class BonCommandeController extends Controller
 
 	}
 
-		/**
-		 * @Route("/crm/bon-commande/get_compte_contact/{id}", name="crm_bon_commande_get_compte_contact", options={"expose"=true})
-		 */
-		public function bonCommandeGetCompteContact($id)
-		{
-			$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\BonCommande');
-			$bc = $repository->find($id);
-		
-			$response = new JsonResponse();
-			$response->setData(array(
-	    		'compte_id' => $bc->getActionCommerciale()->getCompte()->getId(),
-	    		'compte_toString' => $bc->getActionCommerciale()->getCompte()->__toString(),
-				'contact_id' => $bc->getActionCommerciale()->getContact()->getId(),
-				'contact_toString' => $bc->getActionCommerciale()->getContact()->__toString(),
-				'analytique' => $bc->getActionCommerciale()->getAnalytique()->getId(),
-			));
+	/**
+	 * @Route("/crm/bon-commande/get_compte_contact/{id}", name="crm_bon_commande_get_compte_contact", options={"expose"=true})
+	 */
+	public function bonCommandeGetCompteContact($id)
+	{
+		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\BonCommande');
+		$bc = $repository->find($id);
+	
+		$response = new JsonResponse();
+		$response->setData(array(
+    		'compte_id' => $bc->getActionCommerciale()->getCompte()->getId(),
+    		'compte_toString' => $bc->getActionCommerciale()->getCompte()->__toString(),
+			'contact_id' => $bc->getActionCommerciale()->getContact()->getId(),
+			'contact_toString' => $bc->getActionCommerciale()->getContact()->__toString(),
+			'analytique' => $bc->getActionCommerciale()->getAnalytique()->getId(),
+		));
 
-			return $response;
+		return $response;
 
+	}
+
+	/**
+	 * @Route("/crm/bon-commande/search",
+	 *   name="crm_bon_commande_search",
+	 *   options={"expose"=true}
+	 * )
+	 */
+	public function bonCommandeSearchAction() {
+
+		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\BonCommande');
+
+		$list = $repository->search($this->getUser()->getCompany());
+
+		$res = array();
+		foreach ($list as $bc) {
+
+			$_res = array(
+				'id' => $bc->getActionCommerciale()->getId(), 
+				'display' => 'BC-'.$bc->getNum().' - '.$bc->getActionCommerciale()->getCompte()->getNom().' : '.$bc->getActionCommerciale()->getNom(),
+				'refacturable' => $bc->getFraisRefacturables()
+			);
+			$res[] = $_res;
 		}
+
+		$response = new \Symfony\Component\HttpFoundation\Response(json_encode($res));
+		$response->headers->set('Content-Type', 'application/json');
+		return $response;
+	}
 
 
 	// /**

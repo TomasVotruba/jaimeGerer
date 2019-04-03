@@ -219,6 +219,20 @@ class Opportunite
      */
     private $planPaiements;
 
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\CRM\Frais", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+    *
+    */
+    private $frais;
+
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\NDF\Recu", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+    *
+    */
+    private $recus;
+
 
     /**
     * Constructor
@@ -227,6 +241,8 @@ class Opportunite
     {
         $this->settings = new \Doctrine\Common\Collections\ArrayCollection();
         $this->planPaiements = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->frais = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->recus = new \Doctrine\Common\Collections\ArrayCollection();
         $this->fichier = null;
     }
 
@@ -280,7 +296,7 @@ class Opportunite
 
 	/**
 	 *
-	 * @return the string
+	 * @return
 	 */
 	public function getMontant() {
 		return $this->montant;
@@ -288,13 +304,20 @@ class Opportunite
 
 	/**
 	 *
-	 * @param
-	 *        	$montant
+	 * @param $montant
 	 */
 	public function setMontant($montant) {
 		$this->montant = $montant;
 		return $this;
 	}
+
+    /**
+     *
+     * @return 
+     */
+    public function getTotal() {
+        return $this->montant+$this->getTotalFrais();
+    }
 
     /**
      * Set etat
@@ -1141,4 +1164,207 @@ class Opportunite
         return null;
     }
 
+
+    /**
+     * Add frais
+     *
+     * @param \AppBundle\Entity\CRM\Frais $frais
+     * @return Opportunite
+     */
+    public function addFrai(\AppBundle\Entity\CRM\Frais $frais)
+    {
+        $frais->setActionCommerciale($this);
+        $this->frais[] = $frais;
+
+        return $this;
+    }
+
+    /**
+     * Remove frais
+     *
+     * @param \AppBundle\Entity\CRM\Frais $frais
+     */
+    public function removeFrai(\AppBundle\Entity\CRM\Frais $frais)
+    {
+        $this->frais->removeElement($frais);
+    }
+
+    /**
+     * Get frais
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFrais()
+    {
+        return $this->frais;
+    }
+
+    public function hasFraisRefacturables(){
+        foreach($this->bonsCommande as $bc){
+            if(true === $bc->getFraisRefacturables()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Add recus
+     *
+     * @param \AppBundle\Entity\NDF\Recu $recus
+     * @return Opportunite
+     */
+    public function addRecus(\AppBundle\Entity\NDF\Recu $recus)
+    {
+        $this->recus[] = $recus;
+
+        return $this;
+    }
+
+    /**
+     * Remove recus
+     *
+     * @param \AppBundle\Entity\NDF\Recu $recus
+     */
+    public function removeRecus(\AppBundle\Entity\NDF\Recu $recus)
+    {
+        $this->recus->removeElement($recus);
+    }
+
+    /**
+     * Get recus
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRecus()
+    {
+        return $this->recus;
+    }
+
+    public function getFraisNonFactures(){
+        $arr_frais = array();
+        foreach($this->frais as $frais){
+            if(null == $frais->getProduit()){
+                $arr_frais[] = $frais;
+            }
+        }
+
+        return $arr_frais;
+    }
+
+    public function getRecusValides(){
+        $arr_valides = array();
+        foreach($this->recus as $recu){
+            if($recu->getLigneDepense()){
+                if('VALIDE' == $recu->getLigneDepense()->getDepense()->getNoteFrais()->getEtat() || 'RAPPROCHE' == $recu->getLigneDepense()->getDepense()->getNoteFrais()->getEtat()){
+                    $arr_valides[] = $recu;
+                }
+            }
+        }
+
+        return $arr_valides;
+    }
+
+    public function getRecusValidesNonFactures(){
+        $arr_valides = array();
+        foreach($this->recus as $recu){
+            if($recu->getLigneDepense() && null == $recu->getProduit()){
+                if('VALIDE' == $recu->getLigneDepense()->getDepense()->getNoteFrais()->getEtat() || 'RAPPROCHE' == $recu->getLigneDepense()->getDepense()->getNoteFrais()->getEtat()){
+                    $arr_valides[] = $recu;
+                }
+            }
+        }
+
+        return $arr_valides;
+    }
+
+    public function getTotalFraisNDF(){
+        $total = 0;
+        foreach($this->getRecusValides() as $recu){
+            $total+= $recu->getMontantHT();
+        }
+
+        return $total;
+    }
+
+    public function getFraisSousTraitants(){
+        $arr_frais = array();
+        foreach($this->opportuniteSousTraitances as $sousTraitance){
+
+            if(true === $sousTraitance->getFraisRefacturables()){
+
+                foreach($sousTraitance->getRepartitions() as $repartition){
+                    if($repartition->getFrais()){
+                        $arr_frais[] = $repartition;
+                    }                
+                }
+            }
+        }
+
+        return $arr_frais;
+    }
+
+    public function getFraisSousTraitantsNonFactures(){
+        $arr_frais = array();
+        foreach($this->opportuniteSousTraitances as $sousTraitance){
+
+            if(true === $sousTraitance->getFraisRefacturables()){
+
+                foreach($sousTraitance->getRepartitions() as $repartition){
+                    if($repartition->getFrais() && null == $repartition->getProduit()){
+                        $arr_frais[] = $repartition;
+                    }                
+                }
+            }
+        }
+
+        return $arr_frais;
+    }
+
+    public function getTotalFraisSousTraitants(){
+        $total = 0;
+        foreach($this->getFraisSousTraitants() as $repartition ){
+            $total+= $repartition->getFraisMonetaire();
+        }
+        return $total;
+    }
+
+
+    public function getTotalFraisManuels()
+    {
+        $total = 0;
+        foreach($this->frais as $frais){
+            $total+= $frais->getMontantHT();
+        }
+        return $total;
+    }
+
+    public function getTotalFrais(){
+        return $this->getTotalFraisManuels()+$this->getTotalFraisNDF()+$this->getTotalFraisSousTraitants();
+    }
+
+    public function getTotalFraisFactures(){
+        $totalFacture = 0;
+        foreach($this->frais as $frais){
+            if(null != $frais->getProduit()){
+                $totalFacture+= $frais->getMontantHT();
+            }
+        }
+        foreach($this->getRecusValides() as $recu){
+            if(null != $recu->getProduit()){
+                $totalFacture+= $recu->getMontantHT();
+            }
+        }
+        foreach($this->getFraisSousTraitants() as $repartitionSousTraitance){
+            if(null != $repartitionSousTraitance->getProduit()){
+                $totalFacture+= $repartitionSousTraitance->getFraisMonetaire();
+            }
+        }
+
+        return $totalFacture;
+    }
+
+    public function getTotalFraisNonFactures(){
+        return $this->getTotalFrais()-$this->getTotalFraisFactures();
+    }
 }

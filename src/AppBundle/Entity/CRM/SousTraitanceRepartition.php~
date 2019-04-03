@@ -36,10 +36,23 @@ class SousTraitanceRepartition
     private $montant;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="frais", type="integer", nullable=true)
+     */
+    private $frais = null;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\OpportuniteSousTraitance", inversedBy="repartitions")
      * @ORM\JoinColumn(nullable=false)
      */
     private $opportuniteSousTraitance;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Produit", mappedBy="sousTraitanceRepartition")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $produit;
 
 
     /**
@@ -132,12 +145,55 @@ class SousTraitanceRepartition
     }
 
     /**
-     * Get montant montaire
+     * Set montant monetaire
      *
      * @return integer
      */
     public function setMontantMonetaire($montant)
     {
         return $this->montant = $montant*100;
+    }
+
+    /**
+     * Set frais
+     *
+     * @param integer $frais
+     * @return SousTraitanceRepartition
+     */
+    public function setFrais($frais)
+    {
+        $this->frais = $frais;
+
+        return $this;
+    }
+
+    /**
+     * Get frais
+     *
+     * @return integer 
+     */
+    public function getFrais()
+    {
+        return $this->frais;
+    }
+
+    /**
+     * Get frais monetaire
+     *
+     * @return float
+     */
+    public function getFraisMonetaire()
+    {
+        return $this->frais/100;
+    }
+
+    /**
+     * Set frais monetaire
+     *
+     * @return integer
+     */
+    public function setFraisMonetaire($frais)
+    {
+        return $this->frais = $frais*100;
     }
 }

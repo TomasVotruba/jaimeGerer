@@ -127,6 +127,26 @@ class Recu
      */
     private $libelle;
 
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Opportunite", inversedBy="recus")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $actionCommerciale = null;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="refacturable", type="boolean", nullable=false)
+     */
+    private $refacturable = false;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Produit", mappedBy="recu")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     */
+    private $produit;
+
     /**
      * Get id
      *
@@ -516,5 +536,74 @@ class Recu
     public function getLibelle()
     {
         return $this->libelle;
+    }
+
+    /**
+     * Set refacturable
+     *
+     * @param boolean $refacturable
+     * @return Recu
+     */
+    public function setRefacturable($refacturable)
+    {
+        $this->refacturable = $refacturable;
+
+        return $this;
+    }
+
+    /**
+     * Get refacturable
+     *
+     * @return boolean 
+     */
+    public function getRefacturable()
+    {
+        return $this->refacturable;
+    }
+
+    /**
+     * Set actionCommerciale
+     *
+     * @param \AppBundle\Entity\CRM\Opportunite $actionCommerciale
+     * @return Recu
+     */
+    public function setActionCommerciale(\AppBundle\Entity\CRM\Opportunite $actionCommerciale)
+    {
+        $this->actionCommerciale = $actionCommerciale;
+
+        return $this;
+    }
+
+    /**
+     * Get actionCommerciale
+     *
+     * @return \AppBundle\Entity\CRM\Opportunite 
+     */
+    public function getActionCommerciale()
+    {
+        return $this->actionCommerciale;
+    }
+
+    /**
+     * Set produit
+     *
+     * @param \AppBundle\Entity\CRM\Produit $produit
+     * @return Recu
+     */
+    public function setProduit(\AppBundle\Entity\CRM\Produit $produit = null)
+    {
+        $this->produit = $produit;
+
+        return $this;
+    }
+
+    /**
+     * Get produit
+     *
+     * @return \AppBundle\Entity\CRM\Produit 
+     */
+    public function getProduit()
+    {
+        return $this->produit;
     }
 }

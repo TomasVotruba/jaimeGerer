@@ -127,6 +127,26 @@ class Recu
      */
     private $libelle;
 
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Opportunite", inversedBy="recus")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $actionCommerciale = null;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="refacturable", type="boolean", nullable=false)
+     */
+    private $refacturable = false;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Produit", mappedBy="recu")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $produit;
+
     /**
      * Get id
      *
@@ -493,5 +513,74 @@ class Recu
     public function getLigneDepense()
     {
         return $this->ligneDepense;
+    }
+
+    /**
+     * Set libelle
+     *
+     * @param string $libelle
+     * @return Recu
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    /**
+     * Get libelle
+     *
+     * @return string 
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
+     * Set refacturable
+     *
+     * @param boolean $refacturable
+     * @return Recu
+     */
+    public function setRefacturable($refacturable)
+    {
+        $this->refacturable = $refacturable;
+
+        return $this;
+    }
+
+    /**
+     * Get refacturable
+     *
+     * @return boolean 
+     */
+    public function getRefacturable()
+    {
+        return $this->refacturable;
+    }
+
+    /**
+     * Set actionCommerciale
+     *
+     * @param \AppBundle\Entity\CRM\Opportunite $actionCommerciale
+     * @return Recu
+     */
+    public function setActionCommerciale(\AppBundle\Entity\CRM\Opportunite $actionCommerciale)
+    {
+        $this->actionCommerciale = $actionCommerciale;
+
+        return $this;
+    }
+
+    /**
+     * Get actionCommerciale
+     *
+     * @return \AppBundle\Entity\CRM\Opportunite 
+     */
+    public function getActionCommerciale()
+    {
+        return $this->actionCommerciale;
     }
 }

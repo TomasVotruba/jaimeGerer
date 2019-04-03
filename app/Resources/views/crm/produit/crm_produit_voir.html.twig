@@ -1,10 +1,6 @@
 <tr>
 	<td class="produit-input-type">{{ produit.type }}</td>
-	<td class="produit-input-nom">{{ produit.nom }}
-		{% if produit.frais %}
-			<br /><span class="label label-info">Frais refacturables</span>
-		{% endif %}
-	</td>
+	<td class="produit-input-nom">{{ produit.nom }}</td>
 	<td class="produit-input-number">{{ produit.tarifUnitaire|number_format(2, ',', ' ') }}</td>
 	<td class="produit-input-number">{{ produit.quantite }}</td>
 	<td class="produit-input-number">

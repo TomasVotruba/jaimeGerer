@@ -33,10 +33,11 @@
                     <th class="col-md-1">Numéro bon de commande</th>
                     <th class="col-md-1">Organisation</th>
                     <th class="col-md-1">Objet</th>
-                    <th class="col-md-1">Montant</th>
+                    <th class="col-md-1">Montant du bon de commande</th>
                     <th class="col-md-1">Total facturé</th>
                     <th class="col-md-1 center">Factures</th>
                     <th class="col-md-1 center">Frais refacturables</th>
+                    <th class="col-md-1 center">Frais facturés</th>
                     <th class="col-md-1 center">Factures de frais</th>
                 </tr>
                 </thead>
@@ -91,6 +92,7 @@
                     { "data": "montant_facture"},
                     { "data": "factures"},
                     { "data": "frais"},
+                    { "data": "frais_factures"},
                     { "data": "factures_frais"},
                 ],
                 fnDrawCallback: function () {
@@ -154,11 +156,22 @@
                     {
                         "render": function ( data, type, row ) {
                             if(data == true){
-                                return "<p class='center'><span class='glyphicon glyphicon-ok'></span></p>";
+                                var s= row.frais_total+" €";
+                                return s;
+                            } 
+                            return "Non";
+                            
+                        },
+                        "targets": 6
+                    },
+                    {
+                        "render": function ( data, type, row ) {
+                            if(data != null){
+                                return data+" €";
                             }
                             return "";
                         },
-                        "targets": 6
+                        "targets": 7
                     },
                     {
                         "render": function ( data, type, row ) {
@@ -177,7 +190,7 @@
                             return content;
                             
                         },
-                        "targets": 7
+                        "targets": 8
                     }
                 ],
             });

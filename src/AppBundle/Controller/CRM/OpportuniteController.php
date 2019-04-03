@@ -448,7 +448,7 @@ class OpportuniteController extends Controller
 			$em->persist($sousTraitance);
 			$em->flush();
 
-			return $this->redirect($this->generateUrl('crm_opportunite_voir', array(
+			return $this->redirect($this->generateUrl('crm_action_commerciale_voir', array(
 				'id' => $sousTraitance->getOpportunite()->getId()
 			)));
 

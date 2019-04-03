@@ -1,4 +1,4 @@
-createQueryAndGetResult<?php
+<?php
 
 namespace AppBundle\Entity\CRM;
 

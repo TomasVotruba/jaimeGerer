@@ -75,6 +75,13 @@ class OpportuniteSousTraitance
     */
     private $repartitions;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="frais_refacturables", type="boolean", nullable=false)
+     */
+    private $fraisRefacturables = false;
+
 
     /**
      * Constructor
@@ -389,5 +396,28 @@ class OpportuniteSousTraitance
     public function getDepenses()
     {
         return $this->depenses;
+    }
+
+    /**
+     * Set fraisRefacturables
+     *
+     * @param boolean $fraisRefacturables
+     * @return OpportuniteSousTraitance
+     */
+    public function setFraisRefacturables($fraisRefacturables)
+    {
+        $this->fraisRefacturables = $fraisRefacturables;
+
+        return $this;
+    }
+
+    /**
+     * Get fraisRefacturables
+     *
+     * @return boolean 
+     */
+    public function getFraisRefacturables()
+    {
+        return $this->fraisRefacturables;
     }
 }

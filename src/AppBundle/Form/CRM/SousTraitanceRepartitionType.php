@@ -22,16 +22,20 @@ class SousTraitanceRepartitionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-          ->add('date', 'date', array(
-            'years' => range($this->opportunite->getRepartitionStartDate()->format('Y'), $this->opportunite->getRepartitionEndDate()->format('Y')),
-            'required' => true,
-            'input' => 'datetime',
-            'widget' => 'choice',
-          ))
-          ->add('montantMonetaire', 'number', array(
-              'required' => true,
-              'attr' => array('class' => 'align-right montant')
-          ))
+            ->add('date', 'date', array(
+                'years' => range($this->opportunite->getRepartitionStartDate()->format('Y'), $this->opportunite->getRepartitionEndDate()->format('Y')),
+                'required' => true,
+                'input' => 'datetime',
+                'widget' => 'choice',
+            ))
+            ->add('montantMonetaire', 'number', array(
+                'required' => true,
+                'attr' => array('class' => 'align-right montant')
+            ))
+            ->add('fraisMonetaire', 'number', array(
+                'required' => false,
+                'attr' => array('class' => 'align-right montant')
+            ))
         ;
     }
 

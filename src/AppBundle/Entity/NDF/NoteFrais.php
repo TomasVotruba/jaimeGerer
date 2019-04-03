@@ -316,6 +316,10 @@ class NoteFrais
     	return 'NDF '.$this->user->__toString().' '. $this->month.'/'.$this->year.' : '.$this->getTotal().' €';
     }
 
+    public function __toStringSansTotal(){
+        return 'NDF '.$this->user->__toString().' '. $this->month.'/'.$this->year;
+    }
+
     /**
      * Set compteComptable
      *
