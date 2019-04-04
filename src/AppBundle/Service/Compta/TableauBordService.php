@@ -135,13 +135,13 @@ class TableauBordService extends ContainerAware {
     $tableauPredictif = $this->creerTableauPredictif($tableauPrevisonnel, $tableauAccurate, $year);
 
     return array(
-      'arr_prev' => $tableauPrevisonnel,
-      'arr_accurate' => $tableauAccurate,
-      'arr_predictif' => $tableauPredictif,
-      'arr_postes' => $this->arr_postes,
-      'arr_couts_marginaux' => $this->arr_couts_marginaux,
-      'arr_couts_exploitation' => $this->arr_couts_exploitation,
-      'arr_totaux' => $this->arr_totaux,
+        'arr_prev' => $tableauPrevisonnel,
+        'arr_accurate' => $tableauAccurate,
+        'arr_predictif' => $tableauPredictif,
+        'arr_postes' => $this->arr_postes,
+        'arr_couts_marginaux' => $this->arr_couts_marginaux,
+        'arr_couts_exploitation' => $this->arr_couts_exploitation,
+        'arr_totaux' => $this->arr_totaux,
     );
 
   }
@@ -322,6 +322,18 @@ class TableauBordService extends ContainerAware {
             }
         }
 
+         if('ca_mois' == $poste){
+            $arr_prev['frais_public'] = array();
+            $arr_prev['frais_public']['total'] = 0;
+
+            $arr_prev['frais_prive'] = array();
+            $arr_prev['frais_prive']['total'] = 0;
+
+            for($i = 1; $i<=12; $i++){
+                $arr_prev['frais_public'][$i] = 0;
+                $arr_prev['frais_prive'][$i] = 0;
+            }
+        }
         return $arr_prev;
     }
 
@@ -483,6 +495,19 @@ class TableauBordService extends ContainerAware {
             }
             $arr_details[$analytique->getValeur().'_public']['opportunites'] = $this->creerTableauOpportunitesWonAccurate($year, $company, $analytique, 'PUBLIC');
             $arr_details[$analytique->getValeur().'_prive']['opportunites'] = $this->creerTableauOpportunitesWonAccurate($year, $company, $analytique, 'PRIVE');
+
+
+        }
+
+        $arr_details['frais_public'] = array();
+        $arr_details['frais_public']['total'] = 0;
+
+        $arr_details['frais_prive'] = array();
+        $arr_details['frais_prive']['total'] = 0;
+
+        for($i = 1; $i<=12; $i++){
+            $arr_details['frais_public'][$i]['val'] = 0;
+            $arr_details['frais_prive'][$i]['val'] = 0;
         }
 
         $this->arr_totaux['accurate']['ca_mois'] = array();
@@ -514,6 +539,72 @@ class TableauBordService extends ContainerAware {
 
             $this->arr_totaux['accurate']['ca_mois'][$month]+= $opportuniteRepartition->getMontantMonetaire();
             $this->arr_totaux['accurate']['ca_mois']['total']+= $opportuniteRepartition->getMontantMonetaire();
+        }
+
+        $fraisRepo = $this->em->getRepository('AppBundle:CRM\Frais');
+        $arr_frais = $fraisRepo->findForCompanyByYear($company, $year);
+        foreach($arr_frais as $frais){
+            $month = $frais->getDate()->format('n');
+
+            if($frais->getActionCommerciale()->isSecteurPublic()){
+                $arr_details['frais_public'][$month]['val']+= $frais->getMontantHT();
+                $arr_details['frais_public']['total']+= $frais->getMontantHT();
+                
+                $this->arr_totaux['accurate']['ca_mois_repartition'][$month]['public']+= $frais->getMontantHT();
+                $this->arr_totaux['accurate']['ca_mois_repartition']['total']['public']+= $frais->getMontantHT();
+            } else {
+                $arr_details['frais_prive'][$month]['val']+= $frais->getMontantHT();
+                $arr_details['frais_prive']['total']+= $frais->getMontantHT();
+                $this->arr_totaux['accurate']['ca_mois_repartition'][$month]['prive']+= $frais->getMontantHT();
+                $this->arr_totaux['accurate']['ca_mois_repartition']['total']['prive']+= $frais->getMontantHT();
+            }
+
+            $this->arr_totaux['accurate']['ca_mois'][$month]+= $frais->getMontantHT();
+            $this->arr_totaux['accurate']['ca_mois']['total']+= $frais->getMontantHT();
+        }
+
+        $recuRepo = $this->em->getRepository('AppBundle:NDF\Recu');
+        $arr_recus = $recuRepo->findRefacturablesForCompanyByYear($company, $year);
+        foreach($arr_recus as $recu){
+            $month = $recu->getDate()->format('n');
+
+            if($recu->getActionCommerciale()->isSecteurPublic()){
+                $arr_details['frais_public'][$month]['val']+= $recu->getMontantHT();
+                $arr_details['frais_public']['total']+= $recu->getMontantHT();
+                
+                $this->arr_totaux['accurate']['ca_mois_repartition'][$month]['public']+= $recu->getMontantHT();
+                $this->arr_totaux['accurate']['ca_mois_repartition']['total']['public']+= $recu->getMontantHT();
+            } else {
+                $arr_details['frais_prive'][$month]['val']+= $recu->getMontantHT();
+                $arr_details['frais_prive']['total']+= $recu->getMontantHT();
+                $this->arr_totaux['accurate']['ca_mois_repartition'][$month]['prive']+= $recu->getMontantHT();
+                $this->arr_totaux['accurate']['ca_mois_repartition']['total']['prive']+= $recu->getMontantHT();
+            }
+
+            $this->arr_totaux['accurate']['ca_mois'][$month]+= $recu->getMontantHT();
+            $this->arr_totaux['accurate']['ca_mois']['total']+= $recu->getMontantHT();
+        }
+
+        $sousTraitanceRepartitionRepo = $this->em->getRepository('AppBundle:CRM\SousTraitanceRepartition');
+        $arr_sousTraitancesRepartitions = $sousTraitanceRepartitionRepo->findForCompanyByYearHavingFrais($company, $year);
+        foreach($arr_sousTraitancesRepartitions as $sousTraitanceRepartition){
+            $month = $sousTraitanceRepartition->getDate()->format('n');
+
+            if($recu->getActionCommerciale()->isSecteurPublic()){
+                $arr_details['frais_public'][$month]['val']+= $sousTraitanceRepartition->getFraisMonetaire();
+                $arr_details['frais_public']['total']+= $sousTraitanceRepartition->getFraisMonetaire();
+                
+                $this->arr_totaux['accurate']['ca_mois_repartition'][$month]['public']+= $sousTraitanceRepartition->getFraisMonetaire();
+                $this->arr_totaux['accurate']['ca_mois_repartition']['total']['public']+= $sousTraitanceRepartition->getFraisMonetaire();
+            } else {
+                $arr_details['frais_prive'][$month]['val']+= $sousTraitanceRepartition->getFraisMonetaire();
+                $arr_details['frais_prive']['total']+= $sousTraitanceRepartition->getFraisMonetaire();
+                $this->arr_totaux['accurate']['ca_mois_repartition'][$month]['prive']+= $sousTraitanceRepartition->getFraisMonetaire();
+                $this->arr_totaux['accurate']['ca_mois_repartition']['total']['prive']+= $sousTraitanceRepartition->getFraisMonetaire();
+            }
+
+            $this->arr_totaux['accurate']['ca_mois'][$month]+= $sousTraitanceRepartition->getFraisMonetaire();
+            $this->arr_totaux['accurate']['ca_mois']['total']+= $sousTraitanceRepartition->getFraisMonetaire();
         }
 
         return $arr_details;

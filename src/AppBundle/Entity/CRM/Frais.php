@@ -76,6 +76,13 @@ class Frais
      */
     private $produit;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="date", nullable=true)
+     */
+    private $date;
+
 
     /**
      * Get id
@@ -273,5 +280,28 @@ class Frais
     public function getProduit()
     {
         return $this->produit;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     * @return Frais
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime 
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 }

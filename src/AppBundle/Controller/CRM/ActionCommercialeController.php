@@ -21,6 +21,7 @@ use AppBundle\Entity\CRM\DocumentPrix;
 use AppBundle\Entity\Settings;
 use AppBundle\Entity\Rapport;
 use AppBundle\Entity\CRM\PlanPaiement;
+use AppBundle\Entity\CRM\Frais;
 
 use AppBundle\Form\CRM\OpportuniteType;
 use AppBundle\Form\CRM\ActionCommercialeType;
@@ -32,7 +33,7 @@ use AppBundle\Form\CRM\ContactType;
 use AppBundle\Form\SettingsType;
 use AppBundle\Form\CRM\OpportuniteWonBonCommandeType;
 use AppBundle\Form\CRM\OpportuniteWonPlanPaiementType;
-use AppBundle\Form\CRM\ActionCommercialeFraisType;
+use AppBundle\Form\CRM\FraisType;
 
 use \DateTime;
 
@@ -320,15 +321,33 @@ class ActionCommercialeController extends Controller
 	 */
 	public function actionCommercialeVoirAction(Opportunite $actionCommerciale)
 	{
-		$facture = null;
+		$factures = array();
 		if($actionCommerciale->getDevis()){
 			$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
-			$facture = $repository->findByDevis($actionCommerciale->getDevis());
+			$arr_devis = $repository->findByDevis($actionCommerciale->getDevis());
+
+			foreach($arr_devis as $facture){
+				$factures[$facture->getId()] = $facture;
+			}
+
+			foreach($actionCommerciale->getBonsCommande() as $bc){
+				$arr_bc = $repository->findBy(array(
+					'type' => 'FACTURE',
+					'bonCommande' => $bc
+				));
+
+				foreach($arr_bc as $facture){
+					if(!array_key_exists($facture->getId(), $factures)){
+						$factures[$facture->getId()] = $facture;
+					}
+				}
+			}
+			
 		}
 		
 		return $this->render('crm/action-commerciale/crm_action_commerciale_voir.html.twig', array(
 			'opportunite' => $actionCommerciale,
-			'facture' => $facture
+			'facture' => $factures
 		));
 
 	}	
@@ -1363,12 +1382,12 @@ class ActionCommercialeController extends Controller
 	/**
 	 * @Route("/crm/action-commerciale/frais/editer/{id}", name="crm_action_commerciale_frais_editer")
 	 */
-	public function actionCommercialeFraisModifierAction(Opportunite $actionCommerciale)
+	public function actionCommercialeFraisEditerAction(Frais $frais)
 	{
 		
 		$form = $this->createForm(
-			new ActionCommercialeFraisType($this->getUser()->getCompany()),
-			$actionCommerciale
+			new FraisType($this->getUser()->getCompany()),
+			$frais
 		);
 	
 		$request = $this->getRequest();
@@ -1377,21 +1396,54 @@ class ActionCommercialeController extends Controller
 		if ($form->isSubmitted() && $form->isValid()) {
 	
 			$em = $this->getDoctrine()->getManager();
-			$em->persist($actionCommerciale);
+			$em->persist($frais);
 			$em->flush();
 
 			return $this->redirect($this->generateUrl(
 					'crm_action_commerciale_voir',
-					array('id' => $actionCommerciale->getId())
+					array('id' => $frais->getActionCommerciale()->getId())
 			));
 		}
 
 		return $this->render('crm/action-commerciale/crm_action_commerciale_frais_editer.html.twig', array(
 			'form' => $form->createView(),
-			'actionCommerciale' => $actionCommerciale
+			'frais' => $frais
 		));
 	}
 
+	/**
+	 * @Route("/crm/action-commerciale/frais/ajouter/{id}", name="crm_action_commerciale_frais_ajouter")
+	 */
+	public function actionCommercialeFraisAjouterAction(Opportunite $actionCommerciale)
+	{
+		$frais = new Frais();
+		$frais->setActionCommerciale($actionCommerciale);
+		$form = $this->createForm(
+			new FraisType($this->getUser()->getCompany()),
+			$frais
+		);
+	
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+	
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($frais);
+			$em->flush();
+
+			return $this->redirect($this->generateUrl(
+					'crm_action_commerciale_voir',
+					array('id' => $frais->getActionCommerciale()->getId())
+			));
+		}
+
+		return $this->render('crm/action-commerciale/crm_action_commerciale_frais_editer.html.twig', array(
+			'form' => $form->createView(),
+			'frais' => $frais,
+			'ajout' => true
+		));
+	}
 
 
 

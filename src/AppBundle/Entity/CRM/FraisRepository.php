@@ -12,4 +12,20 @@ use Doctrine\ORM\EntityRepository;
  */
 class FraisRepository extends EntityRepository
 {
+	public function findForCompanyByYear($company, $year){
+
+	  	$qb = $this->createQueryBuilder('f')
+	    ->innerJoin('f.actionCommerciale', 'a')
+	    ->innerJoin('a.compte', 'c')
+	    ->where('c.company = :company')
+	    ->andWhere('f.date >= :start')
+	    ->andWhere('f.date <= :end')
+	    ->setParameter('company', $company)
+	    ->setParameter('start', $year.'-01-01')
+	    ->setParameter('end',  $year.'-12-31')
+	    ->addOrderBy('c.nom', 'ASC');
+
+	  	return $qb->getQuery()->getResult();
+	}
+
 }

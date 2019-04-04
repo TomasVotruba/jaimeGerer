@@ -72,9 +72,16 @@ class Frais
 
     /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Produit", mappedBy="frais")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $produit;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="date", nullable=true)
+     */
+    private $date;
 
 
     /**
@@ -250,5 +257,28 @@ class Frais
 
     public function __toString(){
         return $this->nom.' - '.$this->montantHT.' € HT';
+    }
+
+    /**
+     * Set produit
+     *
+     * @param \AppBundle\Entity\CRM\Produit $produit
+     * @return Frais
+     */
+    public function setProduit(\AppBundle\Entity\CRM\Produit $produit = null)
+    {
+        $this->produit = $produit;
+
+        return $this;
+    }
+
+    /**
+     * Get produit
+     *
+     * @return \AppBundle\Entity\CRM\Produit 
+     */
+    public function getProduit()
+    {
+        return $this->produit;
     }
 }

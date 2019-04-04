@@ -12,19 +12,36 @@ use Doctrine\ORM\EntityRepository;
  */
 class SousTraitanceRepartitionRepository extends EntityRepository
 {
-  public function findForCompanyByYear($company, $year){
+    public function findForCompanyByYear($company, $year){
 
-    $qb = $this->createQueryBuilder('r')
-      ->innerJoin('r.opportuniteSousTraitance', 's')
-      ->innerJoin('s.opportunite', 'o')
-      ->innerJoin('o.compte', 'c')
-      ->where('c.company = :company')
-      ->andWhere('r.date >= :start')
-      ->andWhere('r.date <= :end')
-      ->setParameter('company', $company)
-      ->setParameter('start', $year.'-01-01')
-      ->setParameter('end',  $year.'-12-31');
+        $qb = $this->createQueryBuilder('r')
+          ->innerJoin('r.opportuniteSousTraitance', 's')
+          ->innerJoin('s.opportunite', 'o')
+          ->innerJoin('o.compte', 'c')
+          ->where('c.company = :company')
+          ->andWhere('r.date >= :start')
+          ->andWhere('r.date <= :end')
+          ->setParameter('company', $company)
+          ->setParameter('start', $year.'-01-01')
+          ->setParameter('end',  $year.'-12-31');
 
-    return $qb->getQuery()->getResult();
-  }
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findForCompanyByYearHavingFrais($company, $year){
+
+        $qb = $this->createQueryBuilder('r')
+          ->innerJoin('r.opportuniteSousTraitance', 's')
+          ->innerJoin('s.opportunite', 'o')
+          ->innerJoin('o.compte', 'c')
+          ->where('c.company = :company')
+          ->andWhere('r.date >= :start')
+          ->andWhere('r.date <= :end')
+          ->andWhere('r.frais IS NOT NULL')
+          ->setParameter('company', $company)
+          ->setParameter('start', $year.'-01-01')
+          ->setParameter('end',  $year.'-12-31');
+
+        return $qb->getQuery()->getResult();
+    }
 }

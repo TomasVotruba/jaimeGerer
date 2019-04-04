@@ -81,19 +81,6 @@ class ProduitType extends AbstractType
             		'mapped' => false,
             		'disabled' => true,
             		'attr' => array('class' => 'produit-total')
-            ))
-            ->add('frais', 'checkbox', array(
-                'label' => ' ',
-                'required' => false,
-                'attr' => array(
-                    'data-toggle' => 'toggle',
-                    'data-onstyle' => 'success',
-                    'data-offstyle' => 'danger',
-                    'data-on' => 'Oui',
-                    'data-off' => 'Non',
-                    'data-size' => 'mini',
-                    'class' => 'toggle-frais'
-                )
             ));
     }
 

@@ -7,6 +7,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+
 class FraisType extends AbstractType
 {
 
@@ -23,6 +26,8 @@ class FraisType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+
         $builder
            ->add('type', 'entity', array(
                 'class'=>'AppBundle:Settings',
@@ -38,16 +43,17 @@ class FraisType extends AbstractType
                 },
                 'required' => false,
                 'label' => 'Type',
-                'attr' => array('class' => 'produit-type')
+                'attr' => array('class' => 'produit-type'),
+               
             ))
             ->add('nom', 'text', array(
-        		'required' => true,
-            	'label' => 'Nom',
-        	))
+                'required' => true,
+                'label' => 'Nom'
+            ))
             ->add('description', 'textarea', array(
-    			'required' => 'true',
-            	'label' => 'Description'
-        	))
+                'required' => 'true',
+                'label' => 'Description'
+            ))
             ->add('montantHT', 'number', array(
                'required' => true,
                'label' => 'Montant HT (€)',
@@ -65,8 +71,17 @@ class FraisType extends AbstractType
                 'label' => 'Montant TTC (€)',
                 'precision' => 2,
                 'attr' => array('class' => 'montant-ttc')
-             ))
+            ))
+            ->add('date', 'date', array('widget' => 'single_text',
+              'input' => 'datetime',
+              'format' => 'dd/MM/yyyy',
+              'attr' => array('class' => 'dateInput'),
+              'required' => true,
+              'label' => 'Date'
+            ))
         ;
+
+       
     }
 
     /**

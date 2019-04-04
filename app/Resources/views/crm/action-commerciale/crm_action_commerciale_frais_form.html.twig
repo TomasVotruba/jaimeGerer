@@ -4,6 +4,7 @@
         <thead>
                 <th class="produit-input-type">{{ form_label(form.type) }}</td>
                 <th class="produit-input-nom">{{ form_label(form.nom) }}</td>
+                <th class="produit-input-nom">{{ form_label(form.date) }}</td>
                 <th class="frais-input-number">{{ form_label(form.montantHT) }}</td>
                 <th class="frais-input-number">{{ form_label(form.tva) }}</td>
                 <th class="frais-input-number">{{ form_label(form.montantTTC) }}</td>
@@ -20,6 +21,11 @@
                 <td class="produit-input-nom">
                     <div class="form-group">
                         {{ form_widget(form.nom) }}
+                    <div class="form-group">
+                </td>
+                <td class="produit-input-nom">
+                    <div class="form-group">
+                        {{ form_widget(form.date) }}
                     <div class="form-group">
                 </td>
                 <td class="frais-input-number">

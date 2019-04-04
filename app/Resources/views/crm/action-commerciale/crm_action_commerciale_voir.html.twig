@@ -53,7 +53,7 @@
 	    			    	</a>
 
 	    			    	{% if facture|length == 1 %}
-	    						<a href="{{ path('crm_facture_voir', {'id' : facture.0.id }) }}"  class="btn btn-primary btn-block-mobile">
+	    						<a href="{{ path('crm_facture_voir', {'id' : facture|first.id }) }}"  class="btn btn-primary btn-block-mobile">
 	    							<span class="glyphicon glyphicon-eye-open"></span> Voir la facture
 	    						</a>
 	    					{% elseif facture|length > 1 %}
@@ -544,7 +544,7 @@
 					<hr />
 					<h3>Frais refacturables
 						{% if true == opportunite.hasFraisRefacturables %}
-							<a href="{{ path('crm_action_commerciale_frais_editer', {'id' : opportunite.id }) }}" class="btn btn-xs btn-primary">Ajouter des frais</a>
+							<a href="{{ path('crm_action_commerciale_frais_ajouter', {'id' : opportunite.id }) }}" class="btn btn-xs btn-primary">Ajouter des frais</a>
 
 							{% if opportunite.totalFraisNonFactures > 0 %}
 								<a href="{{ path('crm_action_commerciale_facturer_frais', {'id' : opportunite.id }) }}" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modal">Facturer les frais</a>
@@ -563,15 +563,15 @@
 
 				<div class="row">
 
-					<div class="col-md-1 center">
+					<div class="col-md-2 center">
 						<p>Total</p>
 						<p class="xl">{{ opportunite.totalFrais|number_format(2, ',', ' ') }} €</p>
 					</div>
-					<div class="col-md-1 center">
+					<div class="col-md-2 center">
 						<p>Total facturé</p>
 						<p class="xl">{{ opportunite.totalFraisFactures|number_format(2, ',', ' ') }} €</p>
 					</div>
-					<div class="col-md-1 center">
+					<div class="col-md-2 center">
 						<p>Reste à facturer</p>
 						<p class="xl">{{ opportunite.totalFraisNonFactures|number_format(2, ',', ' ') }} €</p>
 					</div>
@@ -583,6 +583,7 @@
 								<tr>
 									<th>Type</th>
 									<th>Libelle</th>
+									<th>Date</th>
 									<th>Montant (HT)</th>
 									{# <th>Montant TVA</th>
 									<th>Montant TTC</th> #}
@@ -602,6 +603,9 @@
 										{{ frais.description }}
 									</td>
 									<td>
+										{{ frais.date|date('d/m/Y') }}
+									</td>
+									<td>
 										{{ frais.montantHT|number_format(2,',', ' ') }} €
 									</td>
 									{# <td>
@@ -618,7 +622,7 @@
 									</td>
 									<td>
 										{% if false == frais.produit %}
-											<a href="{{ path('crm_action_commerciale_frais_editer', {'id' : opportunite.id }) }}" class="btn btn-xs btn-primary">
+											<a href="{{ path('crm_action_commerciale_frais_editer', {'id' : frais.id }) }}" class="btn btn-xs btn-primary">
 												<span class="glyphicon glyphicon-pencil"></span>
 											</a>
 										{% else %}
@@ -637,6 +641,9 @@
 									<td>
 										{{ recu.ligneDepense.depense.noteFrais.__toStringSansTotal }}<br />
 										{{ recu.fournisseur }}
+									</td>
+									<td>
+										{{ recu.date|date('d/m/Y') }}
 									</td>
 									<td>
 										{{ recu.montantHT|number_format(2,',', ' ') }} €
@@ -668,6 +675,9 @@
 									<td>
 										{{ fraisSousTraitant.opportuniteSousTraitance.sousTraitant }}<br />
 										{{ fraisSousTraitant.date|date('m/Y') }}
+									</td>
+									<td>
+										{{ fraisSousTraitant.date|date('d/m/Y') }}
 									</td>
 									<td>
 										{{ fraisSousTraitant.fraisMonetaire|number_format(2,',', ' ') }} €

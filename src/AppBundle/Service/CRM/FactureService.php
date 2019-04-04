@@ -86,7 +86,11 @@ class FactureService extends ContainerAware {
                     $produit->setNom($frais->getNom());
                     $produit->setDescription($frais->getDescription());
                     $produit->setType($frais->getType());
-                    $produit->setTarifUnitaire($frais->getMontantHT());
+                    if($facture->getAnalytique()->getValeur() == 'FC'){
+                        $produit->setTarifUnitaire($frais->getMontantTTC());
+                    } else {
+                        $produit->setTarifUnitaire($frais->getMontantHT());
+                    }
                     $produit->setQuantite(1);
                     $produit->setFrais($frais);
 
@@ -104,7 +108,11 @@ class FactureService extends ContainerAware {
                     $produit->setNom('Frais '.$recu->getUser()->__toString());
                     $produit->setDescription($recu->getFournisseur());
                     $produit->setType($recu->getAnalytique());
-                    $produit->setTarifUnitaire($recu->getMontantHT());
+                    if($facture->getAnalytique()->getValeur() == 'FC'){
+                        $produit->setTarifUnitaire($recu->getMontantTTC());
+                    } else {
+                        $produit->setTarifUnitaire($recu->getMontantHT());
+                    }
                     $produit->setQuantite(1);
                     $produit->setRecu($recu);
 
