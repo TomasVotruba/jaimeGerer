@@ -37,8 +37,7 @@
 		    	<div class="col-md-12">
 		    		<p>
 		    			<a href="#contacts">Contacts de cette organisation</a> - 
-		    			<a href="#opportunites">Opportunités de cette organisation</a> - 
-		    			<a href="#devis">Devis pour cette organisation</a> - 
+		    			<a href="#opportunites">Actions commerciales de cette organisation</a> - 
 		    			<a href="#factures">Factures pour cette organisation</a>
 		    		</p>
 		    	</div>
@@ -322,7 +321,6 @@
 	  
 	  {{ include('crm/contact/crm_contact_liste_part.html.twig', {'arr_contacts': arr_contacts, 'div_id': 'table_contacts'}) }}
 	  {{ include('crm/opportunite/crm_opportunite_liste_part.html.twig', {'arr_opportunites': arr_opportunites, 'div_id': 'table_opportunites'}) }}
-	  {{ include('crm/devis/crm_devis_liste_part.html.twig', {'arr_devis': arr_devis, 'div_id': 'table_devis'}) }}
 	  {{ include('crm/facture/crm_facture_liste_part.html.twig', {'arr_facture': arr_factures, 'div_id': 'table_factures'}) }}
       
 {% endblock %}

@@ -41,7 +41,6 @@
 	    <div class="col-md-12 hidden-xs">
     		<p>
     			<a href="#opportunites">Actions commerciales du contact</a> - 
-    			<a href="#devis">Anciens devis du contact</a> - 
     			<a href="#factures">Factures du contact</a> - 
     			<a href="#prises_contact">Historique des prises de contact</a> -
     			<a href="#emailings">Historique des emailings</a>
@@ -496,7 +495,6 @@
 	   </div>
 
 	  {{ include('crm/opportunite/crm_opportunite_liste_part.html.twig', {'arr_opportunites': arr_opportunites, 'div_id': 'table_opportunites', 'id_to_use': contact.id, 'id_origine_type': 'contact'}) }}
-	  {{ include('crm/devis/crm_devis_liste_part.html.twig', {'arr_devis': arr_devis, 'div_id': 'table_devis'}) }}
 	  {{ include('crm/facture/crm_facture_liste_part.html.twig', {'arr_facture': arr_factures, 'div_id': 'table_factures'}) }}
   	  {{ include('crm/priseContact/crm_prise_contact_liste_part.html.twig', {'contact': contact, 'div_id': 'table_prises_contact'}) }}
 {% endblock %}

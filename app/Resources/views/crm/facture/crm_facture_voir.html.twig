@@ -174,9 +174,7 @@
                         <td>Numéro de devis</td>
                         <td id="facture-num-devis">
                             {% if facture.devis is not null %}
-                                <a href="{{ path('crm_devis_voir', {'id' : facture.devis.id }) }}" ​data-toggle="tooltip-btn-xs" title="Voir">
-                                    {{ facture.devis.num  }}
-                                </a>
+                                {{ facture.devis.num  }}
                             {% else %}
                                 -
                             {% endif %}
