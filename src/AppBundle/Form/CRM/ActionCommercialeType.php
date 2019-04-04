@@ -34,6 +34,8 @@ class ActionCommercialeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $data = $builder->getData();
+
 
         $builder
             ->add('nom', 'text', array(
@@ -155,7 +157,7 @@ class ActionCommercialeType extends AbstractType
                     'PUBLIC' => 'Public',
                     'PRIVE' => 'Privé'
                 ),
-                'data' => $this->compte ? $this->compte->getPriveOrPublic() : null
+                'data' => $data->getPriveOrPublic() != null ?  $data->getPriveOrPublic() : ($this->compte ? $this->compte->getPriveOrPublic() : null)
             ))
             ->add('analytique', 'entity', array(
                 'class'=> 'AppBundle\Entity\Settings',
