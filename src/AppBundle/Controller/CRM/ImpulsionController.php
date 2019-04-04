@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use AppBundle\Entity\CRM\Impulsion;
 use AppBundle\Entity\CRM\Compte;
+use AppBundle\Entity\CRM\Opportunite;
 use AppBundle\Entity\CRM\Contact;
 use AppBundle\Entity\CRM\PriseContact;
 
@@ -237,6 +238,56 @@ class ImpulsionController extends Controller
 			'contact' => $priseContact->getContact(),
 			'screen' => $screen,
 			'action' => $this->generateUrl('crm_impulsion_check', array('id' => $impulsion->getId(), 'screen' => $screen))
+		));
+	}
+
+	/**
+	 * @Route("/crm/impulsion/ajouter-action-commerciale/{id}", name="crm_impulsion_ajouter_action_commerciale")
+	 */
+	public function impulsionAjouterActionCommercialeAction(Opportunite $actionCommerciale)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$impulsion = new Impulsion();
+
+		$impulsion->setUser($this->getUser());
+		$impulsion->setDateCreation(new \DateTime(date('Y-m-d')));
+
+		if($actionCommerciale->getContact()){
+			$impulsion->setContact($actionCommerciale->getContact()->getId());
+		}
+		$impulsion->setInfos('Suivi action commerciale : '.$actionCommerciale->getNom());
+		
+		$form = $this->createForm(new ImpulsionType(
+				$impulsion->getUser()->getId(),
+				$this->getUser()->getCompany()->getId()
+		), $impulsion);
+		
+		if($actionCommerciale->getContact()){
+			$form->get('contact_name')->setData($actionCommerciale->getContact()->__toString());
+		}
+		
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+	
+		if ($form->isSubmitted() && $form->isValid() ) {
+
+			$em = $this->getDoctrine()->getManager();
+			$data = $form->getData();
+			$impulsion->setContact($em->getRepository('AppBundle:CRM\Contact')->findOneById($data->getContact()));
+			
+			$em->persist($impulsion);
+			$em->flush();
+	
+			return $this->redirect($this->generateUrl('crm_action_commerciale_voir', array(
+				'id' => $actionCommerciale->getId()
+			)));
+		}
+		
+		return $this->render('crm/impulsion/crm_impulsion_ajouter.html.twig', array(
+			'form' => $form->createView(),
+			'action' => $this->generateUrl('crm_impulsion_ajouter_action_commerciale', array(
+				'id' => $actionCommerciale->getId()
+			)),
 		));
 	}
 

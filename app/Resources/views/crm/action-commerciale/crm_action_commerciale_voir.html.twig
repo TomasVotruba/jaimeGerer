@@ -64,7 +64,7 @@
 	    		    	{% endif %}
 	    		    {% endif %}
 
-			    	<a href="{{ path('crm_devis_impulsion', {'id' : opportunite.devis.id }) }}"  class="btn hidden-xs {% if (opportunite.devis.contact is null) %} btn-default not-active {% else %} {% if opportunite.devis.contact.email is null %} btn-default not-active {% else %} btn-primary {% endif %}{% endif %}"  data-toggle="modal" data-target="#modal">
+			    	<a href="{{ path('crm_impulsion_ajouter_action_commerciale', {'id' : opportunite.id }) }}"  class="btn hidden-xs {% if (opportunite.contact is null) %} btn-default not-active {% else %} btn-primary {% endif %}" >
 				    	<span class="glyphicon glyphicon-time"></span> Ajouter un suivi
 				    </a>
 				    
