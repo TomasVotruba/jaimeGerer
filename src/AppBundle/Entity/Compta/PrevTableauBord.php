@@ -68,6 +68,13 @@ class PrevTableauBord
      */
     private $company;
 
+      /**
+     * @var boolean
+     *
+     * @ORM\Column(name="frais", type="boolean", nullable=false)
+     */
+    private $frais = false;
+
 
     /**
      * Get id
@@ -258,5 +265,28 @@ class PrevTableauBord
     public function getPriveOrPublic()
     {
         return $this->priveOrPublic;
+    }
+
+    /**
+     * Set frais
+     *
+     * @param boolean $frais
+     * @return PrevTableauBord
+     */
+    public function setFrais($frais)
+    {
+        $this->frais = $frais;
+
+        return $this;
+    }
+
+    /**
+     * Get frais
+     *
+     * @return boolean 
+     */
+    public function getFrais()
+    {
+        return $this->frais;
     }
 }

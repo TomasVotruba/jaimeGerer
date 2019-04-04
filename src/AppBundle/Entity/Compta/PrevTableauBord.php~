@@ -55,11 +55,25 @@ class PrevTableauBord
      */
     private $analytique;
 
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="prive_or_public", type="string", length=6, nullable=true)
+     */
+    private $priveOrPublic;
+
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Company")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $company;
+
+      /**
+     * @var boolean
+     *
+     * @ORM\Column(name="frais", type="boolean", nullable=false)
+     */
+    private $frais = false;
 
 
     /**
@@ -228,5 +242,28 @@ class PrevTableauBord
     public function setMontantMonetaire($montant)
     {
         return $this->montant = $montant*100;
+    }
+
+    /**
+     * Set priveOrPublic
+     *
+     * @param string $priveOrPublic
+     * @return PrevTableauBord
+     */
+    public function setPriveOrPublic($priveOrPublic)
+    {
+        $this->priveOrPublic = $priveOrPublic;
+
+        return $this;
+    }
+
+    /**
+     * Get priveOrPublic
+     *
+     * @return string 
+     */
+    public function getPriveOrPublic()
+    {
+        return $this->priveOrPublic;
     }
 }

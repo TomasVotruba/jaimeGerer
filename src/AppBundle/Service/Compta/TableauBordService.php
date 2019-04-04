@@ -332,7 +332,47 @@ class TableauBordService extends ContainerAware {
             for($i = 1; $i<=12; $i++){
                 $arr_prev['frais_public'][$i] = 0;
                 $arr_prev['frais_prive'][$i] = 0;
+
+                $arr_saved = $prevRepo->findBy(array(
+                    'company' => $company,
+                    'poste' => $poste,
+                    'annee' => $year,
+                    'mois' => $i,
+                    'analytique' => null,
+                    'priveOrPublic' => 'PRIVE',
+                    'frais' => true
+                ));
+
+                foreach($arr_saved as $prevPrive){
+                    $arr_prev['frais_prive'][$i]+= $prevPrive->getMontantMonetaire();
+                    $arr_prev['frais_prive']['total']+= $prevPrive->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste][$i]+= $prevPrive->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste]['total']+= $prevPrive->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste.'_repartition'][$i]['prive']+= $prevPrive->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste.'_repartition']['total']['prive']+= $prevPrive->getMontantMonetaire();
+                }
+
+                $arr_saved = $prevRepo->findBy(array(
+                    'company' => $company,
+                    'poste' => $poste,
+                    'annee' => $year,
+                    'mois' => $i,
+                    'analytique' => null,
+                    'priveOrPublic' => 'PUBLIC',
+                    'frais' => true
+                ));
+
+                foreach($arr_saved as $prevPublic){
+                    $arr_prev['frais_public'][$i]+= $prevPublic->getMontantMonetaire();
+                    $arr_prev['frais_public']['total']+= $prevPublic->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste][$i]+= $prevPublic->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste]['total']+= $prevPublic->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste.'_repartition'][$i]['public']+= $prevPublic->getMontantMonetaire();
+                    $this->arr_totaux['prev'][$poste.'_repartition']['total']['public']+= $prevPublic->getMontantMonetaire();
+                }
             }
+
+            
         }
         return $arr_prev;
     }
@@ -1185,7 +1225,8 @@ class TableauBordService extends ContainerAware {
   public function ajouterPrevisionnel($valeur, $annee, $mois, $poste, $analytiqueVal, $priveOrPublic, $company){
 
     $analytique = null;
-    if($analytiqueVal !== 0){
+
+    if($analytiqueVal !== 0 && 'frais' != $analytiqueVal){
       $settingsRepo = $this->em->getRepository('AppBundle:Settings');
       $analytique = $settingsRepo->findOneBy(array(
         'company' => $company,
@@ -1194,15 +1235,38 @@ class TableauBordService extends ContainerAware {
       ));
     }
 
+    $frais = 0;
+    if('frais' == $analytiqueVal){
+        $frais = 1;
+    }
+
+    $arr_paramsQuery = array(
+        'annee' => $annee,
+        'mois' => $mois,
+        'poste' => $poste,
+        'company' => $company,
+        'frais' => $frais
+    );
+
+    if($priveOrPublic!=0){
+        $arr_paramsQuery['priveOrPublic'] = $priveOrPublic;
+    }
+
+    if($analytique){
+        $arr_paramsQuery['analytique'] = $analytique;
+    }
+
     $prevRepo = $this->em->getRepository('AppBundle:Compta\PrevTableauBord');
-    $prev = $prevRepo->findOneBy(array(
-      'annee' => $annee,
-      'mois' => $mois,
-      'poste' => $poste,
-      'company' => $company,
-      'analytique' => $analytique?$analytique:null,
-      'priveOrPublic' => $priveOrPublic!=0?$priveOrPublic:null
-    ));
+    $prev = $prevRepo->findOneBy($arr_paramsQuery);
+
+
+    dump($annee);
+    dump($mois);
+    dump($poste);
+    dump($company);
+    dump($analytique);
+    dump($priveOrPublic);
+    dump($frais);
 
     if(!$prev){
       $prev = new PrevTableauBord();
@@ -1210,6 +1274,7 @@ class TableauBordService extends ContainerAware {
       $prev->setMois($mois);
       $prev->setPoste($poste);
       $prev->setCompany($company);
+      $prev->setFrais($frais);
 
       if($analytique){
         $prev->setAnalytique($analytique);
@@ -1221,7 +1286,6 @@ class TableauBordService extends ContainerAware {
     }
 
     $prev->setMontantMonetaire($valeur);
-
     $this->em->persist($prev);
     $this->em->flush();
     return $prev;
