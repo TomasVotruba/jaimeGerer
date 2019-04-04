@@ -331,4 +331,198 @@ class OpportuniteService extends ContainerAware {
         return $arr_total;
     }
 
+    public function getDataChartTempsCommercialeAnalytique($company, $year){
+
+        $settingsRepo = $this->em->getRepository('AppBundle:Settings');
+        $arr_analytiques = $settingsRepo->findBy(array(
+          'company' => $company,
+          'parametre' => 'analytique',
+          'module' => 'CRM'
+        ));
+
+        $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
+       
+
+        $arr_temps = array();
+        foreach($arr_analytiques as $analytique){
+            $arr_temps[$analytique->getValeur()] = 0;
+
+            $arr_opportunite = $opportuniteRepo->findForCompanyByYearAndAnalytiqueHavingTempsCommercial($company, $year, $analytique);
+            $tempsTotal = 0;
+            $nbActions = 0;
+            foreach($arr_opportunite as $opportunite){
+                $tempsTotal+= $opportunite->getTempsCommercial();
+                $nbActions++; 
+            }
+            if($tempsTotal > 0){
+                $arr_temps[$analytique->getValeur()] = $tempsTotal/$nbActions;
+            }
+        }
+
+        return $arr_temps;
+    }
+
+    public function getDataChartTempsCommercialeAO($company, $year){
+
+        $settingsRepo = $this->em->getRepository('AppBundle:Settings');
+        $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
+       
+
+        $arr_temps = array();
+        
+        $arr_temps['AO'] = 0;
+        $arr_temps['Pas AO'] = 0;
+
+        $arr_opportunite = $opportuniteRepo->findForCompanyByYearAndAOHavingTempsCommercial($company, $year, true);
+        $tempsTotal = 0;
+        $nbActions = 0;
+        foreach($arr_opportunite as $opportunite){
+            $tempsTotal+= $opportunite->getTempsCommercial();
+            $nbActions++; 
+        }
+        if($tempsTotal > 0){
+            $arr_temps['AO'] = $tempsTotal/$nbActions;
+        }
+
+        $arr_opportunite = $opportuniteRepo->findForCompanyByYearAndAOHavingTempsCommercial($company, $year, false);
+        $tempsTotal = 0;
+        $nbActions = 0;
+        foreach($arr_opportunite as $opportunite){
+            $tempsTotal+= $opportunite->getTempsCommercial();
+            $nbActions++; 
+        }
+        if($tempsTotal > 0){
+            $arr_temps['Pas AO'] = $tempsTotal/$nbActions;
+        }
+        
+        return $arr_temps;
+    }
+
+    public function getDataChartTempsCommercialeAnalytiqueRepartition($company, $year){
+
+        $settingsRepo = $this->em->getRepository('AppBundle:Settings');
+        $arr_analytiques = $settingsRepo->findBy(array(
+            'company' => $company,
+            'parametre' => 'analytique',
+            'module' => 'CRM'
+        ));
+
+        $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
+       
+        $arr_temps = array();
+        foreach($arr_analytiques as $analytique){
+            $arr_temps[$analytique->getValeur()] = 0;
+
+            $arr_opportunite = $opportuniteRepo->findForCompanyByYearAndAnalytiqueHavingTempsCommercial($company, $year, $analytique);
+            $tempsTotal = 0;
+            foreach($arr_opportunite as $opportunite){
+                $tempsTotal+= $opportunite->getTempsCommercial();
+            }
+            if($tempsTotal > 0){
+                $arr_temps[$analytique->getValeur()] = $tempsTotal;
+            }
+        }
+        return $arr_temps;
+    }
+
+    public function getDataChartTempsCommercialeAORepartition($company, $year){
+
+        $settingsRepo = $this->em->getRepository('AppBundle:Settings');
+        $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
+       
+
+        $arr_temps = array();
+        
+        $arr_temps['AO'] = 0;
+        $arr_temps['Pas AO'] = 0;
+
+        $arr_opportunite = $opportuniteRepo->findForCompanyByYearAndAOHavingTempsCommercial($company, $year, true);
+        $tempsTotal = 0;
+        foreach($arr_opportunite as $opportunite){
+            $tempsTotal+= $opportunite->getTempsCommercial();
+        }
+        if($tempsTotal > 0){
+            $arr_temps['AO'] = $tempsTotal;
+        }
+
+        $arr_opportunite = $opportuniteRepo->findForCompanyByYearAndAOHavingTempsCommercial($company, $year, false);
+        $tempsTotal = 0;
+        foreach($arr_opportunite as $opportunite){
+            $tempsTotal+= $opportunite->getTempsCommercial();
+        }
+        if($tempsTotal > 0){
+            $arr_temps['Pas AO'] = $tempsTotal;
+        }
+        
+        return $arr_temps;
+    }
+
+    public function getDataChartTempsCommercialePrivePublic($company, $year){
+
+        $settingsRepo = $this->em->getRepository('AppBundle:Settings');
+        $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
+       
+
+        $arr_temps = array();
+        
+        $arr_temps['Privé'] = 0;
+        $arr_temps['Public'] = 0;
+
+        $arr_opportunite = $opportuniteRepo->findForCompanyByYearPrivePublicHavingTempsCommercial($company, $year, 'PRIVE');
+        $tempsTotal = 0;
+        $nbActions = 0;
+        foreach($arr_opportunite as $opportunite){
+            $tempsTotal+= $opportunite->getTempsCommercial();
+            $nbActions++; 
+        }
+        if($tempsTotal > 0){
+            $arr_temps['Privé'] = $tempsTotal/$nbActions;
+        }
+
+        $arr_opportunite = $opportuniteRepo->findForCompanyByYearPrivePublicHavingTempsCommercial($company, $year, 'PUBLIC');
+        $tempsTotal = 0;
+        $nbActions = 0;
+        foreach($arr_opportunite as $opportunite){
+            $tempsTotal+= $opportunite->getTempsCommercial();
+            $nbActions++; 
+        }
+        if($tempsTotal > 0){
+            $arr_temps['Public'] = $tempsTotal/$nbActions;
+        }
+        
+        return $arr_temps;
+    }
+
+    public function getDataChartTempsCommercialePrivePublicRepartition($company, $year){
+
+        $settingsRepo = $this->em->getRepository('AppBundle:Settings');
+        $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
+       
+
+        $arr_temps = array();
+        
+        $arr_temps['Privé'] = 0;
+        $arr_temps['Public'] = 0;
+
+        $arr_opportunite = $opportuniteRepo->findForCompanyByYearPrivePublicHavingTempsCommercial($company, $year, 'PRIVE');
+        $tempsTotal = 0;
+        foreach($arr_opportunite as $opportunite){
+            $tempsTotal+= $opportunite->getTempsCommercial();
+        }
+        if($tempsTotal > 0){
+            $arr_temps['Privé'] = $tempsTotal;
+        }
+
+        $arr_opportunite = $opportuniteRepo->findForCompanyByYearPrivePublicHavingTempsCommercial($company, $year, 'PUBLIC');
+        $tempsTotal = 0;
+        foreach($arr_opportunite as $opportunite){
+            $tempsTotal+= $opportunite->getTempsCommercial();
+        }
+        if($tempsTotal > 0){
+            $arr_temps['Public'] = $tempsTotal;
+        }
+        
+        return $arr_temps;
+    }
+
 }

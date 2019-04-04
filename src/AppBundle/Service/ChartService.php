@@ -165,4 +165,208 @@ class ChartService extends ContainerAware {
         return $colChart;
     }
 
+     /**
+    * Crée le graphique du temps commercial des opportunités par analytique
+    *
+    * @return ColumnChart
+    */
+     public function actionsCoTempsCommercialeAnalytique($arr_data)
+     {
+         $colChart = new ColumnChart();
+
+         $arrayDataTable = array(
+             ['Type', 'Temps moyen par action commerciale (en heure)' ]
+         );
+         foreach($arr_data as $analytique => $data){
+             if($analytique != "FG" ){
+                 $arrayDataTable[] = [
+                     $analytique, 
+                     $data, 
+                     
+                 ];
+             }
+        }
+
+         $colChart->getData()->setArrayToDataTable($arrayDataTable);
+         $colChart->getOptions()->setColors(array('#ec741b'));
+         $colChart->getOptions()->getLegend()->setPosition('top');
+
+         return $colChart;
+     }
+
+     /**
+    * Crée le graphique du temps commercial des opportunités par AO/pas AO
+    *
+    * @return ColumnChart
+    */
+     public function actionsCoTempsCommercialeAO($arr_data)
+     {
+         $colChart = new ColumnChart();
+
+         $arrayDataTable = array(
+             ['Type', 'Temps moyen par action commerciale (en heure)' ]
+         );
+         foreach($arr_data as $type => $data){
+            $arrayDataTable[] = [
+                $type, 
+                $data, 
+            ];
+        }
+
+         $colChart->getData()->setArrayToDataTable($arrayDataTable);
+         $colChart->getOptions()->setColors(array('#ec741b'));
+         $colChart->getOptions()->getLegend()->setPosition('top');
+
+         return $colChart;
+    }
+
+    /**
+    * Crée le graphique de la repartition du temps commercial par analytique
+    *
+    * @return PieChart
+    */
+     public function actionsCoTempsCommercialeAnalytiqueRepartition($arr_data)
+     {
+         $pieChart = new PieChart();
+
+         //set data
+         $arrayDataTable = [
+            ['Type', 'Temps passé'],
+         ];
+        foreach($arr_data as $type => $data){
+            $arrayDataTable[] = [
+                $type, 
+                $data, 
+            ];
+        }
+        $pieChart->getData()->setArrayToDataTable($arrayDataTable);
+            
+
+         //chart area
+         $pieChart->getOptions()->getChartArea()
+           ->setHeight('90%')
+           ->setWidth('100%');
+
+         $pieChart->getOptions()->setHeight(250)
+                                ->setWidth(250);
+
+         //legend
+        // $pieChart->getOptions()->getLegend()->setPosition('bottom');
+
+         //other options
+         $pieChart->getOptions()
+           ->setPieHole(0.4)
+           ->setColors(array('#ec741b', '#00a7d6', '#e32283', '#bfce00', '#a03488', '9e928f'));
+
+         return $pieChart;
+    }
+
+
+    /**
+    * Crée le graphique de la repartition du temps commercial par AO/pas AO
+    *
+    * @return PieChart
+    */
+     public function actionsCoTempsCommercialeAORepartition($arr_data)
+     {
+         $pieChart = new PieChart();
+
+         //set data
+         $arrayDataTable = [
+            ['Type', 'Temps passé'],
+         ];
+        foreach($arr_data as $type => $data){
+            $arrayDataTable[] = [
+                $type, 
+                $data, 
+            ];
+        }
+        $pieChart->getData()->setArrayToDataTable($arrayDataTable);
+            
+
+         //chart area
+         $pieChart->getOptions()->getChartArea()
+           ->setHeight('90%')
+           ->setWidth('100%');
+
+         $pieChart->getOptions()->setHeight(250)
+                                ->setWidth(250);
+
+         //legend
+        // $pieChart->getOptions()->getLegend()->setPosition('bottom');
+
+         //other options
+         $pieChart->getOptions()
+           ->setPieHole(0.4)
+           ->setColors(array('#ec741b', '#00a7d6', '#e32283', '#bfce00', '#a03488', '9e928f'));
+
+         return $pieChart;
+    }
+    
+     /**
+    * Crée le graphique du temps commercial des opportunités par privé ou public
+    *
+    * @return ColumnChart
+    */
+     public function actionsCoTempsCommercialePrivePublic($arr_data)
+     {
+         $colChart = new ColumnChart();
+
+         $arrayDataTable = array(
+             ['Type', 'Temps moyen par action commerciale (en heure)' ]
+         );
+         foreach($arr_data as $type => $data){
+            $arrayDataTable[] = [
+                $type, 
+                $data, 
+            ];
+        }
+
+         $colChart->getData()->setArrayToDataTable($arrayDataTable);
+         $colChart->getOptions()->setColors(array('#ec741b'));
+         $colChart->getOptions()->getLegend()->setPosition('top');
+
+         return $colChart;
+    }
+
+    /**
+    * Crée le graphique de la repartition du temps commercial privé/public
+    *
+    * @return PieChart
+    */
+     public function actionsCoTempsCommercialePrivePublicRepartition($arr_data)
+     {
+         $pieChart = new PieChart();
+
+         //set data
+         $arrayDataTable = [
+            ['Type', 'Temps passé'],
+         ];
+        foreach($arr_data as $type => $data){
+            $arrayDataTable[] = [
+                $type, 
+                $data, 
+            ];
+        }
+        $pieChart->getData()->setArrayToDataTable($arrayDataTable);
+            
+
+         //chart area
+         $pieChart->getOptions()->getChartArea()
+           ->setHeight('90%')
+           ->setWidth('100%');
+
+         $pieChart->getOptions()->setHeight(250)
+                                ->setWidth(250);
+
+         //legend
+        // $pieChart->getOptions()->getLegend()->setPosition('bottom');
+
+         //other options
+         $pieChart->getOptions()
+           ->setPieHole(0.4)
+           ->setColors(array('#ec741b', '#00a7d6', '#e32283', '#bfce00', '#a03488', '9e928f'));
+
+         return $pieChart;
+    }
 }

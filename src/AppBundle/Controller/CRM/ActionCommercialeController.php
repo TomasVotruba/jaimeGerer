@@ -190,6 +190,23 @@ class ActionCommercialeController extends Controller
 		$dataChartActionsCoRhoneAlpes3Mois = $opportuniteService->getDataChartActionsCoRhoneAlpes3Mois($this->getUser()->getCompany(), date('Y'));		
 		$chartActionsCoRhoneAlpes3Mois = $chartService->actionsCoRhoneAlpes($dataChartActionsCoRhoneAlpes3Mois);
 
+		$dataChartTempsCommercialeAnalytique = $opportuniteService->getDataChartTempsCommercialeAnalytique($this->getUser()->getCompany(), date('Y'));	
+		$chartTempsCommercialeAnalytique = $chartService->actionsCoTempsCommercialeAnalytique($dataChartTempsCommercialeAnalytique);
+
+		$dataChartTempsCommercialeAO = $opportuniteService->getDataChartTempsCommercialeAO($this->getUser()->getCompany(), date('Y'));	
+		$chartTempsCommercialeAO = $chartService->actionsCoTempsCommercialeAO($dataChartTempsCommercialeAO);
+
+		$dataChartTempsCommercialeAnalytiqueRepartition = $opportuniteService->getDataChartTempsCommercialeAnalytiqueRepartition($this->getUser()->getCompany(), date('Y'));	
+		$chartTempsCommercialeAnalytiqueRepartition = $chartService->actionsCoTempsCommercialeAnalytiqueRepartition($dataChartTempsCommercialeAnalytiqueRepartition);
+
+		$dataChartTempsCommercialeAORepartition = $opportuniteService->getDataChartTempsCommercialeAORepartition($this->getUser()->getCompany(), date('Y'));	
+		$chartTempsCommercialeAORepartition = $chartService->actionsCoTempsCommercialeAORepartition($dataChartTempsCommercialeAORepartition);
+
+		$dataChartTempsCommercialePrivePublic = $opportuniteService->getDataChartTempsCommercialePrivePublic($this->getUser()->getCompany(), date('Y'));	
+		$chartTempsCommercialePrivePublic = $chartService->actionsCoTempsCommercialePrivePublic($dataChartTempsCommercialePrivePublic);
+
+		$dataChartTempsCommercialePrivePublicRepartition = $opportuniteService->getDataChartTempsCommercialePrivePublicRepartition($this->getUser()->getCompany(), date('Y'));	
+		$chartTempsCommercialePrivePublicRepartition = $chartService->actionsCoTempsCommercialePrivePublicRepartition($dataChartTempsCommercialePrivePublicRepartition);
 
 		return $this->render('crm/action-commerciale/crm_action_commerciale_reporting.html.twig', array(
 			'chartTauxTransformation' => $chartTauxTransformation,
@@ -197,6 +214,12 @@ class ActionCommercialeController extends Controller
 			'chartActionsCoRhoneAlpes' => $chartActionsCoRhoneAlpes,
 			'chartActionsCoAnalytique3Mois' => $chartActionsCoAnalytique3Mois,
 			'chartActionsCoRhoneAlpes3Mois' => $chartActionsCoRhoneAlpes3Mois,
+			'chartTempsCommercialeAnalytique' => $chartTempsCommercialeAnalytique,
+			'chartTempsCommercialeAO' => $chartTempsCommercialeAO,
+			'chartTempsCommercialeAnalytiqueRepartition' => $chartTempsCommercialeAnalytiqueRepartition,
+			'chartTempsCommercialeAORepartition' => $chartTempsCommercialeAORepartition,
+			'chartTempsCommercialePrivePublic' => $chartTempsCommercialePrivePublic,
+			'chartTempsCommercialePrivePublicRepartition' => $chartTempsCommercialePrivePublicRepartition,
 		));
 	}
 

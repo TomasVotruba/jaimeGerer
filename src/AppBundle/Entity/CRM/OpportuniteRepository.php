@@ -371,6 +371,58 @@ class OpportuniteRepository extends EntityRepository
 		return $qb->getQuery()->getResult();
 	}
 
+	public function findForCompanyByYearAndAnalytiqueHavingTempsCommercial($company, $year, $analytique){
+
+		$qb = $this->createQueryBuilder('o')
+		->innerJoin('o.compte', 'c')
+		->where('c.company = :company')
+		->andWhere('o.date >= :start')
+		->andWhere('o.date <= :end')
+		->andWhere('o.analytique = :analytique')
+		->andWhere('o.tempsCommercial > 0')
+		->setParameter('company', $company)
+		->setParameter('analytique', $analytique)
+		->setParameter('start', $year.'-01-01')
+		->setParameter('end',  $year.'-12-31');
+
+		return $qb->getQuery()->getResult();
+	}
+
+	public function findForCompanyByYearAndAOHavingTempsCommercial($company, $year, $ao){
+
+		$qb = $this->createQueryBuilder('o')
+		->innerJoin('o.compte', 'c')
+		->where('c.company = :company')
+		->andWhere('o.date >= :start')
+		->andWhere('o.date <= :end')
+		->andWhere('o.appelOffre = :ao')
+		->andWhere('o.tempsCommercial > 0')
+		->setParameter('company', $company)
+		->setParameter('ao', $ao)
+		->setParameter('start', $year.'-01-01')
+		->setParameter('end',  $year.'-12-31');
+
+		return $qb->getQuery()->getResult();
+	}
+
+	public function findForCompanyByYearPrivePublicHavingTempsCommercial($company, $year, $priveOrPublic){
+
+		$qb = $this->createQueryBuilder('o')
+		->innerJoin('o.compte', 'c')
+		->where('c.company = :company')
+		->andWhere('o.date >= :start')
+		->andWhere('o.date <= :end')
+		->andWhere('o.priveOrPublic = :priveOrPublic')
+		->andWhere('o.tempsCommercial > 0')
+		->setParameter('company', $company)
+		->setParameter('priveOrPublic', $priveOrPublic)
+		->setParameter('start', $year.'-01-01')
+		->setParameter('end',  $year.'-12-31');
+
+		return $qb->getQuery()->getResult();
+	}
+
+
 	public function findWonForCompanyByYear($company, $year){
 
 		$qb = $this->createQueryBuilder('o')

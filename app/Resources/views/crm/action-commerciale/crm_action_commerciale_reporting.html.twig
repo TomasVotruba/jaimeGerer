@@ -63,6 +63,64 @@
         </div>
          <div class="col-md-2"></div>
     </div>
+     <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <h3>Temps commercial moyen par type</h3>
+            <div id="chart_actions_co_temps_commerciale_analytique"></div>
+        </div>
+        <div class="col-md-1"></div>
+         <div class="col-md-4">
+            <h3>Répartition du temps commercial par type</h3>
+            <div id="chart_actions_co_temps_commerciale_analytique_repartition"></div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <h3>Temps commercial moyen AO/pas AO</h3>
+            <div id="chart_actions_co_temps_commerciale_ao"></div>
+        </div>
+        <div class="col-md-1"></div>
+         <div class="col-md-4">
+            <h3>Répartition du temps commercial AO/pas AO</h3>
+            <div id="chart_actions_co_temps_commerciale_ao_repartition"></div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <h3>Temps commercial moyen public/privé</h3>
+            <div id="chart_actions_co_temps_commerciale_public_prive"></div>
+        </div>
+        <div class="col-md-1"></div>
+         <div class="col-md-4">
+            <h3>Répartition du temps commercial public/privé</h3>
+            <div id="chart_actions_co_temps_commerciale_public_prive_repartition"></div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
 
 {% endblock %}
 
@@ -84,6 +142,12 @@
             {{ gc_draw(chartActionsCoRhoneAlpes, 'chart_actions_co_rhone_alpes') }}
             {{ gc_draw(chartActionsCoAnalytique3Mois, 'chart_actions_co_analytique_3_mois') }}
             {{ gc_draw(chartActionsCoRhoneAlpes3Mois, 'chart_actions_co_rhone_alpes_3_mois') }}
+            {{ gc_draw(chartTempsCommercialeAnalytique, 'chart_actions_co_temps_commerciale_analytique') }}
+            {{ gc_draw(chartTempsCommercialeAnalytiqueRepartition, 'chart_actions_co_temps_commerciale_analytique_repartition') }}
+            {{ gc_draw(chartTempsCommercialeAO, 'chart_actions_co_temps_commerciale_ao') }}
+            {{ gc_draw(chartTempsCommercialeAORepartition, 'chart_actions_co_temps_commerciale_ao_repartition') }}
+            {{ gc_draw(chartTempsCommercialePrivePublic, 'chart_actions_co_temps_commerciale_public_prive') }}
+            {{ gc_draw(chartTempsCommercialePrivePublicRepartition, 'chart_actions_co_temps_commerciale_public_prive_repartition') }}
 
             AmCharts.ready(function() {
                 $.ajax({
