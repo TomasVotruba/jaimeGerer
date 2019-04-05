@@ -84,7 +84,7 @@
 							{% endfor %}
 							<br />
 							<strong>{{ actionCommerciale.compte.nom }}</strong>
-							<br /> {{ actionCommerciale.nom }}
+							<br /> <a href="{{ path('crm_action_commerciale_voir', {'id' : actionCommerciale.id }) }}">{{ actionCommerciale.nom }}</a>
 						</td>
 						<td class="col-md-3">
 							{% if 0 == actionCommerciale.tempsTotal %}
