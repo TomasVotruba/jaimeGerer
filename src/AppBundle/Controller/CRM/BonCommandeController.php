@@ -244,7 +244,7 @@ class BonCommandeController extends Controller
 
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\BonCommande');
 
-		$list = $repository->search($this->getUser()->getCompany());
+		$list = $repository->findWon($this->getUser()->getCompany());
 
 		$res = array();
 		foreach ($list as $bc) {

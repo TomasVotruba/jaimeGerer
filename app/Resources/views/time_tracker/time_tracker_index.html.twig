@@ -1,0 +1,166 @@
+{% extends 'time_tracker/time_tracker_layout.html.twig' %}
+
+{% block content %}
+
+<div class="row" style="margin-top: 20px;" class="top">
+	<div class="col-md-12">
+		<h1>Ajouter du temps</h1>
+	</div>
+</div>
+
+<div class="row" id="time-tracker-form">
+
+	{{ form_start(form) }}
+	<div class="col-md-3">
+		<div class="typeahead-container">
+		    <div class="typeahead-field">
+		        <span class="typeahead-query">
+		        	{{ form_label(form.projet_name) }}<br />
+		        	<span class="form-help">N° du bon de commande, nom du projet ou du client</span>
+		        	{{ form_widget(form.projet_name) }}
+		            {{ form_row(form.projet_entity) }}
+		        </span>
+		    </div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="form-group">
+			{{ form_label(form.date) }}<br />
+			<span class="form-help">Quel jour avez-vous travaillé sur le projet ?</span>
+		    {{ form_widget(form.date) }}
+		</div>
+	</div>
+	<div class="col-md-2">
+		<div class="form-group">
+			{{ form_label(form.duree) }}<br />
+			<span class="form-help">En heures</span>
+		    <div class="input-group">
+		        {{ form_widget(form.duree) }}<div class="input-group-addon">heures </div>
+		    </div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		{{ form_label(form.activite) }}<br />
+		<span class="form-help">Qu'avez-vous fait ?</span>
+		{{ form_widget(form.activite) }}
+	</div>
+	<div class="col-md-1 inline-form-button text-center">
+		<button type="submit" class="btn btn-success">
+		   <span class=" glyphicon glyphicon-ok"></span>
+		</button>
+	</div>
+
+	{{ form_end(form) }}
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<hr />
+		<h1>Liste des projets</h1>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+
+		<table class="table table-bordered table-striped" id="time-tracker-list">
+			<thead>
+				<tr>
+					<th class="hidden">Nom</th>
+					<th>Projet</th>
+					<th>Temps passé</th>
+					<th class="no-sort">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for actionCommerciale in arr_projets %}
+					<tr>
+						<td class="hidden">
+							{{ actionCommerciale.compte.nom }}
+						</td>
+						<td class="col-md-7">
+							{% for bonCommande in actionCommerciale.bonsCommande %}
+								<span class="label label-info">BC-{{ bonCommande.num }}</span>
+							{% endfor %}
+							<br />
+							<strong>{{ actionCommerciale.compte.nom }}</strong>
+							<br /> {{ actionCommerciale.nom }}
+						</td>
+						<td class="col-md-3">
+							{% if 0 == actionCommerciale.tempsTotal %}
+								-
+							{% else %}
+								{{ actionCommerciale.tempsTotalAsString }}
+							{% endif %}
+						</td>
+						<td class="col-md-2">
+							<a href="#top" class="btn btn-success add-time-button" 
+								data-actionco-id="{{ actionCommerciale.id }}"
+								data-action-co-name="{{ actionCommerciale.compte.nom }} : {{ actionCommerciale.nom }}">
+								<span class="glyphicon glyphicon-hourglass"></span>
+							</a>
+							<a href="{{ path('crm_action_commerciale_temps_details', {'id' : actionCommerciale.id}) }}" 
+								class="btn btn-info details-button" data-toggle="modal" data-target="#modal"
+								data-actionco-id="{{ actionCommerciale.id }}">
+								<span class="glyphicon glyphicon-list"></span>
+							</a>
+							<a href="{{ path('crm_action_commerciale_terminer', {'id' : actionCommerciale.id, 'screen' : 'time_tracker'}) }}" 
+								class="btn btn-danger end-projet-button">
+								<span class="glyphicon glyphicon-folder-close"></span>
+							</a>
+						</td>
+
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+
+		$(document).ready( function () {
+
+			$('.typeahead-projet').typeahead({
+				order: "desc",
+				accent: true,
+				source: {
+					url: Routing.generate('crm_bon_commande_search')
+				},
+				callback: {
+					onClickAfter: function (node, a, item, event) {
+						$('.entity-projet').val(item.id);
+					}
+				},
+			});
+
+			$('#time-tracker-list').DataTable({
+				"dom": 'T<"clear">lfrtip',
+				"language" : {                
+					"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"            
+				},
+				"responsive": true,
+				"processing": true,
+				"order": [[ 0, "asc" ]],
+				'columnDefs': [
+			  		{ 'targets': 'no-sort', 'orderable': false }
+				]
+			});
+
+			$('.add-time-button').click(function(e){
+
+				var id = $(this).data('actionco-id');
+				var nom = $(this).data('action-co-name');
+
+				$('.typeahead-projet').val(nom);
+				$('.entity-projet').val(id);
+			});
+
+		});
+
+	</script>
+{% endblock %}

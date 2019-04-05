@@ -233,6 +233,19 @@ class Opportunite
     */
     private $recus;
 
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\TimeTracker\Temps", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+    *
+    */
+    private $temps;
+
+    /**
+    * @var boolean
+    *
+    * @ORM\Column(name="termine", type="boolean", nullable=false)
+    */
+    private $termine = false;
 
     /**
     * Constructor
@@ -296,7 +309,7 @@ class Opportunite
 
 	/**
 	 *
-	 * @return the string
+	 * @return
 	 */
 	public function getMontant() {
 		return $this->montant;
@@ -304,13 +317,20 @@ class Opportunite
 
 	/**
 	 *
-	 * @param
-	 *        	$montant
+	 * @param $montant
 	 */
 	public function setMontant($montant) {
 		$this->montant = $montant;
 		return $this;
 	}
+
+    /**
+     *
+     * @return 
+     */
+    public function getTotal() {
+        return $this->montant+$this->getTotalFrais();
+    }
 
     /**
      * Set etat
@@ -1199,5 +1219,206 @@ class Opportunite
             }
         }
         return false;
+    }
+
+    /**
+     * Add recus
+     *
+     * @param \AppBundle\Entity\NDF\Recu $recus
+     * @return Opportunite
+     */
+    public function addRecus(\AppBundle\Entity\NDF\Recu $recus)
+    {
+        $this->recus[] = $recus;
+
+        return $this;
+    }
+
+    /**
+     * Remove recus
+     *
+     * @param \AppBundle\Entity\NDF\Recu $recus
+     */
+    public function removeRecus(\AppBundle\Entity\NDF\Recu $recus)
+    {
+        $this->recus->removeElement($recus);
+    }
+
+    /**
+     * Get recus
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRecus()
+    {
+        return $this->recus;
+    }
+
+    public function getFraisNonFactures(){
+        $arr_frais = array();
+        foreach($this->frais as $frais){
+            if(null == $frais->getProduit()){
+                $arr_frais[] = $frais;
+            }
+        }
+
+        return $arr_frais;
+    }
+
+    public function getRecusValides(){
+        $arr_valides = array();
+        foreach($this->recus as $recu){
+            if($recu->getLigneDepense()){
+                if('VALIDE' == $recu->getLigneDepense()->getDepense()->getNoteFrais()->getEtat() || 'RAPPROCHE' == $recu->getLigneDepense()->getDepense()->getNoteFrais()->getEtat()){
+                    $arr_valides[] = $recu;
+                }
+            }
+        }
+
+        return $arr_valides;
+    }
+
+    public function getRecusValidesNonFactures(){
+        $arr_valides = array();
+        foreach($this->recus as $recu){
+            if($recu->getLigneDepense() && null == $recu->getProduit()){
+                if('VALIDE' == $recu->getLigneDepense()->getDepense()->getNoteFrais()->getEtat() || 'RAPPROCHE' == $recu->getLigneDepense()->getDepense()->getNoteFrais()->getEtat()){
+                    $arr_valides[] = $recu;
+                }
+            }
+        }
+
+        return $arr_valides;
+    }
+
+    public function getTotalFraisNDF(){
+        $total = 0;
+        foreach($this->getRecusValides() as $recu){
+            $total+= $recu->getMontantHT();
+        }
+
+        return $total;
+    }
+
+    public function getFraisSousTraitants(){
+        $arr_frais = array();
+        foreach($this->opportuniteSousTraitances as $sousTraitance){
+
+            if(true === $sousTraitance->getFraisRefacturables()){
+
+                foreach($sousTraitance->getRepartitions() as $repartition){
+                    if($repartition->getFrais()){
+                        $arr_frais[] = $repartition;
+                    }                
+                }
+            }
+        }
+
+        return $arr_frais;
+    }
+
+    public function getFraisSousTraitantsNonFactures(){
+        $arr_frais = array();
+        foreach($this->opportuniteSousTraitances as $sousTraitance){
+
+            if(true === $sousTraitance->getFraisRefacturables()){
+
+                foreach($sousTraitance->getRepartitions() as $repartition){
+                    if($repartition->getFrais() && null == $repartition->getProduit()){
+                        $arr_frais[] = $repartition;
+                    }                
+                }
+            }
+        }
+
+        return $arr_frais;
+    }
+
+    public function getTotalFraisSousTraitants(){
+        $total = 0;
+        foreach($this->getFraisSousTraitants() as $repartition ){
+            $total+= $repartition->getFraisMonetaire();
+        }
+        return $total;
+    }
+
+
+    public function getTotalFraisManuels()
+    {
+        $total = 0;
+        foreach($this->frais as $frais){
+            $total+= $frais->getMontantHT();
+        }
+        return $total;
+    }
+
+    public function getTotalFrais(){
+        return $this->getTotalFraisManuels()+$this->getTotalFraisNDF()+$this->getTotalFraisSousTraitants();
+    }
+
+    public function getTotalFraisFactures(){
+        $totalFacture = 0;
+        foreach($this->frais as $frais){
+            if(null != $frais->getProduit()){
+                $totalFacture+= $frais->getMontantHT();
+            }
+        }
+        foreach($this->getRecusValides() as $recu){
+            if(null != $recu->getProduit()){
+                $totalFacture+= $recu->getMontantHT();
+            }
+        }
+        foreach($this->getFraisSousTraitants() as $repartitionSousTraitance){
+            if(null != $repartitionSousTraitance->getProduit()){
+                $totalFacture+= $repartitionSousTraitance->getFraisMonetaire();
+            }
+        }
+
+        return $totalFacture;
+    }
+
+    public function getTotalFraisNonFactures(){
+        return $this->getTotalFrais()-$this->getTotalFraisFactures();
+    }
+
+    /**
+     * Add temps
+     *
+     * @param \AppBundle\Entity\TimeTracker\Temps $temps
+     * @return Opportunite
+     */
+    public function addTemp(\AppBundle\Entity\TimeTracker\Temps $temps)
+    {
+        $this->temps[] = $temps;
+
+        return $this;
+    }
+
+    /**
+     * Remove temps
+     *
+     * @param \AppBundle\Entity\TimeTracker\Temps $temps
+     */
+    public function removeTemp(\AppBundle\Entity\TimeTracker\Temps $temps)
+    {
+        $this->temps->removeElement($temps);
+    }
+
+    /**
+     * Get temps
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTemps()
+    {
+        return $this->temps;
+    }
+
+    public function getTempsTotal(){
+        $total = $this->tempsCommercial;
+        foreach($this->getTemps() as $temps){
+            $total+= $temps->getDuree();
+        }
+        return $total;
     }
 }

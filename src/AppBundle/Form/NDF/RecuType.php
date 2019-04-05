@@ -26,6 +26,9 @@ class RecuType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $data = $builder->getData();
+
         $builder
             ->add('date', 'date', array('widget' => 'single_text',
               'input' => 'datetime',
@@ -107,7 +110,7 @@ class RecuType extends AbstractType
                       ->setParameter('num', '6%')
                       ->orderBy('c.nom', 'ASC');
                 },
-                'data' => $this->deplacements
+                'data' => $data->getId() ? $data->getCompteComptable() : $this->deplacements
             ))
             ->add('save', 'submit', array(
               'label' => 'Enregistrer et revenir à la liste des reçus',

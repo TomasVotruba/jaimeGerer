@@ -1000,3 +1000,7 @@ ul.checklist li:before {
     padding: 5px 0 5px 0;
     background-color: #fff;
 }
+
+.form-help{
+    font-size: 0.8em;
+}

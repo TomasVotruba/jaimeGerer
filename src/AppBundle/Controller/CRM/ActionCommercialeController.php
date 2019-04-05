@@ -1468,6 +1468,37 @@ class ActionCommercialeController extends Controller
 		));
 	}
 
+	/**
+	 * @Route("/crm/action-commerciale/temps/details/{id}", name="crm_action_commerciale_temps_details")
+	 */
+	public function getDetails(Opportunite $actionCommerciale){
+
+		return $this->render('crm/action-commerciale/crm_action_commerciale_temps_details_modal.html.twig', array(
+			'actionCommerciale' => $actionCommerciale
+		));
+
+	}
+
+	/**
+	 * @Route("/crm/action-commerciale/terminer/{id}/{screen}", name="crm_action_commerciale_terminer")
+	 */
+	public function terminer(Opportunite $actionCommerciale, $screen = 'action_commerciale'){
+
+		$actionCommerciale->setTermine(true);
+		$em = $this->getDoctrine()->getManager();
+		$em->persist($actionCommerciale);
+		$em->flush();
+
+		if('time_tracker' == $screen){
+			return $this->redirect($this->generateUrl(
+				'time_tracker_index'
+			));
+		}
+
+		return $this->redirect($this->generateUrl(
+			'crm_action_commerciale_voir', array('id' => $actionCommerciale->getId())
+		));
+	}
 
 
 }

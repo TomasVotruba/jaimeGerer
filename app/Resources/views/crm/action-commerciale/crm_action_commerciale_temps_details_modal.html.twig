@@ -1,0 +1,48 @@
+<div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Temps passé sur le projet {{ actionCommerciale.nom }}</h3>
+</div>
+<div class="modal-body">
+
+     <div class="row">   
+        <div class="col-md-2 col-xs-2">
+            {{ actionCommerciale.date|date('d/m/Y') }}
+        </div>
+        <div class="col-md-6 col-xs-6">
+            Commercial
+        </div>
+        <div class="col-md-4 col-xs-4">
+            {{ actionCommerciale.tempsCommercialAsString }}
+        </div>
+    </div>  
+
+    {% for temps in actionCommerciale.temps %}
+        <div class="row">   
+            <div class="col-md-2 col-xs-2">
+                {{ temps.date|date('d/m/Y') }}
+            </div>
+            <div class="col-md-6 col-xs-6">
+                {{ temps.activite }}
+            </div>
+            <div class="col-md-4 col-xs-4">
+                {{ temps.dureeAsString }}
+            </div>
+        </div>   
+    {% endfor %}
+
+    <div class="row">   
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">   
+        <div class="col-md-8 align-right col-xs-8">
+            <strong>Total</strong>
+        </div>
+        <div class="col-md-4 col-xs-4">
+            <strong>{{ actionCommerciale.tempsTotalAsString }}</strong>
+        </div>
+    </div>
+            
+</div>

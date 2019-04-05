@@ -233,6 +233,19 @@ class Opportunite
     */
     private $recus;
 
+    /**
+    *
+    * @ORM\OneToMany(targetEntity="AppBundle\Entity\TimeTracker\Temps", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+    *
+    */
+    private $temps;
+
+    /**
+    * @var boolean
+    *
+    * @ORM\Column(name="termine", type="boolean", nullable=false)
+    */
+    private $termine = false;
 
     /**
     * Constructor
@@ -1366,5 +1379,89 @@ class Opportunite
 
     public function getTotalFraisNonFactures(){
         return $this->getTotalFrais()-$this->getTotalFraisFactures();
+    }
+
+    /**
+     * Add temps
+     *
+     * @param \AppBundle\Entity\TimeTracker\Temps $temps
+     * @return Opportunite
+     */
+    public function addTemp(\AppBundle\Entity\TimeTracker\Temps $temps)
+    {
+        $this->temps[] = $temps;
+
+        return $this;
+    }
+
+    /**
+     * Remove temps
+     *
+     * @param \AppBundle\Entity\TimeTracker\Temps $temps
+     */
+    public function removeTemp(\AppBundle\Entity\TimeTracker\Temps $temps)
+    {
+        $this->temps->removeElement($temps);
+    }
+
+    /**
+     * Get temps
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTemps()
+    {
+        return $this->temps;
+    }
+
+    public function getTempsTotal(){
+        $total = 0;
+        $total+= $this->tempsCommercial;
+        foreach($this->getTemps() as $temps){
+            $total+= $temps->getDuree();
+        }
+
+        return $total;
+    }
+
+    public function getTempsTotalAsString(){
+        $total = $this->getTempsTotal();
+        $hours = floor($total);
+        $minutesDec = $total-$hours;
+        $minutes = $minutesDec*60;
+        
+        return str_pad($hours, 2, 0, STR_PAD_LEFT).'h'.str_pad($minutes, 2, 0, STR_PAD_LEFT);
+    }
+
+    public function getTempsCommercialAsString(){
+        $total = $this->tempsCommercial;
+        $hours = floor($total);
+        $minutesDec = $total-$hours;
+        $minutes = $minutesDec*60;
+        
+        return str_pad($hours, 2, 0, STR_PAD_LEFT).'h'.str_pad($minutes, 2, 0, STR_PAD_LEFT);
+    }
+
+    /**
+     * Set termine
+     *
+     * @param boolean $termine
+     * @return Opportunite
+     */
+    public function setTermine($termine)
+    {
+        $this->termine = $termine;
+
+        return $this;
+    }
+
+    /**
+     * Get termine
+     *
+     * @return boolean 
+     */
+    public function getTermine()
+    {
+        return $this->termine;
     }
 }

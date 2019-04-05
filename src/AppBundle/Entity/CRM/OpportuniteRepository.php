@@ -478,5 +478,18 @@ class OpportuniteRepository extends EntityRepository
 
 		return $qb->getQuery()->getResult();
 	}
+
+	public function findWonNotClosed($company){
+
+		$qb = $this->createQueryBuilder('o')
+		->innerJoin('o.compte', 'c')
+		->where('c.company = :company')
+		->andWhere('o.termine = false')
+		->andWhere('o.etat = :won')
+		->setParameter('company', $company)
+		->setParameter('won', 'WON');
+
+		return $qb->getQuery()->getResult();
+	}
 	
 }

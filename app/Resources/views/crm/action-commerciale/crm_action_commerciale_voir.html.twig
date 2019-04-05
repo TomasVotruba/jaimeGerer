@@ -74,6 +74,12 @@
 		    		<span class="glyphicon glyphicon-duplicate"></span> Dupliquer
 		    	</a>
 
+		    	{% if opportunite.isWon() and false == opportunite.termine %}
+		    		<a href="{{ path('crm_action_commerciale_terminer', {'id' : opportunite.id }) }}"  class="btn btn-danger btn-block-mobile">
+			    		<span class="glyphicon glyphicon-folder-close"></span> Terminer
+			    	</a>
+		    	{% endif %}
+
 		    	<a href="{{ path('crm_action_commerciale_supprimer', {'id' : opportunite.id }) }}"  class="btn btn-danger btn-block-mobile">
 		    		<span class="glyphicon glyphicon-trash"></span> Supprimer
 		    	</a>
@@ -96,10 +102,14 @@
     	<div class="col-md-12 center-mobile">
     		<h2>{{ opportunite.nom }} <span class="hidden-xs">-</span> <span class="block-mobile">{{ opportunite.montant|number_format(2, ',', ' ') }} &euro;</span>
     		<br class="hidden-xs" />
-			{% if opportunite.isWon %}
+    		
+	    	{% if opportunite.isWon %}
 				<small>Frais = {{ opportunite.totalFrais|number_format(2, ',', ' ') }} &euro;</small><br />
-
-				<small class="green"><span class="glyphicon glyphicon-thumbs-up"></span> Action commerciale gagnée</small>
+				{% if opportunite.termine %}
+					<small><span class="glyphicon glyphicon-folder-close"></span> Action commerciale terminée</small>
+				{% else %}
+					<small class="green"><span class="glyphicon glyphicon-thumbs-up"></span> Action commerciale gagnée</small>
+				{% endif %}
 			{% elseif opportunite.isLost %}
 				<small class="red"><span class="glyphicon glyphicon-thumbs-down"></span> Action commerciale perdue</small>
 			{% else %}
@@ -823,6 +833,12 @@
 			</div>
 
 			<div class="row">
+				<div class="col-md-12">
+					<hr />
+				</div>
+			</div>
+
+			<div class="row">
 				<div class="col-md-6">
 					<h3>Sous-traitants <a class="btn btn-xs btn-primary" href="{{ path('crm_action_commerciale_gagner_sous_traitance', {'id' : opportunite.id }) }}">Ajouter un sous-traitant</a></h3>
 					{% if opportunite.opportuniteSousTraitances|length == 0 %}
@@ -859,7 +875,56 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<hr />
+					<h3>Temps passé sur le projet</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<table class="contact-view-table">
+						<tbody>
+							<tr>   
+							    <td>
+							        {{ opportunite.date|date('d/m/Y') }}
+							    </td>
+							    <td>
+							        Commercial
+							    </td>
+							    <td>
+							        {{ opportunite.tempsCommercialAsString }}
+							    </td>
+							</tr>
+							{% for temps in opportunite.temps %}
+						        <tr>   
+						            <td>
+						                {{ temps.date|date('d/m/Y') }}
+						            </td>
+						            <td>
+						                {{ temps.activite }}
+						            </td>
+						            <td>
+						                {{ temps.dureeAsString }}
+						            </td>
+						        </tr>   
+							{% endfor %}
+						</tbody>
+					</table>
+	  
+				</div>
+				<div class="col-md-6 center">
+					<p>Temps total passé :<br /><span class="xl">{{ opportunite.tempsTotalAsString }}</span></p>
+				</div>
+			</div>
 		{% endif %}
+
+		<div class="row">
+			<div class="col-md-12">
+				<hr />
+			</div>
+		</div>
 
 	    <div class="row">
 	    	<div class="col-md-6">
