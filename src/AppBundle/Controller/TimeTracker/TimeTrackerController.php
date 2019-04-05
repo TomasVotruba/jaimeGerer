@@ -15,7 +15,7 @@ class TimeTrackerController extends Controller
 	/**
 	 * @Route("/time-tracker", name="time_tracker_index")
 	 */
-	public function indexAction($action)
+	public function indexAction()
 	{
 		$em = $this->getDoctrine()->getManager();
 		$repo = $em->getRepository('AppBundle:CRM\Opportunite');
