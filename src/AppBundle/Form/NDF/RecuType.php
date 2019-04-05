@@ -30,7 +30,7 @@ class RecuType extends AbstractType
             ->add('date', 'date', array('widget' => 'single_text',
               'input' => 'datetime',
               'format' => 'dd/MM/yyyy',
-              'attr' => array('class' => 'dateInput', 'autofocus' => true),
+              'attr' => array('class' => 'dateInput'),
               'required' => true,
               'label' => 'Date du reçu'
             ))
