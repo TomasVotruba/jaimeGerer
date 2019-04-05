@@ -39,7 +39,7 @@ class RecuType extends AbstractType
               'required' => true
             ))
             ->add('projet_name', 'text', array(
-                'required' => true,
+                'required' => false,
                 'mapped' => false,
                 'label' => 'Projet (numéro de bon de commande, nom du projet ou du client)',
                 'attr' => array('class' => 'typeahead-projet')
