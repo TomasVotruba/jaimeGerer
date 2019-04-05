@@ -45,7 +45,7 @@ class RecuType extends AbstractType
                 'attr' => array('class' => 'typeahead-projet')
             ))
             ->add('projet_entity', 'hidden', array(
-                'required' => true,
+                'required' => false,
                 'attr' => array('class' => 'entity-projet'),
                 'mapped' => false
             ))
