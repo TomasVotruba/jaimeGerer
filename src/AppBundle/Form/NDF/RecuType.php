@@ -30,7 +30,7 @@ class RecuType extends AbstractType
             ->add('date', 'date', array('widget' => 'single_text',
               'input' => 'datetime',
               'format' => 'dd/MM/yyyy',
-              'attr' => array('class' => 'dateInput'),
+              'attr' => array('class' => 'dateInput', 'autocomplete' => 'off'),
               'required' => true,
               'label' => 'Date du reçu'
             ))
@@ -42,7 +42,7 @@ class RecuType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'label' => 'Projet (numéro de bon de commande, nom du projet ou du client)',
-                'attr' => array('class' => 'typeahead-projet')
+                'attr' => array('class' => 'typeahead-projet', 'autocomplete' => 'off')
             ))
             ->add('projet_entity', 'hidden', array(
                 'required' => false,
