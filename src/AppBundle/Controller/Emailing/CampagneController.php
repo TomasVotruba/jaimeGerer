@@ -32,6 +32,10 @@ class CampagneController extends Controller
 	 */ 
 	public function indexAction()
 	{
+		if(!$this->getUser()->hasRole('ROLE_COMMUNICATION')){
+			throw new AccessDeniedException;
+		}
+
 		//return $this->render('emailing/emailing_index.html.twig');
 		return $this->redirect($this->generateUrl(
 			'emailing_campagne_liste'

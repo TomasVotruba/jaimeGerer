@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use AppBundle\Entity\SettingsActivationOutil;
 use AppBundle\Entity\Compta\AffectationDiverse;
@@ -22,6 +23,10 @@ class ComptaController extends Controller
 	 */
 	public function indexAction()
 	{
+		if(!$this->getUser()->hasRole('ROLE_COMPTA')){
+			throw new AccessDeniedException;
+		}
+
 		//vérifier si l'outil Compta a été activé
 		$settingsActivationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
 		$settingsActivationCompta = $settingsActivationRepo->findBy(array(

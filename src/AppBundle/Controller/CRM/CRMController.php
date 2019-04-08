@@ -4,6 +4,7 @@ namespace AppBundle\Controller\CRM;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use AppBundle\Entity\SettingsActivationOutil;
 
@@ -14,6 +15,10 @@ class CRMController extends Controller
 	 */
 	public function indexAction()
 	{
+		if(!$this->getUser()->hasRole('ROLE_COMMERCIAL')){
+			throw new AccessDeniedException;
+		}
+
 		//vérifier si l'outil CRM a été activé
 		$settingsActivationRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:SettingsActivationOutil');
 		$settingsActivationCRM = $settingsActivationRepo->findBy(array(

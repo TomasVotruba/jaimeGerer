@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use AppBundle\Entity\NDF\NoteFrais;
 use AppBundle\Entity\NDF\Recu;
@@ -28,7 +29,10 @@ class NDFController extends Controller
 	 */
 	public function NDFUploadRecuAction(Request $request)
 	{
-
+		if(!$this->getUser()->hasRole('ROLE_NDF')){
+			throw new AccessDeniedException;
+		}
+		
 		$form = $this->createFormBuilder()->getForm();
 		$form->handleRequest($request);
 

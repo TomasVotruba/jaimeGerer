@@ -5,6 +5,7 @@ namespace AppBundle\Controller\TimeTracker;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use AppBundle\Entity\TimeTracker\Temps;
 use AppBundle\Form\TimeTracker\TempsType;
@@ -17,6 +18,10 @@ class TimeTrackerController extends Controller
 	 */
 	public function indexAction()
 	{
+		if(!$this->getUser()->hasRole('ROLE_TIMETRACKER')){
+			throw new AccessDeniedException;
+		}
+		
 		$em = $this->getDoctrine()->getManager();
 		$repo = $em->getRepository('AppBundle:CRM\Opportunite');
 
