@@ -630,7 +630,7 @@ class TableauBordService extends ContainerAware {
         foreach($arr_sousTraitancesRepartitions as $sousTraitanceRepartition){
             $month = $sousTraitanceRepartition->getDate()->format('n');
 
-            if($recu->getActionCommerciale()->isSecteurPublic()){
+            if($sousTraitanceRepartition->getOpportuniteSousTraitance()->getOpportunite()->isSecteurPublic()){
                 $arr_details['frais_public'][$month]['val']+= $sousTraitanceRepartition->getFraisMonetaire();
                 $arr_details['frais_public']['total']+= $sousTraitanceRepartition->getFraisMonetaire();
                 
