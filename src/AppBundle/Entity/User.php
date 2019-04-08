@@ -75,11 +75,18 @@ class User extends BaseUser
     private $avatar;
 
     /**
-  * @var boolean
-  *
-  * @ORM\Column(name="compet_com", type="boolean", nullable=true)
-  */
-  private $competCom = false;
+    * @var boolean
+    *
+    * @ORM\Column(name="compet_com", type="boolean", nullable=true)
+    */
+    private $competCom = false;
+
+    /**
+    * @var integer
+    *
+    * @ORM\Column(name="taux_horaire", type="integer", nullable=true)
+    */
+    private $tauxHoraire;
 
 
     public function __construct()
@@ -265,5 +272,28 @@ class User extends BaseUser
     public function getCompetCom()
     {
         return $this->competCom;
+    }
+
+    /**
+     * Set tauxHoraire
+     *
+     * @param integer $tauxHoraire
+     * @return User
+     */
+    public function setTauxHoraire($tauxHoraire)
+    {
+        $this->tauxHoraire = $tauxHoraire;
+
+        return $this;
+    }
+
+    /**
+     * Get tauxHoraire
+     *
+     * @return integer 
+     */
+    public function getTauxHoraire()
+    {
+        return $this->tauxHoraire;
     }
 }

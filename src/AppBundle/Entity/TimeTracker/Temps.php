@@ -48,6 +48,12 @@ class Temps
      */
     private $actionCommerciale;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
 
     /**
      * Get id
@@ -158,5 +164,28 @@ class Temps
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \AppBundle\Entity\User $user
+     * @return Temps
+     */
+    public function setUser(\AppBundle\Entity\User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \AppBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

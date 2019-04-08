@@ -1424,6 +1424,15 @@ class Opportunite
         return $total;
     }
 
+    public function getTempsTotalSansCommercial(){
+        $total = 0;
+        foreach($this->getTemps() as $temps){
+            $total+= $temps->getDuree();
+        }
+
+        return $total;
+    }
+
     public function getTempsTotalAsString(){
         $total = $this->getTempsTotal();
         $hours = floor($total);
@@ -1440,6 +1449,36 @@ class Opportunite
         $minutes = $minutesDec*60;
         
         return str_pad($hours, 2, 0, STR_PAD_LEFT).'h'.str_pad($minutes, 2, 0, STR_PAD_LEFT);
+    }
+
+     public function getTempsSansCommercialAsString(){
+        $total = $this->getTempsTotalSansCommercial();
+        $hours = floor($total);
+        $minutesDec = $total-$hours;
+        $minutes = $minutesDec*60;
+        
+        return str_pad($hours, 2, 0, STR_PAD_LEFT).'h'.str_pad($minutes, 2, 0, STR_PAD_LEFT);
+    }
+
+    public function getTempsTotalMontant(){
+        $montant = 0;
+        foreach($this->getTemps() as $temps){
+            if($temps->getUser()->getTauxHoraire()){
+                $montant+= $temps->getDuree()*$temps->getUser()->getTauxHoraire();
+            }
+        }
+
+        return $montant;
+    }
+
+    public function usersHaveTauxHoraires(){
+        $ok = true;
+        foreach($this->getTemps() as $temps){
+             if(!$temps->getUser()->getTauxHoraire()){
+                $ok = false;
+            }
+        }
+        return $ok;
     }
 
     /**

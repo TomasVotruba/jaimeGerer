@@ -313,7 +313,7 @@ tr th {
     position: absolute;
     top: 0;
     left: 0px;
-    width: 350px;
+    width: 400px;
     background: #F1F1F1;
     padding: 9px;
     z-index: 100;
@@ -654,6 +654,23 @@ label input[type="checkbox"][disabled] {
     width: 108px;
     height: 100px;
     background-image: url('../../../../web/images/assets/jaimenicomak.png');
+    background-size: cover;
+    top: -11px;
+    left: 27px;
+}
+
+.titre-timetracker {
+    background: #FC5162;
+}
+
+.titre-timetracker:before {
+    position: absolute;
+    margin: auto;
+    z-index: 1;
+    content: "";
+    width: 108px;
+    height: 100px;
+    background-image: url('../../../../web/images/assets/jaimecomptermontemps.png');
     background-size: cover;
     top: -11px;
     left: 27px;

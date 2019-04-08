@@ -75,11 +75,18 @@ class User extends BaseUser
     private $avatar;
 
     /**
-  * @var boolean
-  *
-  * @ORM\Column(name="compet_com", type="boolean", nullable=true)
-  */
-  private $competCom = false;
+    * @var boolean
+    *
+    * @ORM\Column(name="compet_com", type="boolean", nullable=true)
+    */
+    private $competCom = false;
+
+    /**
+    * @var integer
+    *
+    * @ORM\Column(name="taux_horaire", type="integer", nullable=true)
+    */
+    private $tauxHoraire;
 
 
     public function __construct()
@@ -95,6 +102,19 @@ class User extends BaseUser
     public function getId()
     {
         return $this->id;
+    }
+
+    
+    /**
+     * Set id
+     *
+     * @param integer $id 
+     * @return Company
+     */
+    public function setId($id)
+    {
+        return $this->id = $id;
+        return $this;
     }
 
     public function __toString()

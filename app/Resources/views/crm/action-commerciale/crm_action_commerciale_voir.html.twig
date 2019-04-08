@@ -877,45 +877,95 @@
 			</div>
 
 			<div class="row">
+
 				<div class="col-md-12">
 					<hr />
 					<h3>Temps passé sur le projet</h3>
 				</div>
 			</div>
+			{% if opportunite.usersHaveTauxHoraires == false %}
+				<div class="row">
+					<div class="col-md-12">
+						<div class="alert alert-warning">
+							<span class="glyphicon glyphicon-warning-sign"></span>
+							Le taux horaire de certains utilisateurs n'a pas été renseigné. Le résultat peut donc être érroné.
+						</div>
+					</div>
+				</div>
+			{% endif %}
 			<div class="row">
 				<div class="col-md-6">
-					<table class="contact-view-table">
-						<tbody>
-							<tr>   
-							    <td>
-							        {{ opportunite.date|date('d/m/Y') }}
-							    </td>
-							    <td>
-							        Commercial
-							    </td>
-							    <td>
-							        {{ opportunite.tempsCommercialAsString }}
-							    </td>
-							</tr>
-							{% for temps in opportunite.temps %}
-						        <tr>   
-						            <td>
-						                {{ temps.date|date('d/m/Y') }}
-						            </td>
-						            <td>
-						                {{ temps.activite }}
-						            </td>
-						            <td>
-						                {{ temps.dureeAsString }}
-						            </td>
-						        </tr>   
-							{% endfor %}
-						</tbody>
-					</table>
-	  
+					<div class="row">
+						<div class="col-md-4 center">
+							<p>Temps total passé</p>
+							<p class="xl">{{ opportunite.tempsTotalAsString }}</p>
+						</div>
+						<div class="col-md-4 center">
+							<p>Temps passé (hors commercial)</p>
+							<p class="xl">{{ opportunite.tempsSansCommercialAsString }}</p>
+						</div>
+						<div class="col-md-4 center">
+							<p>Coût total (hors commercial)</p>
+							<p class="xl">{{ opportunite.tempsTotalMontant|number_format('2', ',', ' ') }} €</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<table class="contact-view-table">
+								<thead>
+									<tr>
+										<th>Date</th>
+										<th>Personne</th>
+										<th>Activité</th>
+										<th>Temps passé</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>   
+									    <td>
+									        {{ opportunite.date|date('d/m/Y') }}
+									    </td>
+									    <td>
+									    	{{ opportunite.userGestion }}
+									    </td>
+									    <td>
+									        Commercial
+									    </td>
+									    <td>
+									        {{ opportunite.tempsCommercialAsString }}
+									    </td>
+									</tr>
+									{% for temps in opportunite.temps %}
+								        <tr>   
+								            <td>
+								                {{ temps.date|date('d/m/Y') }}
+								            </td>
+								            <td>
+									    		{{ temps.user }}
+									    		{% if temps.user.tauxHoraire is empty %}
+									    			<a role="button" data-toggle="popover" data-trigger="hover" title="Taux horaire inconnu" data-content="Le taux horaire de cet utilisateur n'est pas renseigné.">
+									    				<span class="glyphicon glyphicon-warning-sign red"></span>
+									    			</a>
+									    		{% endif %}
+									    	</td>
+								            <td>
+								                {{ temps.activite }}
+								            </td>
+								            <td>
+								                {{ temps.dureeAsString }}
+								            </td>
+								        </tr>   
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
+				
 				<div class="col-md-6 center">
-					<p>Temps total passé :<br /><span class="xl">{{ opportunite.tempsTotalAsString }}</span></p>
+					<div id="gauge-rentabilite">
+						<!-- Gauge Chart loaded by javascript -->
+					</div>
 				</div>
 			</div>
 		{% endif %}
@@ -991,7 +1041,18 @@
 				    levelColors: ["a9d60c", "f8c700", "ff0000"],
 				    levelColorsGradient: false,
 				    label: "€"
-					});
+				});
+
+				var gt = new JustGage({
+				    id: "gauge-rentabilite",
+				    value: {{ opportunite.tempsTotalMontant|number_format(2,'.','') }},
+				    min: 0,
+				    max: {{ opportunite.montant }},
+				    title: "Temps passé",
+				    levelColors: ["a9d60c", "f8c700", "ff0000"],
+				    levelColorsGradient: false,
+				    label: "€"
+				});
 			{% endif %}
 		});
 	</script>

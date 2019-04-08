@@ -1,46 +1,62 @@
 <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
-    <h3>Temps passé sur le projet {{ actionCommerciale.nom }}</h3>
+    <h3>Temps passé sur le projet "{{ actionCommerciale.nom }}"</h3>
 </div>
 <div class="modal-body">
 
-     <div class="row">   
-        <div class="col-md-2 col-xs-2">
-            {{ actionCommerciale.date|date('d/m/Y') }}
+    {% if 0 != actionCommerciale.tempsCommercial %}
+        <div class="row">   
+            <div class="col-md-2 col-xs-2">
+                {{ actionCommerciale.date|date('d/m/Y') }}
+            </div>
+            <div class="col-md-4 col-xs-4">
+                {{ actionCommerciale.userGestion }}
+            </div>
+            <div class="col-md-4 col-xs-4">
+                Commercial
+            </div>
+            <div class="col-md-2 col-xs-2">
+                {{ actionCommerciale.tempsCommercialAsString }}
+            </div>
+        </div>  
+        <div class="row">   
+            <div class="col-md-12">
+                <hr />
+            </div>
         </div>
-        <div class="col-md-6 col-xs-6">
-            Commercial
-        </div>
-        <div class="col-md-4 col-xs-4">
-            {{ actionCommerciale.tempsCommercialAsString }}
-        </div>
-    </div>  
+    {% endif %}
+
+   
 
     {% for temps in actionCommerciale.temps %}
         <div class="row">   
             <div class="col-md-2 col-xs-2">
                 {{ temps.date|date('d/m/Y') }}
             </div>
-            <div class="col-md-6 col-xs-6">
-                {{ temps.activite }}
+            <div class="col-md-4 col-xs-4">
+                {{ temps.user }}
             </div>
             <div class="col-md-4 col-xs-4">
+                {{ temps.activite }}
+            </div>
+            <div class="col-md-2 col-xs-2">
                 {{ temps.dureeAsString }}
             </div>
-        </div>   
+        </div>  
+
+         <div class="row">   
+                <div class="col-md-12">
+                    <hr />
+                </div>
+            </div> 
     {% endfor %}
 
-    <div class="row">   
-        <div class="col-md-12">
-            <hr />
-        </div>
-    </div>
 
     <div class="row">   
-        <div class="col-md-8 align-right col-xs-8">
+        <div class="col-md-10 align-right col-xs-10">
             <strong>Total</strong>
         </div>
-        <div class="col-md-4 col-xs-4">
+        <div class="col-md-2 col-xs-2">
             <strong>{{ actionCommerciale.tempsTotalAsString }}</strong>
         </div>
     </div>

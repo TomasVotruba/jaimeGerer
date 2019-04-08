@@ -63,7 +63,7 @@ tansition: all ease-in 0.5s;
 .main_menu li{
 	display: inline-block;	
 	margin: 20px;
-	width: 200px;
+	width: 220px;
 	height: 120px;
 	text-align: center;
 	font-family: 'Orbitron', sans-serif;
@@ -122,6 +122,12 @@ tansition: all ease-in 0.5s;
 
 .main_menu li#social:hover a{
 	color: #ec741b;
+	font-weight: bold;
+	transition : all ease-in 0.5s;
+}
+
+.main_menu li#time-tracker:hover a{
+	color: #FC5162;
 	font-weight: bold;
 	transition : all ease-in 0.5s;
 }

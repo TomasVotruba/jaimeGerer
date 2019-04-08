@@ -16,59 +16,60 @@ class UserType extends AbstractType
     {
         $builder
             ->add('firstName', 'text', array(
-              'required' => true,
-              'label' => 'Prénom'
+                'required' => true,
+                'label' => 'Prénom'
             ))
             ->add('lastName', 'text', array(
-              'required' => true,
-              'label' => 'Nom'
+                'required' => true,
+                'label' => 'Nom'
             ))
             ->add('email', 'email', array(
-              'required' => true,
-              'label' => 'Adresse email'
+                'required' => true,
+                'label' => 'Adresse email'
             ))
             ->add('enabled', 'checkbox', array(
-              'required' => false,
-              'label' => ' ',
-              'attr' => array(
-                'data-toggle'=> "toggle",
-                'data-onstyle'=> "success",
-                'data-offstyle'=> "danger",
-                'data-on'=> "Oui",
-                'data-off'=> "Non"
-              )
+                'required' => false,
+                'label' => ' ',
+                'attr' => array(
+                    'data-toggle'=> "toggle",
+                    'data-onstyle'=> "success",
+                    'data-offstyle'=> "danger",
+                    'data-on'=> "Oui",
+                    'data-off'=> "Non"
+                )
             ))
             ->add('admin', 'checkbox', array(
-              'required' => false,
-              'label' => ' ',
-              'mapped' => false,
-              'attr' => array(
-                'data-toggle'=> "toggle",
-                'data-onstyle'=> "success",
-                'data-offstyle'=> "danger",
-                'data-on'=> "Oui",
-                'data-off'=> "Non"
-              )
+                'required' => false,
+                'label' => ' ',
+                'mapped' => false,
+                'attr' => array(
+                    'data-toggle'=> "toggle",
+                    'data-onstyle'=> "success",
+                    'data-offstyle'=> "danger",
+                    'data-on'=> "Oui",
+                    'data-off'=> "Non"
+                )
             ))
             ->add('permissions', 'choice', array(
-              'mapped' => false,
-              'multiple' => true,
-              'expanded' => true,
-              'label' => 'Peut utiliser :',
-              'choices' => array(
-                'ROLE_COMMERCIAL' => 'J\'aime le commercial',
-                'ROLE_COMPTA' => 'J\'aime la compta',
-                'ROLE_COMMUNICATION' => 'J\'aime communiquer',
-                'ROLE_RH' => 'J\'aime le recrutement',
-                'ROLE_NDF' => 'J\'aime les notes de frais',
-              )
+                'mapped' => false,
+                'multiple' => true,
+                'expanded' => true,
+                'label' => 'Peut utiliser :',
+                'choices' => array(
+                    'ROLE_COMMERCIAL' => 'J\'aime le commercial',
+                    'ROLE_COMPTA' => 'J\'aime la compta',
+                    'ROLE_COMMUNICATION' => 'J\'aime communiquer',
+                    //'ROLE_RH' => 'J\'aime le recrutement',
+                    'ROLE_NDF' => 'J\'aime les notes de frais',
+                    'ROLE_TIMETRACKER' => 'J\'aime compter mon temps',
+                )
             ))
-            ->add('receiptBankId', 'text', array(
-              'required' => false,
-              'label' => 'ID Receipt Bank'
+            ->add('tauxHoraire', 'integer', array(
+                'required' => false,
+                'label' => 'Taux horaire'
             ))
             ->add('submit', 'submit', array(
-              'label' => 'Ajouter',
+              'label' => 'Enregistrer',
               'attr' => array('class' => 'btn btn-success')
             ))
         ;

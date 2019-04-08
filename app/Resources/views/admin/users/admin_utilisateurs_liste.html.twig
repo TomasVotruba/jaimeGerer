@@ -28,7 +28,7 @@
           <th class="col-md-1">Activé</th>
           <th class="col-md-2">Accès aux outils</th>
           <th class="col-md-1">Administrateur</th>
-          <th class="col-md-1">ID Receipt Bank</th>
+          <th class="col-md-1">Taux horaire</th>
           <th class="col-md-1">Actions</th>
         </tr>
       </thead>
@@ -52,22 +52,26 @@
               >
             </td>
             <td>
-              <ul class="checklist">
-              {% set isAdmin = false %}
-              {% for role in user.roles %}
-                {% if role == 'ROLE_COMMERCIAL' %}
-                  <li>J'aime le commercial</li>
-                {% elseif role == 'ROLE_COMPTA' %}
-                  <li>J'aime la compta</li>
-                {% elseif role == 'ROLE_COMMUNICATION' %}
-                  <li>J'aime communiquer</li>
-                {% elseif role == 'ROLE_RH' %}
-                  <li>J'aime le recrutement</li>
-                {% elseif role == 'ROLE_ADMIN' %}
-                  {% set isAdmin = true %}
-                {% endif %}
-              {% endfor %}
-              </ul>
+                <ul class="checklist">
+                {% set isAdmin = false %}
+                {% for role in user.roles %}
+                    {% if role == 'ROLE_COMMERCIAL' %}
+                      <li>J'aime le commercial</li>
+                    {% elseif role == 'ROLE_COMPTA' %}
+                      <li>J'aime la compta</li>
+                    {% elseif role == 'ROLE_COMMUNICATION' %}
+                      <li>J'aime communiquer</li>
+                    {% elseif role == 'ROLE_RH' %}
+                      <li>J'aime le recrutement</li>
+                    {% elseif role == 'ROLE_NDR' %}
+                      <li>J'aime les notes de frais</li>
+                    {% elseif role == 'ROLE_TIMETRACKER' %}
+                      <li>J'aime compter mon temps</li>
+                    {% elseif role == 'ROLE_ADMIN' %}
+                      {% set isAdmin = true %}
+                    {% endif %}
+                {% endfor %}
+                </ul>
             </td>
             <td>
               <input
@@ -83,11 +87,7 @@
               >
             </td>
             <td>
-              {% if user.receiptBankId is not null %}
-                {{ user.receiptBankId }}
-              {% else %}
-                -
-              {% endif %}
+                {{ user.tauxHoraire|number_format(2, ',', ' ') }} €
             </td>
             <td>
               <a class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>

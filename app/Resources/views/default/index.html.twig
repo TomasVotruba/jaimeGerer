@@ -47,6 +47,13 @@
 		    		<img src="{{ asset('images/assets/recrutement.png') }}" alt="Recrutement" />
 		    		J'aime le recrutement
 		    	</li>
+		    </ul>
+		</div>
+	</div>		   
+	<div class="row">
+		<div class="col-md-12 center">
+		    <ul class="main_menu">
+		    	
 		    	<li id="ndf" class="active">
 		    		<a href="{{ path('ndf_recus_liste') }}">
 			    		<img src="{{ asset('images/assets/ndf.png') }}" alt="Notes de frais" />
@@ -61,6 +68,12 @@
 				    	</a>
 			    	</li>
 		    	{% endif %}
+    	    	<li id="time-tracker" class="active">
+    	    		<a href="{{ path('time_tracker_index') }}">
+    		    		<img src="{{ asset('images/assets/jaimecomptermontemps.png') }}" alt="J'aime compter mon temps" />
+    		    		J'aime compter mon temps
+    		    	</a>
+    	    	</li>
 		   </ul>
 	   </div>
 	</div>

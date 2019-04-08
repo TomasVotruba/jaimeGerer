@@ -22,6 +22,7 @@ class TimeTrackerController extends Controller
 
 		$temps = new Temps();
 		$temps->setDate(new \DateTime(date('Y-m-d')));
+		$temps->setUser($this->getUser());
 
 		$form = $this->createForm(
 			new TempsType(), 
