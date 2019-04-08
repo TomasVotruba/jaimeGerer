@@ -49,6 +49,11 @@ class TimeTrackerController extends Controller
 			$em->persist($temps);
 			$em->flush();
 
+			$this->get('session')->getFlashBag()->add(
+				'success',
+				$temps->getDureeAsString(). ' ajoutées à '.$temps->getActionCommerciale()->getNom()
+			);
+
 			return $this->redirect($this->generateUrl(
 				'time_tracker_index'
 			));

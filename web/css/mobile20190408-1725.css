@@ -141,6 +141,10 @@
 		background: #ec741b;
 	}
 
+	#titre-mobile-wrapper.time_tracker{
+		background: #FC5162;
+	}
+
 	#mobile-bottom-menu{
 		background: #444141;
 		width: 100%;

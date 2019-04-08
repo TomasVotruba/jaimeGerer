@@ -29,6 +29,21 @@
             <div class="titre titre-timetracker hidden-xs">
                 <h1 id="titre-outil">J'aime compter mon temps</h1>
             </div>
+
+            <div class="row spacer-top">
+                <div class="col-md-12">
+                    {% for flashMessage in app.session.flashbag.get('success') %}
+                        <div class="alert alert-success">
+                            {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                    {% for flashMessage in app.session.flashbag.get('danger') %}
+                        <div class="alert alert-danger">
+                            {{ flashMessage }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
                 
             {% block content %}
             {% endblock %}
