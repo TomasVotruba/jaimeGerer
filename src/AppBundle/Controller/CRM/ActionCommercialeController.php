@@ -1484,20 +1484,35 @@ class ActionCommercialeController extends Controller
 	 */
 	public function terminer(Opportunite $actionCommerciale, $screen = 'action_commerciale'){
 
-		$actionCommerciale->setTermine(true);
-		$em = $this->getDoctrine()->getManager();
-		$em->persist($actionCommerciale);
-		$em->flush();
+		$form = $this->createFormBuilder()->getForm();
 
-		if('time_tracker' == $screen){
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+
+			$actionCommerciale->setTermine(true);
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($actionCommerciale);
+			$em->flush();
+
+			if('time_tracker' == $screen){
+				return $this->redirect($this->generateUrl(
+					'time_tracker_index'
+				));
+			}
+
 			return $this->redirect($this->generateUrl(
-				'time_tracker_index'
+				'crm_action_commerciale_voir', array('id' => $actionCommerciale->getId())
 			));
 		}
 
-		return $this->redirect($this->generateUrl(
-			'crm_action_commerciale_voir', array('id' => $actionCommerciale->getId())
+		return $this->render('crm/action-commerciale/crm_action_commerciale_terminer.html.twig', array(
+			'form' => $form->createView(),
+			'actionCommerciale' => $actionCommerciale,
+			'screen' => $screen
 		));
+
 	}
 
 
