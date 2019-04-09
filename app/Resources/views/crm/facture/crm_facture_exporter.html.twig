@@ -269,7 +269,7 @@
             {{ app.user.company.nom }}
         </p>
 
-        {% if pub.image %}
+        {% if pub.image && pub.texte %}
             <div id="pub">
                 <img src="{{ app.request.schemeAndHttpHost }}/web/upload/crm/pub_facture/{{ pub.image }}"/>
                 <p>{{ pub['texte'] }}</p>
