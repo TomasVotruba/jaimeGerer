@@ -1,0 +1,12 @@
+{% block submenu %}
+    <ul class="nav nav-tabs center-mobile center">
+      	<li class=" col-xs-12 col-md-3 {% if app.request.pathInfo == "/time-tracker" %} active {% endif %}">
+         	<a href="{{ path('time_tracker_index') }}"><span class="glyphicon glyphicon-hourglass"></span> Temps</a>
+     	</li>
+ 
+      	<li class=" col-xs-12 col-md-3 {% if app.request.pathInfo == "/time-tracker/reporting"  %} active {% endif %}">
+        	<a href="{{ path('time_tracker_reporting') }}"><i class="fas fa-chart-pie"></i> Reporting</a>
+      	</li>
+
+    </ul>
+{% endblock %}

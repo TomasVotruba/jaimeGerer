@@ -17,8 +17,14 @@
 {% block mobile_menu_bottom_dropdown %}
     <li role="presentation">
     	<a href="{{ path('time_tracker_index') }}">
-            <span class="glyphicon glyphicon-heart menu-icon"></span>
-            J'aime compter mon temps
+            <span class="glyphicon glyphicon-hourglass"></span>
+           Temps
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="{{ path('time_tracker_reporting') }}">
+            <i class="fas fa-chart-pie"></i>
+           Reporting
         </a>
     </li>
 {% endblock %}

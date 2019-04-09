@@ -67,5 +67,26 @@ class TimeTrackerController extends Controller
 		));
 	}
 
+	/**
+	 * @Route("/time-tracker/reporting", name="time_tracker_reporting")
+	 */
+	public function reporting(){
+
+		$timeTrackerService = $this->get('appbundle.time_tracker_service');
+		$chartService = $this->get('appbundle.chart_service');
+
+		$year = date('Y');
+		$dataChartTempsTravailMois = $timeTrackerService->getDataChartTempsParMois($this->getUser()->getCompany(), $year);
+		$chartTempsTravailMois = $chartService->timeTrackerTempsTravailParMois($dataChartTempsTravailMois);
+
+		$dataChartTempsTravailAnnee= $timeTrackerService->getDataChartTempsParAnnee($this->getUser()->getCompany());
+		$chartTempsTravailAnnee = $chartService->timeTrackerTempsTravailParAnnee($dataChartTempsTravailAnnee);
+
+		return $this->render('time_tracker/time_tracker_reporting.html.twig', array(
+			'chartTempsTravailMois' => $chartTempsTravailMois,
+			'chartTempsTravailAnnee' => $chartTempsTravailAnnee
+		));
+	}
+
 
 }

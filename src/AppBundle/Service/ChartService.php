@@ -369,4 +369,72 @@ class ChartService extends ContainerAware {
 
          return $pieChart;
     }
+
+    /**
+    * Crée le graphique du temps de travail passé par mois
+    *
+    * @return PieChart
+    */
+     public function timeTrackerTempsTravailParMois($arr_data)
+     {
+        $colChart = new ColumnChart();
+
+        $arr_mois = array(
+            1 => 'Jan',
+            2 => 'Fév',
+            3 => 'Mars',
+            4 => 'Avr',
+            5 => 'Mai',
+            6 => 'Juin',
+            7 => 'Juil',
+            8 => 'Août',
+            9 => 'Sept',
+            10 => 'Oct',
+            11 => 'Nov',
+            12 => 'Déc'
+        );
+
+        $arrayDataTable = array(
+            ['Mois', 'Temps total passé (en heures)' ]
+        );
+        foreach($arr_data as $mois => $data){
+            $arrayDataTable[] = [
+                $arr_mois[$mois], 
+                $data, 
+            ];
+        }
+
+        $colChart->getData()->setArrayToDataTable($arrayDataTable);
+        $colChart->getOptions()->setColors(array('#ec741b'));
+        $colChart->getOptions()->getLegend()->setPosition('none');
+
+        return $colChart;
+    }
+
+    /**
+    * Crée le graphique du temps de travail passé par an
+    *
+    * @return PieChart
+    */
+     public function timeTrackerTempsTravailParAnnee($arr_data)
+     {
+        $colChart = new ColumnChart();
+
+
+        $arrayDataTable = array(
+            ['Année', 'Temps total passé (en heures)' ]
+        );
+        foreach($arr_data as $annee => $data){
+            $arrayDataTable[] = [
+                strval($annee), 
+                $data, 
+            ];
+        }
+
+        $colChart->getData()->setArrayToDataTable($arrayDataTable);
+        $colChart->getOptions()->setColors(array('#ec741b'));
+        $colChart->getOptions()->getLegend()->setPosition('none');
+
+        return $colChart;
+    }
 }

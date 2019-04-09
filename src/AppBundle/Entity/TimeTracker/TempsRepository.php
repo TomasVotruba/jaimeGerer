@@ -12,4 +12,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class TempsRepository extends EntityRepository
 {
+	public function findForCompanyByYear($company, $year){
+
+		$qb = $this->createQueryBuilder('t')
+		->innerJoin('t.user', 'u')
+		->where('u.company = :company')
+		->andWhere('t.date >= :start')
+		->andWhere('t.date <= :end')
+		->setParameter('company', $company)
+		->setParameter('start', $year.'-01-01')
+		->setParameter('end',  $year.'-12-31');
+
+		return $qb->getQuery()->getResult();
+	}
 }

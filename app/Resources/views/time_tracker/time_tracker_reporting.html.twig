@@ -1,0 +1,48 @@
+{% extends 'time_tracker/time_tracker_layout.html.twig' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% include 'time_tracker/time_tracker_submenu.html.twig' %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 center-mobile">
+            <h1>Reporting</h1>
+        </div>
+    </div>
+    
+    <div class="row spacer-top">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>Temps de travail par mois (en heures)</h3>
+            <div id="chart_temps_travail_mois"></div>
+        </div>
+        
+        <div class="col-md-8 col-md-offset-2">
+            <h3>Temps de travail par an (en heures)</h3>
+            <div id="chart_temps_travail_annee"></div>
+        </div>
+      
+    </div>
+  
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+
+        $(document).ready(function() {
+
+            /* charts */
+            {{ gc_draw(chartTempsTravailMois, 'chart_temps_travail_mois') }}
+            {{ gc_draw(chartTempsTravailAnnee, 'chart_temps_travail_annee') }}
+           
+           
+        });
+    </script>
+{% endblock %}

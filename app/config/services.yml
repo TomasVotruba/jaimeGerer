@@ -163,3 +163,8 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         arguments: [ "@doctrine.orm.entity_manager" ]
+    appbundle.time_tracker_service:
+        class: AppBundle\Service\TimeTracker\TimeTrackerService
+        calls:
+            - [setContainer, ["@service_container"]]
+        arguments: [ "@doctrine.orm.entity_manager" ]

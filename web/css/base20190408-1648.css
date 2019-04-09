@@ -1021,3 +1021,7 @@ ul.checklist li:before {
 .form-help{
     font-size: 0.8em;
 }
+
+svg > g > g:last-child { 
+    pointer-events: none 
+}
