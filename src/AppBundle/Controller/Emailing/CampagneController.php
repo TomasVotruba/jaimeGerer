@@ -257,6 +257,9 @@ class CampagneController extends Controller
 
 			$file = $form['file']->getData();
 			$html = file_get_contents($file);
+
+			//for outlook to display apostrophes properly
+			$html = str_replace('&apos;', '&#8217;', $html);
 			$campagne->setHTML($html);
 
 			$em = $this->getDoctrine()->getManager();					
