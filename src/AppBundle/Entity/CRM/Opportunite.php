@@ -236,6 +236,7 @@ class Opportunite
     /**
     *
     * @ORM\OneToMany(targetEntity="AppBundle\Entity\TimeTracker\Temps", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+    * @ORM\OrderBy({"date" = "ASC"})
     *
     */
     private $temps;
@@ -1502,5 +1503,21 @@ class Opportunite
     public function getTermine()
     {
         return $this->termine;
+    }
+
+    /**
+     * Le montant réel rapport par une action commerciale 
+     * en otant la sous-traitance et les frais si non refacturables
+     **/ 
+    public function getGainReel(){
+        $gain = $this->getMontant();
+        $gain-= $this->getMontantMonetaireSousTraitance();
+
+        if(false == $this->hasFraisRefacturables()){
+            $gain-= $this->getTotalFrais();
+        }
+
+        return $gain;
+
     }
 }

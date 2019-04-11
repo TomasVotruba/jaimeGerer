@@ -38,7 +38,7 @@ class Temps
     /**
      * @var string
      *
-     * @ORM\Column(name="activite", type="string", length=255)
+     * @ORM\Column(name="activite", type="string", length=255, nullable=true)
      */
     private $activite;
 

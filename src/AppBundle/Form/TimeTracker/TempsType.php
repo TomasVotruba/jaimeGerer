@@ -14,20 +14,29 @@ class TempsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+
+
         $builder
-            ->add('date', 'date', array('widget' => 'single_text',
-                'input' => 'datetime',
-                'format' => 'dd/MM/yyyy',
-                'attr' => array('class' => 'dateInput', 'autocomplete' => 'off'),
+            ->add('monthpicker', 'text', array(
+                'attr' => array('class' => 'monthInput', 'autocomplete' => 'off'),
                 'required' => true,
-                'label' => 'Date'
+                'label' => 'Date',
+                'mapped' => false,
+                'data' => date('m/Y')
+            ))
+            ->add('date', 'date', array(
+                'widget' => 'single_text',
+                'input' => 'datetime',
+                'attr' => array('class' => 'hidden'),
+                'label_attr' => array('class' => 'hidden'),
             ))
             ->add('duree', 'number', array(
                 'required' => true,
                 'label' => 'Temps passé'
             ))
             ->add('activite', 'text', array(
-                'required' => true,
+                'required' => false,
                 'label' => 'Activité'
             ))
             ->add('projet_name', 'text', array(

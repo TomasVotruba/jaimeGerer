@@ -552,31 +552,35 @@
 			<div class="row">
 				<div class="col-md-12">
 					<hr />
-					<h3>Frais refacturables
-						{% if true == opportunite.hasFraisRefacturables %}
-							<a href="{{ path('crm_action_commerciale_frais_ajouter', {'id' : opportunite.id }) }}" class="btn btn-xs btn-primary">Ajouter des frais</a>
-
-							{% if opportunite.totalFraisNonFactures > 0 %}
-								<a href="{{ path('crm_action_commerciale_facturer_frais', {'id' : opportunite.id }) }}" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modal">Facturer les frais</a>
-							{% endif %}
+					<h3>Frais
+						{% if true == opportunite.hasFraisRefacturables and opportunite.totalFraisNonFactures > 0 %}
+							<a href="{{ path('crm_action_commerciale_facturer_frais', {'id' : opportunite.id }) }}" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modal">Facturer les frais</a>
 						{% endif %}
+						<a href="{{ path('crm_action_commerciale_frais_ajouter', {'id' : opportunite.id }) }}" class="btn btn-xs btn-primary">Ajouter des frais</a>
 					</h3>
 				</div>
 			</div>
-			{% if false == opportunite.hasFraisRefacturables %}
-				<div class="row">
-					<div class="col-md-12">
-						<i>Les frais de cette action commerciale ne sont pas refacturables.</i>
+			
+			<div class="row">
+				{% if false == opportunite.hasFraisRefacturables %}
+					<div class="col-md-12 alert alert-warning">
+						Les frais de cette action commerciale ne sont pas refacturables.
 					</div>
+				{% else %}
+					<div class="col-md-12 alert alert-success">
+						Les frais de cette action commerciale sont refacturables.
+					</div>
+				{% endif %}
+			</div>
+			
+
+			<div class="row">
+
+				<div class="col-md-2 center">
+					<p>Total</p>
+					<p class="xl">{{ opportunite.totalFrais|number_format(2, ',', ' ') }} €</p>
 				</div>
-			{% else %}
-
-				<div class="row">
-
-					<div class="col-md-2 center">
-						<p>Total</p>
-						<p class="xl">{{ opportunite.totalFrais|number_format(2, ',', ' ') }} €</p>
-					</div>
+				{% if true == opportunite.hasFraisRefacturables %}
 					<div class="col-md-2 center">
 						<p>Total facturé</p>
 						<p class="xl">{{ opportunite.totalFraisFactures|number_format(2, ',', ' ') }} €</p>
@@ -585,141 +589,149 @@
 						<p>Reste à facturer</p>
 						<p class="xl">{{ opportunite.totalFraisNonFactures|number_format(2, ',', ' ') }} €</p>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<table class="contact-view-table" id="table-bons-commande">
-							<thead>
-								<tr>
-									<th>Type</th>
-									<th>Libelle</th>
-									<th>Date</th>
-									<th>Montant (HT)</th>
-									{# <th>Montant TVA</th>
-									<th>Montant TTC</th> #}
+				{% endif %}
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<table class="contact-view-table" id="table-bons-commande">
+						<thead>
+							<tr>
+								<th>Type</th>
+								<th>Libelle</th>
+								<th>Date</th>
+								<th>Montant (HT)</th>
+								{# <th>Montant TVA</th>
+								<th>Montant TTC</th> #}
+								{% if true == opportunite.hasFraisRefacturables %}
 									<th>Facturé</th>
-									<th>Modifier</th>
-								</tr>
-							</thead>
-							<tbody>
+								{% endif %}
+								<th>Modifier</th>
+							</tr>
+						</thead>
+						<tbody>
 
-							{% for frais in opportunite.frais %}
-								<tr>
-									<td>
-										Manuel
-									</td>
-									<td>
-										{{ frais.nom }}<br />
-										{{ frais.description }}
-									</td>
-									<td>
-										{{ frais.date|date('d/m/Y') }}
-									</td>
-									<td>
-										{{ frais.montantHT|number_format(2,',', ' ') }} €
-									</td>
-									{# <td>
-										{{ frais.tva|number_format(2,',', ' ') }} €
-									</td>
-									<td>
-										{{ frais.montantTTC|number_format(2,',', ' ') }} €
-									</td> #}
+						{% for frais in opportunite.frais %}
+							<tr>
+								<td>
+									Manuel
+								</td>
+								<td>
+									{{ frais.nom }}<br />
+									{{ frais.description }}
+								</td>
+								<td>
+									{{ frais.date|date('d/m/Y') }}
+								</td>
+								<td>
+									{{ frais.montantHT|number_format(2,',', ' ') }} €
+								</td>
+								{# <td>
+									{{ frais.tva|number_format(2,',', ' ') }} €
+								</td>
+								<td>
+									{{ frais.montantTTC|number_format(2,',', ' ') }} €
+								</td> #}
+								{% if true == opportunite.hasFraisRefacturables %}
 									<td>
 										{% if true == frais.produit %}
 											<span class="glyphicon glyphicon-ok"></span>&nbsp;
 											<a href="{{ path('crm_facture_voir', {'id' : frais.produit.documentPrix.id }) }}">{{ frais.produit.documentPrix.num }}</a>
 										{% endif %}
 									</td>
-									<td>
-										{% if false == frais.produit %}
-											<a href="{{ path('crm_action_commerciale_frais_editer', {'id' : frais.id }) }}" class="btn btn-xs btn-primary">
-												<span class="glyphicon glyphicon-pencil"></span>
-											</a>
-										{% else %}
-											<a href="#" class="btn btn-xs btn-default not-active">
-												<span class="glyphicon glyphicon-pencil"></span>
-											</a>
-										{% endif %}
-									</td>
-								</tr>
-							{% endfor %}
-							{% for recu in opportunite.recusValides %}
-								<tr>
-									<td>
-										Note de frais
-									</td>
-									<td>
-										{{ recu.ligneDepense.depense.noteFrais.__toStringSansTotal }}<br />
-										{{ recu.fournisseur }}
-									</td>
-									<td>
-										{{ recu.date|date('d/m/Y') }}
-									</td>
-									<td>
-										{{ recu.montantHT|number_format(2,',', ' ') }} €
-									</td>
-									{# <td>
-										{{ recu.tva|number_format(2,',', ' ') }} €
-									</td>
-									<td>
-										{{ recu.montantTTC|number_format(2,',', ' ') }} €
-									</td> #}
+								{% endif %}
+								<td>
+									{% if false == frais.produit %}
+										<a href="{{ path('crm_action_commerciale_frais_editer', {'id' : frais.id }) }}" class="btn btn-xs btn-primary">
+											<span class="glyphicon glyphicon-pencil"></span>
+										</a>
+									{% else %}
+										<a href="#" class="btn btn-xs btn-default not-active">
+											<span class="glyphicon glyphicon-pencil"></span>
+										</a>
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+						{% for recu in opportunite.recusValides %}
+							<tr>
+								<td>
+									Note de frais
+								</td>
+								<td>
+									{{ recu.ligneDepense.depense.noteFrais.__toStringSansTotal }}<br />
+									{{ recu.fournisseur }}
+								</td>
+								<td>
+									{{ recu.date|date('d/m/Y') }}
+								</td>
+								<td>
+									{{ recu.montantHT|number_format(2,',', ' ') }} €
+								</td>
+								{# <td>
+									{{ recu.tva|number_format(2,',', ' ') }} €
+								</td>
+								<td>
+									{{ recu.montantTTC|number_format(2,',', ' ') }} €
+								</td> #}
+								{% if true == opportunite.hasFraisRefacturables %}
 									<td>
 										{% if true == recu.produit %}
 											<span class="glyphicon glyphicon-ok"></span>&nbsp;
 											<a href="{{ path('crm_facture_voir', {'id' : recu.produit.documentPrix.id }) }}">{{ recu.produit.documentPrix.num }}</a>
 										{% endif %}
 									</td>
-									<td>
-										<a href="#" class="btn btn-xs btn-default not-active">
-											<span class="glyphicon glyphicon-pencil"></span>
-										</a>
-									</td>
-								</tr>
-							{% endfor %}
-							{% for fraisSousTraitant in opportunite.fraisSousTraitants %}
-								<tr>
-									<td>
-										Sous-traitance
-									</td>
-									<td>
-										{{ fraisSousTraitant.opportuniteSousTraitance.sousTraitant }}<br />
-										{{ fraisSousTraitant.date|date('m/Y') }}
-									</td>
-									<td>
-										{{ fraisSousTraitant.date|date('d/m/Y') }}
-									</td>
-									<td>
-										{{ fraisSousTraitant.fraisMonetaire|number_format(2,',', ' ') }} €
-									</td>
-									{# <td></td>
-									<td></td> #}
+								{% endif %}
+								<td>
+									<a href="#" class="btn btn-xs btn-default not-active">
+										<span class="glyphicon glyphicon-pencil"></span>
+									</a>
+								</td>
+							</tr>
+						{% endfor %}
+						{% for fraisSousTraitant in opportunite.fraisSousTraitants %}
+							<tr>
+								<td>
+									Sous-traitance
+								</td>
+								<td>
+									{{ fraisSousTraitant.opportuniteSousTraitance.sousTraitant }}<br />
+									{{ fraisSousTraitant.date|date('m/Y') }}
+								</td>
+								<td>
+									{{ fraisSousTraitant.date|date('d/m/Y') }}
+								</td>
+								<td>
+									{{ fraisSousTraitant.fraisMonetaire|number_format(2,',', ' ') }} €
+								</td>
+								{# <td></td>
+								<td></td> #}
+								{% if true == opportunite.hasFraisRefacturables %}
 									<td>
 										{% if true == fraisSousTraitant.produit %}
 											<span class="glyphicon glyphicon-ok"></span>&nbsp;
 											<a href="{{ path('crm_facture_voir', {'id' : fraisSousTraitant.produit.documentPrix.id }) }}">{{ fraisSousTraitant.produit.documentPrix.num }}</a>
 										{% endif %}
 									</td>
-									<td>
-										{% if false == fraisSousTraitant.produit %}
-											<a href="{{ path('crm_action_commerciale_sous_traitance_editer', {'id' : fraisSousTraitant.opportuniteSousTraitance.id }) }}" class="btn btn-xs btn-primary">
-												<span class="glyphicon glyphicon-pencil"></span>
-											</a>
-										{% else %}
-											<a href="#" class="btn btn-xs btn-default not-active">
-												<span class="glyphicon glyphicon-pencil"></span>
-											</a>
-										{% endif %}
-										
-									</td>
-								</tr>
-							{% endfor %}
-							</tbody>
-						</table>
-					</div>
+								{% endif %}
+								<td>
+									{% if false == fraisSousTraitant.produit %}
+										<a href="{{ path('crm_action_commerciale_sous_traitance_editer', {'id' : fraisSousTraitant.opportuniteSousTraitance.id }) }}" class="btn btn-xs btn-primary">
+											<span class="glyphicon glyphicon-pencil"></span>
+										</a>
+									{% else %}
+										<a href="#" class="btn btn-xs btn-default not-active">
+											<span class="glyphicon glyphicon-pencil"></span>
+										</a>
+									{% endif %}
+									
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
 				</div>
-			{% endif %}
-
+			</div>
+		
 			<div class="row">
 				<div class="col-md-12">
 					<hr />
@@ -1047,7 +1059,7 @@
 				    id: "gauge-rentabilite",
 				    value: {{ opportunite.tempsTotalMontant|number_format(2,'.','') }},
 				    min: 0,
-				    max: {{ opportunite.montant }},
+				    max: {{ opportunite.gainReel }},
 				    title: "Temps passé",
 				    levelColors: ["a9d60c", "f8c700", "ff0000"],
 				    levelColorsGradient: false,

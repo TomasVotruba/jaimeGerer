@@ -13,15 +13,50 @@
             <h1>Reporting</h1>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-2">
+            {{ form_start(form) }}
+            <div class="typeahead-container">
+                <div class="typeahead-field">
+                    <span class="typeahead-query">
+                        {{ form_label(form.projet_name) }}<br />
+                        <span class="form-help">N° du bon de commande, nom du projet ou du client</span>
+                        <div class="input-group">
+                            {{ form_widget(form.projet_name) }}
+                            <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+                        </div>
+                    </span>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 spacer-top" id="wrapper-ajax">
+            <!-- filled by ajax -->
+        </div>
+        <p class="center hidden spacer-top" id="loader">
+            <img src="{{ asset('images/assets/dog_loader.gif') }}" alt="Chargement en cours" /><br />
+            <i>Chargement en cours...</i>
+        </p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
     
     <div class="row spacer-top">
-        <div class="col-md-8 col-md-offset-2">
-            <h3>Temps de travail par mois (en heures)</h3>
+        <div class="col-md-6 ">
+            <h3>Temps de travail total à {{ app.user.company }} par mois (en heures)</h3>
             <div id="chart_temps_travail_mois"></div>
         </div>
         
-        <div class="col-md-8 col-md-offset-2">
-            <h3>Temps de travail par an (en heures)</h3>
+        <div class="col-md-6">
+            <h3>Temps de travail total à {{ app.user.company }} par an (en heures)</h3>
             <div id="chart_temps_travail_annee"></div>
         </div>
       
@@ -38,11 +73,43 @@
 
         $(document).ready(function() {
 
-            /* charts */
+            /* autocomplete */
+            $('.typeahead-projet').typeahead({
+                order: "desc",
+                accent: true,
+                source: {
+                    url: Routing.generate('crm_bon_commande_search')
+                },
+                callback: {
+                    onClickAfter: function (node, a, item, event) {
+                        loadTable(item.id);
+                    }
+                },
+            });
+
+            /* draw charts */
             {{ gc_draw(chartTempsTravailMois, 'chart_temps_travail_mois') }}
             {{ gc_draw(chartTempsTravailAnnee, 'chart_temps_travail_annee') }}
            
-           
         });
+
+        //load project details in wrapper
+        function loadTable(id){
+                
+                $("#loader").removeClass("hidden");
+                $("#wrapper-ajax").html("");
+
+                $.ajax({
+                    type: "GET",
+                    url: Routing.generate('time_tracker_reporting_project', {'id' : id}),
+                    success: function(data) {
+                        $("#loader").addClass("hidden");
+                        $("#wrapper-ajax").html(data);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        $("#loader").addClass("hidden");
+                    },
+                });
+            }
     </script>
 {% endblock %}

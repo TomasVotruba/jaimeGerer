@@ -23,7 +23,10 @@
 		        <span class="typeahead-query">
 		        	{{ form_label(form.projet_name) }}<br />
 		        	<span class="form-help">N° du bon de commande, nom du projet ou du client</span>
-		        	{{ form_widget(form.projet_name) }}
+		        	<div class="input-group">
+		        	    {{ form_widget(form.projet_name) }}
+		        	    <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+		        	</div>
 		            {{ form_row(form.projet_entity) }}
 		        </span>
 		    </div>
@@ -31,9 +34,11 @@
 	</div>
 	<div class="col-md-3">
 		<div class="form-group">
-			{{ form_label(form.date) }}<br />
-			<span class="form-help">Quel jour avez-vous travaillé sur le projet ?</span>
-		    {{ form_widget(form.date) }}
+			{{ form_label(form.monthpicker) }}<br />
+			<span class="form-help">Quand avez-vous travaillé sur le projet ?</span>
+		    {{ form_widget(form.monthpicker) }}
+
+		    {{ form_row(form.date) }}
 		</div>
 	</div>
 	<div class="col-md-2">
@@ -127,10 +132,27 @@
 
 {% block javascripts %}
 	{{ parent() }}
+	 <script src="https://cdn.rawgit.com/digitalBush/jquery.maskedinput/1.4.1/dist/jquery.maskedinput.min.js"></script>
+	<script src="{{ asset('lib/jquery-ui-month-picker/src/MonthPicker.js') }}"></script>
+
 	<script type="text/javascript">
 
 		$(document).ready( function () {
 
+
+			$(".monthInput").MonthPicker({
+			    Button: false,
+			    i18n: {
+			       months: ["Jan", "Fev", "Mars", "Avr", "Mai", "Juin", "Juil", "Aou", "Sep", "Oct", "Nov", "Dec"],
+			       year: ''
+			    },
+		        MonthFormat: 'mm/yy', 
+		      	AltFormat: 'yy-mm-dd', 
+		      	AltField: '#appbundle_timetracker_temps_date'
+			});
+
+
+			/* autocomplete */
 			$('.typeahead-projet').typeahead({
 				order: "desc",
 				accent: true,
@@ -144,6 +166,7 @@
 				},
 			});
 
+			/* draw datatable */
 			$('#time-tracker-list').DataTable({
 				"dom": 'T<"clear">lfrtip',
 				"language" : {                
@@ -157,6 +180,7 @@
 				]
 			});
 
+			/* prefill form when the "Add time" button is clicked */
 			$('.add-time-button').click(function(e){
 
 				var id = $(this).data('actionco-id');

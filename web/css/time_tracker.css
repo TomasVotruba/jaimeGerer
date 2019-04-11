@@ -6,3 +6,17 @@
 .inline-form-button{
 	padding-top: 40px;
 }
+
+ul.typeahead-list {
+	width: 800px;
+    overflow: hidden;
+}
+
+#time_tracker_reporting_project_table td{
+	background-color: #fff;
+	vertical-align: middle;
+}
+
+.typeahead-field input, .typeahead-select{
+	background-color: #fff;
+}

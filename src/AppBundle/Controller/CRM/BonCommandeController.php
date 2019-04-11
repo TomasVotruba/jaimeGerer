@@ -129,7 +129,7 @@ class BonCommandeController extends Controller
 			$ok = false;
 			if(strtoupper($etat) == "ALL"){
 				$ok = true;
-			} else if( strtoupper($etat) == "OK" && ($bc->getMontant() ==  $bc->getTotalFacture() || $bc->getActionCommerciale()->getTotalFrais() == $bc->getActionCommerciale()->getTotalFraisFactures() ) ){
+			} else if( strtoupper($etat) == "OK" && $bc->getMontant() ==  $bc->getTotalFacture() && $bc->getActionCommerciale()->getTotalFrais() == $bc->getActionCommerciale()->getTotalFraisFactures()  ){
 				$ok = true;
 			} else if ( strtoupper($etat) == "CURRENT" && ($bc->getMontant() > $bc->getTotalFacture() || $bc->getActionCommerciale()->getTotalFrais() > $bc->getActionCommerciale()->getTotalFraisFactures() )){
 				$ok = true;

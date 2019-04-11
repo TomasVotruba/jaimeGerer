@@ -1,0 +1,50 @@
+{% if actionCommerciale.usersHaveTauxHoraires == false %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-warning">
+                <span class="glyphicon glyphicon-warning-sign"></span>
+                Le taux horaire de certains utilisateurs n'a pas été renseigné. Le résultat peut donc être érroné.
+            </div>
+        </div>
+    </div>
+{% endif %}
+<div class="row">
+    <div class="col-md-6 center">
+        <p>Temps passé (hors commercial)</p>
+        <p class="xl">{{ actionCommerciale.tempsSansCommercialAsString }}</p>
+    </div>
+    <div class="col-md-6 center">
+        <p>Coût total (hors commercial)</p>
+        <p class="xl">{{ actionCommerciale.tempsTotalMontant|number_format('2', ',', ' ') }} €</p>
+    </div>
+</div>
+
+<table class="table table-bordered spacer-top" id="time_tracker_reporting_project_table">
+    <thead>
+        <tr>
+            <th>Mois</th>
+            <th>Total temps</th>
+            <th>Total montant</th>
+            <th>Personne</th>
+            <th>Temps passé</th>
+            <th>Montant</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for mois, arr_data in arr_mois %}
+            <tr>
+                <td rowspan="{{ arr_data.users|length }}">{{ mois }}</td>
+                <td rowspan="{{ arr_data.users|length }}">{{ arr_data.total_temps }}</td>
+                <td rowspan="{{ arr_data.users|length }}">{{ arr_data.total_euro|number_format(2, ',', ' ') }} €</td>
+                {% for user, data in arr_data.users %}
+                    {% if loop.index > 1 %}<tr>{% endif %}
+                        <td>{{ user }}</td>
+                        <td>{{ data.total_temps }}</td>
+                        <td>{{ data.total_euro|number_format(2, ',', ' ') }}€</td>
+                    {% if loop.index > 1 %}</tr>{% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

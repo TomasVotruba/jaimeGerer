@@ -183,7 +183,7 @@
             {% else %}
               {% if poste == "ca_mois" or poste == "actions_commerciales" %}
                 {% set arr_sous_poste = sous_poste|split('_') %}
-                 {{ arr_sous_poste[0] }} {{ arr_sous_poste[1] }}
+                 {{ arr_sous_poste[0] }} {% if arr_sous_poste[0] == 'frais' %} refacturables {% endif %} {{ arr_sous_poste[1] }}
               {% else %}
                 {{ sous_poste }}
               {% endif %}
