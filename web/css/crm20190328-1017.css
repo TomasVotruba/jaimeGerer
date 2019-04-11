@@ -402,3 +402,13 @@ table.htCore tbody tr td:last-child,  table.htCore tbody tr td:last-child.curren
 .label-no-bold .checkbox label{
 	font-weight: normal;
 }
+
+.block-compet-com-individual{
+	padding: 20px;
+	text-align: center;
+}
+
+.block-compet-com-individual img{
+	width: 100px;
+	margin-bottom: 10px;
+}

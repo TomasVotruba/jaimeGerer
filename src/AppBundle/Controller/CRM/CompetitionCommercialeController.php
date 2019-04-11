@@ -27,7 +27,6 @@ class CompetitionCommercialeController extends Controller
 		$userRepo = $em->getRepository('AppBundle:User');
 
 		$competCom = $compteComRepo->findCurrent();
-
 		$users = $userRepo->findBy(array(
 			'company' => $this->getUser()->getCompany(),
 			'enabled' => true,
@@ -37,7 +36,7 @@ class CompetitionCommercialeController extends Controller
 		$arr_users = array();
 		foreach($users as $user){
 			$arr_users[$user->getId()]['user'] = $user;
-			//$arr_users[$user->getId()]['CA'] = 0;
+			$arr_users[$user->getId()]['CATotal'] = 0;
 			$arr_users[$user->getId()]['CAPublic'] = 0;
 			$arr_users[$user->getId()]['CAPrive'] = 0;
 			//$arr_users[$user->getId()]['ratioCA'] = 0;
@@ -72,7 +71,7 @@ class CompetitionCommercialeController extends Controller
 					continue;
 				}
 
-				//$arr_users[$user->getId()]['CA']+= $actionCommerciale->getMontant();
+				$arr_users[$user->getId()]['CATotal']+= $actionCommerciale->getMontant();
 				if($actionCommerciale->getPriveOrPublic() == "PUBLIC"){
 					$arr_users[$user->getId()]['CAPublic']+= $actionCommerciale->getMontant();
 					$arr_users[$user->getId()]['gagneesPublic'][] = $actionCommerciale;
@@ -135,7 +134,7 @@ class CompetitionCommercialeController extends Controller
 		return $this->render('crm/competition-commerciale/crm_competition_commerciale.html.twig', array(
 			'arr_winners' => $arr_winners,
 			'arr_users'		=> $arr_users,
-			'competCom' => $competCom
+			'competCom' => $competCom,
 		));
 
 	}
@@ -195,5 +194,81 @@ class CompetitionCommercialeController extends Controller
 			'actionCommerciale' => $actionCommerciale
 		));
 	}	
+
+	/**
+	 * @Route("/crm/objectifs-commerciaux/", name="crm_objectifs_commerciaux")
+	 */
+	public function objectifsCommerciaux(){
+
+		$em = $this->getDoctrine()->getManager();
+		$compteComRepo = $em->getRepository('AppBundle:CRM\CompetCom');
+		$actionCommercialeRepo = $em->getRepository('AppBundle:CRM\Opportunite');
+		$userRepo = $em->getRepository('AppBundle:User');
+
+		$total = 0;
+		$totalPublic = 0;
+		$totalPrive = 0;
+
+		$competCom = $compteComRepo->findCurrent();
+		$users = $userRepo->findBy(array(
+			'company' => $this->getUser()->getCompany(),
+			'enabled' => true,
+			'competCom' => true
+		));
+
+		$arr_users = array();
+		foreach($users as $user){
+			$arr_users[$user->getId()]['user'] = $user;
+			$arr_users[$user->getId()]['CATotal'] = 0;
+			$arr_users[$user->getId()]['CAPublic'] = 0;
+			$arr_users[$user->getId()]['CAPrive'] = 0;
+		}
+
+
+		if($competCom && count($arr_users)){
+
+			$arr_actionsCommerciales = $actionCommercialeRepo->findWonBetweenDates(
+				$this->getUser()->getCompany(),
+				$competCom->getStartDate(), 
+				$competCom->getEndDate()
+			);
+
+			foreach($arr_actionsCommerciales as $actionCommerciale){
+
+				$user = $actionCommerciale->getUserCompetCom();
+
+				if(!array_key_exists($user->getId(), $arr_users)){
+					continue;
+				}
+
+				$arr_users[$user->getId()]['CATotal']+= $actionCommerciale->getMontant();
+				$total+= $actionCommerciale->getMontant();
+				if($actionCommerciale->getPriveOrPublic() == "PUBLIC"){
+					$totalPublic+= $actionCommerciale->getMontant();
+					$arr_users[$user->getId()]['CAPublic']+= $actionCommerciale->getMontant();
+				} else {
+					$totalPrive+= $actionCommerciale->getMontant();
+					$arr_users[$user->getId()]['CAPrive']+= $actionCommerciale->getMontant();
+				}
+				
+			}
+			
+		}
+
+		usort($arr_users, function($a, $b) {
+	   		if($a['CATotal'] < $b['CATotal']){
+	   			return 1;
+	   		}
+	   		return -1;
+		});
+
+		return $this->render('crm/competition-commerciale/crm_objectifs_commerciaux.html.twig', array(
+			'arr_users'		=> $arr_users,
+			'totalPublic' => $totalPublic,
+			'totalPrive' => $totalPrive,
+			'total' => $total
+		));	
+	}
+
 
 }

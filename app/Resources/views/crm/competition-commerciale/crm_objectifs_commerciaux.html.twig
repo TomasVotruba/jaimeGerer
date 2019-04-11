@@ -1,0 +1,62 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12">
+                {% include 'crm/action-commerciale/crm_action_commerciale_submenu.html.twig' %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Objectifs commerciaux</h1>
+        </div>
+    </div>
+
+    {% if app.user.company.isNicomak %}
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col-md-12 center">
+            <p><strong>Total &nbsp; </strong><img src="{{ asset('/upload/logo/'~ app.user.company.logo) }}" alt="{{ app.user.company.nom }}" width="100px" style="vertical-align: baseline;"/></p>
+            <p class="xl">{{ total|number_format(2,',',' ') }} € </p>
+            <p>Public : {{ totalPublic|number_format(2,',',' ') }} € - Privé : {{ totalPrive|number_format(2,',',' ') }} €</p>
+        </div>
+
+    </div>
+
+    <div class="row">
+        {% for arr_user in arr_users %}
+            <div class="col-md-3">
+                <div class="block-compet-com-individual">
+                    <img src="{{ asset('/upload/avatar/'~arr_user.user.id~'/l.png') }} " alt="{{ arr_user.user.firstname }}" title="{{ arr_user.user.firstname }}"/> 
+                    <p>
+                        <span class="xl">
+                            {{ (arr_user.CATotal)|number_format(2,',',' ') }} €
+                            {% if (arr_user.CATotal) > 45000 %}
+                                <span class="glyphicon glyphicon-ok green"></span>
+                            {% endif %}
+                        </span>
+                        <br />
+                        Public : {{ (arr_user.CAPublic)|number_format(2,',',' ') }} € <br />
+                        Privé : {{ (arr_user.CAPrive)|number_format(2,',',' ') }} € 
+                    </p>
+                </div>
+            </div>
+
+            {% if loop.index == 4 %}
+                </div>
+                <div class="row">
+            {% endif %}
+        {% endfor %}
+
+    </div>
+{% endif %}
+
+   
+{% endblock %}
