@@ -7,15 +7,13 @@
       	<li class=" col-xs-12 col-md-2 {% if app.request.pathInfo == "/crm/bon_commande/liste"  %} active {% endif %}">
         	<a href="{{ path('crm_bon_commande_liste') }}"><i class="fas fa-file-contract"></i> Bons de commande</a>
       	</li>
-        {% if app.user.company.isNicomak %}
-         	<li class=" col-xs-12 col-md-2 {% if app.request.pathInfo == "/crm/competition-commerciale"  %} active {% endif %}">
-          	<a href="{{ path('crm_competition_commerciale') }}"><i class="fas fa-trophy"></i> Compétition commerciale</a>
-        	</li>
-        {% endif %}
         <li class=" col-xs-12 col-md-2 {% if app.request.pathInfo == "/crm/action-commerciale/reporting"  %} active {% endif %}">
             <a href="{{ path('crm_action_commerciale_reporting') }}"><i class="fas fa-chart-pie"></i> Reporting</a>
         </li>
         {% if app.user.company.isNicomak %}
+          <li class=" col-xs-12 col-md-2 {% if app.request.pathInfo == "/crm/competition-commerciale"  %} active {% endif %}">
+              <a href="{{ path('crm_competition_commerciale') }}"><i class="fas fa-trophy"></i> Compétition commerciale</a>
+            </li>
           <li class=" col-xs-12 col-md-2 {% if app.request.pathInfo == "/crm/objectifs-commerciaux"  %} active {% endif %}">
               <a href="{{ path('crm_objectifs_commerciaux') }}"><i class="fas fa-bullseye"></i> Objectifs commerciaux</a>
           </li>
