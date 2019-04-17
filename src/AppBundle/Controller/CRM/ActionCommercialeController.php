@@ -1081,7 +1081,8 @@ class ActionCommercialeController extends Controller
 			}
 
 			$em->persist($facture);
-
+			$em->flush();
+			
 			if($activationCompta){
 
 				//si le compte comptable du client n'existe pas, on le créé
