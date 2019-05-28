@@ -139,7 +139,7 @@ class BonCommandeController extends Controller
 
 			if($ok){
 				$list[$i]['num'] = $bc->getNum();
-				$list[$i]['compte'] = $bc->getActionCommerciale()->getCompte()->getNom()
+				$list[$i]['compte'] = $bc->getActionCommerciale()->getCompte()->getNom();
 				$list[$i]['compte_id'] = $bc->getActionCommerciale()->getCompte()->getId();
 				$list[$i]['objet'] = $bc->getActionCommerciale()->getNom();
 				$list[$i]['action_commerciale'] = $bc->getActionCommerciale()->getId();
