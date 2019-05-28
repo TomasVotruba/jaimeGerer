@@ -131,7 +131,11 @@ class BonCommandeController extends Controller
 				$ok = true;
 			} else if( strtoupper($etat) == "OK" && $bc->getMontant() ==  $bc->getTotalFacture() && (false == $bc->getFraisRefacturables()  || $bc->getActionCommerciale()->getTotalFrais() == $bc->getActionCommerciale()->getTotalFraisFactures() )  ){
 				$ok = true;
-			} else if ( strtoupper($etat) == "CURRENT" && ( $bc->getMontant() > $bc->getTotalFacture() ||  (false == $bc->getFraisRefacturables() || $bc->getActionCommerciale()->getTotalFrais() > $bc->getActionCommerciale()->getTotalFraisFactures() )) ){
+			} else if ( 
+				strtoupper($etat) == "CURRENT" 
+				&& ( $bc->getMontant() > $bc->getTotalFacture() 
+					||  (true == $bc->getFraisRefacturables() && $bc->getActionCommerciale()->getTotalFrais() > $bc->getActionCommerciale()->getTotalFraisFactures() ) ) 
+				){
 				$ok = true;
 			} else if ( strtoupper($etat) == 'KO' && ($bc->getMontant() < $bc->getTotalFacture() || $bc->getActionCommerciale()->getTotalFrais() < $bc->getActionCommerciale()->getTotalFraisFactures() )) {
 				$ok = true;
@@ -139,7 +143,7 @@ class BonCommandeController extends Controller
 
 			if($ok){
 				$list[$i]['num'] = $bc->getNum();
-				$list[$i]['compte'] = $bc->getActionCommerciale()->getCompte()->getNom();
+				$list[$i]['compte'] = $bc->getActionCommerciale()->getCompte()->getNom()
 				$list[$i]['compte_id'] = $bc->getActionCommerciale()->getCompte()->getId();
 				$list[$i]['objet'] = $bc->getActionCommerciale()->getNom();
 				$list[$i]['action_commerciale'] = $bc->getActionCommerciale()->getId();
