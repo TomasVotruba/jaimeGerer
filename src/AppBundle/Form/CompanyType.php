@@ -65,7 +65,7 @@ class CompanyType extends AbstractType
                 'label' => 'SIREN'
             ))
             ->add('zeroBounceApiKey', 'text', array(
-                'required' => true,
+                'required' => false,
                 'label' => 'API Key ZeroBounce'
             ))
         ;
