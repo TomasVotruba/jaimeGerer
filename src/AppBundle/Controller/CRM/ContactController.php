@@ -668,6 +668,9 @@ class ContactController extends Controller
 	 */
 	public function validerFichierImportExport($type, $existant)
 	{
+
+		ini_set('max_execution_time', 3600);
+		
 		$request = $this->getRequest();
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
