@@ -161,15 +161,19 @@
 
         });
 
-        $('.percent').change(function() {
-            calculTotal();
-        });
-
         $('.remove-button').on('click', function(e) {
             // empêche le lien de créer un « # » dans l'URL
             e.preventDefault();
             $(this).parents('li').remove();
             calculTotal();
+        });
+
+        $('.percent').change(function() {
+            calculMontantFromPercent($(this));
+        });
+
+        $('.montant-euro').change(function() {
+            calculPercentFromMontant($(this));
         });
 
 
@@ -218,7 +222,7 @@
             var val = $(element).val();
             var percent = val*100/montantActionCommerciale
 
-            $(element).parents('.produit-collection').find('.percent').val(percent.toFixed(2));
+            $(element).parents('.produit-collection').find('.percent').val(percent);
 
             calculTotal();
         }

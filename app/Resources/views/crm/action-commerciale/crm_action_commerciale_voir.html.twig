@@ -763,7 +763,7 @@
 									{% endif %}
 								</td>
 								<td>
-									{{ planPaiement.pourcentage }} %
+									{{ planPaiement.pourcentage|number_format(2,',',' ') }} %
 								</td>
 								<td>
 									{{ planPaiement.montant|number_format(2,',',' ') }} €

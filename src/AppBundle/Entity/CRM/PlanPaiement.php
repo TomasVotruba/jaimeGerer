@@ -24,7 +24,7 @@ class PlanPaiement
     /**
      * @var integer
      *
-     * @ORM\Column(name="pourcentage", type="integer")
+     * @ORM\Column(name="pourcentage", type="float")
      */
     private $pourcentage;
 
