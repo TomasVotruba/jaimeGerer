@@ -4,7 +4,6 @@ namespace AppBundle\Entity\CRM;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -261,7 +260,7 @@ class DocumentPrix
     private $compta;
 
     /**
-    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Opportunite", mappedBy="devis")
+    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Opportunite", mappedBy="devis")
     * @ORM\JoinColumn(nullable=true)
     */
     private $opportunite;
