@@ -17,7 +17,7 @@ class PlanPaiementType extends AbstractType
         $planPaiement = $builder->getData();
 
         $builder
-            ->add('pourcentage', 'integer', array(
+            ->add('pourcentage', 'number', array(
                 'attr' => array('class' => 'percent')
             ))
             ->add('nom', 'text', array(

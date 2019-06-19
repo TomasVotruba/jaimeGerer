@@ -216,8 +216,9 @@
         function calculPercentFromMontant(element){
 
             var val = $(element).val();
-            var percent = val*100/montantActionCommerciale;
-            $(element).parents('.produit-collection').find('.percent').val(percent);
+            var percent = val*100/montantActionCommerciale
+
+            $(element).parents('.produit-collection').find('.percent').val(percent.toFixed(2));
 
             calculTotal();
         }
@@ -230,7 +231,7 @@
                 var val = $(value).val();
                 total+= parseFloat(val);
             });
-
+            total = total.toFixed(0);
             $('.total').text(total);
 
             var totalEuro = total/100*montantActionCommerciale;
