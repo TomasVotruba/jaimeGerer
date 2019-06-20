@@ -24,14 +24,14 @@ class PlanPaiement
     /**
      * @var integer
      *
-     * @ORM\Column(name="pourcentage", type="integer")
+     * @ORM\Column(name="pourcentage", type="integer", nullable=true)
      */
     private $pourcentage;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="montant", type="float")
+     * @ORM\Column(name="montant", type="float", nullable=true)
      */
     private $montant;
 
