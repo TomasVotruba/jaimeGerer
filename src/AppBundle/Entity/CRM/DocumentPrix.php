@@ -260,7 +260,7 @@ class DocumentPrix
     private $compta;
 
     /**
-    * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\Opportunite")
+    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Opportunite")
     * @ORM\JoinColumn(nullable=true)
     */
     private $opportunite;

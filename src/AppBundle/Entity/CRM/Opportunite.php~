@@ -160,12 +160,6 @@ class Opportunite
     private $analytique;
 
     /**
-    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="opportunite")
-    * @ORM\JoinColumn(nullable=true)
-    */
-    private $devis;
-
-    /**
     * @var \DateTime
     *
     * @ORM\Column(name="date", type="date")
@@ -236,6 +230,7 @@ class Opportunite
     /**
     *
     * @ORM\OneToMany(targetEntity="AppBundle\Entity\TimeTracker\Temps", mappedBy="actionCommerciale", cascade={"persist", "remove"}, orphanRemoval=true)
+    * @ORM\OrderBy({"date" = "ASC"})
     *
     */
     private $temps;
@@ -246,6 +241,13 @@ class Opportunite
     * @ORM\Column(name="termine", type="boolean", nullable=false)
     */
     private $termine = false;
+
+    /**
+    *
+    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", mappedBy="opportunite")
+    *
+    */
+    private $devis;
 
     /**
     * Constructor
@@ -822,29 +824,6 @@ class Opportunite
 
 
     /**
-     * Set devis
-     *
-     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
-     * @return Opportunite
-     */
-    public function setDevis(\AppBundle\Entity\CRM\DocumentPrix $devis = null)
-    {
-        $this->devis = $devis;
-
-        return $this;
-    }
-
-    /**
-     * Get devis
-     *
-     * @return \AppBundle\Entity\CRM\DocumentPrix 
-     */
-    public function getDevis()
-    {
-        return $this->devis;
-    }
-
-    /**
      * Set date
      *
      * @param \DateTime $date
@@ -1415,10 +1394,141 @@ class Opportunite
     }
 
     public function getTempsTotal(){
-        $total = $this->tempsCommercial;
+        $total = 0;
+        $total+= $this->tempsCommercial;
         foreach($this->getTemps() as $temps){
             $total+= $temps->getDuree();
         }
+
         return $total;
+    }
+
+    public function getTempsTotalSansCommercial(){
+        $total = 0;
+        foreach($this->getTemps() as $temps){
+            $total+= $temps->getDuree();
+        }
+
+        return $total;
+    }
+
+    public function getTempsTotalAsString(){
+        $total = $this->getTempsTotal();
+        $hours = floor($total);
+        $minutesDec = $total-$hours;
+        $minutes = $minutesDec*60;
+        
+        return str_pad($hours, 2, 0, STR_PAD_LEFT).'h'.str_pad($minutes, 2, 0, STR_PAD_LEFT);
+    }
+
+    public function getTempsCommercialAsString(){
+        $total = $this->tempsCommercial;
+        $hours = floor($total);
+        $minutesDec = $total-$hours;
+        $minutes = $minutesDec*60;
+        
+        return str_pad($hours, 2, 0, STR_PAD_LEFT).'h'.str_pad($minutes, 2, 0, STR_PAD_LEFT);
+    }
+
+     public function getTempsSansCommercialAsString(){
+        $total = $this->getTempsTotalSansCommercial();
+        $hours = floor($total);
+        $minutesDec = $total-$hours;
+        $minutes = $minutesDec*60;
+        
+        return str_pad($hours, 2, 0, STR_PAD_LEFT).'h'.str_pad($minutes, 2, 0, STR_PAD_LEFT);
+    }
+
+    public function getTempsTotalMontant(){
+        $montant = 0;
+        foreach($this->getTemps() as $temps){
+            if($temps->getUser()->getTauxHoraire()){
+                $montant+= $temps->getDuree()*$temps->getUser()->getTauxHoraire();
+            }
+        }
+
+        return $montant;
+    }
+
+    public function usersHaveTauxHoraires(){
+        $ok = true;
+        foreach($this->getTemps() as $temps){
+             if(!$temps->getUser()->getTauxHoraire()){
+                $ok = false;
+            }
+        }
+        return $ok;
+    }
+
+    /**
+     * Set termine
+     *
+     * @param boolean $termine
+     * @return Opportunite
+     */
+    public function setTermine($termine)
+    {
+        $this->termine = $termine;
+
+        return $this;
+    }
+
+    /**
+     * Get termine
+     *
+     * @return boolean 
+     */
+    public function getTermine()
+    {
+        return $this->termine;
+    }
+
+    /**
+     * Le montant réel rapport par une action commerciale 
+     * en otant la sous-traitance et les frais si non refacturables
+     **/ 
+    public function getGainReel(){
+        $gain = $this->getMontant();
+        $gain-= $this->getMontantMonetaireSousTraitance();
+
+        if(false == $this->hasFraisRefacturables()){
+            $gain-= $this->getTotalFrais();
+        }
+
+        return $gain;
+
+    }
+
+    /**
+     * Add devis
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
+     * @return Opportunite
+     */
+    public function addDevi(\AppBundle\Entity\CRM\DocumentPrix $devis)
+    {
+        $this->devis[] = $devis;
+
+        return $this;
+    }
+
+    /**
+     * Remove devis
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
+     */
+    public function removeDevi(\AppBundle\Entity\CRM\DocumentPrix $devis)
+    {
+        $this->devis->removeElement($devis);
+    }
+
+    /**
+     * Get devis
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDevis()
+    {
+        return $this->devis;
     }
 }

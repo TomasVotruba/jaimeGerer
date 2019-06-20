@@ -4,7 +4,6 @@ namespace AppBundle\Entity\CRM;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -261,7 +260,7 @@ class DocumentPrix
     private $compta;
 
     /**
-    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Opportunite", mappedBy="devis")
+    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Opportunite")
     * @ORM\JoinColumn(nullable=true)
     */
     private $opportunite;
@@ -844,6 +843,10 @@ class DocumentPrix
     public function getTaxePercent()
     {
         return $this->taxePercent;
+    }
+
+    public function calculateTaxe(){
+        $this->taxe = $this->getTotalHT()*$this->taxePercent;
     }
 
     public function getSousTotal(){
@@ -1571,4 +1574,27 @@ class DocumentPrix
         return $total;
     }
 
+
+    /**
+     * Set factureFrais
+     *
+     * @param boolean $factureFrais
+     * @return DocumentPrix
+     */
+    public function setFactureFrais($factureFrais)
+    {
+        $this->factureFrais = $factureFrais;
+
+        return $this;
+    }
+
+    /**
+     * Get factureFrais
+     *
+     * @return boolean 
+     */
+    public function getFactureFrais()
+    {
+        return $this->factureFrais;
+    }
 }

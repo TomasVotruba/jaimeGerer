@@ -89,7 +89,7 @@
 	        <div class="col-md-4 align-right">
 	        	<strong>Total réparti :</strong>
 	            <strong>
-	                <span class="total">0</span>% 
+	                <span class="total-percent">0</span>% 
 	            </strong>
 	            (<span class="total-euro">0</span> €)
 	            <span class="glyphicon glyphicon-ok green ok-sign hidden"></span>
@@ -168,14 +168,13 @@
             calculTotal();
         });
 
-        $('.percent').change(function() {
-            calculMontantFromPercent($(this));
+         $('.percent').change(function() {
+            calculTotal();
         });
 
         $('.montant-euro').change(function() {
-            calculPercentFromMontant($(this));
+            calculTotal();
         });
-
 
         function addRepartitionForm(repartitionCollectionHolder, $newRepartitionLi, ExecTinymceCommand) {
             var prototype = repartitionCollectionHolder.attr('data-prototype');
@@ -195,11 +194,11 @@
             });
 
             $('.percent').change(function() {
-                calculMontantFromPercent($(this));
+                calculTotal();
             });
 
             $('.montant-euro').change(function() {
-                calculPercentFromMontant($(this));
+                calculTotal();
             });
 
             $(".dateInput").datepicker({
@@ -230,18 +229,30 @@
         function calculTotal()
         {
 
-            var total = 0;
+            var totalARepartir = "{{ actionCommerciale.montant|number_format(2, '.', '') }}";
+            totalARepartir = parseFloat(totalARepartir);
+
+            var totalPercent = 0;
             $.each($('.percent'), function(index, value) {
                 var val = $(value).val();
-                total+= parseFloat(val);
+                totalPercent+= parseFloat(val);
             });
-            total = total.toFixed(0);
-            $('.total').text(total);
+            totalPercent = totalPercent.toFixed(0);
+            $('.total-percent').text(totalPercent);
 
-            var totalEuro = total/100*montantActionCommerciale;
-            $('.total-euro').text(totalEuro.toFixed(2));
 
-            if (total == 100 ) {
+            var totalEuro = 0;
+            $.each($('.montant-euro'), function(index, value) {
+                var val = $(value).val();
+                totalEuro+= parseFloat(val);
+            });
+            totalEuro = totalEuro.toFixed(2);
+            $('.total-euro').text(totalEuro);
+
+            console.log(totalEuro);
+            console.log(totalARepartir);
+
+            if (100 == totalPercent || totalEuro == totalARepartir) {
 
                 $('.feedback-total').addClass("hidden");
                 $('.ok-sign').removeClass("hidden");
@@ -254,14 +265,14 @@
                 	$('button[type=submit]').removeClass("btn-success").prop('disabled', true);
                 }
 
-                if (total < 100) {
+                if (totalPercent < 100) {
 
-                    var reste = 100 - total;
+                    var reste = 100 - totalPercent;
                     $('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Encore " + reste + "% à répartir").removeClass("hidden");
                     $('.ok-sign').addClass("hidden");
-                } else if (total > 100) {
+                } else if (totalPercent > 100) {
 
-                    var trop = total - 100;
+                    var trop = totalPercent - 100;
                     $('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> " + trop + "% en trop").removeClass("hidden");
                     $('.ok-sign').addClass("hidden");
                 }

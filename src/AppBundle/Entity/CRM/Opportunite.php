@@ -160,12 +160,6 @@ class Opportunite
     private $analytique;
 
     /**
-    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="opportunite")
-    * @ORM\JoinColumn(nullable=true)
-    */
-    private $devis;
-
-    /**
     * @var \DateTime
     *
     * @ORM\Column(name="date", type="date")
@@ -247,6 +241,13 @@ class Opportunite
     * @ORM\Column(name="termine", type="boolean", nullable=false)
     */
     private $termine = false;
+
+    /**
+    *
+    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", mappedBy="opportunite")
+    *
+    */
+    private $devis;
 
     /**
     * Constructor
@@ -821,29 +822,6 @@ class Opportunite
       return $arr_months;
     }
 
-
-    /**
-     * Set devis
-     *
-     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
-     * @return Opportunite
-     */
-    public function setDevis(\AppBundle\Entity\CRM\DocumentPrix $devis = null)
-    {
-        $this->devis = $devis;
-
-        return $this;
-    }
-
-    /**
-     * Get devis
-     *
-     * @return \AppBundle\Entity\CRM\DocumentPrix 
-     */
-    public function getDevis()
-    {
-        return $this->devis;
-    }
 
     /**
      * Set date
@@ -1519,5 +1497,51 @@ class Opportunite
 
         return $gain;
 
+    }
+
+    /**
+     * Add devis
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
+     * @return Opportunite
+     */
+    public function addDevi(\AppBundle\Entity\CRM\DocumentPrix $devis)
+    {
+        $this->devis[] = $devis;
+
+        return $this;
+    }
+
+    /**
+     * Remove devis
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
+     */
+    public function removeDevi(\AppBundle\Entity\CRM\DocumentPrix $devis)
+    {
+        $this->devis->removeElement($devis);
+    }
+
+    /**
+     * Get devis
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getDevis()
+    {
+        return $this->devis;
+    }
+
+    /**
+     * Set devis
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
+     * @return Opportunite
+     */
+    public function setDevis(\AppBundle\Entity\CRM\DocumentPrix $devis = null)
+    {
+        $this->devis = $devis;
+
+        return $this;
     }
 }

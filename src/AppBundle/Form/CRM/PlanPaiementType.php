@@ -18,7 +18,8 @@ class PlanPaiementType extends AbstractType
 
         $builder
             ->add('pourcentage', 'number', array(
-                'attr' => array('class' => 'percent')
+                'attr' => array('class' => 'percent'),
+                'required' => false,
             ))
             ->add('nom', 'text', array(
             ))
@@ -29,9 +30,9 @@ class PlanPaiementType extends AbstractType
                 'required' => true,
                 'label' => 'Date',
             ))
-            ->add('montant', 'text', array(
-                'mapped' => false,
-                'attr' => array('class' => 'montant-euro')
+            ->add('montant', 'number', array(
+                'attr' => array('class' => 'montant-euro'),
+                'required' => false,
             ));
         ;
     }

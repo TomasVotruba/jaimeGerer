@@ -722,7 +722,6 @@ class ActionCommercialeController extends Controller
 				$planPaiement->setPourcentage(100);
 				$planPaiement->setFinProjet(true);
 				$planPaiement->setNom('Fin du projet');
-
 				$actionCommerciale->clearPlanPaiements();
 				$actionCommerciale->addPlanPaiement($planPaiement);
 			} 
@@ -1198,6 +1197,7 @@ class ActionCommercialeController extends Controller
 				$data = $form->getData();
 				$facture = clone $devis;
 				$facture->setDevis($devis);
+				$facture->setOpportunite(null);
 				$facture->setObjet($data['objet']);
 				$facture->setFactureFrais(true);
 

@@ -24,9 +24,16 @@ class PlanPaiement
     /**
      * @var integer
      *
-     * @ORM\Column(name="pourcentage", type="float")
+     * @ORM\Column(name="pourcentage", type="integer")
      */
     private $pourcentage;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="montant", type="float")
+     */
+    private $montant;
 
     /**
      * @var \DateTime
@@ -99,7 +106,12 @@ class PlanPaiement
      */
     public function getPourcentage()
     {
-        return $this->pourcentage;
+        $montantActionCommerciale = $this->actionCommerciale->getMontant();
+        if($this->pourcentage){
+            return $this->pourcentage;
+        }
+
+        return $this->montant/$montantActionCommerciale*100;
     }
 
     /**
@@ -178,6 +190,11 @@ class PlanPaiement
 
     public function getMontant(){
         $montantActionCommerciale = $this->actionCommerciale->getMontant();
+
+        if($this->montant){
+            return $this->montant;
+        }
+
         return $this->pourcentage/100*$montantActionCommerciale;
     }
 
@@ -262,5 +279,18 @@ class PlanPaiement
             return 0;
         }
         return $diff->format("%a");
+    }
+
+    /**
+     * Set montant
+     *
+     * @param float $montant
+     * @return PlanPaiement
+     */
+    public function setMontant($montant)
+    {
+        $this->montant = $montant;
+
+        return $this;
     }
 }
