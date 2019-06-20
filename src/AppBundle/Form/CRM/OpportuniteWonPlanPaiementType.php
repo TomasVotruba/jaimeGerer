@@ -30,7 +30,8 @@ class OpportuniteWonPlanPaiementType extends AbstractType
                 'choices' => array(
                     'COMMANDE' => '100 % à la commande',
                     'FIN' => '100 % à la fin du projet',
-                    'CUSTOM' => 'Personnalisé'
+                    'CUSTOM_PERCENT' => 'Personnalisé (pourcentage)',
+                    'CUSTOM_MONTANT' => 'Personnalisé (montant)',
                 ),
                 'multiple' => false,
                 'expanded' => true,
@@ -44,10 +45,8 @@ class OpportuniteWonPlanPaiementType extends AbstractType
        			'by_reference' => false,
 				'label_attr' => array('class' => 'hidden'),
                 'data' => $actionCommerciale->getPlansPaiementsCustom()
-           	));
-            
-        $builder
-          ->add('submit', 'submit', array(
+           	))
+           ->add('submit', 'submit', array(
                 'label' => 'Valider',
                 'attr' => array(
                     'class' => 'btn btn-success',

@@ -740,11 +740,11 @@
 					<table class="contact-view-table" id="plan-paiement-table">
 						<thead>
 							<tr>
-								<th>Nom de la phase</th>
-								<th>Date de facturation</th>
-								<th>Pourcentage à facturer</th>
-								<th>Montant</th>
-								<th>Facture</th>
+								<th class="col-md-3">Nom de la phase</th>
+								<th class="col-md-2">Date de facturation</th>
+								<th class="col-md-2">Pourcentage à facturer</th>
+								<th class="col-md-2">Montant</th>
+								<th class="col-md-3">Facture</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -763,10 +763,10 @@
 									{% endif %}
 								</td>
 								<td>
-									{{ planPaiement.pourcentage|number_format(2,',',' ') }} %
+									{{ planPaiement.pourcentageToString|number_format(2,',',' ') }} %
 								</td>
 								<td>
-									{{ planPaiement.montant|number_format(2,',',' ') }} €
+									{{ planPaiement.montantToString|number_format(2,',',' ') }} €
 								</td>
 								<td>
 									{% if planPaiement.facture %}

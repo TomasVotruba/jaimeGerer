@@ -106,12 +106,26 @@ class PlanPaiement
      */
     public function getPourcentage()
     {
-        $montantActionCommerciale = $this->actionCommerciale->getMontant();
+        return $this->pourcentage;
+    }
+
+    /**
+     * Get pourcentage
+     *
+     * @return integer 
+     */
+    public function getPourcentageToString()
+    {
         if($this->pourcentage){
             return $this->pourcentage;
         }
 
-        return $this->montant/$montantActionCommerciale*100;
+        if($this->actionCommerciale){
+            $montantActionCommerciale = $this->actionCommerciale->getMontant();
+            return $this->montant/$montantActionCommerciale*100;
+        }
+
+        return 0;
     }
 
     /**
@@ -189,13 +203,23 @@ class PlanPaiement
     }
 
     public function getMontant(){
-        $montantActionCommerciale = $this->actionCommerciale->getMontant();
+
+        return $this->montant;
+    }
+
+    public function getMontantToString(){
 
         if($this->montant){
             return $this->montant;
         }
 
-        return $this->pourcentage/100*$montantActionCommerciale;
+        if($this->actionCommerciale){
+            $montantActionCommerciale = $this->actionCommerciale->getMontant();
+            return $this->pourcentage/100*$montantActionCommerciale;
+        }
+
+        return 0;
+        
     }
 
     /**

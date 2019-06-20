@@ -1148,8 +1148,10 @@ class Opportunite
                 return 'COMMANDE';
             } else if (1 == count($this->planPaiements) && true == $this->planPaiements[0]->getFinProjet()){
                 return 'FIN';
+            } else if(null == $this->planPaiements[0]->getPourcentage()) {
+                 return 'CUSTOM_MONTANT';
             } else {
-                return 'CUSTOM';
+                return 'CUSTOM_PERCENT';
             }
 
         }

@@ -88,12 +88,9 @@
 	    <div class="row">
 	        <div class="col-md-4 align-right">
 	        	<strong>Total réparti :</strong>
-	            <strong>
-	                <span class="total-percent">0</span>% 
-	            </strong>
-	            (<span class="total-euro">0</span> €)
+	            <strong class="total-percent hidden"><span class="total">0</span> % </strong>
+	            <strong class="total-euro hidden"><span class="total">0</span> € </strong>
 	            <span class="glyphicon glyphicon-ok green ok-sign hidden"></span>
-
 	        </div>
 	    </div>
 	    <div class="row">
@@ -205,52 +202,42 @@
 				dateFormat: 'dd/mm/yy',
 				firstDay:1
 			});
-        }
 
-        function calculMontantFromPercent(element){
-
-            var val = $(element).val();
-            var montant = val/100*montantActionCommerciale;
-            $(element).parents('.produit-collection').find('.montant-euro').val(montant.toFixed(2));
-        
-            calculTotal();
-        }
-
-        function calculPercentFromMontant(element){
-
-            var val = $(element).val();
-            var percent = val*100/montantActionCommerciale
-
-            $(element).parents('.produit-collection').find('.percent').val(percent);
-
-            calculTotal();
+            toggleCustomPercentOrMontant();
         }
 
         function calculTotal()
         {
+            var selected = $("input[type='radio']:checked").val();
+            if( 'COMMANDE' == selected || 'FIN' == selected || null == selected){
+                return 0;
+            }
+
+            var totalPercent = 0;
+            var totalEuro = 0;
 
             var totalARepartir = "{{ actionCommerciale.montant|number_format(2, '.', '') }}";
             totalARepartir = parseFloat(totalARepartir);
 
-            var totalPercent = 0;
-            $.each($('.percent'), function(index, value) {
-                var val = $(value).val();
-                totalPercent+= parseFloat(val);
-            });
-            totalPercent = totalPercent.toFixed(0);
-            $('.total-percent').text(totalPercent);
+            if('CUSTOM_PERCENT' == selected){
+    
+                $.each($('.percent'), function(index, value) {
+                    var val = $(value).val();
+                    totalPercent+= parseFloat(val);
+                });
+                totalPercent = totalPercent.toFixed(0);
+                $('.total-percent .total').text(totalPercent);
 
+            } else {
 
-            var totalEuro = 0;
-            $.each($('.montant-euro'), function(index, value) {
-                var val = $(value).val();
-                totalEuro+= parseFloat(val);
-            });
-            totalEuro = totalEuro.toFixed(2);
-            $('.total-euro').text(totalEuro);
+                $.each($('.montant-euro'), function(index, value) {
+                    var val = $(value).val();
+                    totalEuro+= parseFloat(val);
+                });
+                totalEuro = totalEuro.toFixed(2);
+                $('.total-euro .total').text(totalEuro);
 
-            console.log(totalEuro);
-            console.log(totalARepartir);
+            }
 
             if (100 == totalPercent || totalEuro == totalARepartir) {
 
@@ -260,20 +247,31 @@
 
             } else {
 
-            	selected = $("input[type='radio']:checked").val();
-            	if( 'CUSTOM' == selected ){
-                	$('button[type=submit]').removeClass("btn-success").prop('disabled', true);
-                }
+                $('button[type=submit]').removeClass("btn-success").prop('disabled', true);
 
-                if (totalPercent < 100) {
+                if (totalPercent < 100 || totalEuro < totalARepartir) {
+                    if('CUSTOM_PERCENT' == selected){
+                        var reste = 100 - totalPercent;
+                        reste+='%';
+                    } else {
+                        var reste = totalARepartir - totalEuro;
+                        reste+='€';
+                    }
 
-                    var reste = 100 - totalPercent;
-                    $('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Encore " + reste + "% à répartir").removeClass("hidden");
+                    $('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> Encore " + reste + " à répartir").removeClass("hidden");
                     $('.ok-sign').addClass("hidden");
-                } else if (totalPercent > 100) {
 
-                    var trop = totalPercent - 100;
-                    $('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> " + trop + "% en trop").removeClass("hidden");
+                } else if (totalPercent > 100 || totalEuro > totalARepartir) {
+
+                     if('CUSTOM_PERCENT' == selected){
+                        var trop =  totalPercent - 100;
+                        trop+='%';
+                    } else {
+                        var trop = totalEuro - totalARepartir;
+                        trop+='€';
+                    }
+
+                    $('.feedback-total').html("<span class='glyphicon glyphicon-warning-sign'></span> " + trop + " en trop").removeClass("hidden");
                     $('.ok-sign').addClass("hidden");
                 }
 
@@ -292,8 +290,42 @@
                 if(0 == $('.produit-collection').length){
                     addRepartitionForm(repartitionCollectionHolder, $newRepartitionLi, false);
                 }
+                toggleCustomPercentOrMontant();
 			}
 		}
+
+        function toggleCustomPercentOrMontant(){
+            selected = $("input[type='radio']:checked").val();
+
+            if('CUSTOM_PERCENT' == selected){
+
+                $('.percent').attr('required', true);
+                $('.percent').attr('disabled', false);
+
+                $('.montant-euro').attr('required', false);
+                $('.montant-euro').attr('disabled', true);
+                $('.montant-euro').val(0);
+
+                $('.total-percent').removeClass('hidden');
+                $('.total-euro').addClass('hidden');
+
+                $('.feedback-total').html('');
+
+            } else if('CUSTOM_MONTANT' == selected){
+
+                $('.percent').attr('required', false);
+                $('.percent').attr('disabled', true);
+                $('.percent').val(0);
+
+                $('.montant-euro').attr('required', true);
+                $('.montant-euro').attr('disabled', false);
+
+                $('.total-percent').addClass('hidden');
+                $('.total-euro').removeClass('hidden');
+
+                $('.feedback-total').html('');
+            }
+        }
 
     });
 </script>
