@@ -105,13 +105,6 @@ class Opportunite
     private $userCompetCom = null;
 
     /**
-    * @var string
-    *
-    * @ORM\Column(name="type", type="string")
-    */
-    private $type;
-
-    /**
     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Settings")
     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
     */
@@ -185,6 +178,13 @@ class Opportunite
     * @ORM\Column(name="prescription", type="boolean", nullable=false)
     */
     private $prescription = false;
+
+    /**
+    * @var boolean
+    *
+    * @ORM\Column(name="nouveau_compte", type="boolean", nullable=true)
+    */
+    private $nouveauCompte = false;
 
     /**
     * @var \DateTime
@@ -485,23 +485,6 @@ class Opportunite
 		return $this->userGestion;
 	}
 
-	/**
-	 *
-	 * @return the string
-	 */
-	public function getType() {
-		return $this->type;
-	}
-
-	/**
-	 *
-	 * @param
-	 *        	$type
-	 */
-	public function setType($type) {
-		$this->type = $type;
-		return $this;
-	}
 
 	/**
 	 *
@@ -1523,5 +1506,28 @@ class Opportunite
         $this->devis = $devis;
 
         return $this;
+    }
+
+    /**
+     * Set nouveauCompte
+     *
+     * @param boolean $nouveauCompte
+     * @return Opportunite
+     */
+    public function setNouveauCompte($nouveauCompte)
+    {
+        $this->nouveauCompte = $nouveauCompte;
+
+        return $this;
+    }
+
+    /**
+     * Get nouveauCompte
+     *
+     * @return boolean 
+     */
+    public function getNouveauCompte()
+    {
+        return $this->nouveauCompte;
     }
 }

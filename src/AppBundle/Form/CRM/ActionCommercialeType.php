@@ -127,14 +127,6 @@ class ActionCommercialeType extends AbstractType
                 'mapped' => false,
                 'data' => $this->compte ? $this->compte->getPays() : null
             ))
-             ->add('type', 'choice', array(
-                'label' => 'Type',
-                'choices' => array(
-                        'Existing Business' => 'Compte existant',
-                        'New Business' => 'Nouveau compte',
-                ),
-                'required' => true
-            ))
             ->add('origine', 'entity', array(
                 'class'=>'AppBundle:Settings',
                 'property' => 'valeur',
@@ -192,6 +184,19 @@ class ActionCommercialeType extends AbstractType
                 'label' => ' ',
                 'required' => false,
                 'attr' => array(
+                    'data-toggle' => 'toggle',
+                    'data-onstyle' => 'success',
+                    'data-offstyle' => 'danger',
+                    'data-on' => 'Oui',
+                    'data-off' => 'Non',
+                    'data-size' => 'mini'
+                )
+            ))
+            ->add('nouveauCompte', 'checkbox', array(
+                'label' => ' ',
+                'required' => false,
+                'attr' => array(
+                    'class' => 'nouveau-compte-checkbox',
                     'data-toggle' => 'toggle',
                     'data-onstyle' => 'success',
                     'data-offstyle' => 'danger',

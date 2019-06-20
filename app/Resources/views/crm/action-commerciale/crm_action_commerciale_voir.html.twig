@@ -119,58 +119,79 @@
     	</div>
     </div>
 
-	    <div class="row">
-	    	<div class="col-md-6">
-	    		<table class="contact-view-table">
-	    			<tbody>
-						<tr>
-							<td>Objet</td>
-							<td id="action-commerciale-objet">
-								{{ opportunite.nom }}
+    <div class="row">
+    	<div class="col-md-6">
+    		<table class="contact-view-table">
+    			<tbody>
+					<tr>
+						<td>Objet</td>
+						<td id="action-commerciale-objet">
+							{{ opportunite.nom }}
 
-							</td>
-						</tr>
-						<tr>
-							<td>Date</td>
-							<td id="action-commerciale-date">
-								{{ opportunite.date|date("d/m/Y") }}
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="col-md-6">
-	    		<table class="contact-view-table">
-	    			<tbody>
-	    				<tr>
-							<td>Gestionnaire</td>
-							<td id="action-commerciale-user-gestion">
-								{{ opportunite.userGestion }}
-								{% if opportunite.userGestion.enabled == false %}
-									<a tabindex="0" role="button" data-toggle="popover" data-trigger="hover" title="Utilisateur inactif" data-content="Cet utilisateur est inactif. Vous devriez changer le gestionnaire de l'opportunité.">
-										<span class="glyphicon glyphicon-warning-sign red"></span>
-									</a>
-								{% endif %}
-							</td>
-						</tr>
-						<tr>
-							<td>Date de validité</td>
-							<td id="action-commerciale-date-validite">
-								{# {% if opportunite.devis %}
-									{{ opportunite.devis.dateValidite|date("d/m/Y") }}
-								{% endif %} #}
-							</td>
-						</tr>
-	    			</tbody>
-	    		</table>
-	    	</div>
-	    </div>
+						</td>
+					</tr>
+					<tr>
+		    			<td>Analytique</td>
+		    			<td id="action-commerciale-analytique">
+		    			{{ opportunite.analytique }}
+		    			</td>
+		    		</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-md-6">
+    		<table class="contact-view-table">
+    			<tbody>
+    				<tr>
+						<td>Gestionnaire</td>
+						<td id="action-commerciale-user-gestion">
+							{{ opportunite.userGestion }}
+							{% if opportunite.userGestion.enabled == false %}
+								<a tabindex="0" role="button" data-toggle="popover" data-trigger="hover" title="Utilisateur inactif" data-content="Cet utilisateur est inactif. Vous devriez changer le gestionnaire de l'opportunité.">
+									<span class="glyphicon glyphicon-warning-sign red"></span>
+								</a>
+							{% endif %}
+						</td>
+					</tr>
+    			</tbody>
+    		</table>
+    	</div>
+    </div>
 
 	    <div class="row">
 			<div class="col-md-12">
 				<hr />
 			</div>
 		</div>
+
+		    <div class="row">
+		    	<div class="col-md-6">
+		    		<table class="contact-view-table">
+		    			<tbody>
+							<tr>
+								<td>Date</td>
+								<td id="action-commerciale-date">
+									{{ opportunite.date|date("d/m/Y") }}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-6">
+		    		<table class="contact-view-table">
+		    			<tbody>
+							<tr>
+								<td>Date de validité</td>
+								<td id="action-commerciale-date-validite">
+									{% if opportunite.devis %}
+										{{ opportunite.devis.dateValidite|date("d/m/Y") }}
+									{% endif %}
+								</td>
+							</tr>
+		    			</tbody>
+		    		</table>
+		    	</div>
+		    </div>
 
 	    <div class="row">
 	    	<div class="col-md-6">
@@ -257,21 +278,31 @@
 			<div class="col-md-6">
 				<table  class="contact-view-table">
 					<tr>
-    					<td>Type</td>
-			    		<td>
-							{{ opportunite.type }}
-			    		</td>
-			    		<tr>
-			    			<td>Analytique</td>
-			    			<td id="action-commerciale-analytique">
-			    			{{ opportunite.analytique }}
-			    			</td>
-			    		</tr>
+    					
+			    		
 			    		<tr>
 							<td>Probabilité</td>
 							<td>{{ opportunite.probabilite.valeur }}</td>
 						</tr>
+						<td>Nouveau compte</td>
+			    		<td>
+							{% if opportunite.nouveauCompte %}
+								Oui
+							{% else %}
+								Non
+							{% endif %}
+			    		</td>
     				</tr>
+    				<tr>
+						<td>Appel d'offre</td>
+						<td>
+							{% if opportunite.appelOffre %}
+								Oui
+							{% else %}
+								Non
+							{% endif %}
+						</td>
+					</tr>
 
 				</table>
 			</div>
@@ -284,21 +315,12 @@
 						</td>
 					</tr>
 					<tr>
-						<td>Secteur</td>
+						<td>Privé ou public</td>
 						<td id="action-commerciale-priveOrPublic">
 							{{ opportunite.priveOrPublicToString }}
 						</td>
 					</tr>
-					<tr>
-						<td>Appel d'offre</td>
-						<td>
-							{% if opportunite.appelOffre %}
-								Oui
-							{% else %}
-								Non
-							{% endif %}
-						</td>
-					</tr>
+					
 					<tr>
 						<td>Prescription</td>
 						<td>

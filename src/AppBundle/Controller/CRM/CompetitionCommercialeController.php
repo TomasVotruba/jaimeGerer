@@ -84,7 +84,7 @@ class CompetitionCommercialeController extends Controller
 					$arr_users[$user->getId()]['prescriptions'][] = $actionCommerciale;
 				}
 
-				if($actionCommerciale->getPriveOrPublic() == "PRIVE" && $actionCommerciale->getType() == "New Business"){
+				if($actionCommerciale->getPriveOrPublic() == "PRIVE" && true === $actionCommerciale->getNouveauCompte()){
 					$arr_users[$user->getId()]['nouveauxComptes'][] = $actionCommerciale;
 				}
 			}

@@ -160,6 +160,12 @@ class Opportunite
     private $analytique;
 
     /**
+    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="opportunite")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $devis;
+
+    /**
     * @var \DateTime
     *
     * @ORM\Column(name="date", type="date")
@@ -179,6 +185,13 @@ class Opportunite
     * @ORM\Column(name="prescription", type="boolean", nullable=false)
     */
     private $prescription = false;
+
+    /**
+    * @var boolean
+    *
+    * @ORM\Column(name="nouveau_compte", type="boolean", nullable=true)
+    */
+    private $nouveauCompte = false;
 
     /**
     * @var \DateTime
@@ -242,12 +255,6 @@ class Opportunite
     */
     private $termine = false;
 
-    /**
-    *
-    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", mappedBy="opportunite")
-    *
-    */
-    private $devis;
 
     /**
     * Constructor
@@ -1148,8 +1155,10 @@ class Opportunite
                 return 'COMMANDE';
             } else if (1 == count($this->planPaiements) && true == $this->planPaiements[0]->getFinProjet()){
                 return 'FIN';
+            } else if(null == $this->planPaiements[0]->getPourcentage()) {
+                 return 'CUSTOM_MONTANT';
             } else {
-                return 'CUSTOM';
+                return 'CUSTOM_PERCENT';
             }
 
         }
@@ -1499,28 +1508,6 @@ class Opportunite
 
     }
 
-    /**
-     * Add devis
-     *
-     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
-     * @return Opportunite
-     */
-    public function addDevi(\AppBundle\Entity\CRM\DocumentPrix $devis)
-    {
-        $this->devis[] = $devis;
-
-        return $this;
-    }
-
-    /**
-     * Remove devis
-     *
-     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
-     */
-    public function removeDevi(\AppBundle\Entity\CRM\DocumentPrix $devis)
-    {
-        $this->devis->removeElement($devis);
-    }
 
     /**
      * Get devis
@@ -1530,5 +1517,18 @@ class Opportunite
     public function getDevis()
     {
         return $this->devis;
+    }
+
+    /**
+     * Set devis
+     *
+     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
+     * @return Opportunite
+     */
+    public function setDevis(\AppBundle\Entity\CRM\DocumentPrix $devis = null)
+    {
+        $this->devis = $devis;
+
+        return $this;
     }
 }
