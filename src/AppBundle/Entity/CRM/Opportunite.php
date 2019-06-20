@@ -160,6 +160,12 @@ class Opportunite
     private $analytique;
 
     /**
+    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", inversedBy="opportunite")
+    * @ORM\JoinColumn(nullable=true)
+    */
+    private $devis;
+
+    /**
     * @var \DateTime
     *
     * @ORM\Column(name="date", type="date")
@@ -242,12 +248,6 @@ class Opportunite
     */
     private $termine = false;
 
-    /**
-    *
-    * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\DocumentPrix", mappedBy="opportunite")
-    *
-    */
-    private $devis;
 
     /**
     * Constructor
@@ -1501,28 +1501,6 @@ class Opportunite
 
     }
 
-    /**
-     * Add devis
-     *
-     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
-     * @return Opportunite
-     */
-    public function addDevi(\AppBundle\Entity\CRM\DocumentPrix $devis)
-    {
-        $this->devis[] = $devis;
-
-        return $this;
-    }
-
-    /**
-     * Remove devis
-     *
-     * @param \AppBundle\Entity\CRM\DocumentPrix $devis
-     */
-    public function removeDevi(\AppBundle\Entity\CRM\DocumentPrix $devis)
-    {
-        $this->devis->removeElement($devis);
-    }
 
     /**
      * Get devis
