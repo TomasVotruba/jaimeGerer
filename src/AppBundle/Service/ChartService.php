@@ -450,7 +450,7 @@ class ChartService extends ContainerAware {
 
         $chart->getData()->setArrayToDataTable($arr_data, true);
         $chart->getOptions()->getLegend()->setPosition('none');
-        $chart->getOptions()->getBar()->setGroupWidth('80%');
+        $chart->getOptions()->getBar()->setGroupWidth('50%');
         $chart->getOptions()->getCandlestick()->getFallingColor()->setStrokeWidth(0);
         $chart->getOptions()->getCandlestick()->getFallingColor()->setFill('#ec741b');
         $chart->getOptions()->getCandlestick()->getRisingColor()->setStrokeWidth(0);
