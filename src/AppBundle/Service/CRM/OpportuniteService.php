@@ -528,7 +528,7 @@ class OpportuniteService extends ContainerAware {
 
         $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
         $arr_temps = array();
-        
+
         $tranches = array(
             'Moins de 1000 €' => array(0, 1000),
             '1001 - 5000 €' =>array(1001, 5000),
@@ -549,13 +549,13 @@ class OpportuniteService extends ContainerAware {
             if(null == $montantMin[1]){
                 $montantMin = 0;
             } else {
-                $montantMin = $montantMin[1];
+                $montantMin = floatval($montantMin[1]);
             }
 
             if(null == $montantMax[1]){
                 $montantMax = 0;
             } else {
-                $montantMax = $montantMax[1];
+                $montantMax = floatval($montantMax[1]);
             }
 
 
