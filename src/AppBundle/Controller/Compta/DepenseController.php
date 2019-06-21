@@ -845,7 +845,12 @@ class DepenseController extends Controller
 				));
 			} else if(count($depense->getSousTraitances()) == 1){
 				$sousTraitance = $depense->getSousTraitances()[0];
-				$sousTraitance->setMontantMonetaire($depense->getTotalHT());
+				if('FC' == $depense->getAnalytique()->getValeur()){
+					$sousTraitance->setMontantMonetaire($depense->getTotalTTC());
+				} else {
+					$sousTraitance->setMontantMonetaire($depense->getTotalHT());
+				}
+				
 				$em->persist($sousTraitance);
 				$em->flush();
 			}
