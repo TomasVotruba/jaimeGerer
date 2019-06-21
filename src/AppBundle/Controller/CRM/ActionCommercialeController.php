@@ -208,6 +208,10 @@ class ActionCommercialeController extends Controller
 		$dataChartTempsCommercialePrivePublicRepartition = $opportuniteService->getDataChartTempsCommercialePrivePublicRepartition($this->getUser()->getCompany(), date('Y'));	
 		$chartTempsCommercialePrivePublicRepartition = $chartService->actionsCoTempsCommercialePrivePublicRepartition($dataChartTempsCommercialePrivePublicRepartition);
 
+		$dataChartTempsCommercialParMontant = $opportuniteService->getDataChartTempsCommercialParMontant($this->getUser()->getCompany(), date('Y'));	
+		$chartTempsCommercialParMontant = $chartService->tempsCommercialParMontant($dataChartTempsCommercialParMontant);
+
+
 		return $this->render('crm/action-commerciale/crm_action_commerciale_reporting.html.twig', array(
 			'chartTauxTransformation' => $chartTauxTransformation,
 			'chartActionsCoAnalytique' => $chartActionsCoAnalytique,
@@ -220,6 +224,7 @@ class ActionCommercialeController extends Controller
 			'chartTempsCommercialeAORepartition' => $chartTempsCommercialeAORepartition,
 			'chartTempsCommercialePrivePublic' => $chartTempsCommercialePrivePublic,
 			'chartTempsCommercialePrivePublicRepartition' => $chartTempsCommercialePrivePublicRepartition,
+			'chartTempsCommercialParMontant' => $chartTempsCommercialParMontant,
 		));
 	}
 

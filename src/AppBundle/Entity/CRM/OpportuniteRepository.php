@@ -422,6 +422,46 @@ class OpportuniteRepository extends EntityRepository
 		return $qb->getQuery()->getResult();
 	}
 
+	public function findMinForCompanyByYearAndMontantTempsCommercial($company, $year, $min, $max){
+		$qb = $this->createQueryBuilder('o')
+		->select('MIN(o.tempsCommercial)')
+		->innerJoin('o.compte', 'c')
+		->where('c.company = :company')
+		->andWhere('o.date >= :start')
+		->andWhere('o.date <= :end')
+		->andWhere('o.montant >= :min')
+		->andWhere('o.montant <= :max')
+		->andWhere('o.tempsCommercial > 0')
+		->andWhere('o.tempsCommercial IS NOT NULL')
+		->setParameter('company', $company)
+		->setParameter('min', $min)
+		->setParameter('max', $max)
+		->setParameter('start', $year.'-01-01')
+		->setParameter('end',  $year.'-12-31');
+
+		return $qb->getQuery()->getOneOrNullResult();
+	}
+
+	public function findMaxForCompanyByYearAndMontantTempsCommercial($company, $year, $min, $max){
+		$qb = $this->createQueryBuilder('o')
+		->select('MAX(o.tempsCommercial)')
+		->innerJoin('o.compte', 'c')
+		->where('c.company = :company')
+		->andWhere('o.date >= :start')
+		->andWhere('o.date <= :end')
+		->andWhere('o.montant >= :min')
+		->andWhere('o.montant <= :max')
+		->andWhere('o.tempsCommercial > 0')
+		->andWhere('o.tempsCommercial IS NOT NULL')
+		->setParameter('company', $company)
+		->setParameter('min', $min)
+		->setParameter('max', $max)
+		->setParameter('start', $year.'-01-01')
+		->setParameter('end',  $year.'-12-31');
+
+		return $qb->getQuery()->getOneOrNullResult();
+	}
+
 
 	public function findWonForCompanyByYear($company, $year){
 

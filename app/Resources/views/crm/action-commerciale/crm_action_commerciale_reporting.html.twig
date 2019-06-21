@@ -108,7 +108,7 @@
         </div>
     </div>
 
-     <div class="row">
+    <div class="row">
         <div class="col-md-2"></div>
         <div class="col-md-4">
             <h3>Temps commercial moyen public/privé {{ 'now'|date('Y') }}</h3>
@@ -119,6 +119,23 @@
             <h3>Répartition du temps commercial public/privé {{ 'now'|date('Y') }}</h3>
             <div id="chart_actions_co_temps_commerciale_public_prive_repartition"></div>
         </div>
+        <div class="col-md-1"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr />
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <h3>Temps commercial par montant {{ 'now'|date('Y') }}</h3>
+            <div id="chart_actions_co_temps_commerciale_par_montant"></div>
+        </div>
+        <div class="col-md-1"></div>
+         
         <div class="col-md-1"></div>
     </div>
 
@@ -148,6 +165,7 @@
             {{ gc_draw(chartTempsCommercialeAORepartition, 'chart_actions_co_temps_commerciale_ao_repartition') }}
             {{ gc_draw(chartTempsCommercialePrivePublic, 'chart_actions_co_temps_commerciale_public_prive') }}
             {{ gc_draw(chartTempsCommercialePrivePublicRepartition, 'chart_actions_co_temps_commerciale_public_prive_repartition') }}
+            {{ gc_draw(chartTempsCommercialParMontant, 'chart_actions_co_temps_commerciale_par_montant') }}
 
             AmCharts.ready(function() {
                 $.ajax({

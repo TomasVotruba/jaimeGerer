@@ -5,6 +5,7 @@ namespace AppBundle\Service;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\PieChart;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\CandlestickChart;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\Material\ColumnChart;
 use CMEN\GoogleChartsBundle\GoogleCharts\Options\VAxis;
 
@@ -436,5 +437,27 @@ class ChartService extends ContainerAware {
         $colChart->getOptions()->getLegend()->setPosition('none');
 
         return $colChart;
+    }
+
+    /**
+    * Crée le graphique du temps commercial par montant de l'action commerciale
+    *
+    * @return Candlestick Chart
+    */
+     public function tempsCommercialParMontant($arr_data)
+     {
+        $chart = new CandlestickChart();
+
+        $chart->getData()->setArrayToDataTable($arr_data, true);
+        $chart->getOptions()->getLegend()->setPosition('none');
+        $chart->getOptions()->getBar()->setGroupWidth('100%');
+        $chart->getOptions()->getCandlestick()->getFallingColor()->setStrokeWidth(0);
+        $chart->getOptions()->getCandlestick()->getFallingColor()->setFill('#a52714');
+        $chart->getOptions()->getCandlestick()->getRisingColor()->setStrokeWidth(0);
+        $chart->getOptions()->getCandlestick()->getRisingColor()->setFill('#0f9d58');
+        $chart->getOptions()->setWidth(900);
+        $chart->getOptions()->setHeight(500);
+
+        return $chart;
     }
 }

@@ -498,7 +498,6 @@ class OpportuniteService extends ContainerAware {
         $settingsRepo = $this->em->getRepository('AppBundle:Settings');
         $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
        
-
         $arr_temps = array();
         
         $arr_temps['Privé'] = 0;
@@ -522,6 +521,36 @@ class OpportuniteService extends ContainerAware {
             $arr_temps['Public'] = $tempsTotal;
         }
         
+        return $arr_temps;
+    }
+
+    public function getDataChartTempsCommercialParMontant($company, $year){
+
+        $opportuniteRepo = $this->em->getRepository('AppBundle:CRM\Opportunite');
+        $arr_temps = array();
+
+        $tranches = array(
+            'Moins de 1000 €' => array(0, 1000),
+            '1001 - 5000 €' =>array(1001, 5000),
+            '5001 - 10000 €' =>array(5001, 10000),
+            '10001 - 20000 €' =>array(10001, 20000),
+            '20001 - 50000 €' =>array(20001, 50000),
+            'Plus de 50000 €' =>array(50000, 99999999999999999999),
+        );
+
+        foreach($tranches as $label => $tranche){
+
+            $min = $tranche[0];
+            $max = $tranche[1];
+
+            $montantMin = $opportuniteRepo->findMinForCompanyByYearAndMontantTempsCommercial($company, $year, $min, $max);
+            $montantMax = $opportuniteRepo->findMaxForCompanyByYearAndMontantTempsCommercial($company, $year, $min, $max);
+
+            $arr_temps[] = array($label, $montantMin[1], $montantMin[1], $montantMax[1], $montantMax[1]);
+            $arr_temps[] = array($label, 10, 10, 20, 20);
+
+        }
+
         return $arr_temps;
     }
 
