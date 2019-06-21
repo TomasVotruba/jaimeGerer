@@ -452,9 +452,9 @@ class ChartService extends ContainerAware {
         $chart->getOptions()->getLegend()->setPosition('none');
         $chart->getOptions()->getBar()->setGroupWidth('100%');
         $chart->getOptions()->getCandlestick()->getFallingColor()->setStrokeWidth(0);
-        $chart->getOptions()->getCandlestick()->getFallingColor()->setFill('#a52714');
+        $chart->getOptions()->getCandlestick()->getFallingColor()->setFill('#ec741b');
         $chart->getOptions()->getCandlestick()->getRisingColor()->setStrokeWidth(0);
-        $chart->getOptions()->getCandlestick()->getRisingColor()->setFill('#0f9d58');
+        $chart->getOptions()->getCandlestick()->getRisingColor()->setFill('#ec741b');
         $chart->getOptions()->setWidth(900);
         $chart->getOptions()->setHeight(500);
 
