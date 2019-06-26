@@ -44,7 +44,7 @@ services:
         class: AppBundle\Service\CRM\DevisService
         calls:
             - [setContainer, ["@service_container"]]
-        arguments: [ "@doctrine.orm.entity_manager" ]
+        arguments: [ "@doctrine.orm.entity_manager", '@appbundle.utils_service', "%kernel.root_dir%", '@templating', '@knp_snappy.pdf' ]
     appbundle.crm_facture_service:
         class: AppBundle\Service\CRM\FactureService
         calls:

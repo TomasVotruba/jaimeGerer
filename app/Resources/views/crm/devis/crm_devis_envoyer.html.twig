@@ -6,7 +6,7 @@
 
 	<div class="center">
 		<p>Le devis <strong>"{{ devis.num}} - {{ devis.objet }}"</strong> sera envoyé à <strong>{{ devis.contact }}</strong> ({{ devis.contact.email }}).</p>
- 			{{ form(form, {'action': path('crm_devis_envoyer', {'id' : devis.id })} ) }}
+ 			{{ form(form, {'action': path('crm_action_commerciale_envoyer', {'id' : actionCommerciale.id })} ) }}
 		<p id="loading-message" class="hidden">
 		<i>Votre message est en cours d'envoi. Pour patienter, voici un petit chat qui danse :</i><br />
 		<img src="{{ asset('images/assets/cat_loader.gif') }}" alt="Patientez..." />

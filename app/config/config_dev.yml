@@ -57,4 +57,4 @@ nicomak_paypal:
     debug: true
 
 swiftmailer:
-    #delivery_addresses: [test@nicomak.eu]
+    delivery_addresses: [test@nicomak.eu]

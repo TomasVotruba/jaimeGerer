@@ -22,6 +22,7 @@ use AppBundle\Entity\Settings;
 use AppBundle\Entity\Rapport;
 use AppBundle\Entity\CRM\PlanPaiement;
 use AppBundle\Entity\CRM\Frais;
+use AppBundle\Entity\CRM\PriseContact;
 
 use AppBundle\Form\CRM\OpportuniteType;
 use AppBundle\Form\CRM\ActionCommercialeType;
@@ -36,7 +37,7 @@ use AppBundle\Form\CRM\OpportuniteWonPlanPaiementType;
 use AppBundle\Form\CRM\FraisType;
 
 use \DateTime;
-
+use Swift_Attachment;
 
 class ActionCommercialeController extends Controller
 {
@@ -1326,13 +1327,19 @@ class ActionCommercialeController extends Controller
 		}
 
 	/**
+	 * Envoyer le devis par email
+	 * 
 	 * @Route("/crm/action-commerciale/envoyer/{id}", name="crm_action_commerciale_envoyer")
 	 */
 	public function actionCommercialeEnvoyerAction(Opportunite $actionCommerciale)
 	{
 		$devis = $actionCommerciale->getDevis();
+		$settingsRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
+ 		$contactAdmin = $settingsRepository->findOneBy(array('company' => $devis->getUserCreation()->getCompany(), 'module' => 'CRM', 'parametre' => 'CONTACT_ADMINISTRATIF'));
+
 		$form = $this->createFormBuilder()->getForm();
 
+		
 		$form->add('objet', 'text', array(
 			'required' => true,
 			'label' => 'Objet',
@@ -1340,17 +1347,23 @@ class ActionCommercialeController extends Controller
 		));
 
 		$form->add('message', 'textarea', array(
-				'required' => true,
-				'label' => 'Message',
-				'data' => $this->renderView('crm/devis/crm_devis_email.html.twig', array(
-					'devis' => $devis
-				)),
-				'attr' => array('class' => 'tinymce')
+			'required' => true,
+			'label' => 'Message',
+			'data' => $this->renderView('crm/devis/crm_devis_email.html.twig', array(
+				'devis' => $devis
+			)),
+			'attr' => array('class' => 'tinymce')
 		));
 
         $form->add('addcc', 'checkbox', array(
-        		'required' => false,
-  				'label' => 'Recevoir une copie de l\'email'
+        	'required' => false,
+  			'label' => 'Recevoir une copie de l\'email'
+        ));
+
+        $form->add('includePropale', 'checkbox', array(
+        	'required' => false,
+  			'label' => 'Inclure la proposition commerciale en pièce jointe',
+  			'attr' => array('disabled' => $actionCommerciale->getFichier() ? false : true)
         ));
 
 		$form->add('submit', 'submit', array(
@@ -1366,7 +1379,8 @@ class ActionCommercialeController extends Controller
 			$objet = $form->get('objet')->getData();
 			$message = $form->get('message')->getData();
 
-			$filename = $this->_devisCreatePDF($devis);
+			$devisService = $this->get('appbundle.crm_devis_service');
+			$filename = $devisService->createDevisPDF($devis);
 			
 			try{
 				$mail = \Swift_Message::newInstance()
@@ -1377,6 +1391,11 @@ class ActionCommercialeController extends Controller
 					->attach(Swift_Attachment::fromPath($filename))
 				;
 				if( $form->get('addcc')->getData() ) $mail->addCc($this->getUser()->getEmail());
+				if( $form->get('includePropale')->getData() && $actionCommerciale->getFichier() ){
+					$propalePath = $this->container->getParameter('actions_commerciales_fichier_directory').DIRECTORY_SEPARATOR.$actionCommerciale->getFichier();
+					$mail->attach(Swift_Attachment::fromPath($propalePath));
+
+				} 
 				$this->get('mailer')->send($mail);
 				$this->get('session')->getFlashBag()->add(
 						'success',
@@ -1417,7 +1436,8 @@ class ActionCommercialeController extends Controller
 
 		return $this->render('crm/devis/crm_devis_envoyer.html.twig', array(
 				'form' => $form->createView(),
-				'devis' => $devis
+				'devis' => $devis,
+				'actionCommerciale' => $actionCommerciale
 		));
 	}
 

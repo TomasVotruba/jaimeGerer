@@ -9,10 +9,18 @@ use AppBundle\Entity\CRM\Devis;
 class DevisService extends ContainerAware {
 
     protected $em;
+    protected $utilsService;
+    protected $kernelRootDir;
+    protected $templatingService;
+    protected $knpSnappyPDF;
 
-    public function __construct(\Doctrine\ORM\EntityManager $em)
+    public function __construct(\Doctrine\ORM\EntityManager $em, $utilsService, $kernelRootDir, $templatingService, $knpSnappyPDF)
     {
         $this->em = $em;
+        $this->utilsService = $utilsService;
+        $this->kernelRootDir = $kernelRootDir;
+        $this->templatingService = $templatingService;
+        $this->knpSnappyPDF = $knpSnappyPDF;
     }
 
     public function win($devis){
@@ -66,5 +74,30 @@ class DevisService extends ContainerAware {
         $devis->setAnalytique($opportunite->getAnalytique());
 
         return $devis;
+    }
+
+    public function createDevisPDF($devis)
+    {
+
+        $settingsRepository = $this->em->getRepository('AppBundle:Settings');
+        $footerDevis = $settingsRepository->findOneBy(array('company' => $devis->getUserCreation()->getCompany(), 'module' => 'CRM', 'parametre' => 'PIED_DE_PAGE_DEVIS'));
+
+        $contactAdmin = $settingsRepository->findOneBy(array('company' => $devis->getUserCreation()->getCompany(), 'module' => 'CRM', 'parametre' => 'CONTACT_ADMINISTRATIF'));
+
+        $html = $this->templatingService->render('crm/devis/crm_devis_exporter.html.twig',array(
+                'devis' => $devis,
+                'footer' => $footerDevis,
+                'contact_admin' => $contactAdmin->getValeur(),
+        ));
+
+        $filename = 'devis_'.$devis->getNum().'.pdf';
+
+        $pdfFolder = $this->kernelRootDir.'/../web/files/crm/'.$devis->getUserCreation()->getCompany()->getId().'/devis/';
+        $nomClient = $this->utilsService->removeSpecialChars($devis->getCompte()->getNom());
+        $fileName =$pdfFolder.$devis->getNum().'.'.$nomClient.'.pdf';
+
+        $this->knpSnappyPDF->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);
+
+        return $fileName;
     }
 }
