@@ -805,9 +805,22 @@ class ActionCommercialeController extends Controller
 		$opportuniteSousTraitance = new OpportuniteSousTraitance();
 		$opportuniteSousTraitance->setOpportunite($actionCommerciale);
 
+		if(null == $actionCommerciale->getRepartitionStartDate() || null == $actionCommerciale->getRepartitionEndDate()){
+			$this->get('session')->getFlashBag()->add(
+				'warning',
+				'Vous devez remplir la répartition du montant en fonction de l\'activité avant de pouvoir ajouter un sous-traitant.'
+			);
+
+			return $this->redirect(
+				$this->generateUrl('crm_action_commerciale_gagner_repartition', array(
+					'id' => $actionCommerciale->getId()
+				))
+			);
+		}
+
 		$form = $this->createForm(
-				new OpportuniteSousTraitanceType(),
-				$opportuniteSousTraitance
+			new OpportuniteSousTraitanceType(),
+			$opportuniteSousTraitance
 		);
 
 		$request = $this->getRequest();

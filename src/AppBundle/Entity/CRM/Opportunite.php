@@ -775,23 +775,32 @@ class Opportunite
     }
 
     public function getRepartitionStartDate(){
-      $startDate = $this->opportuniteRepartitions[0]->getDate();
-      foreach($this->opportuniteRepartitions as $repartition){
-        if($repartition->getDate() < $startDate ){
-          $startDate = $repartition->getDate();
+
+        if(0 == count($this->opportuniteRepartitions)){
+            return null;
         }
-      }
-      return $startDate;
+
+        $startDate = $this->opportuniteRepartitions[0]->getDate();
+        foreach($this->opportuniteRepartitions as $repartition){
+            if($repartition->getDate() < $startDate ){
+                $startDate = $repartition->getDate();
+            }
+        }
+        return $startDate;
     }
 
     public function getRepartitionEndDate(){
-      $startDate = $this->opportuniteRepartitions[0]->getDate();
-      foreach($this->opportuniteRepartitions as $repartition){
-        if($repartition->getDate() > $startDate ){
-          $startDate = $repartition->getDate();
+        if(0 == count($this->opportuniteRepartitions)){
+            return null;
         }
-      }
-      return $startDate;
+
+        $startDate = $this->opportuniteRepartitions[0]->getDate();
+        foreach($this->opportuniteRepartitions as $repartition){
+            if($repartition->getDate() > $startDate ){
+                $startDate = $repartition->getDate();
+            }
+        }
+        return $startDate;
     }
 
     public function getRepartitionMonths(){

@@ -913,7 +913,6 @@ class DepenseController extends Controller
 
 			$em->flush();
 
-
 			return new JsonResponse(array(
 				'id' => $depense->getId(),
 				's_depense' => $depense->__toString(),

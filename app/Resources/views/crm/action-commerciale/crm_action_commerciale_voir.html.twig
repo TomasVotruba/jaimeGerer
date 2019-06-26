@@ -873,8 +873,20 @@
 
 			<div class="row">
 				<div class="col-md-6">
-					<h3>Sous-traitants <a class="btn btn-xs btn-primary" href="{{ path('crm_action_commerciale_gagner_sous_traitance', {'id' : opportunite.id }) }}">Ajouter un sous-traitant</a></h3>
-					{% if opportunite.opportuniteSousTraitances|length == 0 %}
+					<h3>Sous-traitants 
+
+						<a class="btn btn-xs btn-primary" 
+							href="{{ path('crm_action_commerciale_gagner_sous_traitance', {'id' : opportunite.id }) }}"
+							{% if 0 == opportunite.opportuniteRepartitions|length %}
+								disabled
+							{% endif %}
+							>
+							Ajouter un sous-traitant
+						</a>
+
+					</h3>
+
+					{% if 0 == opportunite.opportuniteSousTraitances|length %}
 						<p>Pas de sous-traitance</p>
 					{% else %}
 						<table class="contact-view-table">
@@ -898,9 +910,17 @@
 									</td>
 								</tr>
 							{% endfor %}
-						</tbody>
-					</table>
-				{% endif %}
+							</tbody>
+						</table>
+					{% endif %}
+
+					{% if 0 == opportunite.opportuniteRepartitions|length %}
+						<div class="alert alert-warning">
+							<span class="glyphicon glypicon-warning-sign"></span> Vous devez remplir la répartition du montant en fonction de l'activité avant de pouvoir ajouter un sous-traitant.
+							<a class="btn btn-primary btn-xs" href=" {{ path('crm_action_commerciale_gagner_repartition', {'id' : opportunite.id, 'edition' : true }) }} ">Remplir</a>
+						</div>
+					{% endif %}
+
 				</div>
 				<div class="col-md-6">
 					<div id="gauge-sous-traitance">

@@ -621,8 +621,8 @@ class DevisController extends Controller
 
 
 			return $this->redirect($this->generateUrl(
-					'crm_devis_voir',
-					array('id' => $devis->getId())
+					'crm_action_commerciale_voir',
+					array('id' => $devis->getOpportunite()->getId())
 			));
 		}
 

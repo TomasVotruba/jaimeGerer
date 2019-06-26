@@ -128,9 +128,31 @@
 	    </div>
 
 	    <div class="col-md-11 col-xs-12 fit wrap-content wrap-content-commercial">
+	     	
 	     	<div class="titre titre-crm hidden-xs">
 				<h1 id="titre-outil">J'aime le commercial</h1>
 			</div>
+
+			<div class="row spacer-top">
+				<div class="col-md-12">
+					{% for flashMessage in app.session.flashbag.get('success') %}
+					    <div class="alert alert-success">
+					        {{ flashMessage }}
+					    </div>
+					{% endfor %}
+					{% for flashMessage in app.session.flashbag.get('danger') %}
+					    <div class="alert alert-danger">
+					        {{ flashMessage }}
+					    </div>
+					{% endfor %}
+					{% for flashMessage in app.session.flashbag.get('warning') %}
+					    <div class="alert alert-warning">
+					        {{ flashMessage }}
+					    </div>
+					{% endfor %}
+				</div>
+			</div>
+
 		    	
 		    {% block content %}
 
