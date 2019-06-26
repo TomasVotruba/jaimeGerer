@@ -107,7 +107,7 @@ class UserController extends Controller
 
         $user = $userManager->createUser();
 
-        $form = $this->createForm(new UserType(), $user);
+        $form = $this->createForm(new UserType($this->getUser()->getCompany()->getId()), $user);
 
         $request = $this->getRequest();
 		$form->handleRequest($request);
@@ -198,7 +198,7 @@ class UserController extends Controller
     {
         $userManager = $this->get('fos_user.user_manager');
         
-        $form = $this->createForm(new UserType(), $user);
+        $form = $this->createForm(new UserType($this->getUser()->getCompany()->getId()), $user);
         $form['permissions']->setData($user->getRoles());
         $form['admin']->setData($user->hasRole('ROLE_ADMIN'));
         

@@ -78,6 +78,7 @@ class NDFController extends Controller
 		$recu = new Recu();
 
 		$fc = null;
+		$ccDefaut = null;
 
 		if($this->getUser()->getCompany()->isNicomak()){
 			$fc = $em->getRepository('AppBundle:Settings')->findOneBy(array(
@@ -90,10 +91,11 @@ class NDFController extends Controller
 				'company' => $this->getUser()->getCompany(),
 				'nom' => 'Voyages et déplacements',
 			));
-		}
 
-	
-		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId(), $fc, $deplacements), $recu);
+			$ccDefaut = $this->getUser()->getCompteComptableNoteFrais() ? $this->getUser()->getCompteComptableNoteFrais() : $deplacements;
+		}
+		
+		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId(), $fc, $ccDefaut), $recu);
 
 		$form->add('next', 'submit', array(
 			'label' => 'Enregistrer et ajouter un autre reçu'

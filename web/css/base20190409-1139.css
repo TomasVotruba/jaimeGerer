@@ -400,6 +400,10 @@ tr th {
     margin: Opx;
 }
 
+#userbar ul#user_menu.dropdown-menu-right{
+    right: auto;
+}
+
 /**
 * LEFT COLUMN FOR MENU
 **/

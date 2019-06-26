@@ -11,13 +11,13 @@ class RecuType extends AbstractType
 {
     protected $companyId;
     protected $fc;
-    protected $deplacements;
+    protected $ccDefaut;
 
-    public function __construct ($companyId = null, $fc = null, $deplacements = null)
+    public function __construct ($companyId = null, $fc = null, $ccDefaut = null)
     {
         $this->companyId = $companyId;
         $this->fc = $fc;
-        $this->deplacements = $deplacements;
+        $this->ccDefaut = $ccDefaut;
     }
 
     /**
@@ -28,7 +28,8 @@ class RecuType extends AbstractType
     {
 
         $data = $builder->getData();
-
+        dump($this->ccDefaut);
+     
         $builder
             ->add('date', 'date', array('widget' => 'single_text',
               'input' => 'datetime',
@@ -110,7 +111,7 @@ class RecuType extends AbstractType
                       ->setParameter('num', '6%')
                       ->orderBy('c.nom', 'ASC');
                 },
-                'data' => $data->getId() ? $data->getCompteComptable() : $this->deplacements
+                'data' => $data->getId() ? $data->getCompteComptable() : $this->ccDefaut
             ))
             ->add('save', 'submit', array(
               'label' => 'Enregistrer et revenir à la liste des reçus',

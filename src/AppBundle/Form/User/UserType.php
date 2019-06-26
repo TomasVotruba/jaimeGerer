@@ -5,15 +5,24 @@ namespace AppBundle\Form\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 
 class UserType extends AbstractType
 {
+
+    protected $companyId;
+
+    public function __construct ($companyId = null)
+    {
+        $this->companyId = $companyId;
+    }
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('firstName', 'text', array(
                 'required' => true,
@@ -67,6 +76,20 @@ class UserType extends AbstractType
             ->add('tauxHoraire', 'integer', array(
                 'required' => false,
                 'label' => 'Taux horaire'
+            ))
+            ->add('compteComptableNoteFrais', 'entity', array(
+                'class'=>'AppBundle:Compta\CompteComptable',
+                'required' => false,
+                'label' => 'Compte comptable pour les notes de frais',
+                'property' => 'nom',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                      ->where('c.company = :company')
+                      ->andWhere('c.num LIKE :num')
+                      ->setParameter('company', $this->companyId)
+                      ->setParameter('num', '62510%')
+                      ->orderBy('c.nom', 'ASC');
+                },
             ))
             ->add('submit', 'submit', array(
               'label' => 'Enregistrer',
