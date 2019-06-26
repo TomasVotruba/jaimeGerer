@@ -28,7 +28,6 @@ class RecuType extends AbstractType
     {
 
         $data = $builder->getData();
-        dump($this->ccDefaut);
      
         $builder
             ->add('date', 'date', array('widget' => 'single_text',
