@@ -56,5 +56,5 @@ knp_snappy:
 nicomak_paypal:
     debug: true
 
-#swiftmailer:
-    #delivery_addresses: [test@nicomak.eu]
+swiftmailer:
+    delivery_addresses: [test@nicomak.eu]
