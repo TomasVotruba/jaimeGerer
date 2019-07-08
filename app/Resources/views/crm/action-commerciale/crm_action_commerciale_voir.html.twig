@@ -890,12 +890,23 @@
 						<p>Pas de sous-traitance</p>
 					{% else %}
 						<table class="contact-view-table">
+							<thead>
+								<tr>
+									<th>Sous traitant</th>
+									<th>Montant de la sous-traitance</th>
+									<th>Montant des frais</th>
+									<th>Factures</th>
+								</tr>
+							</thead>
 							<tbody>
 							{% for sousTraitance in opportunite.opportuniteSousTraitances %}
 								<tr>
 									<td> {{ sousTraitance.sousTraitant }} </td>
 									<td>
 										{{ sousTraitance.montantMonetaire|number_format(2, ',', ' ') }} € <a href="{{ path('crm_action_commerciale_sous_traitance_editer', {'id' : sousTraitance.id }) }}" class="btn btn-xs btn-primary">Modifier</a>
+									</td>
+									<td>
+										{{ sousTraitance.montantFraisMonetaire|number_format(2, ',', ' ') }} € <a href="{{ path('crm_action_commerciale_sous_traitance_editer', {'id' : sousTraitance.id }) }}" class="btn btn-xs btn-primary">Modifier</a>
 									</td>
 									<td>
 										{% for depense in sousTraitance.depenses %}

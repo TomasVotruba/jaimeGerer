@@ -246,7 +246,7 @@ class OpportuniteSousTraitance
      */
     public function getMontantMonetaire()
     {
-        $montant = $this->getMontantFrais();
+        $montant = 0;
         
         if($this->typeForfait == "GLOBAL"){
            $montant+= ($this->montantGlobal/100);
@@ -325,14 +325,14 @@ class OpportuniteSousTraitance
     }
 
     public function getResteAFacturer(){
-      $reste = $this->getMontantMonetaire()-$this->getTotalFacture();
+      $reste = $this->getMontantMonetaireAvecFrais()-$this->getTotalFacture();
       return $reste;
     }
 
     public function getNomEtMontant(){
       return  $this->sousTraitant.' - '.
               $this->opportunite->getCompte()->getNom().' - '.$this->opportunite->getNom().' : '.
-              $this->getMontantMonetaire().'€ (reste à facturer : '.
+              $this->getMontantMonetaireAvecFrais().'€ (reste à facturer : '.
               $this->getResteAFacturer().' €)';
     }
 
@@ -426,16 +426,16 @@ class OpportuniteSousTraitance
         return $this->fraisRefacturables;
     }
 
-     public function getMontantFrais(){
-        
-        if(true === $this->fraisRefacturables){
-            return 0;
-        }
+    public function getMontantFraisMonetaire(){
 
         $frais = 0;
         foreach($this->repartitions as $repartition){
             $frais+= $repartition->getFrais();
         }
         return $frais/100;
+    }
+
+    public function getMontantMonetaireAvecFrais(){
+        return $this->getMontantMonetaire() + $this->getMontantFraisMonetaire();
     }
 }
