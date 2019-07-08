@@ -246,10 +246,15 @@ class OpportuniteSousTraitance
      */
     public function getMontantMonetaire()
     {
-      if($this->typeForfait == "GLOBAL"){
-          return $this->montantGlobal/100;
-      }
-      return $this->nbJours*$this->tarifJour/100;
+        $montant = $this->getMontantFrais();
+        
+        if($this->typeForfait == "GLOBAL"){
+           $montant+= ($this->montantGlobal/100);
+        } else {
+            $montant+= ($this->nbJours*$this->tarifJour/100);
+        }
+        
+        return $montant;
     }
 
     /**
@@ -419,5 +424,18 @@ class OpportuniteSousTraitance
     public function getFraisRefacturables()
     {
         return $this->fraisRefacturables;
+    }
+
+     public function getMontantFrais(){
+        
+        if(true === $this->fraisRefacturables){
+            return 0;
+        }
+
+        $frais = 0;
+        foreach($this->repartitions as $repartition){
+            $frais+= $repartition->getFrais();
+        }
+        return $frais/100;
     }
 }
