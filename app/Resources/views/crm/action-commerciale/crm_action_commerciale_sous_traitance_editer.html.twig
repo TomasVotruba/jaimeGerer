@@ -168,7 +168,14 @@
                 } else {
                     $('.frais').addClass("hidden");
                 }
-            })
+            });
+
+
+            if( $('.toggle-frais').prop('checked') == true){
+                $('.frais').removeClass("hidden");
+            } else {
+                $('.frais').addClass("hidden");
+            }
 
             if("{{ opportuniteSousTraitance.typeForfait }}" == 'GLOBAL'){
                 $('.montant-global').removeClass("hidden");
