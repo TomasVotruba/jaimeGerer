@@ -97,290 +97,105 @@ class JournalBanqueController extends Controller
 	 */
 	public function journalBanqueAjouterAction($type, Rapprochement $rapprochementBancaire){
 
-		$em = $this->getDoctrine()->getManager();
-		$numService = $this->get('appbundle.num_service');
-
-		$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
-		$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
-		$lettrageService = $this->get('appbundle.compta_lettrage_service');
-
-		$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
-
 		try{
 			switch($type){
 
 				case 'AFFECTATION-DIVERSE-ACHAT':
-					//credit au compte 512xxxx (selon banque)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-					$ligne->setDebit(null);
-					$ligne->setCredit(-($rapprochementBancaire->getMouvementBancaire()->getMontant()));
-					$ligne->setAnalytique(null);
-					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setCommentaire($rapprochementBancaire->getAffectationDiverse()->getNom());
-					$ligne->setNumEcriture($numEcriture);
-					$em->persist($ligne);
-
-					//debit au compte xxxxxx (selon le compte rattaché à l'affectation)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-					$ligne->setDebit(-($rapprochementBancaire->getMouvementBancaire()->getMontant()));
-					$ligne->setCredit(null);
-					$ligne->setAnalytique(null);
-					$ligne->setCompteComptable($rapprochementBancaire->getAffectationDiverse()->getCompteComptable());
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setCommentaire($rapprochementBancaire->getAffectationDiverse()->getNom());
-					$ligne->setNumEcriture($numEcriture);
-					$em->persist($ligne);
+					$result = $this->ajouterAffectationDiverseAchat($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getAffectationDiverse());
+					if('OK' !== $result){
+						$response = new Response();
+						$response->setStatusCode(500);
+						return $response;
+					}
 
 					break;
 
 				case 'AFFECTATION-DIVERSE-VENTE':
-					//credit au compte xxxxxx (selon le compte rattaché à l'affectation)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-					$ligne->setDebit(null);
-					$ligne->setCredit($rapprochementBancaire->getMouvementBancaire()->getMontant());
-					$ligne->setAnalytique(null);
-					$ligne->setCompteComptable($rapprochementBancaire->getAffectationDiverse()->getCompteComptable());
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setNumEcriture($numEcriture);
-					$ligne->setCommentaire($rapprochementBancaire->getAffectationDiverse()->getNom());
-					$em->persist($ligne);
-
-
-					//debit au compte 512xxxx (selon banque)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-					$ligne->setDebit($rapprochementBancaire->getMouvementBancaire()->getMontant());
-					$ligne->setCredit(null);
-					$ligne->setAnalytique(null);
-					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setNumEcriture($numEcriture);
-					$ligne->setCommentaire($rapprochementBancaire->getAffectationDiverse()->getNom());
-					$em->persist($ligne);
+					$result = $this->ajouterAffectationDiverseVente($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getAffectationDiverse());
+					if('OK' !== $result){
+						$response = new Response();
+						$response->setStatusCode(500);
+						return $response;
+					}
 
 					break;
 
 				case 'DEPENSE':
-					//credit au compte  512xxxx (selon banque)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-					$ligne->setDebit(null);
-					$ligne->setCredit($rapprochementBancaire->getDepense()->getTotalTTC());
-					$ligne->setAnalytique($rapprochementBancaire->getDepense()->getAnalytique());
-					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setModePaiement($rapprochementBancaire->getDepense()->getModePaiement());
-					$ligne->setNumEcriture($numEcriture);
-					$em->persist($ligne);
-
-					//debit au compte 401xxxx (compte du fournisseur)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-					$ligne->setDebit($rapprochementBancaire->getDepense()->getTotalTTC());
-					$ligne->setCredit(null);
-					$ligne->setAnalytique($rapprochementBancaire->getDepense()->getAnalytique());
-					$ligne->setCompteComptable($rapprochementBancaire->getDepense()->getCompte()->getCompteComptableFournisseur());
-					$lettrage = $lettrageService->findNextNum($rapprochementBancaire->getDepense()->getCompte()->getCompteComptableFournisseur());
-					$ligne->setLettrage($lettrage);
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setModePaiement($rapprochementBancaire->getDepense()->getModePaiement());
-					$ligne->setNumEcriture($numEcriture);
-					$em->persist($ligne);
-
-					$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
-						'depense' => $rapprochementBancaire->getDepense(),
-						'compteComptable' => $rapprochementBancaire->getDepense()->getCompte()->getCompteComptableFournisseur()
-					));
-					$ligneJournalAchats->setLettrage($lettrage);
-					$em->persist($ligneJournalAchats);
+					$result = $this->ajouterDepense($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getDepense());
+					if('OK' !== $result){
+						$response = new Response();
+						$response->setStatusCode(500);
+						return $response;
+					}
 
 					break;
 
 				case 'FACTURE':
-
-					//credit au compte  411xxxx (compte du client)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-					$ligne->setDebit(null);
-					$ligne->setCredit($rapprochementBancaire->getFacture()->getTotalTTC());
-					$ligne->setAnalytique($rapprochementBancaire->getFacture()->getAnalytique());
-					$ligne->setCompteComptable($rapprochementBancaire->getFacture()->getCompte()->getCompteComptableClient());
-					$lettrage = $lettrageService->findNextNum($rapprochementBancaire->getFacture()->getCompte()->getCompteComptableClient());
-					$ligne->setLettrage($lettrage);
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setNumEcriture($numEcriture);
-					$em->persist($ligne);
-
-					//debit au compte 512xxxx (selon banque)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-					$ligne->setDebit($rapprochementBancaire->getFacture()->getTotalTTC());
-					$ligne->setCredit(null);
-					$ligne->setAnalytique($rapprochementBancaire->getFacture()->getAnalytique());
-					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setNumEcriture($numEcriture);
-					$em->persist($ligne);
-
-					$ligneJournalVente = $journalVenteRepo->findOneBy(array(
-						'facture' => $rapprochementBancaire->getFacture(),
-						'compteComptable' => $rapprochementBancaire->getFacture()->getCompte()->getCompteComptableClient()
-					));
-					$ligneJournalVente->setLettrage($lettrage);
-					$em->persist($ligneJournalVente);
+					$result = $this->ajouterFacture($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getFacture());
+					if('OK' !== $result){
+						$response = new Response();
+						$response->setStatusCode(500);
+						return $response;
+					}
 
 					break;
 
 				case 'AVOIR-FOURNISSEUR':
-					//credit au compte  401xxxx (compte du fournisseur)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-					$ligne->setDebit(null);
-					$ligne->setCredit($rapprochementBancaire->getAvoir()->getTotalTTC());
-					$ligne->setAnalytique($rapprochementBancaire->getAvoir()->getDepense()->getAnalytique());
-					$ligne->setCompteComptable($rapprochementBancaire->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur());
-					$lettrage = $lettrageService->findNextNum($rapprochementBancaire->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur());
-					$ligne->setLettrage($lettrage);
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setNumEcriture($numEcriture);
-					$em->persist($ligne);
 
-					//debit au compte 512xxxx (selon banque)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-					$ligne->setDebit($rapprochementBancaire->getAvoir()->getTotalTTC());
-					$ligne->setCredit(null);
-					$ligne->setAnalytique($rapprochementBancaire->getAvoir()->getDepense()->getAnalytique());
-					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setNumEcriture($numEcriture);
-					$em->persist($ligne);
-
-					$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
-						'avoir' => $rapprochementBancaire->getAvoir(),
-						'compteComptable' => $rapprochementBancaire->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur()
-					));
-					$ligneJournalAchats->setLettrage($lettrage);
-					$em->persist($ligneJournalAchats);
+					$result = $this->ajouterAvoirFournisseur($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getAvoir());
+					if('OK' !== $result){
+						$response = new Response();
+						$response->setStatusCode(500);
+						return $response;
+					}
 
 					break;
 
 				case 'AVOIR-CLIENT':
-					//credit au compte  512xxxxx (selon banque)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-					$ligne->setDebit(null);
-					$ligne->setCredit($rapprochementBancaire->getAvoir()->getTotalTTC());
-					$ligne->setAnalytique($rapprochementBancaire->getAvoir()->getFacture()->getAnalytique());
-					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setNumEcriture($numEcriture);
-					$em->persist($ligne);
 
-					//debit au compte 411xxxx (compte du client)
-					$ligne = new JournalBanque();
-					$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-					$ligne->setDebit($rapprochementBancaire->getAvoir()->getTotalTTC());
-					$ligne->setCredit(null);
-					$ligne->setAnalytique($rapprochementBancaire->getAvoir()->getFacture()->getAnalytique());
-					$ligne->setCompteComptable($rapprochementBancaire->getAvoir()->getFacture()->getCompte()->getCompteComptableClient());
-					$lettrage = $lettrageService->findNextNum($rapprochementBancaire->getAvoir()->getFacture()->getCompte()->getCompteComptableClient());
-					$ligne->setLettrage($lettrage);
-					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-					$ligne->setNumEcriture($numEcriture);
-					$em->persist($ligne);
-
-					$ligneJournalVente = $journalVenteRepo->findOneBy(array(
-						'avoir' => $rapprochementBancaire->getAvoir(),
-						'compteComptable' => $rapprochementBancaire->getAvoir()->getFacture()->getCompte()->getCompteComptableClient()
-					));
-					$ligneJournalVente->setLettrage($lettrage);
-					$em->persist($ligneJournalVente);
+					$result = $this->ajouterAvoirClient($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getAvoir());
+					if('OK' !== $result){
+						$response = new Response();
+						$response->setStatusCode(500);
+						return $response;
+					}
 
 					break;
+
 
 				case 'REMISE-CHEQUES':
 					//credit au compte  411xxxx (compte du client) pour chaque facture
 					foreach($rapprochementBancaire->getRemiseCheque()->getCheques() as $cheque){
 						foreach($cheque->getPieces() as $piece){
-							$ligne = new JournalBanque();
-							$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-							$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-							$ligne->setDebit(null);
+							
 							if($piece->getFacture() != null){
-								$ligne->setCredit($piece->getFacture()->getTotalTTC());
-								$ligne->setAnalytique($piece->getFacture()->getAnalytique());
-								$ligne->setCompteComptable($piece->getFacture()->getCompte()->getCompteComptableClient());
-								$lettrage = $lettrageService->findNextNum($piece->getFacture()->getCompte()->getCompteComptableClient());
-								$ligne->setLettrage($lettrage);
-								$ligne->setFacture($piece->getFacture());
-								$ligne->setNom('Paiement facture '.$piece->getFacture()->getNum());
-
-								$ligneJournalVente = $journalVenteRepo->findOneBy(array(
-									'facture' => $piece->getFacture(),
-									'compteComptable' => $piece->getFacture()->getCompte()->getCompteComptableClient()
-								));
-								$ligneJournalVente->setLettrage($lettrage);
-								$em->persist($ligneJournalVente);
+								
+								$result = $this->ajouterFacture($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getFacture(), false, 'CHEQUE');
+								if('OK' !== $result){
+									$response = new Response();
+									$response->setStatusCode(500);
+									return $response;
+								}
 
 							} else if($piece->getAvoir() != null){
-								$ligne->setCredit($piece->getAvoir()->getTotalTTC());
-								$ligne->setAnalytique($piece->getAvoir()->getDepense()->getAnalytique());
-								$ligne->setCompteComptable($piece->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur());
-								$lettrage = $lettrageService->findNextNum($piece->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur());
-								$ligne->setLettrage($lettrage);
-								$ligne->setNom('Avoir '.$piece->getAvoir()->getNum());
-								$ligne->setAvoir($piece->getAvoir());
-								$ligne->setNumEcriture($numEcriture);
+								
+								$result = $this->ajouterAvoirFournisseur($rapprochementBancaire->getMouvementBancaire(), $piece->getAvoir(), false, 'CHEQUE');
+								if('OK' !== $result){
+									$response = new Response();
+									$response->setStatusCode(500);
+									return $response;
+								}
 
-								$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
-									'avoir' => $piece->getAvoir(),
-									'compteComptable' => $piece->getAvoir()->getDepense()->getCompte()->getCompteComptableFournisseur()
-								));
-								$ligneJournalAchats->setLettrage($lettrage);
-								$em->persist($ligneJournalAchats);
 							} else if($piece->getOperationDiverse() != null){
-								$ligne->setCredit($piece->getOperationDiverse()->getDebit());
-								//$ligne->setAnalytique($piece->getAvoir()->getDepense()->getAnalytique());
-								$ligne->setCompteComptable($piece->getOperationDiverse()->getCompteComptable());
-								$lettrage = $lettrageService->findNextNum($piece->getOperationDiverse()->getCompteComptable());
-								$ligne->setLettrage($lettrage);
-								$ligne->setNom($piece->getOperationDiverse()->getLibelle());
-								$piece->getOperationDiverse()->setLettrage($lettrage);
-								$em->persist($piece->getOperationDiverse());
+								
+								$result = $this->ajouterOD($rapprochementBancaire->getMouvementBancaire(), $piece->getOperationDiverse(), false, 'CHEQUE');
+								if('OK' !== $result){
+									$response = new Response();
+									$response->setStatusCode(500);
+									return $response;
+								}
+
 							}
-							$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-							$ligne->setModePaiement('CHEQUE');
-							$ligne->setNumEcriture($numEcriture);
-							$em->persist($ligne);
 						}
 					}
 
@@ -390,7 +205,6 @@ class JournalBanqueController extends Controller
 					$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
 					$ligne->setDebit($rapprochementBancaire->getRemiseCheque()->getTotalTTC());
 					$ligne->setCredit(null);
-					//$ligne->setAnalytique($rapprochementBancaire->getRemiseCheque()->getAnalytique());
 					$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
 					$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
@@ -402,49 +216,17 @@ class JournalBanqueController extends Controller
 
 				case 'NOTE-FRAIS':
 					foreach($rapprochementBancaire->getNoteFrais()->getDepenses() as $depense){
-						//credit au compte  512xxxx (selon banque)
-						$ligne = new JournalBanque();
-						$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-						$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-						$ligne->setDebit(null);
-						$ligne->setCredit($depense->getTotalTTC());
-						$ligne->setAnalytique($depense->getAnalytique());
-						$ligne->setCompteComptable($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getCompteComptable());
-						$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-						$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-						$ligne->setModePaiement($depense->getModePaiement());
-						$ligne->setNumEcriture($numEcriture);
-						$em->persist($ligne);
 
-						//debit au compte 421xxxx (compte NDF du salarié)
-						$ligne = new JournalBanque();
-						$ligne->setMouvementBancaire($rapprochementBancaire->getMouvementBancaire());
-						$ligne->setCodeJournal($rapprochementBancaire->getMouvementBancaire()->getCompteBancaire()->getNom());
-						$ligne->setDebit($depense->getTotalTTC());
-						$ligne->setCredit(null);
-						$ligne->setAnalytique($depense->getAnalytique());
-						$ligne->setCompteComptable($rapprochementBancaire->getNoteFrais()->getCompteComptable());
-						$lettrage = $lettrageService->findNextNum($rapprochementBancaire->getNoteFrais()->getCompteComptable());
-						$ligne->setLettrage($lettrage);
-						$ligne->setNom($rapprochementBancaire->getMouvementBancaire()->getLibelle());
-						$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
-						$ligne->setModePaiement($depense->getModePaiement());
-						$ligne->setNumEcriture($numEcriture);
-						$em->persist($ligne);
-
-						$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
-							'depense' => $depense,
-							'compteComptable' => $rapprochementBancaire->getNoteFrais()->getCompteComptable()
-						));
-						$ligneJournalAchats->setLettrage($lettrage);
-						$em->persist($ligneJournalAchats);
+						$result = $this->ajouterDepense($rapprochementBancaire->getMouvementBancaire(), $depense);
+						if('OK' !== $result){
+							$response = new Response();
+							$response->setStatusCode(500);
+							return $response;
+						}
+	
 					}
 					break;
 				}
-				$em->flush();
-
-				$numEcriture++;
-				$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 		} catch (\Exception $e){
 			throw $e;
@@ -463,7 +245,7 @@ class JournalBanqueController extends Controller
 	/**
 	 * @Route("/compta/journal-banque/ajouter-plusieurs-pieces", name="compta_journal_banque_ajouter_plusieurs_pieces")
 	 */
-	public function journalBanqueAjouterPlusieursPiecesAction($arr_mouvements, $arr_pieces, $arr_montants){
+	public function journalBanqueAjouterPlusieursPiecesAction($arr_mouvements, $arr_pieces){
 
 		$em = $this->getDoctrine()->getManager();
 		$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
@@ -506,29 +288,133 @@ class JournalBanqueController extends Controller
 			$em->persist($ligne);
 		}
 
-
 		foreach($arr_pieces as $arr_piece){
 			foreach($arr_piece as $type => $piece){
 
-				$ligne = new JournalBanque();
-				$ligne->setMouvementBancaire(null);
-				//$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
-				$ligne->setAnalytique(null);
-				$ligne->setStringAnalytique();
-				$ligne->setLettrage($lettrage);
-				
+				switch($type){
 
-				$ligne->setCompteComptable($piece->getCompte()->getCompteComptableClient());
-				
-				
-				$ligne->setNom($mouvementBancaire->getLibelle());
-				$ligne->setDate($mouvementBancaire->getDate());
-				$ligne->setNumEcriture($numEcriture);
-				$em->persist($ligne);
+					case 'AFFECTATIONS-DIVERSES-ACHAT':
+						$result = $this->ajouterAffectationDiverseAchat($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getAffectationDiverse(), false);
+						if('OK' !== $result){
+							$response = new Response();
+							$response->setStatusCode(500);
+							return $response;
+						}
 
-			}
-		}
+						break;
 
+					case 'AFFECTATIONS-DIVERSES-VENTE':
+						$result = $this->ajouterAffectationDiverseVente($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getAffectationDiverse(), false);
+						if('OK' !== $result){
+							$response = new Response();
+							$response->setStatusCode(500);
+							return $response;
+						}
+
+						break;
+
+					case 'DEPENSES':
+						$result = $this->ajouterDepense($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getDepense(), false);
+						if('OK' !== $result){
+							$response = new Response();
+							$response->setStatusCode(500);
+							return $response;
+						}
+
+						break;
+
+					case 'FACTURES':
+						$result = $this->ajouterFacture($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getFacture(), false);
+						if('OK' !== $result){
+							$response = new Response();
+							$response->setStatusCode(500);
+							return $response;
+						}
+
+						break;
+
+					case 'AVOIRS-FOURNISSEUR':
+
+						$result = $this->ajouterAvoirFournisseur($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getAvoir(), false);
+						if('OK' !== $result){
+							$response = new Response();
+							$response->setStatusCode(500);
+							return $response;
+						}
+
+						break;
+
+					case 'AVOIRS-CLIENT':
+
+						$result = $this->ajouterAvoirClient($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getAvoir(), false);
+						if('OK' !== $result){
+							$response = new Response();
+							$response->setStatusCode(500);
+							return $response;
+						}
+
+						break;
+
+
+					case 'REMISES-CHEQUES':
+						//credit au compte  411xxxx (compte du client) pour chaque facture
+						foreach($rapprochementBancaire->getRemiseCheque()->getCheques() as $cheque){
+							foreach($cheque->getPieces() as $piece){
+								
+								if($piece->getFacture() != null){
+									
+									$result = $this->ajouterFacture($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getFacture(), false, 'CHEQUE');
+									if('OK' !== $result){
+										$response = new Response();
+										$response->setStatusCode(500);
+										return $response;
+									}
+
+								} else if($piece->getAvoir() != null){
+									
+									$result = $this->ajouterAvoirFournisseur($rapprochementBancaire->getMouvementBancaire(), $piece->getAvoir(), false, 'CHEQUE');
+									if('OK' !== $result){
+										$response = new Response();
+										$response->setStatusCode(500);
+										return $response;
+									}
+
+								} else if($piece->getOperationDiverse() != null){
+									
+									$result = $this->ajouterOD($rapprochementBancaire->getMouvementBancaire(), $piece->getOperationDiverse(), false, 'CHEQUE');
+									if('OK' !== $result){
+										$response = new Response();
+										$response->setStatusCode(500);
+										return $response;
+									}
+
+								}
+							}
+						}
+
+						break;
+
+					case 'NOTES-FRAIS':
+						foreach($rapprochementBancaire->getNoteFrais()->getDepenses() as $depense){
+
+							$result = $this->ajouterDepense($rapprochementBancaire->getMouvementBancaire(), $depense, false);
+							if('OK' !== $result){
+								$response = new Response();
+								$response->setStatusCode(500);
+								return $response;
+							}
+				
+						}
+						break;
+				} //end switch
+
+			} //end foreach($arr_piece as $type => $piece){
+
+		} // end foreach($arr_pieces as $arr_piece){
+
+		$response = new Response();
+		$response->setStatusCode(200);
+		return $response;
 
 	}
 
@@ -536,7 +422,7 @@ class JournalBanqueController extends Controller
 	/**
 	 * @Route("/compta/journal-banque/ajouter-plusieurs-pieces-meme-compte", name="compta_journal_banque_ajouter_plusieurs_pieces_meme_compte")
 	 */
-	public function journalBanqueAjouterPlusieursPiecesMemeCompteAction($arr_mouvements, $arr_pieces, $arr_montants){
+	public function journalBanqueAjouterPlusieursPiecesMemeCompteAction($arr_mouvements, $arr_pieces){
 
 		$em = $this->getDoctrine()->getManager();
 		$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
@@ -553,14 +439,15 @@ class JournalBanqueController extends Controller
 		$arr_analytiques = array();
 		$analytique = '';
 
-		//on créé une chaine de caractère qui décrit les modes de paiement par montantc
+		//on créé une chaine de caractère qui décrit les modes de paiement par montant
 		$modePaiement = '';
 
-
+		//on écrit le libellé à partir du montant de chaque poste analytique
 		foreach($arr_pieces as $arr_piece){
 			foreach($arr_piece as $type => $piece){
 
 				if($type != 'AFFECTATIONS-DIVERSES-VENTE' && $type != 'AFFECTATIONS-DIVERSES-ACHAT'){
+					
 					$montant= $piece->getTotalTTC();
 					if($montant < 0){
 						$montant = -$montant;
@@ -674,7 +561,7 @@ class JournalBanqueController extends Controller
 			}
 		}
 
-
+		//écrire les lignes du journal de banque
 		try{
 			switch($type){
 
@@ -719,6 +606,17 @@ class JournalBanqueController extends Controller
 						$ligne->setDate($mouvementBancaire->getDate());
 						$ligne->setNumEcriture($numEcriture);
 						$em->persist($ligne);
+					}
+
+					break;
+
+				case 'REMISES-CHEQUES':
+					$prefixe = '';
+					if(count($arr_annees) > 1){
+						foreach($arr_annees as $annee){
+							$prefixe.= $annee;
+							$prefixe.=' ';
+						}
 					}
 
 					break;
@@ -971,6 +869,7 @@ class JournalBanqueController extends Controller
 					break;
 			}
 
+			//lettrage des lignes existantes du journal de vente ou d'achat
 			foreach($arr_pieces as $arr_piece){
 				foreach($arr_piece as $type => $piece){
 
@@ -1030,6 +929,7 @@ class JournalBanqueController extends Controller
 			
 			$em->flush();
 
+			//num pour le FEC
 			$numEcriture++;
 			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
@@ -1044,66 +944,6 @@ class JournalBanqueController extends Controller
 		return $response;
 
 	}
-
-
-	// /**
-	//  * @Route("/compta/journal-banque/reinitialiser", name="compta_journal_banque_reinitialiser")
-	//  */
-	// public function journalBanqueReinitialiser(){
-
-	// 	$em = $this->getDoctrine()->getManager();
-	// 	$journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
-	// 	$rapprochementRepo = $em->getRepository('AppBundle:Compta\Rapprochement');
-	// 	$compteBancaireRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\CompteBancaire');
-	// 	$journalBanqueService = $this->container->get('appbundle.compta_journal_banque_controller');
-
-	// 	$arr_comptesBancaires = $compteBancaireRepo->findByCompany($this->getUser()->getCompany());
-	// 	foreach($arr_comptesBancaires as $compteBancaire){
-	// 		$arr_journal = $journalBanqueRepo->findJournalEntier($this->getUser()->getCompany(), $compteBancaire);
-	// 		foreach($arr_journal as $ligne){
-	// 			$em->remove($ligne);
-	// 		}
-	// 	}
-	// 	$em->flush();
-
-	// 	$arr_rapprochements = $rapprochementRepo->findForCompany($this->getUser()->getCompany());
-	// 	foreach($arr_rapprochements as $rapprochement){
-
-	// 		$type = "";
-	// 		if($rapprochement->getFacture()){
-	// 			$type = "FACTURE";
-	// 		} else if($rapprochement->getDepense()){
-	// 			$type = "DEPENSE";
-	// 		} else if($rapprochement->getAvoir()){
-	// 			if($rapprochement->getAvoir()->getType() == 'CLIENT'){
-	// 				$type = "AVOIR-CLIENT";
-	// 			} else {
-	// 				$type = "AVOIR-FOURNISSEUR";
-	// 			}
-	// 		} else if($rapprochement->getAccompte()){
-	// 			$type = "ACCOMPTE";
-	// 		} else if($rapprochement->getRemiseCheque()){
-	// 			$type = "REMISE-CHEQUES";
-	// 		} else if($rapprochement->getAffectationDiverse()){
-	// 			if($rapprochement->getAffectationDiverse()->getType() == 'VENTE'){
-	// 				$type = "AFFECTATION-DIVERSE-VENTE";
-	// 			} else {
-	// 				$type = "AFFECTATION-DIVERSE-ACHAT";
-	// 			}
-	// 		} else if($rapprochement->getNoteFrais()){
-	// 			$type = "NOTE-FRAIS";
-	// 		}
-
-	// 		if($type != ""){
-	// 			//ecrire dans le journal de banque
-	// 			$journalBanqueService->journalBanqueAjouterAction($type, $rapprochement);
-	// 		}
-
-	// 	}
-
-	// 	return new Response;
-
-	// }
 
 	/**
 	 * @Route("/compta/journal-banque/exporter/{id}/{year}",
@@ -1189,123 +1029,603 @@ class JournalBanqueController extends Controller
 
 	}
 
-	/**
-	 * @Route("/compta/lettrage2017",
-	 *   name="compta_lettrage_2017"
-	 * )
-	 */
-	public function lettrage2017(){
+	private function ajouterFacture($mouvementBancaire, $facture, $ecrireLigneBanque = true, $modePaiement = null){
 
 		$em = $this->getDoctrine()->getManager();
-		$journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
-		$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
-		$journalAchatRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
-		$rapprochementRepo = $em->getRepository('AppBundle:Compta\Rapprochement');
-		$lettrageService = $this->get('appbundle.compta_lettrage_service');
 
-		$arr_rapprochements = $rapprochementRepo->findForCompanyByYear($this->getUser()->getCompany(), 2017);
+		try{
+			//récupération du numéro d'écriture pour le FEC
+			$numService = $this->get('appbundle.num_service');
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
-		foreach($arr_rapprochements as $rapprochement){
+			//récupération du prochain numéro de lettrage pour le compte comptable client
+			$lettrageService = $this->get('appbundle.compta_lettrage_service');
+			$lettrage = $lettrageService->findNextNum($facture->getCompte()->getCompteComptableClient());
 
-			/*
-			if($rapprochement->getFacture()){
-
-				$facture = $rapprochement->getFacture();
-
-				if($facture->getDateCreation()->format('Y') != 2017){
-					continue;
-				}
-
-				$cc = $facture->getCompte()->getCompteComptableClient();
-				$lettrage = $lettrageService->findNextNum($cc);
-
-				$ligneBanque = $journalBanqueRepo->findOneBy(array(
-					'mouvementBancaire' => $rapprochement->getMouvementBancaire(),
-					'compteComptable' => $cc
-				));
-
-				$ligneVente = $journalVenteRepo->findOneBy(array(
-					'facture' => $facture,
-					'compteComptable' => $cc
-				));
-
-				if($ligneVente && $ligneBanque){
-					$ligneVente->setLettrage($lettrage);
-					$em->persist($ligneVente);
-					$ligneBanque->setLettrage($lettrage);
-					$em->persist($ligneBanque);
-					$em->flush();
-
-				} 
-				
-			} 
-			*/
-
-			/*
-			if ($rapprochement->getAvoir()){
-				$avoir = $rapprochement->getAvoir();
-				if($avoir->getDateCreation()->format('Y') != 2017){
-					continue;
-				}
-
-				if($avoir->getDepense()){
-
-					if($avoir->getDateCreation()->format('Y') != 2017){
-						continue;
-					}
-
-					$cc = $avoir->getDepense();->getCompte()->getCompteComptableFournisseur();
-					$lettrage = $lettrageService->findNextNum($cc);
-
-					$ligneBanque = $journalBanqueRepo->findOneBy(array(
-						'mouvementBancaire' => $rapprochement->getMouvementBancaire(),
-						'compteComptable' => $cc
-					));
-
-					$ligneAchat = $journalAchatRepo->findOneBy(array(
-						'avoir' => $avoir,
-						'compteComptable' => $cc
-					));
-
-					if($ligneAchat && $ligneBanque){
-						$ligneAchat->setLettrage($lettrage);
-						$em->persist($ligneAchat);
-						$ligneBanque->setLettrage($lettrage);
-						$em->persist($ligneBanque);
-						$em->flush();
-					} 
-				} else if ($avoir->getFacture()){
-					
-					$cc = $avoir->getFacture()->getCompte()->getCompteComptableClient();
-					$lettrage = $lettrageService->findNextNum($cc);
-
-					$ligneBanque = $journalBanqueRepo->findOneBy(array(
-						'mouvementBancaire' => $rapprochement->getMouvementBancaire(),
-						'compteComptable' => $cc
-					));
-
-					$ligneVente = $journalVenteRepo->findOneBy(array(
-						'avoir' => $avoir,
-						'compteComptable' => $cc
-					));
-
-					if($ligneVente && $ligneBanque){
-						$ligneVente->setLettrage($lettrage);
-						$em->persist($ligneVente);
-						$ligneBanque->setLettrage($lettrage);
-						$em->persist($ligneBanque);
-						$em->flush();
-
-					} 
-				}
-				
+			//credit au compte  411xxxx (compte du client)
+			$ligne = new JournalBanque();
+			$ligne->setMouvementBancaire($mouvementBancaire);
+			$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+			$ligne->setDebit(null);
+			$ligne->setCredit($facture->getTotalTTC());
+			$ligne->setAnalytique($facture->getAnalytique());
+			$ligne->setCompteComptable($facture->getCompte()->getCompteComptableClient());
+			$ligne->setLettrage($lettrage);
+			$ligne->setNom($mouvementBancaire->getLibelle());
+			$ligne->setDate($mouvementBancaire->getDate());
+			$ligne->setNumEcriture($numEcriture);
+			if(null !== $modePaiement){
+				$ligne->setModePaiement($modePaiement);
 			}
-			*/
+			$em->persist($ligne);
+
+			if(true === $ecrireLigneBanque){
+				//debit au compte 512xxxx (compte de la banque)
+				$ligne = new JournalBanque();
+				$ligne->setMouvementBancaire($mouvementBancaire);
+				$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+				$ligne->setDebit($facture->getTotalTTC());
+				$ligne->setCredit(null);
+				$ligne->setAnalytique($facture->getAnalytique());
+				$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+				$ligne->setNom($mouvementBancaire->getLibelle());
+				$ligne->setDate($mouvementBancaire->getDate());
+				$ligne->setNumEcriture($numEcriture);
+				if(null !== $modePaiement){
+					$ligne->setModePaiement($modePaiement);
+				}
+				$em->persist($ligne);
+			}
+			
+
+			//lettrage de la ligne de la facture dans le journal de vente
+			$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
+			$ligneJournalVente = $journalVenteRepo->findOneBy(array(
+				'facture' => $facture,
+				'compteComptable' => $facture->getCompte()->getCompteComptableClient()
+			));
+			$ligneJournalVente->setLettrage($lettrage);
+			$em->persist($ligneJournalVente);
+
+			$em->flush();
+
+			//incrémentation du numéro d'écriture 
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+
+		} catch (\Exception $e){
+			return $e->getMessage();
 		}
-
-		return new Response();
-
+		
+		return 'OK';
 	}
+
+	private function ajouterDepense($mouvementBancaire, $depense, $ecrireLigneBanque = true){
+
+		$em = $this->getDoctrine()->getManager();
+
+		try{
+			//récupération du numéro d'écriture pour le FEC
+			$numService = $this->get('appbundle.num_service');
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+
+			//récupération du prochain numéro de lettrage pour le compte comptable client
+			$lettrageService = $this->get('appbundle.compta_lettrage_service');
+			$lettrage = $lettrageService->findNextNum($depense->getCompte()->getCompteComptableFournisseur());
+
+			//debit au compte 401xxxx (compte du fournisseur)
+			$ligne = new JournalBanque();
+			$ligne->setMouvementBancaire($mouvementBancaire);
+			$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+			$ligne->setDebit($depense->getTotalTTC());
+			$ligne->setCredit(null);
+			$ligne->setAnalytique($depense->getAnalytique());
+			$ligne->setCompteComptable($depense->getCompte()->getCompteComptableFournisseur());
+			$ligne->setLettrage($lettrage);
+			$ligne->setNom($mouvementBancaire->getLibelle());
+			$ligne->setDate($mouvementBancaire->getDate());
+			$ligne->setModePaiement($depense->getModePaiement());
+			$ligne->setNumEcriture($numEcriture);
+			$em->persist($ligne);
+
+			if(true === $ecrireLigneBanque){
+				//crédit au compte 512xxxx (compte de la banque)
+				$ligne = new JournalBanque();
+				$ligne->setMouvementBancaire($mouvementBancaire);
+				$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+				$ligne->setDebit(null);
+				$ligne->setCredit($depense->getTotalTTC());
+				$ligne->setAnalytique($depense->getAnalytique());
+				$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+				$ligne->setNom($mouvementBancaire->getLibelle());
+				$ligne->setDate($mouvementBancaire->getDate());
+				$ligne->setModePaiement($depense->getModePaiement());
+				$ligne->setNumEcriture($numEcriture);
+				$em->persist($ligne);
+			}
+
+			//lettrage de la ligne de la dépense dans le journal d'achat
+			$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
+			$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
+				'depense' => $depense,
+				'compteComptable' => $depense->getCompte()->getCompteComptableFournisseur()
+			));
+			$ligneJournalAchats->setLettrage($lettrage);
+			$em->persist($ligneJournalAchats);
+
+			$em->flush();
+
+			//incrémentation du numéro d'écriture 
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+
+		} catch (\Exception $e){
+			return $e->getMessage();
+		}
+		
+		return 'OK';
+	}
+
+	private function ajouterAvoirFournisseur($mouvementBancaire, $avoir, $ecrireLigneBanque = true, $modePaiement = null){
+
+		$em = $this->getDoctrine()->getManager();
+
+		try{
+			//récupération du numéro d'écriture pour le FEC
+			$numService = $this->get('appbundle.num_service');
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+
+			//récupération du prochain numéro de lettrage pour le compte comptable client
+			$lettrageService = $this->get('appbundle.compta_lettrage_service');
+			$lettrage = $lettrageService->findNextNum($avoir->getDepense()->getCompte()->getCompteComptableFournisseur());
+
+			//credit au compte  401xxxx (compte du fournisseur)
+			$ligne = new JournalBanque();
+			$ligne->setMouvementBancaire($mouvementBancaire);
+			$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+			$ligne->setDebit(null);
+			$ligne->setCredit($avoir->getTotalTTC());
+			$ligne->setAnalytique($avoir->getDepense()->getAnalytique());
+			$ligne->setCompteComptable($avoir->getDepense()->getCompte()->getCompteComptableFournisseur());
+			$ligne->setLettrage($lettrage);
+			$ligne->setNom($mouvementBancaire->getLibelle());
+			$ligne->setDate($mouvementBancaire->getDate());
+			$ligne->setNumEcriture($numEcriture);
+			if(null !== $modePaiement){
+				$ligne->setModePaiement($modePaiement);
+			}
+			$em->persist($ligne);
+
+			if(true === $ecrireLigneBanque){
+				//débit au compte 512xxxx (compte de la banque)
+				$ligne = new JournalBanque();
+				$ligne->setMouvementBancaire($mouvementBancaire);
+				$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+				$ligne->setDebit($avoir->getTotalTTC());
+				$ligne->setCredit(null);
+				$ligne->setAnalytique($avoir->getDepense()->getAnalytique());
+				$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+				$ligne->setNom($mouvementBancaire->getLibelle());
+				$ligne->setDate($mouvementBancaire->getDate());
+				$ligne->setNumEcriture($numEcriture);
+				if(null !== $modePaiement){
+					$ligne->setModePaiement($modePaiement);
+				}
+				$em->persist($ligne);
+			}
+
+			//lettrage de la ligne de l'avoir dans le journal d'achat
+			$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
+			$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
+				'avoir' => $avoir,
+				'compteComptable' => $avoir->getDepense()->getCompte()->getCompteComptableFournisseur()
+			));
+			$ligneJournalAchats->setLettrage($lettrage);
+			$em->persist($ligneJournalAchats);
+
+			$em->flush();
+
+			//incrémentation du numéro d'écriture 
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+
+		} catch (\Exception $e){
+			return $e->getMessage();
+		}
+		
+		return 'OK';
+	}
+
+	private function ajouterAvoirClient($mouvementBancaire, $avoir, $ecrireLigneBanque = true){
+
+		$em = $this->getDoctrine()->getManager();
+
+		try{
+			//récupération du numéro d'écriture pour le FEC
+			$numService = $this->get('appbundle.num_service');
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+
+			//récupération du prochain numéro de lettrage pour le compte comptable client
+			$lettrageService = $this->get('appbundle.compta_lettrage_service');
+			$lettrage = $lettrageService->findNextNum($avoir->getFacture()->getCompte()->getCompteComptableClient());
+
+			//debit au compte  401xxxx (compte du client)
+			$ligne = new JournalBanque();
+			$ligne->setMouvementBancaire($mouvementBancaire);
+			$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+			$ligne->setDebit($rapprochementBancaire->getAvoir()->getTotalTTC());
+			$ligne->setCredit(null);
+			$ligne->setAnalytique($avoir->getFacture()->getAnalytique());
+			$ligne->setCompteComptable($avoir->getFacture()->getCompte()->getCompteComptableClient());
+			$ligne->setLettrage($lettrage);
+			$ligne->setNom($mouvementBancaire->getLibelle());
+			$ligne->setDate($mouvementBancaire->getDate());
+			$ligne->setNumEcriture($numEcriture);
+			$em->persist($ligne);
+
+			if(true === $ecrireLigneBanque){
+				//crédit au compte 512xxxx (compte de la banque)
+				$ligne = new JournalBanque();
+				$ligne->setMouvementBancaire($mouvementBancaire);
+				$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+				$ligne->setDebit(null);
+				$ligne->setCredit($avoir->getTotalTTC());
+				$ligne->setAnalytique($avoir->getFacture()->getAnalytique());
+				$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+				$ligne->setNom($mouvementBancaire->getLibelle());
+				$ligne->setDate($mouvementBancaire->getDate());
+				$ligne->setNumEcriture($numEcriture);
+				$em->persist($ligne);
+			}
+
+			//lettrage de la ligne de l'avoir dans le journal de vente
+			$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
+			$ligneJournalVente = $journalVenteRepo->findOneBy(array(
+				'avoir' => $avoir,
+				'compteComptable' => $avoir->getFacture()->getCompte()->getCompteComptableClient()
+			));
+			$ligneJournalVente->setLettrage($lettrage);
+			$em->persist($ligneJournalVente);
+
+			$em->flush();
+
+			//incrémentation du numéro d'écriture 
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+
+		} catch (\Exception $e){
+			return $e->getMessage();
+		}
+		
+		return 'OK';
+	}
+
+	private function ajouterOD($mouvementBancaire, $od, $ecrireLigneBanque = true, $modePaiement = null){
+
+		$em = $this->getDoctrine()->getManager();
+
+		try{
+			//récupération du numéro d'écriture pour le FEC
+			$numService = $this->get('appbundle.num_service');
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+
+			//récupération du prochain numéro de lettrage pour le compte comptable client
+			$lettrageService = $this->get('appbundle.compta_lettrage_service');
+			$lettrage = $lettrageService->findNextNum($od->getCompteComptable());
+
+			//debit au compte de l'OD
+			$ligne = new JournalBanque();
+			$ligne->setMouvementBancaire($mouvementBancaire);
+			$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+			$ligne->setDebit(null);
+			$ligne->setCredit($od->getDebit());
+			$ligne->setCompteComptable($od->getCompteComptable());
+			$ligne->setLettrage($lettrage);
+			$ligne->setNom($od->getLibelle());
+			if(null !== $modePaiement){
+				$ligne->setModePaiement($modePaiement);
+			}
+			$em->persist($ligne);
+
+			//lettrage de l'OD
+			$od->setLettrage($lettrage);
+			$em->persist($od);
+
+			$em->flush();
+
+			//incrémentation du numéro d'écriture 
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+
+		} catch (\Exception $e){
+			return $e->getMessage();
+		}
+		
+		return 'OK';
+	}
+
+	private function ajouterAffectationDiverseVente($mouvementBancaire, $affectationDiverse, $ecrireLigneBanque = true){
+
+		$em = $this->getDoctrine()->getManager();
+
+		try{
+			//récupération du numéro d'écriture pour le FEC
+			$numService = $this->get('appbundle.num_service');
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+
+			//crédit au compte xxxxxx (selon le compte rattaché à l'affectation)
+			$ligne = new JournalBanque();
+			$ligne->setMouvementBancaire($mouvementBancaire);
+			$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+			$ligne->setDebit(null);
+			$ligne->setCredit($mouvementBancaire->getMontant());
+			$ligne->setAnalytique(null);
+			$ligne->setCompteComptable($affectationDiverse->getCompteComptable());
+			$ligne->setNom($mouvementBancaire->getLibelle());
+			$ligne->setDate($mouvementBancaire->getDate());
+			$ligne->setNumEcriture($numEcriture);
+			$ligne->setCommentaire($affectationDiverse->getNom());
+			$em->persist($ligne);
+
+
+			if(true === $ecrireLigneBanque){
+				//débit au compte 512xxxx (compte de la banque)
+				$ligne = new JournalBanque();
+				$ligne->setMouvementBancaire($mouvementBancaire);
+				$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+				$ligne->setDebit($mouvementBancaire->getMontant());
+				$ligne->setCredit(null);
+				$ligne->setAnalytique(null);
+				$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+				$ligne->setNom($mouvementBancaire->getLibelle());
+				$ligne->setDate($mouvementBancaire->getDate());
+				$ligne->setNumEcriture($numEcriture);
+				$ligne->setCommentaire($affectationDiverse->getNom());
+				$em->persist($ligne);
+			}
+
+			$em->flush();
+
+			//incrémentation du numéro d'écriture 
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+
+		} catch (\Exception $e){
+			return $e->getMessage();
+		}
+		
+		return 'OK';
+	}
+
+	private function ajouterAffectationDiverseAchat($mouvementBancaire, $affectationDiverse, $ecrireLigneBanque = true){
+
+		$em = $this->getDoctrine()->getManager();
+
+		try{
+			//récupération du numéro d'écriture pour le FEC
+			$numService = $this->get('appbundle.num_service');
+			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+
+			//débit au compte xxxxxx (selon le compte rattaché à l'affectation)
+			$ligne = new JournalBanque();
+			$ligne->setMouvementBancaire($mouvementBancaire);
+			$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+			$ligne->setDebit($mouvementBancaire->getMontant());
+			$ligne->setCredit(null);
+			$ligne->setAnalytique(null);
+			$ligne->setCompteComptable($affectationDiverse->getCompteComptable());
+			$ligne->setNom($mouvementBancaire->getLibelle());
+			$ligne->setDate($mouvementBancaire->getDate());
+			$ligne->setNumEcriture($numEcriture);
+			$ligne->setCommentaire($affectationDiverse->getNom());
+			$em->persist($ligne);
+
+
+			if(true === $ecrireLigneBanque){
+				//crédit au compte 512xxxx (compte de la banque)
+				$ligne = new JournalBanque();
+				$ligne->setMouvementBancaire($mouvementBancaire);
+				$ligne->setCodeJournal($mouvementBancaire->getCompteBancaire()->getNom());
+				$ligne->setDebit(null);
+				$ligne->setCredit($mouvementBancaire->getMontant());
+				$ligne->setAnalytique(null);
+				$ligne->setCompteComptable($mouvementBancaire->getCompteBancaire()->getCompteComptable());
+				$ligne->setNom($mouvementBancaire->getLibelle());
+				$ligne->setDate($mouvementBancaire->getDate());
+				$ligne->setNumEcriture($numEcriture);
+				$ligne->setCommentaire($affectationDiverse->getNom());
+				$em->persist($ligne);
+			}
+
+			$em->flush();
+
+			//incrémentation du numéro d'écriture 
+			$numEcriture++;
+			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+
+		} catch (\Exception $e){
+			return $e->getMessage();
+		}
+		
+		return 'OK';
+	}
+
+	// /**
+	//  * @Route("/compta/journal-banque/reinitialiser", name="compta_journal_banque_reinitialiser")
+	//  */
+	// public function journalBanqueReinitialiser(){
+
+	// 	$em = $this->getDoctrine()->getManager();
+	// 	$journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
+	// 	$rapprochementRepo = $em->getRepository('AppBundle:Compta\Rapprochement');
+	// 	$compteBancaireRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Compta\CompteBancaire');
+	// 	$journalBanqueService = $this->container->get('appbundle.compta_journal_banque_controller');
+
+	// 	$arr_comptesBancaires = $compteBancaireRepo->findByCompany($this->getUser()->getCompany());
+	// 	foreach($arr_comptesBancaires as $compteBancaire){
+	// 		$arr_journal = $journalBanqueRepo->findJournalEntier($this->getUser()->getCompany(), $compteBancaire);
+	// 		foreach($arr_journal as $ligne){
+	// 			$em->remove($ligne);
+	// 		}
+	// 	}
+	// 	$em->flush();
+
+	// 	$arr_rapprochements = $rapprochementRepo->findForCompany($this->getUser()->getCompany());
+	// 	foreach($arr_rapprochements as $rapprochement){
+
+	// 		$type = "";
+	// 		if($rapprochement->getFacture()){
+	// 			$type = "FACTURE";
+	// 		} else if($rapprochement->getDepense()){
+	// 			$type = "DEPENSE";
+	// 		} else if($rapprochement->getAvoir()){
+	// 			if($rapprochement->getAvoir()->getType() == 'CLIENT'){
+	// 				$type = "AVOIR-CLIENT";
+	// 			} else {
+	// 				$type = "AVOIR-FOURNISSEUR";
+	// 			}
+	// 		} else if($rapprochement->getAccompte()){
+	// 			$type = "ACCOMPTE";
+	// 		} else if($rapprochement->getRemiseCheque()){
+	// 			$type = "REMISE-CHEQUES";
+	// 		} else if($rapprochement->getAffectationDiverse()){
+	// 			if($rapprochement->getAffectationDiverse()->getType() == 'VENTE'){
+	// 				$type = "AFFECTATION-DIVERSE-VENTE";
+	// 			} else {
+	// 				$type = "AFFECTATION-DIVERSE-ACHAT";
+	// 			}
+	// 		} else if($rapprochement->getNoteFrais()){
+	// 			$type = "NOTE-FRAIS";
+	// 		}
+
+	// 		if($type != ""){
+	// 			//ecrire dans le journal de banque
+	// 			$journalBanqueService->journalBanqueAjouterAction($type, $rapprochement);
+	// 		}
+
+	// 	}
+
+	// 	return new Response;
+
+	// }
+
+	// /**
+	//  * @Route("/compta/lettrage2017",
+	//  *   name="compta_lettrage_2017"
+	//  * )
+	//  */
+	// public function lettrage2017(){
+
+	// 	$em = $this->getDoctrine()->getManager();
+	// 	$journalBanqueRepo = $em->getRepository('AppBundle:Compta\JournalBanque');
+	// 	$journalVenteRepo = $em->getRepository('AppBundle:Compta\JournalVente');
+	// 	$journalAchatRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
+	// 	$rapprochementRepo = $em->getRepository('AppBundle:Compta\Rapprochement');
+	// 	$lettrageService = $this->get('appbundle.compta_lettrage_service');
+
+	// 	$arr_rapprochements = $rapprochementRepo->findForCompanyByYear($this->getUser()->getCompany(), 2017);
+
+	// 	foreach($arr_rapprochements as $rapprochement){
+
+	// 		/*
+	// 		if($rapprochement->getFacture()){
+
+	// 			$facture = $rapprochement->getFacture();
+
+	// 			if($facture->getDateCreation()->format('Y') != 2017){
+	// 				continue;
+	// 			}
+
+	// 			$cc = $facture->getCompte()->getCompteComptableClient();
+	// 			$lettrage = $lettrageService->findNextNum($cc);
+
+	// 			$ligneBanque = $journalBanqueRepo->findOneBy(array(
+	// 				'mouvementBancaire' => $rapprochement->getMouvementBancaire(),
+	// 				'compteComptable' => $cc
+	// 			));
+
+	// 			$ligneVente = $journalVenteRepo->findOneBy(array(
+	// 				'facture' => $facture,
+	// 				'compteComptable' => $cc
+	// 			));
+
+	// 			if($ligneVente && $ligneBanque){
+	// 				$ligneVente->setLettrage($lettrage);
+	// 				$em->persist($ligneVente);
+	// 				$ligneBanque->setLettrage($lettrage);
+	// 				$em->persist($ligneBanque);
+	// 				$em->flush();
+
+	// 			} 
+				
+	// 		} 
+	// 		*/
+
+			
+	// 		if ($rapprochement->getAvoir()){
+	// 			$avoir = $rapprochement->getAvoir();
+	// 			if($avoir->getDateCreation()->format('Y') != 2017){
+	// 				continue;
+	// 			}
+
+	// 			if($avoir->getDepense()){
+
+	// 				if($avoir->getDateCreation()->format('Y') != 2017){
+	// 					continue;
+	// 				}
+
+	// 				$cc = $avoir->getDepense();->getCompte()->getCompteComptableFournisseur();
+	// 				$lettrage = $lettrageService->findNextNum($cc);
+
+	// 				$ligneBanque = $journalBanqueRepo->findOneBy(array(
+	// 					'mouvementBancaire' => $rapprochement->getMouvementBancaire(),
+	// 					'compteComptable' => $cc
+	// 				));
+
+	// 				$ligneAchat = $journalAchatRepo->findOneBy(array(
+	// 					'avoir' => $avoir,
+	// 					'compteComptable' => $cc
+	// 				));
+
+	// 				if($ligneAchat && $ligneBanque){
+	// 					$ligneAchat->setLettrage($lettrage);
+	// 					$em->persist($ligneAchat);
+	// 					$ligneBanque->setLettrage($lettrage);
+	// 					$em->persist($ligneBanque);
+	// 					$em->flush();
+	// 				} 
+	// 			} else if ($avoir->getFacture()){
+					
+	// 				$cc = $avoir->getFacture()->getCompte()->getCompteComptableClient();
+	// 				$lettrage = $lettrageService->findNextNum($cc);
+
+	// 				$ligneBanque = $journalBanqueRepo->findOneBy(array(
+	// 					'mouvementBancaire' => $rapprochement->getMouvementBancaire(),
+	// 					'compteComptable' => $cc
+	// 				));
+
+	// 				$ligneVente = $journalVenteRepo->findOneBy(array(
+	// 					'avoir' => $avoir,
+	// 					'compteComptable' => $cc
+	// 				));
+
+	// 				if($ligneVente && $ligneBanque){
+	// 					$ligneVente->setLettrage($lettrage);
+	// 					$em->persist($ligneVente);
+	// 					$ligneBanque->setLettrage($lettrage);
+	// 					$em->persist($ligneBanque);
+	// 					$em->flush();
+
+	// 				} 
+	// 			}
+				
+	// 		}
+			
+	// 	}
+
+	// 	return new Response();
+
+	// }
 
 
 }

@@ -903,7 +903,12 @@
 								<tr>
 									<td> {{ sousTraitance.sousTraitant }} </td>
 									<td>
-										{{ sousTraitance.montantMonetaire|number_format(2, ',', ' ') }} € <a href="{{ path('crm_action_commerciale_sous_traitance_editer', {'id' : sousTraitance.id }) }}" class="btn btn-xs btn-primary">Modifier</a>
+										{{ sousTraitance.montantMonetaire|number_format(2, ',', ' ') }} € 
+										{% if sousTraitance.htPrixNet is not null %}
+											{{ sousTraitance.htPrixNet }}
+										{% endif %}
+
+										<a href="{{ path('crm_action_commerciale_sous_traitance_editer', {'id' : sousTraitance.id }) }}" class="btn btn-xs btn-primary">Modifier</a>
 									</td>
 									<td>
 										{{ sousTraitance.montantFraisMonetaire|number_format(2, ',', ' ') }} € <a href="{{ path('crm_action_commerciale_sous_traitance_editer', {'id' : sousTraitance.id }) }}" class="btn btn-xs btn-primary">Modifier</a>

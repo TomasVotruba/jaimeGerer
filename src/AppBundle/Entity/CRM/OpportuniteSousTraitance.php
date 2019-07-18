@@ -82,6 +82,13 @@ class OpportuniteSousTraitance
      */
     private $fraisRefacturables = false;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ht_prix_net", type="string", nullable=false)
+     */
+    private $htPrixNet = 'HT';
+
 
     /**
      * Constructor
@@ -330,10 +337,24 @@ class OpportuniteSousTraitance
     }
 
     public function getNomEtMontant(){
-      return  $this->sousTraitant.' - '.
+        $str=  $this->sousTraitant.' - '.
               $this->opportunite->getCompte()->getNom().' - '.$this->opportunite->getNom().' : '.
-              $this->getMontantMonetaireAvecFrais().'€ (reste à facturer : '.
-              $this->getResteAFacturer().' €)';
+              $this->getMontantMonetaireAvecFrais().'€ ';
+
+        if($this->htPrixNet){
+            $str.=$this->htPrixNet;
+        }
+
+        $str.=' (reste à facturer : '.
+              $this->getResteAFacturer().' € ';
+
+        if($this->htPrixNet){
+            $str.=$this->htPrixNet;
+        }
+
+        $str.=')';
+
+        return $str;
     }
 
     /**
@@ -437,5 +458,28 @@ class OpportuniteSousTraitance
 
     public function getMontantMonetaireAvecFrais(){
         return $this->getMontantMonetaire() + $this->getMontantFraisMonetaire();
+    }
+
+    /**
+     * Set htPrixNet
+     *
+     * @param string $htPrixNet
+     * @return OpportuniteSousTraitance
+     */
+    public function setHtPrixNet($htPrixNet)
+    {
+        $this->htPrixNet = $htPrixNet;
+
+        return $this;
+    }
+
+    /**
+     * Get htPrixNet
+     *
+     * @return string 
+     */
+    public function getHtPrixNet()
+    {
+        return $this->htPrixNet;
     }
 }

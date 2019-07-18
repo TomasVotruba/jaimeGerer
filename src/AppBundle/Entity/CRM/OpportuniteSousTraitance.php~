@@ -82,6 +82,13 @@ class OpportuniteSousTraitance
      */
     private $fraisRefacturables = false;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ht_prix_net", type="string", nullable=false)
+     */
+    private $htPrixNet = 'HT';
+
 
     /**
      * Constructor
@@ -246,10 +253,15 @@ class OpportuniteSousTraitance
      */
     public function getMontantMonetaire()
     {
-      if($this->typeForfait == "GLOBAL"){
-          return $this->montantGlobal/100;
-      }
-      return $this->nbJours*$this->tarifJour/100;
+        $montant = 0;
+        
+        if($this->typeForfait == "GLOBAL"){
+           $montant+= ($this->montantGlobal/100);
+        } else {
+            $montant+= ($this->nbJours*$this->tarifJour/100);
+        }
+        
+        return $montant;
     }
 
     /**
@@ -320,14 +332,14 @@ class OpportuniteSousTraitance
     }
 
     public function getResteAFacturer(){
-      $reste = $this->getMontantMonetaire()-$this->getTotalFacture();
+      $reste = $this->getMontantMonetaireAvecFrais()-$this->getTotalFacture();
       return $reste;
     }
 
     public function getNomEtMontant(){
       return  $this->sousTraitant.' - '.
               $this->opportunite->getCompte()->getNom().' - '.$this->opportunite->getNom().' : '.
-              $this->getMontantMonetaire().'€ (reste à facturer : '.
+              $this->getMontantMonetaireAvecFrais().'€ (reste à facturer : '.
               $this->getResteAFacturer().' €)';
     }
 
@@ -396,5 +408,41 @@ class OpportuniteSousTraitance
     public function getDepenses()
     {
         return $this->depenses;
+    }
+
+    /**
+     * Set fraisRefacturables
+     *
+     * @param boolean $fraisRefacturables
+     * @return OpportuniteSousTraitance
+     */
+    public function setFraisRefacturables($fraisRefacturables)
+    {
+        $this->fraisRefacturables = $fraisRefacturables;
+
+        return $this;
+    }
+
+    /**
+     * Get fraisRefacturables
+     *
+     * @return boolean 
+     */
+    public function getFraisRefacturables()
+    {
+        return $this->fraisRefacturables;
+    }
+
+    public function getMontantFraisMonetaire(){
+
+        $frais = 0;
+        foreach($this->repartitions as $repartition){
+            $frais+= $repartition->getFrais();
+        }
+        return $frais/100;
+    }
+
+    public function getMontantMonetaireAvecFrais(){
+        return $this->getMontantMonetaire() + $this->getMontantFraisMonetaire();
     }
 }

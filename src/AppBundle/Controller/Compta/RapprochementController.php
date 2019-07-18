@@ -588,13 +588,13 @@ class RapprochementController extends Controller
         $arr_avoirs_rapprochees_par_remises_cheques = array();
         foreach($arr_all_remises_cheques as $remiseCheque){
           if($remiseCheque->getTotalRapproche() < $remiseCheque->getTotal()){
-     //       $arr_pieces['REMISES-CHEQUES'][] = $remiseCheque;
+            //$arr_pieces['REMISES-CHEQUES'][] = $remiseCheque;
           } else {
             foreach($remiseCheque->getCheques() as $cheque){
               foreach($cheque->getPieces() as $piece){
                 if($piece->getFacture()){
                   $arr_factures_rapprochees_par_remises_cheques[] = $piece->getFacture()->getId();
-                }else if($piece->getAvoir()){
+                } else if($piece->getAvoir()){
                   $arr_avoirs_rapprochees_par_remises_cheques[] = $piece->getFacture()->getId();
                 }
               }
@@ -690,7 +690,6 @@ class RapprochementController extends Controller
         $arr_cc = array();
         $arr_pieces = array();
         $arr_mouvements = array();
-        $arr_montants = array();
 
         foreach($arr_mouvementsId as $mouvementId){
             $mouvementBancaire = $mouvementBancaireRepo->find($mouvementId);
@@ -772,11 +771,11 @@ class RapprochementController extends Controller
                     }
                     break;
                  
-                  // case 'REMISES-CHEQUES' :
-                  //   $repo = $em->getRepository('AppBundle:Compta\RemiseCheque');
-                  //   $piece = $repo->find($id);
-                  //   $rapprochement->setRemiseCheque($piece);
-                  //   break;
+                  case 'REMISES-CHEQUES' :
+                    $repo = $em->getRepository('AppBundle:Compta\RemiseCheque');
+                    $piece = $repo->find($id);
+                    $rapprochement->setRemiseCheque($piece);
+                    break;
 
                 case 'AFFECTATIONS-DIVERSES-VENTE' :
                     $repo = $em->getRepository('AppBundle:Compta\AffectationDiverse');
@@ -844,7 +843,7 @@ class RapprochementController extends Controller
         try {
 
             $journalBanqueService = $this->container->get('appbundle.compta_journal_banque_controller');
-            $journalBanqueService->journalBanqueAjouterPlusieursPiecesMemeCompteAction($arr_mouvements, $arr_pieces, $arr_montants);
+            $journalBanqueService->journalBanqueAjouterPlusieursPiecesMemeCompteAction($arr_mouvements, $arr_pieces);
             $em->flush();
 
         } catch(\Exception $e){

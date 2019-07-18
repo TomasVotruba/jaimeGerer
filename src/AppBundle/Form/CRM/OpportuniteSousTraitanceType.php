@@ -74,6 +74,16 @@ class OpportuniteSousTraitanceType extends AbstractType
                     'class' => 'toggle-frais'
                 )
             ))
+            ->add('htPrixNet', 'choice', array(
+                'choices' => array(
+                    'HT' => 'HT',
+                    'Prix net' => 'Prix net'
+                ),
+                'required' => true,
+                'multiple' => false,
+                'expanded' => true,
+                'label' => 'HT ou Prix net ?'
+            ))
             ->add('submit', 'submit', array(
                 'label' => 'Terminer',
                 'attr' => array(
