@@ -17,7 +17,8 @@ class CompteComptableType extends AbstractType
         $builder
             ->add('num', 'text', array(
         		'required' => true,
-            	'label' => 'Numéro (8 caractères maximum)'
+            	'label' => 'Numéro (8 caractères maximum)',
+                'attr' => array('maxlength' => 8)
         	))
             ->add('nom', 'text', array(
         		'required' => true,

@@ -21,7 +21,7 @@
 	   	{{ form_label(form.num) }}<br />
 	   	 <div class="input-group">
 	    	{{ form_errors(form.num) }}
-	    	<div class="input-group-addon">411</div>{{ form_widget(form.num, { 'attr': {'class': 'num'}}) }}
+	    	<div class="input-group-addon">411</div>{{ form_widget(form.num, { 'attr': {'class': 'num', 'maxlength' : 5}}) }}
 	    </div>
 	</div>
 
@@ -54,15 +54,7 @@
 			*	Limiter le nombre de caractères à 8
 			**/
 			$('.num').keyup(function(e){
-
 				checkNum($(this).val());
-
-				if(e.keyCode != 8 && e.keyCode != 13 && e.keyCode != 37 && e.keyCode != 39 && e.keyCode != 46){
-					if($(this).val().length >= 5){
-						return false;
-					}
-				}
-				
 			});
 
 		});
