@@ -79,7 +79,7 @@ class ContactController extends Controller
 	/**
 	 * @Route("/crm/contact/liste/search/{search}", name="crm_contact_liste_search", options={"expose"=true})
 	 */
-	public function contactListeSearchAction($search)
+	public function contactListeSearchAction($search = '')
 	{
 		return $this->render('crm/contact/crm_contact_liste.html.twig', array(
 			'search' => $search
