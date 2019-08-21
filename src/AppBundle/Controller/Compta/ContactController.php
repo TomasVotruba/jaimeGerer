@@ -36,8 +36,6 @@ class ContactController extends Controller
 
 		$col = $arr_sort[0]['column'];
 
-		dump($arr_cols[$col]['data']);
-
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Compte');
 
 		$arr_search = $requestData->get('search');
