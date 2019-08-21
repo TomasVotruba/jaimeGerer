@@ -1259,15 +1259,6 @@ class TableauBordService extends ContainerAware {
     $prevRepo = $this->em->getRepository('AppBundle:Compta\PrevTableauBord');
     $prev = $prevRepo->findOneBy($arr_paramsQuery);
 
-
-    dump($annee);
-    dump($mois);
-    dump($poste);
-    dump($company);
-    dump($analytique);
-    dump($priveOrPublic);
-    dump($frais);
-
     if(!$prev){
       $prev = new PrevTableauBord();
       $prev->setAnnee($annee);
