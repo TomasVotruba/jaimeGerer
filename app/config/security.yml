@@ -49,7 +49,6 @@ security:
               path:     /
               domain:   ~
               user_provider: fos_userbundle
-            switch_user: true
 
     # with these settings you can restrict or allow access for different parts
     # of your application based on roles, ip, host or methods

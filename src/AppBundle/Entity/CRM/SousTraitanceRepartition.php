@@ -44,13 +44,13 @@ class SousTraitanceRepartition
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CRM\OpportuniteSousTraitance", inversedBy="repartitions")
-     * @ORM\JoinColumn(nullable=false, onDelete="SET NULL")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $opportuniteSousTraitance;
 
     /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Produit", mappedBy="sousTraitanceRepartition")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL"))
      */
     private $produit;
 
