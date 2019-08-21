@@ -36,18 +36,20 @@ class ContactController extends Controller
 
 		$col = $arr_sort[0]['column'];
 
+		dump($arr_cols[$col]['data']);
+
 		$repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\Compte');
 
 		$arr_search = $requestData->get('search');
 
 		if($type == "CLIENT"){
 			$list = $repository->findForListClient(
-					$this->getUser()->getCompany(),
-					$requestData->get('length'),
-					$requestData->get('start'),
-					$arr_cols[$col]['data'],
-					$arr_sort[0]['dir'],
-					$arr_search['value']
+				$this->getUser()->getCompany(),
+				$requestData->get('length'),
+				$requestData->get('start'),
+				$arr_cols[$col]['data'],
+				$arr_sort[0]['dir'],
+				$arr_search['value']
 			);
 
 			$factureRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle:CRM\DocumentPrix');
@@ -75,12 +77,30 @@ class ContactController extends Controller
 
 			}
 
+			if($arr_cols[$col]['data'] == 'total'){
+				if($arr_sort[0]['dir'] == 'asc'){
+					usort($list, array($this, 'sortByTotalAsc'));
+				} else {
+					usort($list, array($this, 'sortByTotalDesc'));
+				}
+
+				$list = array_slice( $list, $requestData->get('start'), $requestData->get('length'));
+			} else if($arr_cols[$col]['data'] == 'total_annee'){
+				if($arr_sort[0]['dir'] == 'asc'){
+					usort($list, array($this, 'sortByTotalAnneeAsc'));
+				} else {
+					usort($list, array($this, 'sortByTotalAnneeDesc'));
+				}
+
+				$list = array_slice( $list, $requestData->get('start'), $requestData->get('length'));
+			} 
+
 			$response = new JsonResponse();
 			$response->setData(array(
-					'draw' => intval( $requestData->get('draw') ),
-					'recordsTotal' => $repository->count($this->getUser()->getCompany()),
-					'recordsFiltered' => $repository->countForListClient($this->getUser()->getCompany(), $arr_search['value']),
-					'aaData' => $list,
+				'draw' => intval( $requestData->get('draw') ),
+				'recordsTotal' => $repository->count($this->getUser()->getCompany()),
+				'recordsFiltered' => $repository->countForListClient($this->getUser()->getCompany(), $arr_search['value']),
+				'aaData' => $list,
 			));
 		} else {
 			$list = $repository->findForListFournisseur(
@@ -128,6 +148,39 @@ class ContactController extends Controller
 		}
 		return $response;
 	}
+
+	private function sortByTotalAsc($a, $b)
+	{
+	    if ($a['total'] == $b['total']) {
+	        return 0;
+	    }
+	    return ($a['total'] < $b['total']) ? -1 : 1;
+	}
+
+	private function sortByTotalDesc($a, $b)
+	{
+	    if ($a['total'] == $b['total']) {
+	        return 0;
+	    }
+	    return ($a['total'] < $b['total']) ? 1 : -1;
+	}
+
+	private function sortByTotalAnneeAsc($a, $b)
+	{
+	    if ($a['total_annee'] == $b['total_annee']) {
+	        return 0;
+	    }
+	    return ($a['total_annee'] < $b['total_annee']) ? -1 : 1;
+	}
+
+	private function sortByTotalAnneeDesc($a, $b)
+	{
+	    if ($a['total_annee'] == $b['total_annee']) {
+	        return 0;
+	    }
+	    return ($a['total_annee'] < $b['total_annee']) ? 1 : -1;
+	}
+
 
 	/**
 	 * Display an organization as customer or supplier

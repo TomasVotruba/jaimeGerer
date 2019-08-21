@@ -108,9 +108,13 @@ class CompteRepository extends EntityRepository
 			->setParameter('search', '%'.$search.'%');
 		}
 
-		$qb->setMaxResults($length)
-		->setFirstResult($start)
-		->addOrderBy('c.'.$orderBy, $dir);
+
+		if($orderBy != 'total' && $orderBy != 'total_annee'){
+			$qb->setMaxResults($length)
+			->setFirstResult($start)
+			->addOrderBy('c.'.$orderBy, $dir);
+		}
+		
 
 		return $qb->getQuery()->getResult();
 	}
