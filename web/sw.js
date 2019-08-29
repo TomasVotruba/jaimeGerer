@@ -1,22 +1,14 @@
-var cacheName = 'cache';
-var filesToCache = [
-  'css/base20190409-1139.css'
-];
-self.addEventListener('install', function(e) {
-  console.log('[ServiceWorker] Install');
-  e.waitUntil(
-    caches.open(cacheName).then(function(cache) {
-      console.log('[ServiceWorker] Caching app shell');
-      return cache.addAll(filesToCache);
+self.addEventListener('install', function(event) {
+  event.waitUntil(
+    caches.open('sw-cache').then(function(cache) {
+      return cache.add('/login');
     })
   );
 });
-self.addEventListener('activate',  event => {
-  event.waitUntil(self.clients.claim());
-});
-self.addEventListener('fetch', event => {
+ 
+self.addEventListener('fetch', function(event) {
   event.respondWith(
-    caches.match(event.request, {ignoreSearch:true}).then(response => {
+    caches.match(event.request).then(function(response) {
       return response || fetch(event.request);
     })
   );
