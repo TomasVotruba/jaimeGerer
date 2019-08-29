@@ -1126,7 +1126,11 @@ class JournalBanqueController extends Controller
 			$ligne->setDebit($depense->getTotalTTC());
 			$ligne->setCredit(null);
 			$ligne->setAnalytique($depense->getAnalytique());
-			$ligne->setCompteComptable($noteFrais->getCompteComptable());
+			if($noteFrais){
+				$ligne->setCompteComptable($noteFrais->getCompteComptable());
+			}
+			$ligne->setCompteComptable($depense->getCompte()->getCompteComptableFournisseur());
+
 			$ligne->setLettrage($lettrage);
 			$ligne->setNom($mouvementBancaire->getLibelle());
 			$ligne->setDate($mouvementBancaire->getDate());
