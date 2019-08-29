@@ -1,4 +1,5 @@
 self.addEventListener('install', function(event) {
+  caches.delete('sw-cache');
   event.waitUntil(
     caches.open('sw-cache').then(function(cache) {
 
