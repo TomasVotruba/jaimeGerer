@@ -217,7 +217,7 @@ class JournalBanqueController extends Controller
 				case 'NOTE-FRAIS':
 					foreach($rapprochementBancaire->getNoteFrais()->getDepenses() as $depense){
 
-						$result = $this->ajouterDepense($rapprochementBancaire->getMouvementBancaire(), $depense);
+						$result = $this->ajouterDepense($rapprochementBancaire->getMouvementBancaire(), $depense, true, $rapprochementBancaire->getNoteFrais());
 						if('OK' !== $result){
 							$response = new Response();
 							$response->setStatusCode(500);
@@ -1100,7 +1100,7 @@ class JournalBanqueController extends Controller
 		return 'OK';
 	}
 
-	private function ajouterDepense($mouvementBancaire, $depense, $ecrireLigneBanque = true){
+	private function ajouterDepense($mouvementBancaire, $depense, $ecrireLigneBanque = true, $noteFrais = null){
 
 		$em = $this->getDoctrine()->getManager();
 
@@ -1111,7 +1111,13 @@ class JournalBanqueController extends Controller
 
 			//récupération du prochain numéro de lettrage pour le compte comptable client
 			$lettrageService = $this->get('appbundle.compta_lettrage_service');
-			$lettrage = $lettrageService->findNextNum($depense->getCompte()->getCompteComptableFournisseur());
+
+			if($noteFrais){
+				$lettrage = $lettrageService->findNextNum($noteFrais->getCompteComptable());
+			} else {
+				$lettrage = $lettrageService->findNextNum($depense->getCompte()->getCompteComptableFournisseur());
+			}
+			
 
 			//debit au compte 401xxxx (compte du fournisseur)
 			$ligne = new JournalBanque();
@@ -1120,7 +1126,7 @@ class JournalBanqueController extends Controller
 			$ligne->setDebit($depense->getTotalTTC());
 			$ligne->setCredit(null);
 			$ligne->setAnalytique($depense->getAnalytique());
-			$ligne->setCompteComptable($depense->getCompte()->getCompteComptableFournisseur());
+			$ligne->setCompteComptable($noteFrais->getCompteComptable());
 			$ligne->setLettrage($lettrage);
 			$ligne->setNom($mouvementBancaire->getLibelle());
 			$ligne->setDate($mouvementBancaire->getDate());
@@ -1146,10 +1152,18 @@ class JournalBanqueController extends Controller
 
 			//lettrage de la ligne de la dépense dans le journal d'achat
 			$journalAchatsRepo = $em->getRepository('AppBundle:Compta\JournalAchat');
-			$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
-				'depense' => $depense,
-				'compteComptable' => $depense->getCompte()->getCompteComptableFournisseur()
-			));
+			if($noteFrais){
+				$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
+					'depense' => $depense,
+					'compteComptable' => $noteFrais->getCompteComptable()
+				));
+			} else {
+				$ligneJournalAchats = $journalAchatsRepo->findOneBy(array(
+					'depense' => $depense,
+					'compteComptable' => $depense->getCompte()->getCompteComptableFournisseur()
+				));
+			}
+			
 			$ligneJournalAchats->setLettrage($lettrage);
 			$em->persist($ligneJournalAchats);
 
