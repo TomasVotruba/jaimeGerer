@@ -1,6 +1,5 @@
-var cacheName = 'hello-world-page';
+var cacheName = 'cache';
 var filesToCache = [
-  '/',
   'css/base20190409-1139.css'
 ];
 self.addEventListener('install', function(e) {
