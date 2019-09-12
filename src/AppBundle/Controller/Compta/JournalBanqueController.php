@@ -165,12 +165,16 @@ class JournalBanqueController extends Controller
 
 				case 'REMISE-CHEQUES':
 					//credit au compte  411xxxx (compte du client) pour chaque facture
+					
+					//récupération du numéro d'écriture pour le FEC
+					$numService = $this->get('appbundle.num_service');
+					$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 					foreach($rapprochementBancaire->getRemiseCheque()->getCheques() as $cheque){
 						foreach($cheque->getPieces() as $piece){
 							
 							if($piece->getFacture() != null){
 								
-								$result = $this->ajouterFacture($rapprochementBancaire->getMouvementBancaire(), $rapprochementBancaire->getFacture(), false, 'CHEQUE');
+								$result = $this->ajouterFacture($rapprochementBancaire->getMouvementBancaire(), $piece->getFacture() , false, 'CHEQUE', $numEcriture);
 								if('OK' !== $result){
 									$response = new Response();
 									$response->setStatusCode(500);
@@ -210,7 +214,15 @@ class JournalBanqueController extends Controller
 					$ligne->setDate($rapprochementBancaire->getMouvementBancaire()->getDate());
 					$ligne->setModePaiement('CHEQUE');
 					$ligne->setNumEcriture($numEcriture);
+
+					$em = $this->getDoctrine()->getManager();
 					$em->persist($ligne);
+					$em->flush();
+
+					//incrémentation du numéro d'écriture 
+					$numEcriture++;
+					$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+
 
 					break;
 
@@ -1029,15 +1041,20 @@ class JournalBanqueController extends Controller
 
 	}
 
-	private function ajouterFacture($mouvementBancaire, $facture, $ecrireLigneBanque = true, $modePaiement = null){
+	private function ajouterFacture($mouvementBancaire, $facture, $ecrireLigneBanque = true, $modePaiement = null, $numEcriture = null){
 
 		$em = $this->getDoctrine()->getManager();
 
 		try{
-			//récupération du numéro d'écriture pour le FEC
-			$numService = $this->get('appbundle.num_service');
-			$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
 
+			$hasNumEcriture = true;
+			if($numEcriture == null){
+				//récupération du numéro d'écriture pour le FEC
+				$numService = $this->get('appbundle.num_service');
+				$numEcriture = $numService->getNumEcriture($this->getUser()->getCompany());
+				$hasNumEcriture = false;
+			}
+			
 			//récupération du prochain numéro de lettrage pour le compte comptable client
 			$lettrageService = $this->get('appbundle.compta_lettrage_service');
 			$lettrage = $lettrageService->findNextNum($facture->getCompte()->getCompteComptableClient());
@@ -1089,9 +1106,12 @@ class JournalBanqueController extends Controller
 
 			$em->flush();
 
-			//incrémentation du numéro d'écriture 
-			$numEcriture++;
-			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+			if($hasNumEcriture == false){
+				//incrémentation du numéro d'écriture 
+				$numEcriture++;
+				$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+			}
+			
 
 		} catch (\Exception $e){
 			return $e->getMessage();
