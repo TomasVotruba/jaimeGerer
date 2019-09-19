@@ -284,7 +284,7 @@ class ActionCommercialeType extends AbstractType
                 'required' => false,
                 'label' => 'Commentaire',
                 'mapped' => false,
-                'data' => $this->companyId == 1 ? ($this->devis->getDescription() ? $this->devis->getDescription() : 'Les frais de déplacement, hébergement et restauration seront ajoutés en sus sur présentation de justificatifs.') : ''
+                'data' => $this->companyId == 1 ? ($this->devis->getDescription() !== null ? $this->devis->getDescription() : 'Les frais de déplacement, hébergement et restauration seront ajoutés en sus sur présentation de justificatifs.') : ''
             ))
             ->add('tempsCommercial', 'number', array(
                 'required' => false,

@@ -30,8 +30,6 @@ class OpportuniteType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-    	//~ var_dump($this->request->request->get($this->getName())); exit;
-    	//~ $posts = $this->request->request->get($this->getName());
         $builder
             ->add('nom', 'text', array(
         		'label' => 'Nom de l\'opportunité'

@@ -524,7 +524,7 @@ class ActionCommercialeController extends Controller
 			$devis->setCodePostal($form->get('codePostal')->getData());
 			$devis->setRegion($form->get('region')->getData());
 			$devis->setPays($form->get('pays')->getData());
-			$devis->setDescription($form->get('description')->getData());
+			$devis->setDescription($form->get('description')->getData() == null ? '' : $form->get('description')->getData());
 			$devis->setCGV($form->get('cgv')->getData());
 			$devis->setRemise($form->get('remise')->getData());
 			$devis->setTaxe($form->get('taxe')->getData());
