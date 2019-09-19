@@ -305,7 +305,7 @@
 		    		
 		    	</tbody>
 		    </table>
-		</div>
+		</div>>
 		<div class="col-md-6">
 	    	<table class="contact-view-table">
 	    		<tbody>
@@ -323,51 +323,31 @@
 			    		<td>Réseau</td>  
 			    		<td id="contact-reseau">
 			    		
-			    	</tbody>
-			    </table>
-			</div>
-			<div class="col-md-6">
-		    	<table class="contact-view-table">
-		    		<tbody>
-		    			<tr>
-				    		<td>Type de relation commerciale</td>  
-							<td id="contact-type">
-								<ul>
-								{% for type in contact.settings if type.parametre == 'TYPE' %}
-				    				<li>{{ type.valeur }}</li>  				
-				    			{% endfor %}  
-				    			</ul>
-				    		</td>
-				    	</tr>
-				    	<tr>
-				    		<td>Réseau</td>  
-				    		<td id="contact-reseau">
-				    		
-				    			{% if contact.reseau is empty %}
-						    		-
-						    	{% else %}
-									{{ contact.reseau.valeur }}
-						    	{% endif %}
-				    		</td> 
-				    	</tr>
-				    	<tr>
-				    		<td>Origine :</td>  
-				    		<td id="contact-origine">
-				    			{% for type in contact.settings if type.parametre == 'TYPE' %}
-				    			
-				    			{% endfor %}
-				    			{% if contact.origine is empty %}
-						    		-
-						    	{% else %}
-									{{ contact.origine.valeur }}	
-						    	{% endif %}
-				    		</td>
-				    	</tr>
+			    			{% if contact.reseau is empty %}
+					    		-
+					    	{% else %}
+								{{ contact.reseau.valeur }}
+					    	{% endif %}
+			    		</td> 
+			    	</tr>
+			    	<tr>
+			    		<td>Origine :</td>  
+			    		<td id="contact-origine">
+			    			{% for type in contact.settings if type.parametre == 'TYPE' %}
+			    			
+			    			{% endfor %}
+			    			{% if contact.origine is empty %}
+					    		-
+					    	{% else %}
+								{{ contact.origine.valeur }}	
+					    	{% endif %}
+			    		</td>
+			    	</tr>
 				    	
-				    </tbody>
-	    		</table>
-	    	</div>
-		</div>
+			    </tbody>
+    		</table>
+    	</div>
+	</div>
 
 		 <div class="row">
 	    	<div class="col-md-12">
