@@ -1169,7 +1169,7 @@ class ActionCommercialeController extends Controller
 
 				$arr_recus = array();
 				foreach($actionCommerciale->getRecusValidesNonFactures() as $recu){
-				    $arr_recus[$recu->getId()] = $recu->getLigneDepense()->getDepense()->getNoteFrais()->__toStringSansTotal().' - '.$recu->getFournisseur().' - '.$recu->getMontantHT().' € HT';
+				    $arr_recus[$recu->getId()] = $recu->getUser().' - '.$recu->getFournisseur().' - '.$recu->getMontantHT().' € HT';
 				}
 				$form->add('recus', 'choice', array(
 					'required' => true,

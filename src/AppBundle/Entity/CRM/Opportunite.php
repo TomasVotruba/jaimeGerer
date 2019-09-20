@@ -1254,10 +1254,8 @@ class Opportunite
     public function getRecusValidesNonFactures(){
         $arr_valides = array();
         foreach($this->recus as $recu){
-            if($recu->getLigneDepense() && null == $recu->getProduit()){
-                if('VALIDE' == $recu->getLigneDepense()->getDepense()->getNoteFrais()->getEtat() || 'RAPPROCHE' == $recu->getLigneDepense()->getDepense()->getNoteFrais()->getEtat()){
-                    $arr_valides[] = $recu;
-                }
+            if(null == $recu->getProduit()){
+                $arr_valides[] = $recu;
             }
         }
 
