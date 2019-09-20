@@ -116,7 +116,7 @@ class DocumentPrixRepository extends EntityRepository
 
 		if($orderBy == 'compte_nom'){
 			$qb->addOrderBy('c.nom', $dir);
-		} else {
+		} else if($orderBy != 'totaux') {
 			$qb->addOrderBy('d.'.$orderBy, $dir);
 		}
 		return $qb->getQuery()->getResult();

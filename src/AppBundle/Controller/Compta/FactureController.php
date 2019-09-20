@@ -183,6 +183,16 @@ class FactureController extends Controller
 
 		}
 
+		if($arr_cols[$col]['data'] == 'totaux'){
+			if($arr_sort[0]['dir'] == 'asc'){
+				usort($list, array($this, 'sortByTotalAsc'));
+			} else {
+				usort($list, array($this, 'sortByTotalDesc'));
+			}
+
+			$list = array_slice( $list, $requestData->get('start'), $requestData->get('length'));
+		}  
+
 		$response = new JsonResponse();
 		$response->setData(array(
 				'draw' => intval( $requestData->get('draw') ),
@@ -193,6 +203,22 @@ class FactureController extends Controller
 		));
 
 		return $response;
+	}
+
+	private function sortByTotalAsc($a, $b)
+	{
+	    if ($a['totaux']['HT'] == $b['totaux']['HT']) {
+	        return 0;
+	    }
+	    return ($a['totaux']['HT'] < $b['totaux']['HT']) ? -1 : 1;
+	}
+
+	private function sortByTotalDesc($a, $b)
+	{
+	    if ($a['totaux']['HT'] == $b['totaux']['HT']) {
+	        return 0;
+	    }
+	    return ($a['totaux']['HT'] < $b['totaux']['HT']) ? 1 : -1;
 	}
 
 
