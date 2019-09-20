@@ -1266,7 +1266,7 @@ class Opportunite
 
     public function getTotalFraisNDF(){
         $total = 0;
-        foreach($this->getRecusValides() as $recu){
+        foreach($this->getRecus() as $recu){
             $total+= $recu->getMontantHT();
         }
 

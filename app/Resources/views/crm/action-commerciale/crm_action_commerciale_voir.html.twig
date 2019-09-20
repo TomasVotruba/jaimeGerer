@@ -673,13 +673,18 @@
 								</td>
 							</tr>
 						{% endfor %}
-						{% for recu in opportunite.recusValides %}
+						{% for recu in opportunite.recus %}
 							<tr>
 								<td>
 									Note de frais
 								</td>
 								<td>
-									{{ recu.ligneDepense.depense.noteFrais.__toStringSansTotal }}<br />
+									{% if recu.ligneDepense %}
+										{{ recu.ligneDepense.depense.noteFrais.__toStringSansTotal }}
+									{% else %}
+										NDF {{ recu.user }}
+									{% endif %}
+									<br />
 									{{ recu.fournisseur }}
 								</td>
 								<td>
