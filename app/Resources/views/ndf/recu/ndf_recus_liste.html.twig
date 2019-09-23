@@ -8,12 +8,18 @@
 	</div>
 
 	<div class="row spacer-top">	
-		<div class="col-md-12 center-mobile">
+		<div class="col-md-6 center-mobile">
 			<p>
 				<a class="btn btn-success" href="{{ path('ndf_recu_ajouter') }}">
 					<span class="glyphicon glyphicon-plus"></span> Ajouter un reçu
 				</a>
 			</p>
+		</div>
+		<div class="col-md-6 center-mobile">
+			 <p class="align-right" id="wrapper-totaux">
+                <span class="l">Total des reçus :<br />
+                <span class="xl">{{ total }} € TTC</span>
+            </p>
 		</div>
 
 	</div>

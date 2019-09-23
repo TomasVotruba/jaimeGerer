@@ -150,8 +150,14 @@ class NDFController extends Controller
 			'user' => $this->getUser()
 		));
 
+		$total = 0;
+		foreach($arr_recus as $recu){
+			$total+= $recu->getMontantTTC();
+		}
+
 		return $this->render('ndf/recu/ndf_recus_liste.html.twig', array(
-			'arr_recus' => $arr_recus
+			'arr_recus' => $arr_recus,
+			'total' => $total
 		));
 	}
 
