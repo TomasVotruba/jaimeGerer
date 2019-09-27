@@ -199,7 +199,7 @@ class PlanPaiement
     }
 
     public function __toString(){
-        return $this->nom.' - '.$this->date->format('d/m/Y').' : '.strval($this->pourcentage).'%'.' ('.number_format($this->getMontant(), 2).' €)';
+        return $this->nom.' - '.$this->date->format('d/m/Y').' : '.strval($this->pourcentage).'%'.' ('.number_format($this->getMontantToString(), 2).' €)';
     }
 
     public function getMontant(){

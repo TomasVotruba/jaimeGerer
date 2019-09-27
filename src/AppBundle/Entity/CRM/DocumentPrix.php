@@ -847,6 +847,7 @@ class DocumentPrix
 
     public function calculateTaxe(){
         $this->taxe = $this->getTotalHT()*$this->taxePercent;
+        return $this->taxe;
     }
 
     public function getSousTotal(){

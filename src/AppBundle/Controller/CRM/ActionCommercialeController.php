@@ -1088,10 +1088,16 @@ class ActionCommercialeController extends Controller
 						$em->remove($produit);
 					}
 					$facture->clearProduits();
+					if(null !== $facture->getTaxe()){
+						$facture->setTaxe(0);
+					}
 
 					$factureService = $this->get('appbundle.crm_facture_service');
 					$produit = $factureService->createProduitFromPlanPaiement($planPaiement);
 					$facture->addProduit($produit);
+					$em->persist($facture);
+
+					$facture->calculateTaxe();
 
 					$planPaiement->setFacture($facture);
 					$em->persist($planPaiement);
