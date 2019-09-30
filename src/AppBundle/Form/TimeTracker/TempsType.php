@@ -18,18 +18,12 @@ class TempsType extends AbstractType
 
 
         $builder
-            ->add('monthpicker', 'text', array(
-                'attr' => array('class' => 'monthInput', 'autocomplete' => 'off'),
+            ->add('date', 'date', array('widget' => 'single_text',
+                'input' => 'datetime',
+                'format' => 'dd/MM/yyyy',
+                'attr' => array('class' => 'dateInput'),
                 'required' => true,
                 'label' => 'Date',
-                'mapped' => false,
-                'data' => date('m/Y')
-            ))
-            ->add('date', 'date', array(
-                'widget' => 'single_text',
-                'input' => 'datetime',
-                'attr' => array('class' => 'hidden'),
-                'label_attr' => array('class' => 'hidden'),
             ))
             ->add('duree', 'number', array(
                 'required' => true,
