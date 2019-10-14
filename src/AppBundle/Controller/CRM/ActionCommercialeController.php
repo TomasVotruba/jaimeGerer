@@ -1480,6 +1480,34 @@ class ActionCommercialeController extends Controller
 	}
 
 	/**
+	 * @Route("/crm/action-commerciale/frais/supprimer/{id}", name="crm_action_commerciale_frais_supprimer")
+	 */
+	public function actionCommercialeFraisSupprimerAction(Frais $frais)
+	{
+		$form = $this->createFormBuilder()->getForm();
+		
+		$request = $this->getRequest();
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+	
+			$em = $this->getDoctrine()->getManager();
+			$em->remove($frais);
+			$em->flush();
+
+			return $this->redirect($this->generateUrl(
+					'crm_action_commerciale_voir',
+					array('id' => $frais->getActionCommerciale()->getId())
+			));
+		}
+
+		return $this->render('crm/action-commerciale/crm_action_commerciale_frais_supprimer.html.twig', array(
+			'form' => $form->createView(),
+			'frais' => $frais
+		));
+	}
+
+	/**
 	 * @Route("/crm/action-commerciale/frais/ajouter/{id}", name="crm_action_commerciale_frais_ajouter")
 	 */
 	public function actionCommercialeFraisAjouterAction(Opportunite $actionCommerciale)

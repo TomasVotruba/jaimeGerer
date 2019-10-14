@@ -214,6 +214,25 @@ class NDFController extends Controller
 	}
 
 	/**
+	 * @Route("/ndf/recu/non-refacturable/{id}", name="ndf_recu_non_refacturable")
+	 */
+	public function NDFRecuNonRefacturableAction(Recu $recu)
+	{
+		$actionCommerciale = $recu->getActionCommerciale();
+
+		$em = $this->getDoctrine()->getManager();
+		$recu->setRefacturable(false);
+		$recu->removeActionCommerciale();
+			
+		$em->persist($recu);
+		$em->flush();
+
+		return $this->redirect($this->generateUrl(
+			'crm_action_commerciale_voir', array('id' => $actionCommerciale->getId())
+		));
+	}
+
+	/**
 	 * @Route("/ndf/recu/supprimer/{id}", name="ndf_recu_supprimer")
 	 */
 	public function NDFRecuSupprimerAction(Recu $recu)

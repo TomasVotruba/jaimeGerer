@@ -1334,7 +1334,7 @@ class Opportunite
                 $totalFacture+= $frais->getMontantHT();
             }
         }
-        foreach($this->getRecusValides() as $recu){
+        foreach($this->recus as $recu){
             if(null != $recu->getProduit()){
                 $totalFacture+= $recu->getMontantHT();
             }

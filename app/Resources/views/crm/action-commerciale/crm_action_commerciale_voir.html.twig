@@ -574,7 +574,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					<hr />
-					<h3>Frais
+					<h3>Frais refacturables
 						{% if true == opportunite.hasFraisRefacturables and opportunite.totalFraisNonFactures > 0 %}
 							<a href="{{ path('crm_action_commerciale_facturer_frais', {'id' : opportunite.id }) }}" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modal">Facturer les frais</a>
 						{% endif %}
@@ -626,7 +626,7 @@
 								{% if true == opportunite.hasFraisRefacturables %}
 									<th>Facturé</th>
 								{% endif %}
-								<th>Modifier</th>
+								<th>Actions</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -665,6 +665,11 @@
 										<a href="{{ path('crm_action_commerciale_frais_editer', {'id' : frais.id }) }}" class="btn btn-xs btn-primary">
 											<span class="glyphicon glyphicon-pencil"></span>
 										</a>
+
+										<a href="{{ path('crm_action_commerciale_frais_supprimer', {'id' : frais.id }) }}" class="btn btn-xs btn-danger">
+											<span class="glyphicon glyphicon-remove"></span>
+										</a>
+
 									{% else %}
 										<a href="#" class="btn btn-xs btn-default not-active">
 											<span class="glyphicon glyphicon-pencil"></span>
@@ -673,6 +678,7 @@
 								</td>
 							</tr>
 						{% endfor %}
+
 						{% for recu in opportunite.recus %}
 							<tr>
 								<td>
@@ -708,12 +714,30 @@
 									</td>
 								{% endif %}
 								<td>
-									<a href="#" class="btn btn-xs btn-default not-active">
-										<span class="glyphicon glyphicon-pencil"></span>
+									{% if false == recu.produit %}
+										{% if recu.ligneDepense.depense.noteFrais.etat|upper != "VALIDE" and  recu.ligneDepense.depense.noteFrais.etat|upper != "RAPPROCHE" %}
+											<a href="{{ path('ndf_recu_modifier', {'id' : recu.id }) }}" class="btn btn-xs btn-warning">
+												<span class="glyphicon glyphicon-pencil"></span>
+											</a>
+										{% else %}
+											<a href="#" class="btn btn-xs btn-default not-active">
+												<span class="glyphicon glyphicon-pencil"></span>
+											</a>
+										{% endif %}
+
+									{% else %}
+										<a href="#" class="btn btn-xs btn-default not-active">
+											<span class="glyphicon glyphicon-pencil"></span>
+										</a>
+									{% endif %}
+
+									<a href="{{ path('ndf_recu_non_refacturable', {'id' : recu.id }) }}" class="btn btn-xs btn-danger">
+										<span class="glyphicon glyphicon-remove"></span>
 									</a>
 								</td>
 							</tr>
 						{% endfor %}
+
 						{% for fraisSousTraitant in opportunite.fraisSousTraitants %}
 							<tr>
 								<td>

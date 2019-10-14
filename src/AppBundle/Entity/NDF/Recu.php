@@ -585,6 +585,18 @@ class Recu
     }
 
     /**
+     * Set actionCommerciale to null
+     *
+     * @return Recu
+     */
+    public function removeActionCommerciale()
+    {
+        $this->actionCommerciale = null;
+
+        return $this;
+    }
+
+    /**
      * Set produit
      *
      * @param \AppBundle\Entity\CRM\Produit $produit

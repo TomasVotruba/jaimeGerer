@@ -1,0 +1,26 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Supprimer des frais</h1>	
+		</div>
+	</div>
+
+	<div class="row">
+		 
+	    <div class="col-md-12">
+	    	<p id="warning-suppression">Etes-vous sur de vouloir supprimer les frais : {{ frais }} ?</p>
+	    	{{ form_start(form) }}
+ 			{{ form_widget(form) }}
+	   	 	
+	   	 	 <a class="btn" href="{{ path('crm_action_commerciale_voir', {'id' : frais.actionCommerciale.id }) }}">
+       			<span class="glyphicon glyphicon-chevron-left"></span>Annuler
+    		</a>
+	   	 	<input type="submit" value="Supprimer" class="btn btn-danger" id="btn-submit-form" />
+	   	 	{{ form_end(form) }}
+	    </div>
+    </div>
+
+{% endblock %}
