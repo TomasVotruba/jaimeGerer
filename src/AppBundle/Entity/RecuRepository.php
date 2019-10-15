@@ -16,17 +16,11 @@ class RecuRepository extends EntityRepository
 
 	  	$qb = $this->createQueryBuilder('r')
 	    ->innerJoin('r.user', 'u')
-	    ->innerJoin('r.ligneDepense', 'l')
-	    ->innerJoin('l.depense', 'd')
-	    ->innerJoin('d.noteFrais', 'n')
 	    ->where('u.company = :company')
 	    ->andWhere('r.date >= :start')
 	    ->andWhere('r.date <= :end')
 	    ->andWhere('r.refacturable = true')
-	    ->andWhere('n.etat = :valide OR n.etat = :rapproche')
 	    ->setParameter('company', $company)
-	    ->setParameter('valide', 'VALIDE')
-	    ->setParameter('rapproche', 'RAPPROCHE')
 	    ->setParameter('start', $year.'-01-01')
 	    ->setParameter('end',  $year.'-12-31');
 
