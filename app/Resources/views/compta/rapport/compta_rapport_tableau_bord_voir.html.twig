@@ -444,7 +444,7 @@
               </td>
             {% endif %}
 
-            <td class="accurate {{ accurate < 0 ? 'red' : 'green' }}" id="resultat_exploitation-{{ i }}-accurate">
+            <td class="accurate {{ accurate < prev ? 'red' : 'green' }}" id="resultat_exploitation-{{ i }}-accurate">
               {{ accurate|number_format(2, ',', ' ') }} €
             </td>
           {% endfor %}
@@ -474,7 +474,7 @@
               </td>
             {% endif %}
 
-            <td class="accurate {{ accurate < 0 ? 'red' : 'green' }}" id="resultat_exploitation_cumule-{{ i }}-accurate">
+            <td class="accurate {{ accurate < prev ? 'red' : 'green' }}" id="resultat_exploitation_cumule-{{ i }}-accurate">
               {{ accurate|number_format(2, ',', ' ') }} €
             </td>
           {% endfor %}
