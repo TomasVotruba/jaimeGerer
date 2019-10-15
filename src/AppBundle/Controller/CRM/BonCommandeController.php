@@ -195,11 +195,13 @@ class BonCommandeController extends Controller
 			
 		}
 
+		$list = array_slice( $list, $requestData->get('start'), $requestData->get('length'));
+
 		$response = new JsonResponse();
 		$response->setData(array(
 			'draw' => intval( $requestData->get('draw') ),
-			'recordsTotal' => $repository->countForList($this->getUser()->getCompany(), $arr_search['value']),
-			'recordsFiltered' => $repository->countForList($this->getUser()->getCompany(), $arr_search['value']),
+			'recordsTotal' => $repository->count($this->getUser()->getCompany()),
+			'recordsFiltered' => $i,
 			'aaData' => $list,
 		));
 		return $response;

@@ -44,9 +44,7 @@ class BonCommandeRepository extends EntityRepository
 		if($orderBy == null){
 			$orderBy = 'num';
 		}
-		$qb->setMaxResults($length)
-	        ->setFirstResult($start)
-	        ->addOrderBy('bc.'.$orderBy, $dir);
+		$qb->addOrderBy('bc.'.$orderBy, $dir);
 
 		return $qb->getQuery()->getResult();
 	}
@@ -64,6 +62,17 @@ class BonCommandeRepository extends EntityRepository
 			$qb->andWhere('c.nom LIKE :search OR o.nom LIKE :search OR bc.num LIKE :search ')
 			->setParameter('search', '%'.$search.'%');
 		}
+
+		return $qb->getQuery()->getSingleScalarResult();
+	}
+
+	public function count($company){
+		$qb = $this->createQueryBuilder('bc')
+			->select('COUNT(bc)')
+			->leftJoin('AppBundle\Entity\CRM\Opportunite', 'o', 'WITH', 'o.id = bc.actionCommerciale')
+			->leftJoin('AppBundle\Entity\CRM\Compte', 'c', 'WITH', 'c.id = o.compte')
+			->where('c.company = :company')
+			->setParameter('company', $company);
 
 		return $qb->getQuery()->getSingleScalarResult();
 	}

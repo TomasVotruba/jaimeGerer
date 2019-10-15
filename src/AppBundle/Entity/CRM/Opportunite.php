@@ -1324,7 +1324,9 @@ class Opportunite
     }
 
     public function getTotalFrais(){
-        return $this->getTotalFraisManuels()+$this->getTotalFraisNDF()+$this->getTotalFraisSousTraitants();
+        $total =  $this->getTotalFraisManuels()+$this->getTotalFraisNDF()+$this->getTotalFraisSousTraitants();
+
+        return round($total, 2);
     }
 
     public function getTotalFraisFactures(){
@@ -1345,7 +1347,7 @@ class Opportunite
             }
         }
 
-        return $totalFacture;
+        return round($totalFacture, 2);
     }
 
     public function getTotalFraisNonFactures(){
