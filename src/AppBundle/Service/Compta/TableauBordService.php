@@ -1248,7 +1248,7 @@ class TableauBordService extends ContainerAware {
         'frais' => $frais
     );
 
-    if($priveOrPublic!=0){
+    if(null !== $priveOrPublic){
         $arr_paramsQuery['priveOrPublic'] = $priveOrPublic;
     }
 
@@ -1270,15 +1270,17 @@ class TableauBordService extends ContainerAware {
       if($analytique){
         $prev->setAnalytique($analytique);
       }
-
-      if($priveOrPublic){
+      
+      if(null !== $priveOrPublic){
         $prev->setPriveOrPublic(strtoupper($priveOrPublic));
       }
+      
     }
 
     $prev->setMontantMonetaire($valeur);
     $this->em->persist($prev);
     $this->em->flush();
+
     return $prev;
 
   }
@@ -1391,7 +1393,7 @@ class TableauBordService extends ContainerAware {
             for($i = 0; $i<count($arr_sous_poste)-1; $i++){
                 $analytique.=$arr_sous_poste[$i];
             }
-            
+
             $this->ajouterPrevisionnel($montant, $year, $mois, $nomPoste, $analytique, $priveOrPublic, $company);
           } else {
             $this->ajouterPrevisionnel($montant, $year, $mois, $nomSousPostePoste, null, null, $company);
