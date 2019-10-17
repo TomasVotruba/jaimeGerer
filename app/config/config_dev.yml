@@ -50,7 +50,7 @@ knp_snappy:
     pdf:
         enabled:    true
         #binary:     /usr/local/bin/wkhtmltopdf
-        binary:     C:\wkhtmltopdf12\bin\wkhtmltopdf
+        binary:     C:\wkhtmltopdf\bin\wkhtmltopdf
         options: []
 
 nicomak_paypal:

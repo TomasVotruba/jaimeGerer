@@ -40,7 +40,7 @@ class UtilsService extends ContainerAware {
        'ï', 'î',
        'ö', 'ô',
        'ù', 'û', 'ü',
-       ' ', '-', '\'','_','&'
+       ' ', '-', '\'','_','&',',','(',')'
     );
 
     $normalChars = array(
@@ -49,10 +49,10 @@ class UtilsService extends ContainerAware {
        'i', 'i',
        'o', 'o',
        'u', 'u', 'u',
-       '', '', '', '', ''
+       '', '', '', '', '','','',''
     );
 
-    $string = str_replace($specialChars, $normalChars, $string);
+    $string = str_ireplace($specialChars, $normalChars, $string);
     return strtolower($string);
 
   }

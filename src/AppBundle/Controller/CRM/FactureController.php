@@ -543,17 +543,17 @@ class FactureController extends Controller
 		$rib = $settingsRepository->findOneBy(array('module' => 'CRM', 'parametre' => 'RIB', 'company'=>$this->getUser()->getCompany()));
 
 		$html = $this->renderView('crm/facture/crm_facture_exporter.html.twig',array(
-				'facture' => $facture,
-				'footer' => $footerfacture,
-				'pub' => $arr_pub,
-				'contact_admin' => $contactAdmin->getValeur(),
-				'RIB' => $rib
+			'facture' => $facture,
+			'footer' => $footerfacture,
+			'pub' => $arr_pub,
+			'contact_admin' => $contactAdmin->getValeur(),
+			'RIB' => $rib
 		));
 
-		$nomClient = strtolower(str_ireplace(' ','', $facture->getCompte()->getNom()));
+		$utilsService = $this->get('appbundle.utils_service');
+		$nomClient = $utilsService->removeSpecialChars($facture->getCompte()->getNom()); 
+		
 		$filename = $facture->getNum().'.'.$nomClient.'.pdf';
-
-		//$filename = $facture->getNum().'.'.$nomClient.'.pdf';
 		return new Response(
 				$this->get('knp_snappy.pdf')->getOutputFromHtml($html,
 						array(
