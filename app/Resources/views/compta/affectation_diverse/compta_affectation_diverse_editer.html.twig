@@ -1,0 +1,28 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Modifier une affectation diverse</h1>	
+		</div>
+	</div>
+
+	<div class="row">
+		 
+	    <div class="col-md-12">
+	    
+	    	{{ form_start(form) }}
+ 			{{ form_widget(form) }}
+
+   	 	 	<a class="btn" href="{{ path('compta_affectation_diverse_liste') }}">
+       			<span class="glyphicon glyphicon-chevron-left"></span>Annuler
+    		</a>
+	   	 	<input type="submit" value="Supprimer" class="btn btn-danger" />
+
+	   	 	{{ form_end(form) }}
+
+	    </div>
+    </div>
+
+{% endblock %}

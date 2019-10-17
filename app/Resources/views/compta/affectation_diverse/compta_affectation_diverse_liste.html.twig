@@ -1,0 +1,104 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Liste des affectations diverses</h1>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-md-12">
+			{% include 'compta/star_compta/compta_star_compta_submenu.html.twig' %}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			{% for flashMessage in app.session.flashbag.get('success') %}
+			    <div class="alert alert-success">
+			        {{ flashMessage }}
+			    </div>
+			{% endfor %}
+			{% for flashMessage in app.session.flashbag.get('danger') %}
+			    <div class="alert alert-danger">
+			        {{ flashMessage }}
+			    </div>
+			{% endfor %}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<h2>Achat</h2>
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>Nom</th>
+						<th>Compte comptable</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for affectationDiverse in arr_achats %}
+						<tr>
+							<td>{{ affectationDiverse.nom }}</td>
+							<td>
+								<a href="{{ path('compta_compte_voir', {'id' : affectationDiverse.compteComptable.id }) }}">
+									{{ affectationDiverse.compteComptable }}
+								</a>
+							</td>
+							<td>
+								<a class="btn btn-xs btn-warning" href="{{ path('compta_affectation_diverse_editer', {'id' : affectationDiverse.id }) }}">
+									<span class="glyphicon glyphicon-pencil"></span>
+								</a>
+								<a class="btn btn-xs btn-danger" href="{{ path('compta_affectation_diverse_supprimer', {'id' : affectationDiverse.id }) }}">
+									<span class="glyphicon glyphicon-trash"></span>
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+
+		<div class="col-md-6">
+			<h2>Vente</h2>
+			<table class="table table-bordered table-striped">
+				<thead>
+					<tr>
+						<th>Nom</th>
+						<th>Compte comptable</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for affectationDiverse in arr_ventes %}
+						<tr>
+							<td>{{ affectationDiverse.nom }}</td>
+							<td>
+								<a href="{{ path('compta_compte_voir', {'id' : affectationDiverse.compteComptable.id }) }}">
+									{{ affectationDiverse.compteComptable }}
+								</a>
+							</td>
+							<td>
+								<a class="btn btn-xs btn-warning"  href="{{ path('compta_affectation_diverse_editer', {'id' : affectationDiverse.id }) }}">
+									<span class="glyphicon glyphicon-pencil"></span>
+								</a>
+								<a class="btn btn-xs btn-danger" href="{{ path('compta_affectation_diverse_supprimer', {'id' : affectationDiverse.id }) }}">
+									<span class="glyphicon glyphicon-trash"></span>
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+
+
+{% endblock %}
+

@@ -9,6 +9,9 @@
       <li {% if app.request.pathInfo == "/compta/lignes-non-lettrees"  %} class="active" {% endif %}>
           <a href="{{ path('compta_lignes_non_lettrees') }}">Lignes non lettrées</a>
       </li>
+      <li {% if app.request.pathInfo == "/compta/affectation-diverse/liste"  %} class="active" {% endif %}>
+          <a href="{{ path('compta_affectation_diverse_liste') }}">Affectations diverses</a>
+      </li>
      
     </ul>
 {% endblock %}
