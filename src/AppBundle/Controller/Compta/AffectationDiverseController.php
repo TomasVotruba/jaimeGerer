@@ -101,10 +101,9 @@ class AffectationDiverseController extends Controller
 			$em->flush();
 
 			$this->get('session')->getFlashBag()->add(
-					'success',
-					'L\'affectation diverse a bien été supprimée.'
+				'success',
+				'L\'affectation diverse a bien été supprimée.'
 			);
-
 
 			return $this->redirect($this->generateUrl(
 				'compta_affectation_diverse_liste'
@@ -142,6 +141,11 @@ class AffectationDiverseController extends Controller
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($affectationDiverse);
 			$em->flush();
+
+			$this->get('session')->getFlashBag()->add(
+				'success',
+				'L\'affectation diverse a bien été modifiée.'
+			);
 			
 			return $this->redirect($this->generateUrl(
 				'compta_affectation_diverse_liste'
