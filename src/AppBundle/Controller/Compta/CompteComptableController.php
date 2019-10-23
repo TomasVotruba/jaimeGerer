@@ -32,6 +32,7 @@ class CompteComptableController extends Controller
 		$form->add('recherche', 'text', array(
 			'label' => 'Rechercher',
 			'required' => true,
+			'attr' => array('placeholder' => 'Recherche')
 		));
 
 		$form->add('submit', 'submit', array(
@@ -43,26 +44,33 @@ class CompteComptableController extends Controller
 		$form->handleRequest($request);
 		$dataCount = array();
 		$dataBigCount = array();
+		$arr_results = array();
+
 		if ($form->isSubmitted() && $form->isValid() ) {
+
 			$data = $form->getData();
-			$arr_comptes = $repo->SearchByName($data['recherche'],$this->getUser()->getCompany());
-			foreach( $arr_comptes as $compte )
+			$arr_results = $repo->SearchByName($data['recherche'],$this->getUser()->getCompany());
+
+			foreach( $arr_results as $compte )
 			{
-				if( isset($dataBigCount[substr($compte->getNum(),0,1)]) )
+				if( isset($dataBigCount[substr($compte->getNum(),0,1)]) ){
 					$dataBigCount[substr($compte->getNum(),0,1)]++;
-				else
+				} else {
 					$dataBigCount[substr($compte->getNum(),0,1)] = 1;
-				if ( isset($dataCount[substr($compte->getNum(),0,2)]) )
+				}
+
+				if ( isset($dataCount[substr($compte->getNum(),0,2)]) ){
 					$dataCount[substr($compte->getNum(),0,2)]++;
-				else
+				} else{
 					$dataCount[substr($compte->getNum(),0,2)] = 1 ;
+				}
 			}
 		}
-		else
-			$arr_comptes = $repo->findBy(array(
-					'company' => $this->getUser()->getCompany()
-				),
-			array('num' => 'ASC'));
+		
+		$arr_comptes = $repo->findBy(
+			array('company' => $this->getUser()->getCompany()),
+			array('num' => 'ASC')
+		);
 
 		$arr_categories = array(
 			1 => "Comptes de capitaux",
@@ -147,11 +155,12 @@ class CompteComptableController extends Controller
  		);
 
 		return $this->render('compta/plan/compta_plan_liste.html.twig', array(
-				'arr_comptes' => $arr_comptes,
-				'arr_categories' => $arr_categories,
-				'form' =>$form->createView(),
-				'dataBigCount' => $dataBigCount,
-				'dataCount' => $dataCount
+			'arr_comptes' => $arr_comptes,
+			'arr_categories' => $arr_categories,
+			'form' =>$form->createView(),
+			'dataBigCount' => $dataBigCount,
+			'dataCount' => $dataCount,
+			'arr_results' => $arr_results
 		));
 	}
 

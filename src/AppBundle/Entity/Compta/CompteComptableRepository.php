@@ -84,7 +84,7 @@ class CompteComptableRepository extends EntityRepository
 			->andWhere('c.nom LIKE :nom')
 			->setParameter('company', $company)
 			->setParameter('nom', '%'.$nom.'%')
-			->addOrderBy('c.nom', 'ASC')
+			->addOrderBy('c.num', 'ASC')
 			->getQuery()
 			->getResult();
 

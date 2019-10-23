@@ -32,14 +32,11 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-4">
 			{{ form_widget(form.recherche) }}
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-8">
 			{{ form_widget(form.submit) }}
-			{%  if form.recherche.vars.value != '' %}
-			<a class="btn btn-info" href="{{  path('compta_compte_liste') }}">Réinitialiser</a>
-			{%  endif %}
 		</div>
 	</div>
 	{{ form_rest(form) }}
@@ -47,7 +44,13 @@
 	<div class="row">
 		<div class="col-md-6">
 			{%  if form.recherche.vars.value != '' %}
-				{{ form.recherche.vars.value }} {{ dataBigCount|length + dataCount|length }} résultat{% if dataBigCount|length + dataCount|length > 1 %}s{% endif %}
+				Vous avez rercherché : {{ form.recherche.vars.value }}<br />
+				<strong>{{ arr_results|length }} résultat{% if arr_results|length > 1 %}s{% endif %}</strong>
+				<ul>
+				{% for result in arr_results %}
+					<li><a href="{{ path('compta_compte_voir', {'id' : result.id }) }}">{{ result }}</a></li>
+				{% endfor %}
+				</ul>
 			{% endif %}
 		</div>
 	</div>
