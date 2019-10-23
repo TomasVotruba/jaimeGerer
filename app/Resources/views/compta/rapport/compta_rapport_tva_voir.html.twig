@@ -8,14 +8,14 @@
 	<!-- soumis à tva -->
 	{% for label, type in types %}
 
-		<tr class="{% if loop.last %} black-border-bottom {% elseif loop.first %} thick-border-top {% endif %}" >
+		<tr class="{% if loop.last %} black-border-bottom {% elseif loop.first %} thick-border-top {% endif %} {% if arr_periode.mois is odd %} odd {% endif %}" >
 
 			{% if loop.first %}
-				<td rowspan="6" class="thick-border-top "><strong>{{ arr_periode.mois }}/{{ arr_periode.annee }}</strong></td>
-				<td class="thick-border-left thick-border-top black-border-bottom black-border-right" rowspan="3">Soumis à TVA</td>
+				<td rowspan="6" class="thick-border-top align-middle"><strong>{{ arr_periode.mois }}/{{ arr_periode.annee }}</strong></td>
+				<td class="thick-border-left thick-border-top black-border-bottom black-border-right align-middle center" rowspan="3">Soumis à TVA</td>
 			{% endif %}
 
-			<td class="black-border-right">{{ label }}</td>
+			<td class="black-border-right center">{{ label }}</td>
 			<td class="align-right thick-border-left">{{ arr_periode.entree_soumis[type].entreeTTC|number_format(2,',',' ') }} €</td>
 			<td class="align-right">{{ arr_periode.entree_soumis[type].entreeHT|number_format(2,',',' ') }} €</td>
 			<td class="align-right">
@@ -39,7 +39,7 @@
 			</td>
 
 			
-			<td class="align-right thick-border-left{% if arr_periode.balance[type] < 0 %} red {% else %} green{% endif %}">{{ arr_periode.balance[type]|number_format(2,',',' ') }} €</td>
+			<td class="align-right thick-border-left{% if arr_periode.balance[type] < 0 %} red {% else %} green{% endif %}"><strong>{{ arr_periode.balance[type]|number_format(2,',',' ') }} €</strong></td>
 		
 
 		</tr>
@@ -48,13 +48,13 @@
 	<!-- non soumis à tva  -->
 	{% for label, type in types %}
 
-		<tr class="{% if loop.last %} thick-border-bottom {% elseif loop.first %} black-border-top {% endif %}" >
+		<tr class="{% if loop.last %} thick-border-bottom {% elseif loop.first %} black-border-top {% endif %} {% if arr_periode.mois is odd %} odd {% endif %}" >
 
 			{% if loop.first %}
-				<td class="thick-border-left thick-border-top black-border-bottom black-border-right" rowspan="3">Non-soumis à TVA</td>
+				<td class="thick-border-left thick-border-top black-border-bottom black-border-right align-middle center" rowspan="3">Non-soumis à TVA</td>
 			{% endif %}
 
-			<td class="black-border-right">{{ label }}</td>
+			<td class="black-border-right center">{{ label }}</td>
 			<td class="align-right thick-border-left">{{ arr_periode.entree_non_soumis[type].entreeTTC|number_format(2,',',' ') }} €</td>
 			<td class="align-right">{{ arr_periode.entree_non_soumis[type].entreeHT|number_format(2,',',' ') }} €</td>
 			<td class="align-right">
