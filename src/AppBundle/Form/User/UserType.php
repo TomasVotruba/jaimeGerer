@@ -91,6 +91,29 @@ class UserType extends AbstractType
                       ->orderBy('c.nom', 'ASC');
                 },
             ))
+            ->add('modeleVoiture', 'text', array(
+                'required' => false,
+                'label' => 'Modèle'
+            ))
+            ->add('marqueVoiture', 'text', array(
+                'required' => false,
+                'label' => 'Marque'
+            ))
+            ->add('immatriculationVoiture', 'text', array(
+                'required' => false,
+                'label' => 'Immatriculation'
+            ))
+            ->add('puissanceVoiture', 'choice', array(
+                'required' => false,
+                'label' => 'Puissance fiscale',
+                'choices' => array(
+                    3 => '3 CV',
+                    4 => '4 CV',
+                    5 => '5 CV',
+                    6 => '6 CV',
+                    7 => '7 CV et plus'
+                )
+            ))
             ->add('submit', 'submit', array(
               'label' => 'Enregistrer',
               'attr' => array('class' => 'btn btn-success')

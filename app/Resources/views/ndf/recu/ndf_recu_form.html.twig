@@ -8,7 +8,9 @@
 
 	<div class="col-md-6">
 		<div class="form-group">
-			{{ form_row(form.fournisseur) }}
+			{% if recu.deplacementVoiture == false %}
+				{{ form_row(form.fournisseur) }}	
+			{% endif %}
 		</div>
 	</div>
 </div>
@@ -46,21 +48,79 @@
 	</div>
 </div>
 
+<hr />
+
+{% if recu.deplacementVoiture == true %}
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				{{ form_row(form.trajet) }}
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				{{ form_label(form.distance) }}
+				<div class="input-group">
+					{{ form_widget(form.distance) }}<div class="input-group-addon">km</div>
+				</div>
+			</div>
+		</div>	
+	</div>
+	
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				{{ form_row(form.marqueVoiture) }}
+			</div>
+		</div>	
+
+		<div class="col-md-6">
+			<div class="form-group">
+				{{ form_row(form.modeleVoiture) }}
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				{{ form_row(form.immatriculationVoiture) }}
+			</div>
+		</div>
+
+		<div class="col-md-6">
+			<div class="form-group">
+				{{ form_row(form.puissanceVoiture) }}
+			</div>
+		</div>
+	</div>
+{% endif %}
 
 <div class="row">
 	<hr />
 	<div class="col-md-3 col-md-offset-8">
+
 		<div class="form-group">
-			{{ form_row(form.montantHT) }}
+			{{ form_label(form.montantHT) }}
+			<div class="input-group">
+				{{ form_widget(form.montantHT) }}<div class="input-group-addon">€</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			{{ form_label(form.tva) }}
+			<div class="input-group">
+				{{ form_widget(form.tva) }}<div class="input-group-addon">€</div>
+			</div>
 		</div>
 
 		<div class="form-group">
-			{{ form_row(form.tva) }}
+			{{ form_label(form.montantTTC) }}
+			<div class="input-group">
+				{{ form_widget(form.montantTTC) }}<div class="input-group-addon">€</div>
+			</div>
 		</div>
 
-		<div class="form-group">
-			{{ form_row(form.montantTTC) }}
-		</div>
 	</div>
 
 </div>	

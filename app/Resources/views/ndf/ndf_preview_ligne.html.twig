@@ -1,6 +1,12 @@
 <tr id="{{ recu.id }}">
 	<td>{{ recu.date|date('d/m/Y') }}</td>
-	<td>{{ recu.fournisseur }}</td>
+	<td>
+		{% if recu.deplacementVoiture == false %}
+			{{ recu.fournisseur }}
+		{% else %}
+			Trajet {{ recu.trajet }} : {{ recu.distance }}km
+		{% endif %}
+	</td>
 	<td class="align-right">{{ recu.montantHT|number_format(2,',',' ')}} € <span class="hidden ht">{{ recu.montantHT }}</span></td>
 	<td class="align-right">{{ recu.tva|number_format(2,',',' ')}} € <span class="hidden tva">{{ recu.tva }}</span></td>
 	<td class="align-right">{{ recu.montantTTC|number_format(2,',',' ')}} € <span class="hidden ttc">{{ recu.montantTTC }}</span></td>

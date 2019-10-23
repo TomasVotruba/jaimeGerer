@@ -148,6 +148,55 @@ class Recu
     private $produit;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="trajet", type="string", length=255, nullable=true)
+     */
+    private $trajet;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="distance", type="integer", nullable=true)
+     */
+    private $distance;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="deplacementVoiture", type="boolean", nullable=false)
+     */
+    private $deplacementVoiture = false;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="modele_voiture", type="string", length=255, nullable=true)
+     */
+    private $modeleVoiture;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="puissance_voiture", type="integer", nullable=true)
+     */
+    private $puissanceVoiture;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="marque_voiture", type="string", length=255, nullable=true)
+     */
+    private $marqueVoiture;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="immatriculation_voiture", type="string", length=255, nullable=true)
+     */
+    private $immatriculationVoiture;
+
+    /**
      * Get id
      *
      * @return integer
@@ -488,7 +537,10 @@ class Recu
     }
 
     public function __toString(){
-      return $this->date->format("d/m/Y").' | '.$this->getFournisseur().' | '.$this->getMontantTTC().' €';
+        if($this->deplacementVoiture === true){
+             return $this->date->format("d/m/Y").' | Trajet '.$this->getTrajet().' | '.$this->getMontantTTC().' €';
+        }
+       return $this->date->format("d/m/Y").' | '.$this->getFournisseur().' | '.$this->getMontantTTC().' €';
     }
 
 
@@ -617,5 +669,166 @@ class Recu
     public function getProduit()
     {
         return $this->produit;
+    }
+
+    /**
+     * Set trajet
+     *
+     * @param string $trajet
+     * @return Recu
+     */
+    public function setTrajet($trajet)
+    {
+        $this->trajet = $trajet;
+
+        return $this;
+    }
+
+    /**
+     * Get trajet
+     *
+     * @return string 
+     */
+    public function getTrajet()
+    {
+        return $this->trajet;
+    }
+
+    /**
+     * Set distance
+     *
+     * @param integer $distance
+     * @return Recu
+     */
+    public function setDistance($distance)
+    {
+        $this->distance = $distance;
+
+        return $this;
+    }
+
+    /**
+     * Get distance
+     *
+     * @return integer 
+     */
+    public function getDistance()
+    {
+        return $this->distance;
+    }
+
+    /**
+     * Set deplacementVoiture
+     *
+     * @param boolean $deplacementVoiture
+     * @return Recu
+     */
+    public function setDeplacementVoiture($deplacementVoiture)
+    {
+        $this->deplacementVoiture = $deplacementVoiture;
+
+        return $this;
+    }
+
+    /**
+     * Get deplacementVoiture
+     *
+     * @return boolean 
+     */
+    public function getDeplacementVoiture()
+    {
+        return $this->deplacementVoiture;
+    }
+
+    /**
+     * Set modeleVoiture
+     *
+     * @param string $modeleVoiture
+     * @return Recu
+     */
+    public function setModeleVoiture($modeleVoiture)
+    {
+        $this->modeleVoiture = $modeleVoiture;
+
+        return $this;
+    }
+
+    /**
+     * Get modeleVoiture
+     *
+     * @return string 
+     */
+    public function getModeleVoiture()
+    {
+        return $this->modeleVoiture;
+    }
+
+    /**
+     * Set puissanceVoiture
+     *
+     * @param integer $puissanceVoiture
+     * @return Recu
+     */
+    public function setPuissanceVoiture($puissanceVoiture)
+    {
+        $this->puissanceVoiture = $puissanceVoiture;
+
+        return $this;
+    }
+
+    /**
+     * Get puissanceVoiture
+     *
+     * @return integer 
+     */
+    public function getPuissanceVoiture()
+    {
+        return $this->puissanceVoiture;
+    }
+
+    /**
+     * Set marqueVoiture
+     *
+     * @param string $marqueVoiture
+     * @return Recu
+     */
+    public function setMarqueVoiture($marqueVoiture)
+    {
+        $this->marqueVoiture = $marqueVoiture;
+
+        return $this;
+    }
+
+    /**
+     * Get marqueVoiture
+     *
+     * @return string 
+     */
+    public function getMarqueVoiture()
+    {
+        return $this->marqueVoiture;
+    }
+
+    /**
+     * Set immatriculationVoiture
+     *
+     * @param string $immatriculationVoiture
+     * @return Recu
+     */
+    public function setImmatriculationVoiture($immatriculationVoiture)
+    {
+        $this->immatriculationVoiture = $immatriculationVoiture;
+
+        return $this;
+    }
+
+    /**
+     * Get immatriculationVoiture
+     *
+     * @return string 
+     */
+    public function getImmatriculationVoiture()
+    {
+        return $this->immatriculationVoiture;
     }
 }

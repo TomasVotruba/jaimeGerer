@@ -57,10 +57,6 @@ class NDFController extends Controller
 			$em->persist($recu);
 			$em->flush();
 
-			//send to receiptbank API
-			/**
-			 * @todo : connect and sent to Receipt Bank API
-			 */
 		}
 
 		return $this->render('ndf/recu/ndf_recu_upload.html.twig', array(
@@ -69,13 +65,14 @@ class NDFController extends Controller
 	}
 
 	/**
-	 * @Route("/ndf/recu/ajouter", name="ndf_recu_ajouter")
+	 * @Route("/ndf/recu/ajouter/{deplacementVoiture}", name="ndf_recu_ajouter")
 	 */
-	public function NDFRecuAjouterAction()
+	public function NDFRecuAjouterAction($deplacementVoiture = false)
 	{
 		$em = $this->getDoctrine()->getManager();
 
 		$recu = new Recu();
+		$recu->setDeplacementVoiture($deplacementVoiture);
 
 		$fc = null;
 		$ccDefaut = null;
@@ -95,7 +92,7 @@ class NDFController extends Controller
 			$ccDefaut = $this->getUser()->getCompteComptableNoteFrais() ? $this->getUser()->getCompteComptableNoteFrais() : $deplacements;
 		}
 		
-		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId(), $fc, $ccDefaut), $recu);
+		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId(), $fc, $ccDefaut, $deplacementVoiture, $this->getUser()), $recu);
 
 		$form->add('next', 'submit', array(
 			'label' => 'Enregistrer et ajouter un autre reçu'
@@ -134,7 +131,8 @@ class NDFController extends Controller
 
 		return $this->render('ndf/recu/ndf_recu_ajouter.html.twig', array(
 			'form' => $form->createView(),
-			'recu' => $recu
+			'recu' => $recu,
+			'deplacementVoiture' => $deplacementVoiture
 		));
 	}
 
@@ -179,7 +177,7 @@ class NDFController extends Controller
 	{
 		$em = $this->getDoctrine()->getManager();
 
-		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId()), $recu);
+		$form = $this->createForm(new RecuType($this->getUser()->getCompany()->getId(), null, null, $recu->getDeplacementVoiture()), $recu);
 
 		if($recu->getActionCommerciale()){
 			$form->get('projet_name')->setData($recu->getActionCommerciale()->getNom());
@@ -209,7 +207,7 @@ class NDFController extends Controller
 
 		return $this->render('ndf/recu/ndf_recu_modifier.html.twig', array(
 			'recu' => $recu,
-			'form' => $form->createView()
+			'form' => $form->createView(),
 		));
 	}
 
@@ -417,7 +415,13 @@ class NDFController extends Controller
 					if($recu->getAnalytique()->getId() == $analytique->getId()){
 
 						$ligne = new LigneDepense();
-						$nom = $recu->getDate()->format('d/m/Y').' : '.$recu->getFournisseur();
+						$nom = $recu->getDate()->format('d/m/Y').' : ';
+						if($recu->getDeplacementVoiture() === true){
+							$nom.= 'trajet '.$recu->getTrajet();
+						} else {
+							$nom.=$recu->getFournisseur();
+						}
+
 						if($recu->getLibelle()){
 							$nom.=' - '.$recu->getLibelle();
 						}

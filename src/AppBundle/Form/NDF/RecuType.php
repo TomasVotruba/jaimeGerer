@@ -12,12 +12,16 @@ class RecuType extends AbstractType
     protected $companyId;
     protected $fc;
     protected $ccDefaut;
+    protected $deplacementVoiture;
+    protected $user;
 
-    public function __construct ($companyId = null, $fc = null, $ccDefaut = null)
+    public function __construct ($companyId = null, $fc = null, $ccDefaut = null, $deplacementVoiture = false, $user = null)
     {
         $this->companyId = $companyId;
         $this->fc = $fc;
         $this->ccDefaut = $ccDefaut;
+        $this->deplacementVoiture = $deplacementVoiture;
+        $this->user = $user;
     }
 
     /**
@@ -30,17 +34,6 @@ class RecuType extends AbstractType
         $data = $builder->getData();
      
         $builder
-            ->add('date', 'date', array('widget' => 'single_text',
-              'input' => 'datetime',
-              'format' => 'dd/MM/yyyy',
-              'attr' => array('class' => 'dateInput', 'autocomplete' => 'off'),
-              'required' => true,
-              'label' => 'Date du reçu'
-            ))
-            ->add('fournisseur', 'text', array(
-              'label' => 'Fournisseur',
-              'required' => true
-            ))
             ->add('projet_name', 'text', array(
                 'required' => false,
                 'mapped' => false,
@@ -115,6 +108,64 @@ class RecuType extends AbstractType
             ->add('save', 'submit', array(
               'label' => 'Enregistrer et revenir à la liste des reçus',
             ));
+
+            if($this->deplacementVoiture === false){
+                $builder->add('fournisseur', 'text', array(
+                    'label' => 'Fournisseur',
+                    'required' => true
+                ))
+                ->add('date', 'date', array('widget' => 'single_text',
+                    'input' => 'datetime',
+                    'format' => 'dd/MM/yyyy',
+                    'attr' => array('class' => 'dateInput', 'autocomplete' => 'off'),
+                    'required' => true,
+                    'label' => 'Date du reçu'
+                ));
+            } else {
+                $builder->add('trajet', 'text', array(
+                    'label' => 'Trajet',
+                    'required' => true
+                ))
+                ->add('date', 'date', array('widget' => 'single_text',
+                    'input' => 'datetime',
+                    'format' => 'dd/MM/yyyy',
+                    'attr' => array('class' => 'dateInput', 'autocomplete' => 'off'),
+                    'required' => true,
+                    'label' => 'Date du trajet'
+                ))
+                ->add('distance', 'integer', array(
+                    'label' => 'Distance (km)',
+                    'required' => true
+                ))
+                ->add('marqueVoiture', 'text', array(
+                    'label' => 'Marque du véhicule',
+                    'required' => true,
+                    'data' => $data->getId() ? $data->getMarqueVoiture() : $this->user->getMarqueVoiture()
+                ))
+                ->add('modeleVoiture', 'text', array(
+                    'label' => 'Modèle du véhicule',
+                    'required' => true,
+                    'data' => $data->getId() ? $data->getModeleVoiture() : $this->user->getModeleVoiture()
+                ))
+                ->add('immatriculationVoiture', 'text', array(
+                    'label' => 'Immatriculation du véhicule',
+                    'required' => true,
+                    'data' => $data->getId() ? $data->getImmatriculationVoiture() : $this->user->getImmatriculationVoiture()
+                ))
+                 ->add('puissanceVoiture', 'choice', array(
+                    'required' => true,
+                    'label' => 'Puissance fiscale du véhicule',
+                    'choices' => array(
+                        3 => '3 CV',
+                        4 => '4 CV',
+                        5 => '5 CV',
+                        6 => '6 CV',
+                        7 => '7 CV et plus'
+                    ),
+                    'data' => $data->getId() ? $data->getPuissanceVoiture() : $this->user->getPuissanceVoiture()
+                ))
+                ;
+            }
            
           
         ;

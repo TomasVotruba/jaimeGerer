@@ -5,7 +5,7 @@
             {{ form_row(form.firstName) }}
         </div>
     </div>
-    <div class="col-md-4 col-md-offset-1 center">
+    <div class="col-md-4 col-md-offset-2 center">
         <div class="form-group">
           {{ form_row(form.lastName) }}
         </div>
@@ -35,10 +35,45 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4 col-md-offset-1 center">
+    <div class="col-md-4 col-md-offset-2 center">
         <div class="form-group">
             {{ form_label(form.compteComptableNoteFrais) }}
             {{ form_widget(form.compteComptableNoteFrais) }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+     <div class="col-md-12 center">
+        <hr />
+        <p><strong>Véhicule</strong><br />
+            <i>Ces informations permettent de préremplir automatiquement les frais de déplacement dans <span class="jaimelesnotesdefrais">J'aime les notes de frais</span></i>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-1 center">
+        <div class="form-group">
+            {{ form_row(form.marqueVoiture) }}
+        </div>
+    </div>
+    <div class="col-md-4 col-md-offset-2 center">
+        <div class="form-group">
+          {{ form_row(form.modeleVoiture) }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-1 center">
+        <div class="form-group">
+            {{ form_row(form.immatriculationVoiture) }}
+        </div>
+    </div>
+     <div class="col-md-4 col-md-offset-2 center">
+        <div class="form-group">
+            {{ form_row(form.puissanceVoiture) }}
         </div>
     </div>
 </div>
@@ -49,30 +84,31 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-2 col-md-offset-1 center">
-
-        <div class="form-group">
-            <strong>Activé</strong><br />
-          {{ form_row(form.enabled) }}
+{% if profile == false %}
+    <div class="row">
+        <div class="col-md-2 col-md-offset-1 center">
+            <div class="form-group">
+                <strong>Activé</strong><br />
+              {{ form_row(form.enabled) }}
+            </div>
+        </div>
+        <div class="col-md-2 col-md-offset-1 center">
+            <div class="form-group">
+              <strong>Administrateur</strong><br />
+              {{ form_row(form.admin) }}
+            </div>
+        </div>
+        <div class="col-md-4 col-md-offset-1 center">
+            <div class="form-group">
+              {{ form_row(form.permissions) }}
+            </div>
         </div>
     </div>
-    <div class="col-md-2 col-md-offset-1 center">
-        <div class="form-group">
-          <strong>Administrateur</strong><br />
-          {{ form_row(form.admin) }}
-        </div>
-    </div>
-    <div class="col-md-4 col-md-offset-1 center">
-        <div class="form-group">
-          {{ form_row(form.permissions) }}
-        </div>
-    </div>
-</div>
+    <hr />
+{% endif %}
 
 <div class="row">
     <div class="col-md-12 center">
-        <hr />
         <div class="form-group">
           {{ form_row(form.submit) }}
         </div>

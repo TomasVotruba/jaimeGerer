@@ -143,9 +143,58 @@ class Recu
 
     /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\CRM\Produit", mappedBy="recu")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     private $produit;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="trajet", type="string", length=255, nullable=true)
+     */
+    private $trajet;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="distance", type="integer", nullable=true)
+     */
+    private $distance;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="deplacementVoiture", type="boolean", nullable=false)
+     */
+    private $deplacementVoiture = false;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="modele_voiture", type="string", length=255, nullable=true)
+     */
+    private $modeleVoiture;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="puissance_voiture", type="integer", nullable=true)
+     */
+    private $puissanceVoiture;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="marque_voiture", type="string", length=255, nullable=true)
+     */
+    private $marqueVoiture;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="immatriculation_voiture", type="string", length=255, nullable=true)
+     */
+    private $immatriculationVoiture;
 
     /**
      * Get id
@@ -488,7 +537,10 @@ class Recu
     }
 
     public function __toString(){
-      return $this->date->format("d/m/Y").' | '.$this->getFournisseur().' | '.$this->getMontantTTC().' €';
+        if($this->deplacementVoiture === true){
+             return $this->date->format("d/m/Y").' | '.$this->getTrajet().' | '.$this->getMontantTTC().' €';
+        }
+       return $this->date->format("d/m/Y").' | '.$this->getFournisseur().' | '.$this->getMontantTTC().' €';
     }
 
 
@@ -582,5 +634,109 @@ class Recu
     public function getActionCommerciale()
     {
         return $this->actionCommerciale;
+    }
+
+    /**
+     * Set actionCommerciale to null
+     *
+     * @return Recu
+     */
+    public function removeActionCommerciale()
+    {
+        $this->actionCommerciale = null;
+
+        return $this;
+    }
+
+    /**
+     * Set produit
+     *
+     * @param \AppBundle\Entity\CRM\Produit $produit
+     * @return Recu
+     */
+    public function setProduit(\AppBundle\Entity\CRM\Produit $produit = null)
+    {
+        $this->produit = $produit;
+
+        return $this;
+    }
+
+    /**
+     * Get produit
+     *
+     * @return \AppBundle\Entity\CRM\Produit 
+     */
+    public function getProduit()
+    {
+        return $this->produit;
+    }
+
+    /**
+     * Set trajet
+     *
+     * @param string $trajet
+     * @return Recu
+     */
+    public function setTrajet($trajet)
+    {
+        $this->trajet = $trajet;
+
+        return $this;
+    }
+
+    /**
+     * Get trajet
+     *
+     * @return string 
+     */
+    public function getTrajet()
+    {
+        return $this->trajet;
+    }
+
+    /**
+     * Set distance
+     *
+     * @param integer $distance
+     * @return Recu
+     */
+    public function setDistance($distance)
+    {
+        $this->distance = $distance;
+
+        return $this;
+    }
+
+    /**
+     * Get distance
+     *
+     * @return integer 
+     */
+    public function getDistance()
+    {
+        return $this->distance;
+    }
+
+    /**
+     * Set deplacementVoiture
+     *
+     * @param boolean $deplacementVoiture
+     * @return Recu
+     */
+    public function setDeplacementVoiture($deplacementVoiture)
+    {
+        $this->deplacementVoiture = $deplacementVoiture;
+
+        return $this;
+    }
+
+    /**
+     * Get deplacementVoiture
+     *
+     * @return boolean 
+     */
+    public function getDeplacementVoiture()
+    {
+        return $this->deplacementVoiture;
     }
 }

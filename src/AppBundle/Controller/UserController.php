@@ -180,8 +180,9 @@ class UserController extends Controller
 		}
 
         return $this->render('admin/utilisateurs/admin_utilisateurs_ajouter.html.twig', array(
-          'form' => $form->createView(),
-          'company' => $this->getUser()->getCompany()
+            'form' => $form->createView(),
+            'company' => $this->getUser()->getCompany(),
+            'profile' => false
         ));
     }
 
@@ -235,7 +236,60 @@ class UserController extends Controller
 
         return $this->render('admin/utilisateurs/admin_utilisateurs_ajouter.html.twig', array(
             'form' => $form->createView(),
-            'company' => $this->getUser()->getCompany()
+            'company' => $this->getUser()->getCompany(),
+            'profile' => false
+        ));
+    }
+
+    /**
+     * Display the logged user profile
+     * @return Response Rendered view
+     *
+     * @Route("profil/voir",
+     *   name="profil_voir"
+     * )
+     */
+    public function profilVoirAction()
+    {
+        return $this->render('user/user_profil_voir.html.twig', array(
+            'user' => $this->getUser()
+        ));
+    }
+
+     /**
+     * Edit the logged user profile
+     * @return Response Rendered view
+     *
+     * @Route("profil/editer",
+     *   name="profil_editer"
+     * )
+     */
+    public function profilEditerAction()
+    {
+        $userManager = $this->get('fos_user.user_manager');
+        
+        $form = $this->createForm(new UserType($this->getUser()->getCompany()->getId()), $this->getUser());
+        
+        $form->remove('admin');
+        $form->remove('permissions');
+        $form->remove('enabled');
+
+        $request = $this->getRequest();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $userManager->updateUser($this->getUser());
+
+            return $this->render('user/user_profil_voir.html.twig', array(
+                'user' => $this->getUser()
+            ));
+        }
+
+        return $this->render('user/user_profil_editer.html.twig', array(
+            'form' => $form->createView(),
+            'company' => $this->getUser()->getCompany(),
+            'profile' => true
         ));
     }
 

@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+<div class="row">
+  	<div class="col-md-8 col-md-offset-2 well center">
+    	<h1>Mon profil</h1>
+        <p>
+            <a class="btn btn-warning" href="{{ path('profil_editer') }}">Modifier</a>
+        </p>
+
+        <hr />
+
+        <div class="row">
+            <div class="col-md-6">
+                <strong>Nom</strong><br /> {{ user.firstname }}  {{ user.lastname }}
+            </div>
+            <div class="col-md-6">
+                <strong>Email</strong><br />{{ user.email }}
+            </div>
+        </div>
+        <div class="row spacer-top">
+            <hr />
+            <div class="col-md-6">
+                <strong>Taux horaire</strong><br />{{ user.tauxHoraire }} €
+            </div>
+            <div class="col-md-6">
+                <strong>Compte comptable notes de frais</strong><br />{{ user.compteComptableNoteFrais }}
+            </div>
+        </div>
+
+         <div class="row">
+            <div class="col-md-12">
+                <hr />
+                <strong>Véhicule personnel</strong><br />
+                <i>Ces informations permettent de préremplir automatiquement les frais de déplacement dans <span class="jaimelesnotesdefrais">J'aime les notes de frais</span></i>
+            </div>
+        </div>
+
+        <div class="row spacer-top"> 
+            <div class="col-md-6">
+                <strong>Marque</strong><br />{{ user.marqueVoiture }}
+            </div>
+            <div class="col-md-6">
+                <strong>Modèle</strong><br />{{ user.modeleVoiture }}
+            </div>
+            <div class="col-md-6">
+                <strong>Immatriculation</strong><br />{{ user.immatriculationVoiture }}
+            </div>
+            <div class="col-md-6">
+                <strong>Puissance fiscale</strong><br />{{ user.puissanceVoiture }} CV
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+</div>
+
+
+
+{% endblock %}

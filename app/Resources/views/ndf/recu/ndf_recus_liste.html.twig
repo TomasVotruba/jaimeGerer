@@ -13,6 +13,9 @@
 				<a class="btn btn-success" href="{{ path('ndf_recu_ajouter') }}">
 					<span class="glyphicon glyphicon-plus"></span> Ajouter un reçu
 				</a>
+				<a class="btn btn-success" href="{{ path('ndf_recu_ajouter', {'deplacementVoiture' : true }) }}">
+					<i class="fas fa-car"></i> Ajouter des frais kilométriques
+				</a>
 			</p>
 		</div>
 		<div class="col-md-6 center-mobile">
@@ -31,7 +34,7 @@
 				<thead>
 					<tr>
 						<th class="col-md-1">Date</th>
-						<th class="col-md-1">Fournisseur</th>
+						<th class="col-md-1">Libellé</th>
 						<th class="col-md-1">Montant HT</th>
 						<th class="col-md-1">Montant TVA</th>
 						<th class="col-md-1">Montant TTC</th>
@@ -48,7 +51,13 @@
 						<tr>
 							{% if recu.etat != "PROCESSING" %}
 								<td>{{ recu.date|date('d/m/Y') }}</td>
-								<td>{{ recu.fournisseur }}</td>
+								<td>
+									{% if recu.deplacementVoiture == false %}
+										{{ recu.fournisseur }}
+									{% else %}
+										Trajet {{ recu.trajet }} : {{ recu.distance }}km
+									{% endif %}
+								</td>
 								<td>{{ recu.montantHT|number_format(2,',',' ') }} €</td>
 								<td>{{ recu.tva|number_format(2,',',' ') }} €</td>
 								<td>{{ recu.montantTTC|number_format(2,',',' ') }} €</td>
@@ -111,4 +120,6 @@
 
 		</div>
 	</div>
+
+
 {% endblock %}

@@ -88,6 +88,34 @@ class User extends BaseUser
     */
     private $tauxHoraire;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="marque_voiture", type="string", length=255, nullable=true)
+     */
+    private $marqueVoiture;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="modele_voiture", type="string", length=255, nullable=true)
+     */
+    private $modeleVoiture;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="immatriculation_voiture", type="string", length=255, nullable=true)
+     */
+    private $immatriculation_voiture;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="puissance_voiture", type="integer", length=255, nullable=true)
+     */
+    private $puissance_voiture;
+
 
     public function __construct()
     {
@@ -295,5 +323,99 @@ class User extends BaseUser
     public function getTauxHoraire()
     {
         return $this->tauxHoraire;
+    }
+
+    /**
+     * Set marqueVoiture
+     *
+     * @param string $marqueVoiture
+     * @return User
+     */
+    public function setMarqueVoiture($marqueVoiture)
+    {
+        $this->marqueVoiture = $marqueVoiture;
+
+        return $this;
+    }
+
+    /**
+     * Get marqueVoiture
+     *
+     * @return string 
+     */
+    public function getMarqueVoiture()
+    {
+        return $this->marqueVoiture;
+    }
+
+    /**
+     * Set modeleVoiture
+     *
+     * @param string $modeleVoiture
+     * @return User
+     */
+    public function setModeleVoiture($modeleVoiture)
+    {
+        $this->modeleVoiture = $modeleVoiture;
+
+        return $this;
+    }
+
+    /**
+     * Get modeleVoiture
+     *
+     * @return string 
+     */
+    public function getModeleVoiture()
+    {
+        return $this->modeleVoiture;
+    }
+
+    /**
+     * Set immatriculation_voiture
+     *
+     * @param string $immatriculationVoiture
+     * @return User
+     */
+    public function setImmatriculationVoiture($immatriculationVoiture)
+    {
+        $this->immatriculation_voiture = $immatriculationVoiture;
+
+        return $this;
+    }
+
+    /**
+     * Get immatriculation_voiture
+     *
+     * @return string 
+     */
+    public function getImmatriculationVoiture()
+    {
+        return $this->immatriculation_voiture;
+    }
+
+
+
+    /**
+     * Set puissance_voiture
+     *
+     * @param integer $puissanceVoiture
+     * @return User
+     */
+    public function setPuissanceVoiture($puissanceVoiture)
+    {
+        $this->puissance_voiture = $puissanceVoiture;
+
+        return $this;
+    }
+
+    /**
+     * Get puissance_voiture
+     *
+     * @return integer 
+     */
+    public function getPuissanceVoiture()
+    {
+        return $this->puissance_voiture;
     }
 }
