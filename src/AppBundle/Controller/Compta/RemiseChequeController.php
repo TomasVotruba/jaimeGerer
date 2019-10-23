@@ -268,11 +268,11 @@ class RemiseChequeController extends Controller
 		$arr_factures_rapprochees_par_remises_cheques = array();
 		$arr_avoirs_rapprochees_par_remises_cheques = array();
 		$arr_od_rapprochees_par_remises_cheques = array();
-		foreach($arr_all_remises_cheques as $remiseCheque){
-			if($remiseCheque->getTotalRapproche() < $remiseCheque->getTotal()){
-				$arr_remises_cheques[] = $remiseCheque;
+		foreach($arr_all_remises_cheques as $rc){
+			if($rc->getTotalRapproche() < $rc->getTotal()){
+				$arr_remises_cheques[] = $rc;
 			} else {
-				foreach($remiseCheque->getCheques() as $cheque){
+				foreach($rc->getCheques() as $cheque){
 					foreach($cheque->getPieces() as $piece){
 						if($piece->getFacture()){
 							$arr_factures_rapprochees_par_remises_cheques[] = $piece->getFacture()->getId();
@@ -332,6 +332,11 @@ class RemiseChequeController extends Controller
 			//clear cheques collection
 			foreach($remiseCheque->getCheques() as $oldCheque){
 				$pieces = $oldCheque->getPieces();
+				foreach($pieces as $piece){
+					if($piece->getFacture()){
+						$piece->getFacture()->setEtat('SENT');
+					}
+				}
 				$pieces->clear();
 				// $remiseCheque->removeCheque($oldCheque);
 				// $em->remove($oldCheque);

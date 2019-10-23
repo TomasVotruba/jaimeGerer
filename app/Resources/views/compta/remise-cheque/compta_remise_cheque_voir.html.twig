@@ -10,7 +10,8 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<p><a class="btn btn-primary" href="{{ path('compta_remise_cheque_exporter', {'id' : remiseCheque.id}) }}"><span class="glyphicon glyphicon-floppy-disk"></span> Exporter le coupon</a></p>
+			<p><a class="btn btn-warning" href="{{ path('compta_remise_cheque_editer', {'id' : remiseCheque.id}) }}"><span class="glyphicon glyphicon-pencil"></span> Modifier</a>
+			<a class="btn btn-primary" href="{{ path('compta_remise_cheque_exporter', {'id' : remiseCheque.id}) }}"><span class="glyphicon glyphicon-floppy-disk"></span> Exporter le coupon</a></p>
 		</div>
 	</div>
 
