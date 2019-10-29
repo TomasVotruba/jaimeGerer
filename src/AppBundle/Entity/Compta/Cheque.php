@@ -204,8 +204,9 @@ class Cheque
     			$montant+=$piece->getFacture()->getTotalTTC();
     		} else if($piece->getAvoir() != null){
     			$montant+=$piece->getAvoir()->getTotalTTC();
-    		}else if($piece->getOperationDiverse() != null){
-    			$montant+=$piece->getOperationDiverse()->getDebit();
+    		} else if($piece->getOperationDiverse() != null){
+
+    			$montant+=$piece->getOperationDiverse()->getCredit();
     		}
     	}
     	return $montant;
@@ -219,7 +220,7 @@ class Cheque
     		} else if($piece->getAvoir() != null){
     			$montant+=$piece->getAvoir()->getTotalHT();
     		}else if($piece->getOperationDiverse() != null){
-    			$montant+=$piece->getOperationDiverse()->getDebit();
+    			$montant+=$piece->getOperationDiverse()->getCredit();
     		}
     	}
     	return $montant;
@@ -233,7 +234,7 @@ class Cheque
     		} else if($piece->getAvoir() != null){
     			$montant+=$piece->getAvoir()->getTaxe();
     		}else if($piece->getOperationDiverse() != null){
-    			$montant+=$piece->getOperationDiverse()->getDebit();
+    			$montant+=$piece->getOperationDiverse()->getCredit();
     		}
     	}
     	return $montant;
