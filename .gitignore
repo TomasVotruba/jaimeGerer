@@ -16,3 +16,5 @@ Supprimerait .idea/
 Supprimerait app/cache/
 Supprimerait app/logs/
 Supprimerait web/bundles/
+
+app/bootstrap.php.cache
