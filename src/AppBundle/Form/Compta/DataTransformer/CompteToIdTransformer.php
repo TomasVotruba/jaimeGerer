@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Form\DataTransformer;
+namespace AppBundle\Form\Compta\DataTransformer;
 
 use AppBundle\Entity\CRM\Compte;
 use Doctrine\Common\Persistence\ObjectManager;

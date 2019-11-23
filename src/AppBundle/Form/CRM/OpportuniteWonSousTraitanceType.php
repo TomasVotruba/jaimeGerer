@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use AppBundle\Form\CRM\OpportuniteRepartitionType;
 use AppBundle\Form\CRM\OpportuniteSousTraitanceType;
 
-class OpportuniteWonRepartitionType extends AbstractType
+class OpportuniteWonSousRepartitionType extends AbstractType
 {
 
     /**

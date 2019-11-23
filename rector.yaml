@@ -1,0 +1,38 @@
+parameters:
+    auto_import_names: false
+
+    sets:
+        - 'php53'
+        - 'php54'
+        - 'php55'
+        - 'php56'
+
+    # default getcwd()
+    symfony_project_directory: '.'
+
+#services:
+#    # @todo invent
+#    RemoveProjectFileRector:
+#        - 'app/AppCache.php'
+#        - 'app/check.php'
+#        - 'app/SymfonyRequirements.php'
+#        - 'bin/doctrine'
+#        - 'bin/doctrine.php'
+#        - 'bin/security-checker'
+#        - 'bin/security-checker.bat'
+#        - 'bin/simple-phpunit'
+#        - 'bin/simple-phpunit.bat'
+#
+#    # @todo invent
+#    MoveProjectFileRector:
+#        app/cache/*: 'var/cache'
+#        app/logs/*: 'var/logs'
+#        app/phpunit.xml.dist: 'phpunit.xml.dist'
+#        app/console: 'bin/console'
+#
+#    # @todo invent
+#    # to prevent autolaod conflicts
+#    ChangePsr0ComposerToClassmapRector: ~
+#
+#    # @todo invent
+#    CorrectNamespaceAndClassNameToMatchFileLocationRector: ~

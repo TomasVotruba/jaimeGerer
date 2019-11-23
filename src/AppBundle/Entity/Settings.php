@@ -37,14 +37,14 @@ class Settings
      * @ORM\Column(name="valeur", type="text", nullable=false)
      */
     private $valeur;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="module", type="string", length=255, nullable=false)
      */
     private $module;
-    
+
     /**
      * @var string
      *
@@ -57,13 +57,13 @@ class Settings
      * @ORM\JoinColumn(nullable=true)
      */
     private $company;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Compta\CompteComptable")
      * @ORM\JoinColumn(nullable=true)
      */
     private $compteComptable;
-    
+
   	 /**
      * @var string
      *
@@ -77,29 +77,29 @@ class Settings
      * @ORM\Column(name="titre", type="string", length=255, nullable=true)
      */
     private $titre;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="noTVA", type="boolean")
      */
     private $noTVA = false;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="categorie", type="string", length=255, nullable=false)
      */
     private $categorie;
-    
+
     //for image upload
     /**
      * @Assert\Image(
      * 	maxSize="2M",
-     * 	minHeight="50",
-     * 	maxHeight="300",
-     * 	minWidth="50",
-     * 	maxWidth="300" )
+     * 	minHeight=50,
+     * 	maxHeight=300,
+     * 	minWidth=50,
+     * 	maxWidth=300 )
      */
     private $file;
     private $tempFilename;
@@ -107,7 +107,7 @@ class Settings
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -130,7 +130,7 @@ class Settings
     /**
      * Get parametre
      *
-     * @return string 
+     * @return string
      */
     public function getParametre()
     {
@@ -153,13 +153,13 @@ class Settings
     /**
      * Get valeur
      *
-     * @return string 
+     * @return string
      */
     public function getValeur()
     {
         return $this->valeur;
     }
-    
+
     /**
      * Set module
      *
@@ -169,10 +169,10 @@ class Settings
     public function setModule($module)
     {
     	$this->module = $module;
-    
+
     	return $this;
     }
-    
+
     /**
      * Get module
      *
@@ -182,12 +182,12 @@ class Settings
     {
     	return $this->module;
     }
-   
+
     public function __toString()
     {
     	return $this->getValeur();
     }
-    
+
 
     /**
      * Set type
@@ -205,29 +205,29 @@ class Settings
     /**
      * Get type
      *
-     * @return string 
+     * @return string
      */
     public function getType()
     {
         return $this->type;
     }
-    
+
     public function getFile() {
     	return $this->file;
     }
-    
+
     public function setFile(UploadedFile $file)
     {
     	$this->file = $file;
     	$this->tempFilename = null;
-    
+
     	if (null !== $this->valeur) {
     		$this->tempFilename = $this->valeur;
     		$this->valeur = null;
     	}
-    
+
     }
-    
+
     /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
@@ -238,12 +238,12 @@ class Settings
     	if (null === $this->file) {
     		return;
     	}
-    
+
     	if ($this->file) {
     		$this->valeur = $this->_simplifyString($this->parametre).'.'.$this->file->guessExtension();
     	}
     }
-    
+
     /**
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
@@ -254,7 +254,7 @@ class Settings
     	if (null === $this->file) {
     		return;
     	}
-    
+
     	if ($this->file) {
 
     		if (null !== $this->tempFilename) {
@@ -263,15 +263,15 @@ class Settings
     				unlink($oldFile);
     			}
     		}
-    
+
     		$this->file->move(
     				$this->getUploadRootDir(),
     				$this->valeur
     		);
     	}
-    
+
     }
-    
+
     /**
      * @ORM\PreRemove()
      */
@@ -281,7 +281,7 @@ class Settings
     		$this->tempFilename = $this->getUploadRootDir().'/'.$this->id.'.'.$this->_simplifyString($this->parametre);
     	}
     }
-    
+
     /**
      * @ORM\PostRemove()
      */
@@ -291,45 +291,45 @@ class Settings
     		unlink($this->tempFilename);
     	}
     }
-    
+
     public function getUploadDir()
     {
     	return 'upload';
     }
-    
+
     protected function getUploadRootDir()
     {
     	return __DIR__.'/../../../web/'.$this->getUploadDir();
     }
-    
+
     /**
      * Simplify a string (lowercase, no space, no special character)
      * @param unknown $s
      * @return unknown
      */
     private function _simplifyString($s){
-    
+
     	$s = strtolower($s);
-    
+
     	$a_specialchars = array(
     			'à', 'â', 'é', 'è', 'ê', 'ë', 'ï', 'î', 'ô', 'ö', 'ù', 'û',
     			'-', "'", ' ',
     	);
-    
+
     	$a_normalchars = array(
     			'a', 'a', 'e', 'e', 'e', 'e', 'i', 'i', 'o', 'o', 'u', 'u',
     			'', '','',
     	);
-    
+
     	$s = str_replace($a_specialchars, $a_normalchars, $s);
-    
+
     	return $s;
     }
-    
+
     public function getTempFilename() {
     	return $this->tempFilename;
     }
-    
+
     public function setTempFilename($tempFilename) {
     	$this->tempFilename = $tempFilename;
     	return $this;
@@ -358,7 +358,7 @@ class Settings
 		$this->id = $id;
 		return $this;
 	}
-	
+
 
     /**
      * Set helpText
@@ -376,7 +376,7 @@ class Settings
     /**
      * Get helpText
      *
-     * @return string 
+     * @return string
      */
     public function getHelpText()
     {
@@ -399,7 +399,7 @@ class Settings
     /**
      * Get titre
      *
-     * @return string 
+     * @return string
      */
     public function getTitre()
     {
@@ -422,7 +422,7 @@ class Settings
     /**
      * Get categorie
      *
-     * @return string 
+     * @return string
      */
     public function getCategorie()
     {
@@ -445,7 +445,7 @@ class Settings
     /**
      * Get noTVA
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getNoTVA()
     {

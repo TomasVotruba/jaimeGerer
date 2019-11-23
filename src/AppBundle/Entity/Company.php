@@ -40,7 +40,7 @@ class Company
      * @ORM\Column(name="logo", type="string", length=255, nullable=true)
      */
     private $logo;
-    
+
     /**
      * @var string
      *
@@ -101,7 +101,7 @@ class Company
      *
      * @ORM\Column(name="fax", type="string", length=255, nullable=true)
      */
-    private $fax; 
+    private $fax;
 
     /**
      * @var string
@@ -109,15 +109,15 @@ class Company
      * @ORM\Column(name="color", type="string", length=7, nullable=true)
      */
     private $color;
-  
+
     //for logo upload
     /**
      * @Assert\Image(
      * 	maxSize="2M",
-     * 	minHeight="50",
-     * 	maxHeight="300",
-     * 	minWidth="50",
-     * 	maxWidth="300" )
+     * 	minHeight=50,
+     * 	maxHeight=300,
+     * 	minWidth=50,
+     * 	maxWidth=300 )
      */
     private $file;
     private $tempFilename;
@@ -154,7 +154,7 @@ class Company
     /**
      * Set id
      *
-     * @param integer $id 
+     * @param integer $id
      * @return Company
      */
     public function setId($id)
@@ -166,7 +166,7 @@ class Company
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -189,7 +189,7 @@ class Company
     /**
      * Get nom
      *
-     * @return string 
+     * @return string
      */
     public function getNom()
     {
@@ -212,7 +212,7 @@ class Company
     /**
      * Get logo
      *
-     * @return string 
+     * @return string
      */
     public function getLogo()
     {
@@ -235,7 +235,7 @@ class Company
     /**
      * Get adresse
      *
-     * @return string 
+     * @return string
      */
     public function getAdresse()
     {
@@ -258,7 +258,7 @@ class Company
     /**
      * Get ville
      *
-     * @return string 
+     * @return string
      */
     public function getVille()
     {
@@ -281,7 +281,7 @@ class Company
     /**
      * Get codePostal
      *
-     * @return string 
+     * @return string
      */
     public function getCodePostal()
     {
@@ -304,7 +304,7 @@ class Company
     /**
      * Get pays
      *
-     * @return string 
+     * @return string
      */
     public function getPays()
     {
@@ -327,7 +327,7 @@ class Company
     /**
      * Get region
      *
-     * @return string 
+     * @return string
      */
     public function getRegion()
     {
@@ -350,7 +350,7 @@ class Company
     /**
      * Get telephone
      *
-     * @return phone_number 
+     * @return phone_number
      */
     public function getTelephone()
     {
@@ -374,30 +374,30 @@ class Company
     /**
      * Get fax
      *
-     * @return phone_number 
+     * @return phone_number
      */
     public function getFax()
     {
         return preg_replace('/[^0-9\/+\ ]/', '', $this->fax);
     }
-    
+
     public function getFile() {
     	return $this->file;
     }
-    
+
     public function setFile(UploadedFile $file)
     {
 
     	$this->file = $file;
     	$this->tempFilename = null;
-    	 
+
     	if (null !== $this->logo) {
     		$this->tempFilename = $this->logo;
     		$this->logo = null;
     	}
-    
+
     }
-    
+
     /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
@@ -408,24 +408,24 @@ class Company
     	if (null === $this->file) {
     		return;
     	}
-    	 
+
     	if ($this->file) {
     		$this->logo = $this->_simplifyString($this->nom).'.'.$this->file->guessExtension();
     	}
-    
+
     }
-    
+
     /**
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
     public function upload()
     {
-    	
+
     	if (null === $this->file) {
     		return;
     	}
-    
+
     	if ($this->file) {
     		if (null !== $this->tempFilename) {
     			$oldFile = $this->getLogoUploadRootDir().'/'.$this->tempFilename;
@@ -433,15 +433,15 @@ class Company
     				unlink($oldFile);
     			}
     		}
-    
+
     		$this->file->move(
     				$this->getLogoUploadRootDir(),
     				$this->logo
     		);
     	}
-    	 
+
     }
-    
+
     /**
      * @ORM\PreRemove()
      */
@@ -451,7 +451,7 @@ class Company
     		$this->tempFilename = $this->getLogoUploadRootDir().'/'.$this->id.'.'.$this->logo;
     	}
     }
-    
+
     /**
      * @ORM\PostRemove()
      */
@@ -461,41 +461,41 @@ class Company
     		unlink($this->tempFilename);
     	}
     }
-    
+
     public function getLogoUploadDir()
     {
     	return 'upload';
     }
-    
+
     protected function getLogoUploadRootDir()
     {
     	return __DIR__.'/../../../web/'.$this->getLogoUploadDir();
     }
-    
+
     /**
      * Simplify a string (lowercase, no space, no special character)
      * @param unknown $s
      * @return unknown
      */
     private function _simplifyString($s){
-    		
+
     	$s = strtolower($s);
-    		
+
     	$a_specialchars = array(
     			'à', 'â', 'é', 'è', 'ê', 'ë', 'ï', 'î', 'ô', 'ö', 'ù', 'û',
     			'-', "'", ' ',
     	);
-    		
+
     	$a_normalchars = array(
     			'a', 'a', 'e', 'e', 'e', 'e', 'i', 'i', 'o', 'o', 'u', 'u',
     			'', '','',
     	);
-    		
+
     	$s = str_replace($a_specialchars, $a_normalchars, $s);
-    		
+
     	return $s;
     }
-    
+
     public function getTempFilename() {
     	return $this->tempFilename;
     }
@@ -503,11 +503,11 @@ class Company
     	$this->tempFilename = $tempFilename;
     	return $this;
     }
-    
+
     public function __toString(){
     	return $this->nom;
     }
-     
+
 
     /**
      * Set color
@@ -525,7 +525,7 @@ class Company
     /**
      * Get color
      *
-     * @return string 
+     * @return string
      */
     public function getColor()
     {
@@ -548,7 +548,7 @@ class Company
     /**
      * Get tampon
      *
-     * @return string 
+     * @return string
      */
     public function getTampon()
     {
@@ -616,7 +616,7 @@ class Company
     /**
      * Get siren
      *
-     * @return string 
+     * @return string
      */
     public function getSiren()
     {
@@ -639,7 +639,7 @@ class Company
     /**
      * Get zeroBounceApiKey
      *
-     * @return string 
+     * @return string
      */
     public function getZeroBounceApiKey()
     {
@@ -662,7 +662,7 @@ class Company
     /**
      * Get isNicomak
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getIsNicomak()
     {

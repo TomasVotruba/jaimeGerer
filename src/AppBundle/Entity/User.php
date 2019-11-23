@@ -59,10 +59,11 @@ class User extends BaseUser
     /**
      * @Assert\Image(
      *  maxSize="1M",
-     *  minHeight="50",
-     *  maxHeight="300",
-     *  minWidth="50",
-     *  maxWidth="300" )
+     *  minHeight=50,
+     *  maxHeight=300,
+     *  minWidth=50,
+     *  maxWidth=300
+     *     )
      */
     private $file;
     private $tempFilename;
@@ -132,11 +133,11 @@ class User extends BaseUser
         return $this->id;
     }
 
-    
+
     /**
      * Set id
      *
-     * @param integer $id 
+     * @param integer $id
      * @return Company
      */
     public function setId($id)
@@ -222,7 +223,7 @@ class User extends BaseUser
     /**
      * Get compteComptableNoteFrais
      *
-     * @return \AppBundle\Entity\Compta\CompteComptable 
+     * @return \AppBundle\Entity\Compta\CompteComptable
      */
     public function getCompteComptableNoteFrais()
     {
@@ -245,7 +246,7 @@ class User extends BaseUser
     /**
      * Get signature
      *
-     * @return string 
+     * @return string
      */
     public function getSignature()
     {
@@ -268,7 +269,7 @@ class User extends BaseUser
     /**
      * Get avatar
      *
-     * @return string 
+     * @return string
      */
     public function getAvatar()
     {
@@ -295,7 +296,7 @@ class User extends BaseUser
     /**
      * Get competCom
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getCompetCom()
     {
@@ -318,7 +319,7 @@ class User extends BaseUser
     /**
      * Get tauxHoraire
      *
-     * @return integer 
+     * @return integer
      */
     public function getTauxHoraire()
     {
@@ -341,7 +342,7 @@ class User extends BaseUser
     /**
      * Get marqueVoiture
      *
-     * @return string 
+     * @return string
      */
     public function getMarqueVoiture()
     {
@@ -364,7 +365,7 @@ class User extends BaseUser
     /**
      * Get modeleVoiture
      *
-     * @return string 
+     * @return string
      */
     public function getModeleVoiture()
     {
@@ -387,7 +388,7 @@ class User extends BaseUser
     /**
      * Get immatriculation_voiture
      *
-     * @return string 
+     * @return string
      */
     public function getImmatriculationVoiture()
     {
@@ -412,7 +413,7 @@ class User extends BaseUser
     /**
      * Get puissance_voiture
      *
-     * @return integer 
+     * @return integer
      */
     public function getPuissanceVoiture()
     {
